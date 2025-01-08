@@ -47,7 +47,7 @@ summary {
     & a {
       color: $colorAccent3;
     }
-    & pre, p, span {
+    & pre, p, span, li {
       color: $colorText;
     }
 
@@ -71,6 +71,13 @@ summary {
     & small{
       font-size: $fontSizeSub;
       color: $colorAccent3;
+    }
+  }
+
+  &__submenu {
+    color: $colorMenu;
+    &_lv1 {
+      color: $colorSubMenu;
     }
   }
 }
