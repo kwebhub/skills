@@ -5757,7 +5757,7 @@ block menu
 
       //- Источники
       details
-        summary Источники
+        summary.menu__submenu Источники
         a(href="https://developer.wordpress.org/") WordPress<br>
         a(href="https://developer.wordpress.org/block-editor/reference-guides/") Guides<br>
         a(href="https://developer.wordpress.org/reference/functions/") wp core functions<br>
@@ -5771,6 +5771,7 @@ block menu
         a(href="https://happyprime.github.io/wphtml-converter/") Convert WordPress block HTML to its JavaScript object or PHP array forms.<br>
         a(href="https://wp-kama.ru") WP-Kama<br>
         a(href="https://developer.woocommerce.com/docs/") Woocommerce<br>
+        a(href="https://github.com/ndiego/editor-curation-examples") Отключение и блокировка блоков
 
         p.
           Plugins:<br>
@@ -5785,1222 +5786,237 @@ block menu
           Cyr to lat<br>
           Show current template<br>
           
-      //- Посадка верстки на wordpress
+      //-ACF
       details
-        summary Посадка верстки на wordpress
-        a(href="https://www.youtube.com/watch?v=CGz7-22mX4M") Нативными функциями:
-        p.
-          - создать файлы страниц<br>
-          - связать файлы страниц со страницами в админке<br>
-          - подключить стили и скрипты<br>
-          - поменять пути к картинкам и шрифтам<br>
-          - возможность менять и добавлять контент из админки<br>
-          style.css<br>
-          index.php<br>
-          screenshot.png<br>
-          functions.php<br>
+        summary.menu__submenu ACF
+        a(href="https://www.youtube.com/watch?v=Q5zcWpRMl9s") ACF
+        p Стандартный вывод информации из ACF (текст, ссылка на картинку и т.п.):
+        code &lt;?php the_field('имя_поля'); ?&gt;
+        br
+        p Вывод повторителя:
         pre
           code.
-            add_action( 'wp_enqueue_scripts', function () { 
-              wp_enqueue_style( 'style',
-              get_template_directory_uri() . /assets/css/style.min.css ); 
-              wp_enqueue_script( 'main',
-              get_template_directory_uri() . '/assets/js/main.js', array('jquery'),
-              'null',
-              true );
-            });
-
-            add_theme_support( 'post-thumbnails' );
-            add_theme_support( 'title-tag' );
-            add_theme_support( 'custom-logo' );
-
-            <span>header.php</span>
-            &lt;html &lt;?php language_attributes(); ?&gt;&gt;
-            &lt;meta charset="&lt;?php bloginfo('charset'); ?&gt;"&gt;
-            &lt;?php the_custom_logo(); ?&gt;
-            &lt;img(src="&lt;?php bloginfo('template_url'); ?&gt;/assets/images/1.jpg" alt="Image"&gt;
-            wp_head();
-
-            <span>footer.php</span>
-            wp_footer();
-
-            <span>front-page.php</span>
-            &lt;?php 
-            /* 
-            * Template Name: front 
-            */
-            get_header();
-            ?&gt;
-            &lt;? код страниц ?&gt;
-            <span>Вывести все записи</span>
-            &lt;?php global $post; 
-            $myposts = get_posts([ 
-              'numberposts' => -1,
-            ]); 
-            if( $myposts ){ 
-              foreach( $myposts as $post ){ 
-                setup_postdata( $post ); 
-            ?&gt; 
-                &lt;? Верстка ?&gt;
-            &lt;?php }
-            }
-            <span>Сбрасываем $post</span>
-            wp_reset_postdata();
-            ?&gt;
-            get_footer();
-            <span>contact form 7</span>
-            &lt;?php echo do_shortcode('[contact-form-7...]') ?&gt;
-
-        //-ACF
-        details
-          summary ACF
-          a(href="https://www.youtube.com/watch?v=Q5zcWpRMl9s") ACF
-          p Стандартный вывод информации из ACF (текст, ссылка на картинку и т.п.):
-          code &lt;?php the_field('имя_поля'); ?&gt;
-          br
-          p Вывод повторителя:
-          pre
-            code.
-              &lt;?php if(get_field('имя_повторителя')): ?&gt;
-                &lt;?php while(has_sub_field('имя_повторителя')) : ?&gt;
-                  &lt;div&gt;
-                    &lt;img(src="&lt;?php the_sub_field('имя_поля'); ?&gt;"&gt;
-                  &lt;/div&gt;
-                &lt;?php endwhile; ?&gt;
-              &lt;?php endif; ?&gt;
-          br
-          p Повторитель в повторителе:
-          pre
-            code.
-              &lt;?php if(get_field('имя_повторителя_1')): ?&gt;
-                &lt;?php while(has_sub_field('имя_повторителя_1')) : ?&gt;
-                  &lt;div&gt;
-                    &lt;mg(src="&lt;?php the_sub_field('имя_поля_повторителя_1'); ?&gt;"&gt;
-                    &lt;ul&gt;
-                      &lt;?php if(get_sub_field('имя_повторителя_2')): ?&gt;
-                      &lt;?php while(has_sub_field('имя_повторителя_2')) : ?&gt;
-                        &lt;?php the_sub_field('имя_поля_повторителя_2'); ?&gt;
-                      &lt;?php endwhile; ?&gt;
-                      &lt;?php endif; ?&gt;
-                  &lt;/div&gt;
-                &lt;?php endwhile; ?&gt;
-              &lt;?php endif; ?&gt;
-          br
-          p Вывод группы полей:
-          pre
-            code.
-              &lt;?php if( have_rows('имя_группы') ): ?&gt;
-              &lt;?php while( have_rows('имя_группы') ): the_row(); ?&gt;
-                &lt;a href="&lt;?php the_sub_field('имя_поля_группы'); ?&gt;"&gt;
-                  &lt;i class="fa fa-vk" aria-hidden="true"&gt;&lt;/i&gt;&lt;/a&gt;
-                &lt;a href="&lt;?php the_sub_field('имя_поля_группы'); ?&gt;"&gt;
-                  &lt;i class="fa fa-facebook" aria-hidden="true"&gt;&lt;/i&gt;&lt;/a&gt;
+            &lt;?php if(get_field('имя_повторителя')): ?&gt;
+              &lt;?php while(has_sub_field('имя_повторителя')) : ?&gt;
+                &lt;div&gt;
+                  &lt;img(src="&lt;?php the_sub_field('имя_поля'); ?&gt;"&gt;
+                &lt;/div&gt;
               &lt;?php endwhile; ?&gt;
-              &lt;?php endif; ?&gt;
-          br
-          p Тип поля “Галерея”
-          pre
-            code.
-              &lt;?php if ($img_gallery = get_field("имя_галереи")) : ?&gt;
-                &lt;?php foreach ($img_gallery as $img) : ?&gt;
-                  &lt;?php if ($img) : ?&gt;
-                    &lt;?= "&lt;img
-                      src="&lt;?= esc_url($img['sizes']['thumbnail']) ?&gt;"
-                      alt="&lt;?= esc_attr($img['alt']) ?&gt;"
-                      loading="lazy"
-                      width="&lt;?= esc_attr($image_array['width']) ?&gt;"
-                      height="&lt;?= esc_attr($image_array['height']) ?&gt;"
-                    /&gt;" ?&gt;
-                  &lt;?php endif; ?&gt;
-                &lt;?php endforeach; ?&gt;
-              &lt;?php endif; ?&gt;
-          br
-          p Тип поля “Объект записи”
-          pre
-            code.
-              &lt;?php if ($post_objects = get_field("имя_объекта_записи")) : ?&gt;
-                &lt;?php
-                foreach ($post_objects as $post) : setup_postdata($post); ?&gt;
-                  &lt;?php if ($post) : ?&gt;
-                    &lt;?php the_title(); ?&gt;
-                    &lt;?php the_excerpt(); ?&gt;
-                    &lt;?php the_field("имя_поля_объекта_записи"); ?&gt;
-                    &lt;?php the_permalink(); ?&gt;
-                  &lt;?php endif; ?&gt;
-                &lt;?php endforeach; ?&gt;
-                &lt;?php wp_reset_postdata(); ?&gt;
-              &lt;?php endif; ?&gt;
-          br
-          p Тип поля “Гибкое содержание”
-          pre
-            code.
-              &lt;?php if (have_rows('имя_гибкого_содержания')) : ?&gt;
-                &lt;?php while (have_rows('имя_гибкого_содержания')) : the_row(); ?&gt;
-                  &lt;?php if (get_row_layout() == 'hero') : ?&gt;
-                    &lt;?php get_template_part("template-parts/hero-section") ?&gt;
-                  &lt;?php elseif (get_row_layout() == 'about') : ?&gt;
-                    &lt;?php get_template_part("template-parts/about-section") ?&gt;
-                  &lt;?php elseif (get_row_layout() == 'contacts') : ?&gt;
-                    &lt;?php get_template_part("template-parts/contacts-section") ?&gt;
-                  &lt;?php endif; ?&gt;
-                &lt;?php endwhile; ?&gt;
-              &lt;?php endif; ?&gt;
-          br
-          p Тип поля “Ссылка”
-          pre
-            code.
-              &lt;?php if (get_field('имя_ссылки')) : ?&gt;
-                &lt;a
-                  href="&lt;?= get_field('имя_ссылки')['url'] ?&gt;"
-                  target="&lt;?= get_field('имя_ссылки')['target'] ?&gt;"&gt;
-                  &lt;?= get_field('имя_ссылки')['title'] ?&gt;
-                &lt;/a&gt;
-              &lt;?php endif; ?&gt;
-          br
-          p Вывод поля ACF только если оно заполнено
-          pre
-            code.
-              &lt;?php if (get_field("имя_поля")) { ?&gt;
-                &lt;?php the_field("имя_поля"); ?&gt;
-              &lt;?php } ?&gt;
-          br
-          p Страница опций ACF
-          pre
-            code.
-              if (function_exists("acf_add_options_page")) {
-                acf_add_options_page(array(
-                  "page_title" => "Опции темы",
-                  "menu_title" => "Опции темы",
-                  "menu_slug"  => "theme_settings",
-                ));
-              }
-          br
-          p Вывод полей из страницы с опций
-          code &lt;?php the_field("имя_поля", "option"); ?&gt;
-          p.
-            Для нумерации строк в плагине Advanced Custom Fields (ACF) необходимо использовать функцию get_field(), которая позволяет извлечь данные из поля.<br>
-            В примере ниже строки будут нумероваться с помощью цикла for:
-          pre
-            code.
-              &lt;?php if( have_rows('service') ): $i = 0; ?&gt;
-              &lt;?php while ( have_rows('service') ) : the_row(); $i++; ?&gt;
-                &lt;?php echo $i; ?&gt;
-              &lt;? endwhile; endif; ?&gt;
-
-      //- Structure
-      details
-        summary Structure
-        p.
-          Темы берут контент, хранящийся в WordPress, и отображают его в браузере.<br>
-          HTML, CSS, PHP, JSON и JavaScript - wp stack.<br>
-          Используйте имя вашей темы для создания пространства имен.<br>
-          <br>
-          Редактор сайта: Внешний вид > Редактор в меню администратора WordPress.<br>
-          Пункт «Стили» на панели меню.<br>
-          Выбрать иконку Style Book (глаз) - полный доступ к изменению глобальных стилей сайта.<br>
-          <br>
-          Экспортировать тему из интерфейса редактора сайта, нажмите кнопку ⋮ (Параметры) в области заголовка. Нажмите кнопку Экспорт.<br>
-          Распаковать архив, переименовать папку с темой, отредактировать шапку style.css и заархивировать папку в zip.<br>
-          <br>
-          После активации Create Block Theme вы должны увидеть новую кнопку в редакторе сайта, которая отображается как значок гаечного ключа.<br> Нажмите эту кнопку, чтобы открыть меню Create Block Theme.<br>
-          <br>
-          WordPress автоматически обрабатывает окончательную разметку, поэтому вам остается только создать шаблоны.<br>
+            &lt;?php endif; ?&gt;
+        br
+        p Повторитель в повторителе:
         pre
           code.
-            - assets/
-              - css/
-                - core-site-title.css
-            - images/
-              - header-background.png
-            - js/
-              - navigation.js
-            - inc/
-              - ClassName.php
-              - functions-helpers.php
-            - parts/
-              - footer.html
-              - header.html
-            - patterns/
-              - example.php
-            - styles/
-              - example.json
-            - templates/
-              - 404.html
-              - archive.html
-              - index.html (обязательный)
-              - singular.html
-            - .editorconfig
-            - .gitattributes
-            - .gitignore
-            - CHANGELOG.md
-            - LICENSE.md
-            - README.txt
-            - functions.php
-            - package.json
-            - screenshot.png
-            - style.css (обязательный)
-            - theme.json
-          br
-          p.
-            <b>style.css</b> (основная таблица стилей):<br> этот файл необходим для настройки данных темы, таких как ее имя и описание.<br> Его также можно использовать для добавления пользовательского CSS.<br>
-            <b>templates/index.html</b> (шаблоны):<br> Шаблон по умолчанию/запасной вариант.<br> Это необходимо для того, чтобы WordPress считал это блочной темой.<br>
-            <b>README.txt</b> (обзор темы)<br>
-            <b>screenshot.png</b> (скриншот темы 1200 x 900)<br>
-            <b>theme.json</b> (глобальные настройки и стили)<br>
-            <b>parts</b> (Template Parts):<br> содержит пользовательские части шаблона темы.<br>
-            <b>patterns</b> (Набор блоков):<br> Многоразовые шаблоны, состоящие из одного или нескольких блоков, которые пользователи могут вставлять через интерфейс редактора.<br> WordPress автоматически регистрирует файлы, включенные в эту папку.<br>
-            <b>styles</b> (Вариации стилей):<br> вариации глобальных настроек и стилей темы, хранящиеся в отдельных файлах JSON.<br>
-            <b>templates</b> (Шаблоны):<br> Файлы, которые представляют общую структуру документа front-end.<br>
-            <b>inc</b>(Пользовательская функциональность):<br> темы часто будут иметь пользовательские PHP-классы или файлы.<br>
-            <b>.editorconfig</b> ( EditorConfig ):<br> используется для настройки форматирования, такого как окончания строк и интервалы, для редакторов кода.<br>
-            <b>.gitattributes</b> ( Git: Атрибуты ):<br> Настраивает атрибуты с помощью системы контроля версий Git.<br>
-            <b>.gitignore</b> ( Git: Ignore ):<br> определяет файлы, которые следует игнорировать при фиксации кода в репозитории Git.<br>
-            <b>CHANGELOG.md</b> ( Ведите журнал изменений ):<br> понятный человеку журнал важных изменений для каждого выпуска вашей темы.<br>
-            <b>LICENSE.md</b> ( Обзор темы: Лицензирование и авторские права ):<br> Определяет лицензию для темы.<br> Обратите внимание, что все темы, отправленные в каталог тем WordPress, должны быть лицензированы по GPL v2+.<br>
-            <b>package.json</b> ( npm: package.json ):<br> часто используется для определения процесса сборки и зависимостей разработки в среде Node.<br>
-            
+            &lt;?php if(get_field('имя_повторителя_1')): ?&gt;
+              &lt;?php while(has_sub_field('имя_повторителя_1')) : ?&gt;
+                &lt;div&gt;
+                  &lt;mg(src="&lt;?php the_sub_field('имя_поля_повторителя_1'); ?&gt;"&gt;
+                  &lt;ul&gt;
+                    &lt;?php if(get_sub_field('имя_повторителя_2')): ?&gt;
+                    &lt;?php while(has_sub_field('имя_повторителя_2')) : ?&gt;
+                      &lt;?php the_sub_field('имя_поля_повторителя_2'); ?&gt;
+                    &lt;?php endwhile; ?&gt;
+                    &lt;?php endif; ?&gt;
+                &lt;/div&gt;
+              &lt;?php endwhile; ?&gt;
+            &lt;?php endif; ?&gt;
+        br
+        p Вывод группы полей:
+        pre
+          code.
+            &lt;?php if( have_rows('имя_группы') ): ?&gt;
+            &lt;?php while( have_rows('имя_группы') ): the_row(); ?&gt;
+              &lt;a href="&lt;?php the_sub_field('имя_поля_группы'); ?&gt;"&gt;
+                &lt;i class="fa fa-vk" aria-hidden="true"&gt;&lt;/i&gt;&lt;/a&gt;
+              &lt;a href="&lt;?php the_sub_field('имя_поля_группы'); ?&gt;"&gt;
+                &lt;i class="fa fa-facebook" aria-hidden="true"&gt;&lt;/i&gt;&lt;/a&gt;
+            &lt;?php endwhile; ?&gt;
+            &lt;?php endif; ?&gt;
+        br
+        p Тип поля “Галерея”
+        pre
+          code.
+            &lt;?php if ($img_gallery = get_field("имя_галереи")) : ?&gt;
+              &lt;?php foreach ($img_gallery as $img) : ?&gt;
+                &lt;?php if ($img) : ?&gt;
+                  &lt;?= "&lt;img
+                    src="&lt;?= esc_url($img['sizes']['thumbnail']) ?&gt;"
+                    alt="&lt;?= esc_attr($img['alt']) ?&gt;"
+                    loading="lazy"
+                    width="&lt;?= esc_attr($image_array['width']) ?&gt;"
+                    height="&lt;?= esc_attr($image_array['height']) ?&gt;"
+                  /&gt;" ?&gt;
+                &lt;?php endif; ?&gt;
+              &lt;?php endforeach; ?&gt;
+            &lt;?php endif; ?&gt;
+        br
+        p Тип поля “Объект записи”
+        pre
+          code.
+            &lt;?php if ($post_objects = get_field("имя_объекта_записи")) : ?&gt;
+              &lt;?php
+              foreach ($post_objects as $post) : setup_postdata($post); ?&gt;
+                &lt;?php if ($post) : ?&gt;
+                  &lt;?php the_title(); ?&gt;
+                  &lt;?php the_excerpt(); ?&gt;
+                  &lt;?php the_field("имя_поля_объекта_записи"); ?&gt;
+                  &lt;?php the_permalink(); ?&gt;
+                &lt;?php endif; ?&gt;
+              &lt;?php endforeach; ?&gt;
+              &lt;?php wp_reset_postdata(); ?&gt;
+            &lt;?php endif; ?&gt;
+        br
+        p Тип поля “Гибкое содержание”
+        pre
+          code.
+            &lt;?php if (have_rows('имя_гибкого_содержания')) : ?&gt;
+              &lt;?php while (have_rows('имя_гибкого_содержания')) : the_row(); ?&gt;
+                &lt;?php if (get_row_layout() == 'hero') : ?&gt;
+                  &lt;?php get_template_part("template-parts/hero-section") ?&gt;
+                &lt;?php elseif (get_row_layout() == 'about') : ?&gt;
+                  &lt;?php get_template_part("template-parts/about-section") ?&gt;
+                &lt;?php elseif (get_row_layout() == 'contacts') : ?&gt;
+                  &lt;?php get_template_part("template-parts/contacts-section") ?&gt;
+                &lt;?php endif; ?&gt;
+              &lt;?php endwhile; ?&gt;
+            &lt;?php endif; ?&gt;
+        br
+        p Тип поля “Ссылка”
+        pre
+          code.
+            &lt;?php if (get_field('имя_ссылки')) : ?&gt;
+              &lt;a
+                href="&lt;?= get_field('имя_ссылки')['url'] ?&gt;"
+                target="&lt;?= get_field('имя_ссылки')['target'] ?&gt;"&gt;
+                &lt;?= get_field('имя_ссылки')['title'] ?&gt;
+              &lt;/a&gt;
+            &lt;?php endif; ?&gt;
+        br
+        p Вывод поля ACF только если оно заполнено
+        pre
+          code.
+            &lt;?php if (get_field("имя_поля")) { ?&gt;
+              &lt;?php the_field("имя_поля"); ?&gt;
+            &lt;?php } ?&gt;
+        br
+        p Страница опций ACF
+        pre
+          code.
+            if (function_exists("acf_add_options_page")) {
+              acf_add_options_page(array(
+                "page_title" => "Опции темы",
+                "menu_title" => "Опции темы",
+                "menu_slug"  => "theme_settings",
+              ));
+            }
+        br
+        p Вывод полей из страницы с опций
+        code &lt;?php the_field("имя_поля", "option"); ?&gt;
+        p.
+          Для нумерации строк в плагине Advanced Custom Fields (ACF) необходимо использовать функцию get_field(), которая позволяет извлечь данные из поля.<br>
+          В примере ниже строки будут нумероваться с помощью цикла for:
+        pre
+          code.
+            &lt;?php if( have_rows('service') ): $i = 0; ?&gt;
+            &lt;?php while ( have_rows('service') ) : the_row(); $i++; ?&gt;
+              &lt;?php echo $i; ?&gt;
+            &lt;? endwhile; endif; ?&gt;
+
       //- functions.php
       details
-        summary functions.php
-        p Есть несколько причин, по которым вы можете увидеть сломанный сайт с белым экраном.<br> Одна из таких причин — когда файл functions.php(или любой файл PHP) имеет пробел после закрывающего ?>
+        summary.menu__submenu functions.php
+        p.
+          Есть несколько причин, по которым вы можете увидеть сломанный сайт с белым экраном.<br>
+          Одна из таких причин — когда файл functions.php(или любой файл PHP) имеет пробел после закрывающего ?>
         pre
           code.
             &lt;?php
-            add_action( 'after_setup_theme',
-              function () {
-                add_theme_support( 'wp-block-styles' );
-              } );
-        p.
-          <b>include get_parent_theme_file_path( 'inc/helpers.php' )</b>; - подключить файл из родительской темы<br>
-          <b>include get_theme_file_path( 'inc/helpers.php' )</b>; - подключить файл из дочерней темы<br>
-          <em>Возвращает URL-адрес</em>:<br>
-          - get_stylesheet_uri(): Возвращает URL-адрес файла активной темы style.css.<br>
-          - get_theme_file_uri( $file ):<br> Возвращает URL активной темы с необязательным $file-параметром. Возвращается к родительской теме, если активна дочерняя тема и файл не существует.<br>
-          - get_parent_theme_file_uri( $file ): Возвращает URL-адрес родительской темы с необязательным $file-путем.<br>
-          <em>Возвращает путь к каталогу</em>:<br>
-          - get_theme_file_path( $file ):<br> Возвращает путь к каталогу активной темы с необязательным $fileпараметром.<br> Возвращается к родительской теме, если активна дочерняя тема и файл не существует.<br>
-          - get_parent_theme_file_path( $file ):<br> Возвращает путь к каталогу родительской темы с необязательным $fileпараметром.<br>
-          <em>Стили</em>:
-        pre
-          code.
-            add_action( 'wp_enqueue_scripts',
-              function () {
-              <span>ставлю в очередь style.css</span>
-              wp_enqueue_style(
-                'theme-slug-style',
-                get_stylesheet_uri()
-              );
-              <span>ставлю в очередь primary.css</span>
-              wp_enqueue_style(
-                'theme-slug-primary',
-                get_parent_theme_file_uri( 'assets/css/primary.css' )
-              );
-              <span>добавляю CSS в head область на фронтенде</span>
-              wp_add_inline_style(
-                <span>при подключении primary.css</span>
-                'theme-slug-primary',
-                'body { background: #eee; }'
-              );
-            } );
-
-            <span>Чтобы пользовательские стили отображались в редакторе</span>
-            add_action( 'after_setup_theme',
-              function () {
-                add_editor_style( array(
-                  get_stylesheet_uri(),
-                  get_parent_theme_file_uri( 'assets/css/primary.css' )
-              ) );
-            } );
-
-            <span>функция загрузки таблиц стилей для каждого блока в редакторе и на фронтенде</span>
-            wp_enqueue_block_style()
-
-            <span>JS</span>:
-            add_action( 'wp_enqueue_scripts',
-              function () {
-
+            add_action( 'after_setup_theme', function () {
+              add_theme_support( 'wp-block-styles' );
+            });
+            <span>подключить файл из родительской темы</span>
+            include get_parent_theme_file_path( 'inc/helpers.php' );
+            <span>подключить файл из дочерней темы</span>
+            include get_theme_file_path( 'inc/helpers.php' );
+            <span>функция загрузки таблиц стилей для каждого блока в редакторе и на фронтенде wp_enqueue_block_style()</span>   
+            add_action( 'wp_enqueue_scripts', function () {
               <span>ставлю в очередь navigation.js</span>
-              wp_enqueue_script(
-                'theme-slug-navigation',
+              wp_enqueue_script( 'theme-slug-navigation',
                 get_parent_theme_file_uri( 'assets/js/navigation.js' ),
                 array(),
                 wp_get_theme()->get( 'Version' ),
                 true
               );
-
               <span>добавляю JS в head область на фронтенде</span>
-              wp_add_inline_script(
-                'theme-slug-navigation',
+              wp_add_inline_script( 'theme-slug-navigation',
                 'console.log( "Testing" );'
               );
-            } );
-
+            });
             <span>JS для редактора блоков</span>
-            enqueue_block_editor_assets
             add_action( 'enqueue_block_editor_assets',
-              'theme_slug_enqueue_editor_scripts',
-              function () {
-
+              'theme_slug_enqueue_editor_scripts', function () {
                 <span>ставлю в очередь editor.js для редактора</span>
-                wp_enqueue_script(
-                  'theme-slug-editor',
+                wp_enqueue_script('theme-slug-editor',
                   get_parent_theme_file_uri( 'assets/js/editor.js' ),
                   array(),
                   wp_get_theme()->get( 'Version' ),
                   true
                 );
-              } );
-        br
+              });
         p.
-          Управление скриптами - <b>@wordpress/scripts</b><br>
-          Список включенных скриптов - <b>wp-includes/script-loader.php</b><br>
+          Список включенных скриптов - wp-includes/script-loader.php<br>
           Обращение к файлу изображения:<br>
-          <b>&lt;img(src="&lt;?php echo esc_url( get_theme_file_uri( 'assets/img/example.webp' ) ); ?&gt;" alt="" /&gt;</b><br>
-          Шрифты подключать через <b>theme.json</b>
+        code &lt;img(src="&lt;?php echo esc_url( get_theme_file_uri( 'assets/img/example.webp' ) ); ?&gt;" alt="" /&gt;
+        p Шрифты подключать через theme.json
       
-      //- theme.json
-      details
-        summary theme.json
-        p.
-          <dfn>theme.json</dfn> - глобальные настройки, стили и т.д. для блочных и классических тем, отображаются как на фронтенде так и в редакторе.
-          theme.json - на глобальном уровне, т.е. ко всем блокам.<br>
-          settings.block - настройки для отдельного блока.<br>
-          настройки, специфичные для блока, перезаписывают глобальные настройки.<br>
-          Все основные блоки WordPress имеют пространство имен core.<br>
-          theme.json поддерживает стили на трех разных уровнях:
-                - Корень (глобальный)
-                - Элементы
-                - Блоки
-          theme.json - отражено в редакторе<br>
-          - Включить или отключить такие функции, как буквицы, отступы, поля и высота строки.<br>
-          - Добавить цветовую палитру, градиенты, дуплексы и тени.<br>
-          - Настроить типографские функции, такие как семейства шрифтов, размеры и многое другое.<br>
-          - Добавить пользовательские свойства CSS.<br>
-          - Регистрация пользовательских шаблонов, частей шаблонов и назначение деталей областям шаблонов.
-        pre
-          code.
-            { "$schema": "https://schemas.wp.org/trunk/theme.json",
-              "version": 2,
-              "settings": {},
-              "styles": {},
-              "customTemplates": {},
-              "templateParts": {},
-              "patterns": [] }
-        p.
-          <b>$schema:</b> используется для определения поддерживаемой схемы JSON, которая будет интегрироваться со многими редакторами кода, предоставляя вам подсказки и сообщения об ошибках «на лету».<br>
-          <b>version:</b> Версия theme.json схемы, для которой вы строите.<br>Последняя версия — 2, ее всегда можно найти в theme.json Living Reference — документе, в котором перечислены самые последние свойства, которые вы можете задать.<br>
-          <b>settings:</b> используется для определения элементов управления блоками, цветовых палитр, размеров шрифтов и многого другого.<br>
-          <b>styles:</b> используется для применения цветов, размеров шрифтов, пользовательских CSS и т. д. к веб-сайту и блокам.<br>
-          <b>customTemplates:</b> Метаданные для пользовательских шаблонов, определенных в папке вашей темы /templates.<br>
-          <b>templateParts:</b> Метаданные для частей шаблона, определенных в папке вашей темы /parts.<br>
-          <b>patterns:</b> Массив шаблонов, которые необходимо зарегистрировать из каталога шаблонов.
-        pre
-          code.
-            { "$schema": "https://schemas.wp.org/trunk/theme.json",
-              "version": 2,
-              "settings": {},
-              "styles": {},
-              "customTemplates": {},
-              "templateParts": {},
-              "patterns": [] }
-        p.
-          <b>"appearanceTools":</b> false, - включение других настроек.<br> При обновлении WordPress может автоматически включить в тему новые инструменты дизайна в будущем.<br>
-          <b>"border":</b> {}, - управление шириной, стилем, цветом и радиусом границы.<br>
-          <br>
-          Настройка границ блоков, предоставляет доступные параметры в редакторе.<br>
-          <b>color:</b> Включает/отключает выбор цвета границы.<br>
-          <b>radius:</b> Включает/отключает управление радиусом границы.<br>
-          <b>style:</b> Включает/отключает селектор стиля границы (пользователи могут выбрать solid, dashedили dotted).<br>
-          <b>width:</b> Включает/отключает ввод ширины границы.<br>
-          <br>
-          <b>"color":</b> {}, - регистрировать цветовую палитру, градиенты, дуплекс.<br>
-          Предустановки, которые пользователи могут выбирать:<br>
-          <b>"background":</b> true, - пользователь может настраивать фон глобально (по умолчанию true).<br>
-          <b>"link":</b> true, - пользователь может настраивать ссылки глобально (по умолчанию true).<br>
-          <b>"text":</b> true, - пользователь может настраивать текст глобально (по умолчанию true).<br>
-          <b>"custom":</b> true, - пользователь может создавать и использовать собственные цвета для блоков (по умолчанию true).<br>
-          <b>"customDuotone":</b> true, - пользователь может создавать собственные двухцветные фильтры (обычно используемые для наложения на блоки с изображениями) для блоков (по умолчанию true).<br>
-          <b>"customGradient":</b> true, - пользователь может создавать собственные градиенты фона для блоков (по умолчанию true).<br>
-          <b>"defaultDuotone":</b> true, - пользователь может выбирать из стандартных предустановок WordPress (по умолчанию true).<br>
-          <b>"defaultGradients":</b> true, - - пользователь может выбирать из стандартных предустановок WordPress (по умолчанию true).<br>
-          <b>"defaultPalette":</b> true, - - пользователь может выбирать из стандартных предустановок WordPress (по умолчанию true).<br>
-          <b>"duotone":</b> [], - регистрация пользовательских цветовых пресетов двухцветных фильтров, из которых пользователь может выбирать.<br>
-          <br>
-          Регистрация двухцветного фильтра
-        pre
-          code.
-            "duotone": [
-              { "colors": [
-                "#450a0a",
-                "#fef2f2"
-                ],
-                "name": "Red",
-                "slug": "red" }]
-        p.
-          <b>"gradients":</b> [], - регистрация пользовательских цветовых пресетов градиентов, из которых пользователь может выбирать.<br>
-          Регистрация градиента
-        pre
-          code.
-            "gradients": [
-              { "gradient": "linear-gradient(to right, #10b981, #64a30d)",
-                "name": "Emerald",
-                "slug": "emerald" }]
-        p.
-          <b>"palette":</b> [] - регистрация пользовательских цветовых пресетов цвета, из которых пользователь может выбирать.<br>
-          Пресет цветовой палитры с заголовком contrast станет<br> <b>--wp--preset--color--contrast</b>.<br>
-          WordPress генерирует CSS-классы на основе предустановки<br> <b>.has-contrast-color</b>.<br>
-          Слаг base - для фона сайта, а contrast - для текста.<br>
-          Регистрация цвета
-        pre
-          code.
-            "palette": [
-              { "color": "#ffffff",
-                "name": "Base",
-                "slug": "base" }]
-        p "custom": {}, - пользовательские свойства CSS
-        pre
-          code.
-            { "version": 2,
-              "settings": {
-                "custom": {
-                  "lineHeight": "1.4em"}}}
-            <span>создаст:</span>
-            body {--wp--custom--line-height: 1.4em;}
-            { 
-              "version": 2,
-              "settings": {
-                "custom": {
-                  "lineHeight": {
-                    "xs": "1",
-                    "sm": "1.25",
-                    "md": "1.5",
-                    "lg": "1.75" }}}}
-            <span>создаст:</span>
-            body {
-              --wp--custom--line-height--xs: 1;
-              --wp--custom--line-height--sm: 1.25;
-              --wp--custom--line-height--md: 1.5;
-              --wp--custom--line-height--lg: 1.75;
-            }
-        p получить доступ к свойству line-height
-        code var:custom|line-height|md
-        p либо
-        code var( --wp--custom--line-height--md )
-        br
-        p.
-          <dfn>Пресеты</dfn> — это стандартизированный метод создания опций в интерфейсе и генерации пользовательских свойств CSS.<br>
-          <b>"dimensions":</b> {}, - минимальная высота, включает управление минимальной высотой блока в редакторе<br>
-          <b>"layout":</b> {}, - свойства макета, такие как ширина контента и ширина блока.<br>
-          В WordPress есть отдельная настройка полной ширины.
-        pre
-          code.
-            {
-              "version": 2,
-              "settings": {
-                "layout": {
-                  "contentSize": "40rem",
-                  "wideSize": "64rem" }}}
-        p.
-          <b>"wideSize":</b> "64rem" - блок выходит за рамки контентной части.<br>
-          <b>"lightbox:</b> {}", - настроить функцию лайтбокса изображения.<br>
-          Включает функцию лайтбокса, которая расширяет изображение, когда посетитель сайта нажимает на изображение.<br>
-          Относится только к основному блоку изображений (core/image).<br>
-        pre
-          code.
-            {
-              "version": 2,
-              "settings": {
-                "blocks": {
-                  "core/image": {
-                    "lightbox": {
-                      <span>включить функцию лайтбокса</span>
-                      "enabled": true,
-                      <span>вкл/выкл лайтбокс для отдельных изображений</span>
-                      "allowEditing": true }}}}}
-        p <b>"position":</b> {}, - поддержкa липкого позиционирования, прикрепит блок к его ближайшему родителю, когда пользователь прокручивает страницу.
-        pre
-          code.
-            {
-              "version": 2,
-              "settings": {
-                "position": {
-                  "sticky": true }}}
-        p.
-          Липкий заголовок нельзя использовать в части шаблона Header.<br>Нужно обернуть его в содержащий блок Group и применить липкое позиционирование к Group.<br>
-          <br>
-          <b>"shadow":</b> {}, - поддержка box-shadow и пользовательские предустановки теней.
-        pre
-          code.
-            {
-              "version": 2,
-              "settings": {
-                "shadow": {
-                  <span>предустановки тени WordPress по умолчанию</span>
-                  "defaultPresets": true,
-                  <span>пользовательские тени</span>
-                  "presets": [
-                    {
-                      "name": "Natural",
-                      "slug": "natural",
-                      "shadow": "6px 6px 9px rgba(0, 0, 0, 0.2)" }]}}}
-            <span>создаст:</span>
-            body { --wp--preset--shadow--natural: 6px 6px 9px rgba(0, 0, 0, 0.2); }
-        br
-        p.
-          <b>"spacing":</b> {} - отступы и интервалы<br>
-          - <b>"blockGap":</b> null, - вкл/выкл Block Spacing (true/ false). По умолчанию null<br>
-          - <b>"customSpacingSize":</b> true, - пользовательские значения интервалов для блоков<br>
-          - <b>"margin":</b> false, - вкл/выкл Margin<br>
-          - <b>"padding":</b> false, - вкл/выкл Padding<br>
-          - <b>"spacingScale":</b><br> { - Объект конфигурации для определения пользовательской шкалы интервалов.<br>WordPress определяет шкалу по умолчанию с семью шагами, которые увеличиваются на 1.5rem.<br>
-            <b>"operator":</b> "*",<br>
-            <b>"increment":</b> 1.5,<br>
-            <b>"steps":</b> 7,<br>
-            <b>"mediumStep":</b> 1.5,<br>
-            <b>"unit":</b> "rem"<br>},<br>
-          - <b>"spacingSizes":</b> [], - Массив объектов нестандартного размера, которые могут переопределять масштаб интервала или добавлять его.<br>
-          - <b>"units":</b> [ "px", "em", "rem", "vh", "vw", "%" ] - Массив возможных единиц CSS, которые пользователи могут выбирать при добавлении собственного интервала.<br>
-          Значение mediumStep всегда присваивается предустановке<br>
-          <b>--wp--preset--spacing--50</b>, когда WordPress генерирует CSS, а другие предустановленные слаги в шкале расширяются вверх/вниз от этого среднего числа с шагом 10.<br>
-          <br>
-          <b>"typography":</b> {}, - пользовательские размеры шрифтов и регистрация семейств шрифтов.<br>
-          - <b>"customFontSize":</b> true, - Разрешить ли пользователям вводить собственные размеры шрифта.<br>По умолчанию true.<br>
-          - <b>"fluid":</b> false, - Включать ли плавные размеры шрифтов, которые увеличиваются на больших экранах и уменьшаются на меньших.<br>Это можно переопределить для отдельных пользовательских размеров.<br>По умолчанию false.<br>
-          - <b>"fontSizes":</b> [], - Массив объектов размера шрифта, который можно использовать для настройки доступных предустановок, из которых пользователи могут выбирать.<br>WordPress регистрирует размеры по умолчанию small, medium, largeи x-large.<br>
-          - <b>"dropCap":</b> true, - Могут ли пользователи включать буквицу для первой буквы блока абзаца.<br>По умолчанию true.<br>
-          - <b>"fontStyle":</b> true, - Могут ли пользователи выбирать собственный стиль шрифта.<br>По умолчанию true.<br>
-          - <b>"fontWeight":</b> true, - Могут ли пользователи выбирать пользовательский вес шрифта.<br> Диапазоны веса соответствуют стандартным весам шрифта от Thin до Black.<br>По умолчанию true.<br>
-          - <b>"letterSpacing":</b> true, - Могут ли пользователи вводить пользовательское значение интервала между буквами.<br>По умолчанию false.<br>
-          - <b>"lineHeight":</b> false, - Могут ли пользователи вводить пользовательскую высоту строки для текста.<br>Нет возможности регистрировать предустановки высоты строки, поэтому эта опция включает полностью пользовательский ввод.<br>По умолчанию false.<br>
-          - <b>"textColumns":</b> false, - Показывать ли параметр столбцов для текста блока.<br>По умолчанию false.<br>
-          - <b>"textDecoration":</b> true, - Может ли пользователь задать оформление текста для текста блока.<br> Доступные параметры: None, Underline и Strikethrough.<br>По умолчанию true.<br>
-          - <b>"textTransform":</b> true, - Может ли пользователь изменять регистр букв для текста блока.<br> Доступные параметры: None, Uppercase, Lowercase и Capitalize.<br>По умолчанию true.<br>
-          - <b>"writingMode":</b> false - Включать ли ориентацию текста в интерфейсе, позволяя пользователям выбирать между горизонтальным и вертикальным текстом.<br>По умолчанию false.<br>
-          <br>
-          Регистрация системных шрифтов
-        pre
-          code.
-            {
-              "$schema": "https://schemas.wp.org/trunk/theme.json",
-              "version": 2,
-              "settings": {
-                "typography": {
-                  "fontFamilies": [
-                    {
-                    "name": "Primary",
-                    "slug": "primary",
-                    "fontFamily": "Charter, 'Bitstream Charter', 'Sitka Text', Cambria, serif"
-                    },
-                    {
-                    "name": "Secondary",
-                    "slug": "secondary",
-                    "fontFamily": "system-ui, sans-serif" }]}}}
-            <span>создаст:</span>
-            body {
-            --wp--preset--font-family--primary: Charter, 'Bitstream Charter', 'Sitka Text', Cambria, serif;
-            --wp--preset--font-family--secondary: system-ui, sans-serif;
-            }
-            <span>Регистрация веб-шрифтов</span>
-            /assets
-                /fonts
-                    /open-sans.woff2
-                    /open-sans-italic.woff2
-            {
-              "$schema": "https://schemas.wp.org/trunk/theme.json",
-              "version": 2,
-              "settings": {
-                "typography": {
-                  "fontFamilies": [
-                    {
-                      "name": "Primary",
-                      "slug": "primary",
-                      "fontFamily": "Charter, 'Bitstream Charter', 'Sitka Text', Cambria, serif"
-                    },
-                    {
-                      "name": "Secondary",
-                      "slug": "secondary",
-                      "fontFamily": "'Open Sans', sans-serif",
-                      "fontFace": [
-                        {
-                          "fontFamily": "Open Sans",
-                          "fontWeight": "300 800",
-                          "fontStyle": "normal",
-                          "fontStretch": "normal",
-                          "src": [ "file:./assets/fonts/open-sans.woff2" ]
-                        },
-                        {
-                          "fontFamily": "Open Sans",
-                          "fontWeight": "300 800",
-                          "fontStyle": "italic",
-                          "fontStretch": "normal",
-                          "src": [ "file:./assets/fonts/open-sans-italic.woff2" ]}]}]}}}
-            <span>создаст:</span>
-            body {
-              --wp--preset--font-family--primary: Charter, 'Bitstream Charter', 'Sitka Text', Cambria, serif;
-              --wp--preset--font-family--secondary: 'Open Sans', sans-serif;
-            }
-            {
-              "version": 2,
-              "settings": {
-                "typography": {
-                  "fluid": false,
-                  "fontSizes": [
-                    {
-                      "name": "Small",
-                      "slug": "small",
-                      "size": "13px"
-                    },
-                    {
-                      "name": "Medium",
-                      "slug": "medium",
-                      "size": "20px"
-                    },
-                    {
-                      "name": "Large",
-                      "slug": "large",
-                      "size": "36px"
-                    },
-                    {
-                      "name": "Extra Large",
-                      "slug": "x-large",
-                      "size": "42px"
-                    }]}}}
-            <span>создаст:</span>
-            body {
-              --wp--preset--font-size--small: 13px;
-              --wp--preset--font-size--medium: 20px;
-              --wp--preset--font-size--large: 36px;
-              --wp--preset--font-size--x-large: 42px;
-            } и классы
-            .has-small-font-size{
-              font-size: var(--wp--preset--font-size--small) !important;
-            }
-            .has-medium-font-size{
-              font-size: var(--wp--preset--font-size--medium) !important;
-            }
-            .has-large-font-size{
-              font-size: var(--wp--preset--font-size--large) !important;
-            }
-            .has-x-large-font-size{
-              font-size: var(--wp--preset--font-size--x-large) !important;
-            }
-            {
-              "version": 2,
-              "settings": {
-                "typography": {
-                  "fluid": true }}}
-            body {
-              --wp--preset--font-size--small: 13px;
-              --wp--preset--font-size--medium: clamp(14px, 0.875rem + ((1vw - 3.2px) * 0.852), 20px);
-              --wp--preset--font-size--large: clamp(22.041px, 1.378rem + ((1vw - 3.2px) * 1.983), 36px);
-              --wp--preset--font-size--x-large: clamp(25.014px, 1.563rem + ((1vw - 3.2px) * 2.413), 42px);
-            }
-            {
-              "$schema": "https://schemas.wp.org/trunk/theme.json",
-              "version": 2,
-              "settings": {
-                "typography": {
-                  "fluid": true,
-                  "fontSizes": [
-                    {
-                      "name": "Small",
-                      "size": "1rem",
-                      "slug": "sm",
-                      "fluid": false
-                    },
-                    {
-                      "name": "Medium",
-                      "size": "1.25rem",
-                      "slug": "md",
-                      "fluid": {
-                        "min": "1rem",
-                        "max": "1.5rem"
-                      }
-                    },
-                    {
-                      "name": "Large",
-                      "size": "1.5rem",
-                      "slug": "lg",
-                      "fluid": {
-                        "min": "1.25rem",
-                        "max": "2rem"
-            }}]}}}
-            <span>создаст:</span>
-            body {
-              --wp--preset--font-size--sm: 1rem;
-              --wp--preset--font-size--md: clamp(1rem, 1rem + ((1vw - 0.2rem) * 1.136), 1.5rem);
-              --wp--preset--font-size--lg: clamp(1.25rem, 1.25rem + ((1vw - 0.2rem) * 1.705), 2rem);
-            }
-        p.
-          <b>"useRootPaddingAwareAlignments":</b> false, - заполнение корневого элемента<br>
-          <b>"blocks":</b> {} - настройки параметров каждого блока.<br>
-          <b>styles:</b> используется для применения цветов, размеров шрифтов, пользовательских CSS и других стилей к веб-сайту и блокам.<br>
-          добавлять стили темы через styles позволяет пользователям настраивать их через Внешний вид > Редактор > Стили
-        pre
-          code.
-            {
-              "version": 2,
-              "styles": {
-                "color": {
-                  "text": "#000000",
-                  "background": "#ffffff"
-                },
-                "elements": {
-                  "button": {
-                    "color": {
-                      "text": "#ffffff",
-                      "background": "#000000"
-                    }
-                  }
-                },
-                "blocks": {
-                  "core/code": {
-                    "color": {
-                      "text": "#ffffff",
-                      "background": "#000000"
-            }}}}}
-            <span>Псевдоклассы:</span>
-            {
-              "version": 2,
-              "styles": {
-                "elements": {
-                  "button": {
-                    "color": {
-                      "text": "#ffffff",
-                      "background": "#aa3f33"
-                    },
-                    ":hover": {
-                      "color": {
-                        "background": "#822f27"
-            }}}}}}
-            <span>Вложенность:</span>
-            {
-              "version": 2,
-              "styles": {
-                "elements": {
-                  "core/pullquote": {
-                    "typography": {
-                      "fontSize": "2.25rem"
-                    },
-                    "elements": {
-                      "cite": {
-                        "typography": {
-                          "fontSize": "max( 50%, 1.5rem )"
-                        }
-            }}}}}}
-            <span>создаст:</span>
-            .wp-block-pullquote {
-              font-size: 2.25rem;
-            }
-            .wp-block-pullquote cite {
-              font-size: max( 50%, 1.5rem );
-            }
-            <span>Вариативность:</span>
-            {
-              "version": 2,
-              "styles": {
-                "blocks": {
-                  "core/button": {
-                    "variations": {
-                      "outline": {
-                        "border": {
-                          "color": "currentColor",
-                          "style": "solid",
-                          "width": "2px"
-            }}}}}}}
-        p.
-          Цвет фона сайта должен использовать base предустановленный.<br>
-          Основной цвет текста сайта должен использовать contrast предустановленный цвет.<br>
-          Цвета ссылок должны использовать primary предустановленные.<br>
-          Для ссылки на предустановки в theme.json существует специальный синтаксис, который можно использовать: <b>var:preset|$feature|$slug</b>.<br>
-          Таким образом base, в этом случае цвет будет <b>var:preset|color|base</b>.<br>
-        pre
-          code.
-            {
-              "version": 2,
-              "settings": {
-                "color": {
-                  "palette": [
-                    {
-                      "color": "#ffffff",
-                      "name": "Base",
-                      "slug": "base"
-                    },
-                    {
-                      "color": "#000000",
-                      "name": "Contrast",
-                      "slug": "contrast"
-                    },
-                    {
-                      "color": "#89cff0",
-                      "name": "Primary",
-                      "slug": "primary"
-              }]}},
-              "styles": {
-                "color": {
-                  "text": "var:preset|color|contrast",
-                  "background": "var:preset|color|base"
-                },
-                "elements": {
-                  "link": {
-                    "color": {
-                      "text": "var:preset|color|primary"
-            }}}}}
-        p.
-          синтаксис CSS <b>var( --wp--preset--{$feature}--{$slug} )</b><br>
-          синтаксис WordPress <b>var:preset|$feature|$slug</b> работает намного лучше<br>
-          <br>
-          Пользовательский пресет:
-        pre
-          code.
-            {
-              "version": 2,
-              "settings": {
-                "custom": {
-                  "lineHeight": {
-                    "xs": "1",
-                    "sm": "1.25",
-                    "md": "1.5",
-                    "lg": "1.75"
-              }}},
-              "styles": {
-                "typography": {
-                  "lineHeight": "var:custom|line-height|md"
-            }}}
-        p.
-          <b>customTemplates:</b> Метаданные для пользовательских шаблонов, определенных в папке вашей темы /templates.<br>
-          Эти шаблоны отдельных постов/страниц/CPT(пользовательский тип записи).<br>
-          При регистрации этих шаблонов пользователи темы могут выбрать их на экране редактирования поста.<br>
-          Для блочных тем WordPress будет искать шаблоны в /templates папке темы.<br>
-          Поэтому, регистрируетя шаблон example, должен быть /templates/example.html файл.<br>
-        pre
-          code.
-            {
-              "version": 2,
-              "customTemplates": [
-                {
-                  "name": "content",
-                  "title": "Content,
-                  "postTypes": [
-                    "page",
-                    "post"
-                  ]}]}
-        p.
-          <b>templateParts:</b> Метаданные для частей шаблона, определенных в папке вашей темы /parts.<br>
-          обычно используются как разделы, которые нужно повторно использовать в нескольких шаблонах.<br>
-          WordPress будет искать части шаблона в /parts папке темы.<br>
-          Поэтому при регистрации части шаблона с именем `example` должен быть /parts/example.html файл.<br>
-        pre
-          code.
-            {
-              "version": 2,
-              "templateParts": [
-                {
-                  "area": "header",
-                  "name": "header",
-                  "title": "Header"
-                },
-                {
-                  "area": "footer",
-                  "name": "footer",
-                  "title": "Footer"
-                }]}
-        p.
-          <b>area:</b> Область, к которой относится часть шаблона.<br>Параметры по умолчанию: header, footer, и uncategorized.<br>
-          Можно назначить любой пользовательской области.<br>
-          - name: Имя файла части шаблона без расширения.<br>
-          - title: Понятное для человека название шаблона, которое может быть переведено.<br>
-          - patterns: Массив шаблонов, которые необходимо зарегистрировать из каталога patterns.<br>
-          <br>
-          Позволяет объединять шаблоны из каталога шаблонов WordPress с темой, без необходимости разрабатывать и создавать их самостоятельно.
-        pre
-          code.
-            {
-              "version": 2,
-              "patterns": [
-                "fullscreen-cover-image-gallery", - pattern's slug
-                "hero-banner-with-overlap-images",
-                "mixed-shape-gallery"
-              ]
-            }
-            {
-              "version": 2,
-              "settings": {
-                "appearanceTools": true
-              }
-            }
-            <span>эквивалентно:</span>
-            {
-              "version": 2,
-              "settings": {
-                "border": {
-                  "color": true,
-                  "radius": true,
-                  "style": true,
-                  "width": true
-                },
-                "color": {
-                  "link": true
-                },
-                "dimensions": {
-                  "minHeight": true
-                },
-                "position": {
-                  "sticky": true
-                },
-                "spacing": {
-                  "blockGap": true,
-                  "margin": true,
-                  "padding": true
-                },
-                "typography": {
-                  "lineHeight": true
-                }}}
-            <span>можно отключать свойства по одному.</span>
-        br
-        p.
-          Вариации стиля сайта:<br>
-          файлы JSON с пользовательскими именами, которые хранятся в /styles папке темы - это по сути альтернативные версии theme.json.<br>
-          Это позволяет пользователям выбирать, какую вариацию ("скин" для темы) использовать на сайте.<br>
-          Заголовок вариации /styles/VariationsNane.json:
-        pre
-          code.
-            {
-              "version": 2,
-              "title": "VariationsName",
-              "settings": {},
-              "styles": {}
-            }
-        p.
-          Поле title используется для представления варианта в пользовательском интерфейсе.<br>
-          При выборе вариации данные файла JSON вариации сохраняются в базе данных как пользовательские настройки.<br>
-          Вариация стиля ограничена одним файлом JSON, который переопределяет основной theme.json, тогда как дочерняя тема может переопределять что угодно из своей родительской темы.<br>
-          В дочерней теме theme.json просто переопределяет файл родительской темы theme.json.<br>
-          <br>
-          Шаблоны:<br>
-          шаблоны берут динамические данные и оборачивают их в структурированную HTML-разметку, которая затем отправляется в браузер.<br>
-          &lth1&gt;Your Website Name&lt/h1&gt; = <!-- wp:site-title /--><br>
-          
-          <!-- wp:namespace/slug {"align":"full"} /--><br>
-          <b>Префикс wp</b>: сообщает WordPress, что это блок.
-          <b>Пространство имен</b>: Пространство имен блока.
-          <b>Слаг</b>: Слаг блока.
-          <b>Настройки блока</b>: код JSON, представляющий настройки блока.
-
-          При работе с основными блоками WordPress core/site-title блок не включает предшествующее core/при вызове:
-          <!-- wp:site-title /--><br>
-          чтобы распространить свой шаблон вместе с темой, необходимо добавить его в пользовательский файл шаблона в папке темы /templates и зарегистрировать свой шаблон через свой theme.jsonфайл.<br>
-          <br>
-          Созданные пользователем шаблоны хранятся wp_templateв базе данных под определенным типом записи.<br>
-          Шаблоны находятся в папке дочерней темы /templates(если дочерняя тема активна).<br>
-          Шаблоны в папке темы /templates.<br>
-          <br>
-          Patterns - один из самых полезных инструментов для разработки тем, позволяющий повторно использовать группы блоков в самых разных сценариях.<br>
-          <br>
-          
       //- block
       details
-        summary block
-        img(src=`${assets}images/content/wp/attributes.webp`, alt="")
-        img(src=`${assets}images/content/wp/block-registration.webp`, alt="")
-        img(src=`${assets}images/content/wp/attributes.webp`, alt="")
-
-        //- Изменить через класс
-        details
-          summary Изменить через класс
-          p.
-            добавить класс к блоку - на панели справа Advanced -> Additional CSS class:<br>
-            либо добавить код в functions.php:
-            поменяет стили на фронте, использовать классы блоков с !importent.
-          pre
-            code.
-              function add_custom_class( $block_content, $block ) {
-                return str_replace( 'class="', 'class="my-custom-class ', $block_content );
-              }
-              add_filter( 'render_block', 'add_custom_class', 10, 2 );
-        
-        //- Изменить через styles
-        details
-          summary Изменить через styles
-          p В php-файле добавить
-          code register_block_style()
-          br
-          p либо добавить папку styles в папку темы и создать файл yourname.json:
-          pre
-            code.
-              {
-                "$schema": "https://schemas.wp.org/trunk/theme.json",
-                "version": 3,
-                "title": "Hand Drawn",
-                "slug": "hand-drawn",
-                "blockTypes": [ "core/image", "core/quote" ],
-                "styles": {
-                  "color": {
-                    "text": "var(--wp--preset--color--accent-3)"
-                  },
-                  "border": {
-                    "color": "var(--wp--preset--color--accent-3)",
-                    "style": "solid",
-                    "width": "2px",
-                    "radius": "255px 15px 225px 15px/15px 225px 15px 255px"
-                  },
-                  "shadow": "var(--wp--preset--shadow--natural)"
-                }
-              }
-
-        //- Добавить атрибут
-        details
-          summary Добавить атрибут
-          pre
-            code.
-              function add_custom_attribute( $block_content, $block ) {
-                return str_replace( '&lt;div', '&lt;div data-my-custom-attribute="my-custom-attribute-value"', $block_content );
-              }
-              add_filter( 'render_block', 'add_custom_attribute', 10, 2 );
-
-        //- Variations
-        details
-          summary Variations
-          pre
-            code.
-              function my_custom_block_register_block_variations() {
-                register_block_style(
-                  'core/quote',
-                  array(
-                    'name'         => 'fancy-quote',
-                    'label'        => 'Fancy Quote',
-                    'inline_style' => '.wp-block-quote.is-style-fancy-quote {
-                      background-color: #f00;
-                      color: #fff; padding: 20px;
-                    },
-                  )
-                );
-              }
-              add_action( 'init', 'my_custom_block_register_block_variations' );
-          br    
-          p variations for the block json:
-          pre
-            code.
-              {
-                "$schema": "https://schemas.wp.org/trunk/theme.json",
-                "version": 3,
-                "title": "Hand Drawn",
-                "slug": "hand-drawn",
-                "blockTypes": [ "core/image", "core/quote" ],
-                "styles": {
-                  "color": {
-                    "text": "var(--wp--preset--color--accent-3)"
-                  },
-                  "border": {
-                    "color": "var(--wp--preset--color--accent-3)",
-                    "style": "solid",
-                    "width": "2px",
-                    "radius": "255px 15px 225px 15px/15px 225px 15px 255px"
-                  },
-                  "shadow": "var(--wp--preset--shadow--natural)"
-                },
-                "blockVariations": {
-                  "core/quote": {
-                    "fancy-quote": {
-                      "name": "Fancy Quote",
-                      "inlineStyle": ".wp-block-quote.is-style-fancy-quote { background-color: #f00; color: #fff; padding: 20px; }"
-                    }}}}
-
-        //- Добавить блок в теме
-        details
-          summary Добавить блок в теме
-          pre
-            code.
-              function my_custom_block() {
-                register_block_type( 'my-custom-block', array(
-                  'editor_script' => 'my-custom-block-editor',
-                  'editor_style'  => 'my-custom-block-editor',
-                  'style'         => 'my-custom-block',
-                ) );
-              }
-              add_action( 'init', 'my_custom_block' );
-          br
-          p добавить папку blocks в папку темы и создать файл yourname.php:
-          pre
-            code.
-              function my_custom_block_styles() {
-                wp_enqueue_style(
-                  'my-custom-block-styles',
-                  get_template_directory_uri() . '/styles/yourname.css',
-                  array( 'wp-edit-blocks' ),
-                  filemtime( get_template_directory() . '/styles/yourname.css' )
-                );
-              }
-              add_action( 'enqueue_block_editor_assets', 'my_custom_block_styles' );
-          br
-          p добавить папку blocks в папку темы и создать файл yourname.js:
-          pre
-            code.
-              function my_custom_block_scripts() {
-                wp_enqueue_script(
-                  'my-custom-block-editor',
-                  get_template_directory_uri() . '/blocks/yourname.js',
-                  array( 'wp-blocks', 'wp-element', 'wp-editor' ),
-                  filemtime( get_template_directory() . '/blocks/yourname.js' )
-                );
-              }
-              add_action( 'enqueue_block_editor_assets', 'my_custom_block_scripts' );
-          br
-          p добавить блок в theme.json:
-          pre
-            code.
-              {
-                "$schema": "https://schemas.wp.org/trunk/theme.json",
-                "version": 3,
-                "title": "Hand Drawn",
-                "slug": "hand-drawn",
-                "blockTypes": [ "core/image", "core/quote" ],
-                "styles": {
-                  "color": {
-                    "text": "var(--wp--preset--color--accent-3)"
-                  },
-                  "border": {
-                    "color": "var(--wp--preset--color--accent-3)",
-                    "style": "solid",
-                    "width": "2px",
-                    "radius": "255px 15px 225px 15px/15px 225px 15px 255px"
-                  },
-                  "shadow": "var(--wp--preset--shadow--natural)"
-                },
-                "blockVariations": {
-                  "core/quote": {
-                    "fancy-quote": {
-                      "name": "Fancy Quote",
-                      "inlineStyle": 
-                        ".wp-block-quote.is-style-fancy-quote {
-                          background-color: #f00;
-                          color: #fff;
-                          padding: 20px;
-                        }}}
-                },
-                "blockStyles": {
-                  "my-custom-block": {
-                    "editor": "my-custom-block-editor",
-                    "style": "my-custom-block",
-                    "script": "my-custom-block-editor"
-                  }}}
-
-        //- Создать блок
-        details
-          summary Создать блок
-          img(src="./assets/images/content/wp/file-structure-block.png", alt="")
-          p.
-            plugins/
-          p Создать блок
-          code npx @wordpress/create-block kweblock --namespace=kweb --variant=dynamic
-
-          p Автоформат добавить в package.json
-          code "prettier": "@wordpress/prettier-config"
-
-          p Создать файл webpack.config.js и добавить свой код для выполнения webpack
+        summary.menu__submenu block
+        p block.json
+        pre
           code.
+            {
+              "$schema": "https://schemas.wp.org/trunk/block.json",
+              "apiVersion": 3,
+              "name": "namespace/block-slug",
+              "version": "0.1.0",
+              "title": "Block name",
+              "category": "widgets",
+              "icon": "some svg",
+              "description": "Some block description",
+              "example": {},
+              <span>Add store for custom data</span>
+              "attributes": {
+                  "showCustomData": {
+                      "type": "boolean"
+                  },
+                  "customData": {
+                      "type": "string"
+                  }
+              },
+              <span>Add controls for admin panel</span>
+              "supports": {
+                  "html": false
+              },
+              "textdomain": "block-slug",
+              <span>Block register and functionality</span>
+              <span>from edit.js and save.js</span>
+              "editorScript": "file:./index.js",
+              <span>CSS only in editor</span>
+              "editorStyle": "file:./index.css",
+              <span>CSS in frontend & editor</span>
+              "style": "file:./style-index.css",
+              <span>Frontend dynamic render</span>
+              "render": "file:./render.php",
+              <span>JS in frontend</span>
+              "viewScript": "file:./view.js"
+            }
+            <span>Создать блок</span>
+            npx @wordpress/create-block kweblock --namespace=kweb --variant=dynamic
+            <span>добавить в package.json</span>
+            "prettier": "@wordpress/prettier-config"
+            <span>Создать файл webpack.config.js и добавить свой код для выполнения webpack</span>
             const defaultConfig = require("@wordpress/scripts/config/webpack.config");
-
             var config = {
               ...defaultConfig,
               entry: {
@@ -7008,27 +6024,24 @@ block menu
                 "custom/index": "./src/custom/index.js",
               },
             };
-
-          p.
-            Внутри папки src создать папку custom и в ней файл index.js
-            Для примера отменим регистрацию блока core/verse при компиляции webpack
+        p.
+          Внутри папки src создать папку custom и в ней файл index.js<br>
+          Для примера отменим регистрацию блока core/verse при компиляции webpack.
+        pre
           code.
             import { unregisterBlockType } from "@wordpress/blocks";
             import domReady from "@wordpress/dom-ready";
-
             const unregisterBlocks = ["core/verse"];
-
             domReady(function () {
               unregisterBlocks.forEach(block) => {
                 unregisterBlockType(block);
               });
             });
-
-          p В файле kweblock.php добавить код для подключения функционала из custom/index.js
+        p В файле kweblock.php добавить код для подключения функционала из custom/index.js
+        pre
           code.
             function kweblock_enqueue_editor_modifications() {
               $asset_file = include plugin_dir_path( __FILE__ ) . 'build/custom/index.assets.php';
-            
               wp_enqueue_script(
                 'kweblock_enqueue_editor_modifications',
                 plugins_url( '/build/custom/index.js', __FILE__ ),
@@ -7038,171 +6051,166 @@ block menu
               );
             }
             add_action( 'enqueue_block_editor_assets', 'kweblock_enqueue_editor_modifications' );
-
-          p Внутри папки scr создать папку kweblock_1 и переместить в неё содержимое папки src
-
-          p Перейти в папку src и добавить ещё блок
-          code npx @wordpress/create-block kweblock_2 --no-plugin --namespace=kweb1 --variant=dynamic
-
-          p В файле kweblock.php
+        p.
+          Внутри папки scr создать папку kweblock_1 и переместить в неё содержимое папки src.<br>
+          Перейти в папку src и добавить ещё блок.
+        pre
           code.
+            npx @wordpress/create-block kweblock_2 --no-plugin --namespace=kweb1 --variant=dynamic
+            <span>В файле kweblock.php</span>
             function kweb_kweblock_block_init() {
               register_block_type( __DIR__ . '/build/kweblock_1' );
               register_block_type( __DIR__ . '/build/kweblock_2' );
             }
             add_action( 'init', 'kweb_kweblock_block_init' );
-
-          p.
-            В терминале npm start
-            В панели администратора активировать плагин
-
-          p.
-            edit.js - пишем весь функционал блока и компоненты react для вывода в редакторе
-            render.php - пишем код динамического фронтенда. Обновляет фронтенд динамически.
-            save.js - пишем весь функционал блока как в edit.js, но без компонентов react. Сохранит разметку html в базу данных для вывода на фронтенд.
-
-            index.js - отвечает за вызов registerBlockType(), импортирует файлы edit.js и save.js
-            свойствo edit = компонент react из edit.js
-            свойствo save = статическая html-разметка из save.js
-
-            регистрация на сервере (файл_плагина.php)
+        p.
+          В терминале npm start<br>
+          В панели администратора активировать плагин<br>
+          <br>
+          edit.js - пишем весь функционал блока и компоненты react для вывода в редакторе.<br>
+          render.php - пишем код динамического фронтенда. Обновляет фронтенд динамически.<br>
+          save.js - пишем весь функционал блока как в edit.js, но без компонентов react.<br>
+          Сохранит разметку html в базу данных для вывода на фронтенд.<br>
+          <br>
+          index.js - отвечает за вызов registerBlockType(), импортирует файлы edit.js и save.js<br>
+          свойствo edit = компонент react из edit.js<br>
+          свойствo save = статическая html-разметка из save.js<br>
+          <br>
+          useBlockProps() - edit.js, включениe дополнительных классов и атрибутов в разметку блока в редакторе, передавая их в качестве аргументов<br>
+          useBlockProps.save() - save.js, в html разметку фронтенда добавляются классы при добавлении supports<br>
+          get_block_wrapper_attributes() - render.php, в динамический фронтенд добавляются классы и аттрибуты<br>
+          <br>
+          Пакет @wordpress/scripts настраивает webpack и Babel<br>
+          Пакет @wordpress/components включает библиотеку общих компонентов WordPress для создания общих элементов пользовательского интерфейса для редактора блоков и панели управления WordPress.<br>
+          Пакет @wordpress/block-editor включает библиотеку компонентов и хуков для редактора блоков, включая те, которые определяют пользовательские настройки элементов управления для блока.<br>
+          - attributes: Объект всех атрибутов блока.<br>
+          - setAttributes: Метод обновления объекта атрибутов.<br>
+          - isSelected: Логическое значение, указывающее, выбран ли блок в данный момент.<br>
+          <br>
+          BlockControls - компонент react, отображает панель инструментов блока в редакторе.<br>
+          InspectorControls - компонент react, отображает панель настроек блока в редакторе.<br>
+          <br>
+          wp:image - блоки ядра<br>
+          wp:namespace/name - пользовательские блоки<br>
+          <br>
+          wp_enqueue_style() - добавляет стили в очередь для загрузки на странице.<br>
+          wp_enqueue_script() - добавляет скрипт в очередь для загрузки на странице.<br>
+          wp_localize_script() - добавляет данные JavaScript в объект window.<br>
+          цепляем на хуки:<br>
+          enqueue_block_editor_assets – загружать только в режиме редактора<br>
+          enqueue_block_assets – загружается как в интерфейсе, так и в редакторе<br>
+        pre
+          code.
+            <span>Block in theme</span>
+            add_action( 'enqueue_block_editor_assets', function() {
+              wp_enqueue_script( 'my-custom-block-editor',
+                get_template_directory_uri() . '/blocks/my-custom-block/index.js',
+                array( 'wp-blocks', 'wp-element', 'wp-editor' ),
+                filemtime( get_template_directory() . '/blocks/my-custom-block/index.js' )
+              );
+              wp_enqueue_style( 'my-custom-block-editor',
+                get_template_directory_uri() . '/blocks/my-custom-block/index.css',
+                array( 'wp-edit-blocks' ),
+                filemtime( get_template_directory() . '/blocks/my-custom-block/index.css' )
+              );
+            });
+            <span>Block in plugin</span>
+            add_action( 'enqueue_block_editor_assets', function() {
+              wp_enqueue_script( 'my-custom-block-editor',
+                plugins_url( 'blocks/my-custom-block/index.js', __FILE__ ),
+                array( 'wp-blocks', 'wp-element', 'wp-editor' ),
+                filemtime( plugin_dir_path( __FILE__ ) . 'blocks/my-custom-block/index.js' )
+              );
+              wp_enqueue_style( 'my-custom-block-editor',
+                plugins_url( 'blocks/my-custom-block/index.css', __FILE__ ),
+                array( 'wp-edit-blocks' ),
+                filemtime( plugin_dir_path( __FILE__ ) . 'blocks/my-custom-block/index.css' )
+              );
+            });
+            <span>Variations</span>
+            function my_custom_block_register_block_variations() {
+              register_block_style(
+                'core/quote',
+                array(
+                  'name'         => 'fancy-quote',
+                  'label'        => 'Fancy Quote',
+                  'inline_style' => '.wp-block-quote.is-style-fancy-quote {
+                    background-color: #f00;
+                    color: #fff; padding: 20px;
+                  },
+                )
+              );
+            }
+            add_action( 'init', 'my_custom_block_register_block_variations' );
+            <span>Добавить блок в теме</span>
+            function my_custom_block() {
+              register_block_type( 'my-custom-block', array(
+                'editor_script' => 'my-custom-block-editor',
+                'editor_style'  => 'my-custom-block-editor',
+                'style'         => 'my-custom-block',
+              ) );
+            }
+            add_action( 'init', 'my_custom_block' );
+          p добавить папку blocks в папку темы и создать файл yourname.php:
           pre
             code.
-              function my_custom_block___register_block() {
-                  register_block_type( __DIR__ . '/build' );
+              function my_custom_block_styles() {
+                wp_enqueue_style( 'my-custom-block-styles',
+                  get_template_directory_uri() . '/styles/yourname.css',
+                  array( 'wp-edit-blocks' ),
+                  filemtime( get_template_directory() . '/styles/yourname.css' )
+                );
               }
-              add_action( 'init', 'my_custom_block___register_block' ); 
-          p регистрация на клиенте (index.js)
+              add_action( 'enqueue_block_editor_assets', 'my_custom_block_styles' );
+          p добавить папку blocks в папку темы и создать файл yourname.js:
           pre
             code.
-              import { registerBlockType } from '@wordpress/blocks';
-              import { useBlockProps } from '@wordpress/block-editor';
-              import metadata from './block.json';
-
-              const Edit = () => &lt;p { ...useBlockProps() }&gt;Hello World - Block Editor&lt;/p&gt;;
-              const save = () => &lt;p { ...useBlockProps.save() }&gt;Hello World - Frontend&lt;/p&gt;;
-
-              registerBlockType( metadata.name, {
-                  edit: Edit,
-                  save,
-              } );
-          p.
-            useBlockProps() - edit.js, включениe дополнительных классов и атрибутов в разметку блока в редакторе, передавая их в качестве аргументов<br>
-            useBlockProps.save() - save.js, в html разметку фронтенда добавляются классы при добавлении supports<br>
-            get_block_wrapper_attributes() - render.php, в динамический фронтенд добавляются классы и аттрибуты<br>
-
-            Пакет @wordpress/scripts настраивает webpack и Babel
-            Пакет @wordpress/components включает библиотеку общих компонентов WordPress для создания общих элементов пользовательского интерфейса для редактора блоков и панели управления WordPress.<br>
-            Пакет @wordpress/block-editor включает библиотеку компонентов и хуков для редактора блоков, включая те, которые определяют пользовательские настройки элементов управления для блока.<br>
-            - attributes: Объект всех атрибутов блока.<br>
-            - setAttributes: Метод обновления объекта атрибутов.<br>
-            - isSelected: Логическое значение, указывающее, выбран ли блок в данный момент.<br>
-
-            BlockControls - компонент react, отображает панель инструментов блока в редакторе.<br>
-            InspectorControls - компонент react, отображает панель настроек блока в редакторе.<br>
-
-            wp:image - блоки ядра
-            wp:namespace/name - пользовательские блоки
-
-            wp_enqueue_style() - добавляет стили в очередь для загрузки на странице.<br>
-            wp_enqueue_script() - добавляет скрипт в очередь для загрузки на странице.<br>
-            wp_localize_script() - добавляет данные JavaScript в объект window.<br>
-            цепляем на хуки:<br>
-            enqueue_block_editor_assets – загружать только в режиме редактора<br>
-            enqueue_block_assets – загружается как в интерфейсе, так и в редакторе<br>
-          pre
-            code.
-              <span>Block in theme</span>
-              add_action(
-                'enqueue_block_editor_assets', 
-                function() {
-                  wp_enqueue_script(
-                    'my-custom-block-editor',
-                    get_template_directory_uri() . '/blocks/my-custom-block/index.js',
-                    array( 'wp-blocks', 'wp-element', 'wp-editor' ),
-                    filemtime( get_template_directory() . '/blocks/my-custom-block/index.js' )
-                  );
-                  wp_enqueue_style(
-                    'my-custom-block-editor',
-                    get_template_directory_uri() . '/blocks/my-custom-block/index.css',
-                    array( 'wp-edit-blocks' ),
-                    filemtime( get_template_directory() . '/blocks/my-custom-block/index.css' )
-                  );
-                });
-              <span>Block in plugin</span>
-              add_action(
-                'enqueue_block_editor_assets', 
-                function() {
-                  wp_enqueue_script(
-                    'my-custom-block-editor',
-                    plugins_url( 'blocks/my-custom-block/index.js', __FILE__ ),
-                    array( 'wp-blocks', 'wp-element', 'wp-editor' ),
-                    filemtime( plugin_dir_path( __FILE__ ) . 'blocks/my-custom-block/index.js' )
-                  );
-                  wp_enqueue_style(
-                    'my-custom-block-editor',
-                    plugins_url( 'blocks/my-custom-block/index.css', __FILE__ ),
-                    array( 'wp-edit-blocks' ),
-                    filemtime( plugin_dir_path( __FILE__ ) . 'blocks/my-custom-block/index.css' )
-                  );
-                });
-
-        //- block.json
-        details
-          summary block.json
-          img(src="./assets/images/content/wp/block-json.png", alt="")
-          img(src="./assets/images/content/wp/attributes.webp", alt="")
-          img(src="./assets/images/content/wp/block-registration.webp", alt="")
-          pre
-            code.
-              {
-                "$schema": "https://schemas.wp.org/trunk/block.json",
-                "apiVersion": 3,
-                "name": "namespace/block-slug",
-                "version": "0.1.0",
-                "title": "Block name",
-                "category": "widgets",
-                "icon": "some svg",
-                "description": "Some block description",
-                "example": {},
-                <span>Add store for custom data</span>
-                "attributes": {
-                    "showCustomData": {
-                        "type": "boolean"
-                    },
-                    "customData": {
-                        "type": "string"
-                    }
-                },
-                <span>Add controls for admin panel</span>
-                "supports": {
-                    "html": false
-                },
-                "textdomain": "block-slug",
-                <span>Block register and functionality<span>
-                <span>from edit.js and save.js<span>
-                "editorScript": "file:./index.js",
-                <span>CSS only in editor</span>
-                "editorStyle": "file:./index.css",
-                <span>CSS in frontend & editor</span>
-                "style": "file:./style-index.css",
-                <span>Frontend dynamic render</span>
-                "render": "file:./render.php",
-                <span>JS in frontend</span>
-                "viewScript": "file:./view.js"
+              function my_custom_block_scripts() {
+                wp_enqueue_script( 'my-custom-block-editor',
+                  get_template_directory_uri() . '/blocks/yourname.js',
+                  array( 'wp-blocks', 'wp-element', 'wp-editor' ),
+                  filemtime( get_template_directory() . '/blocks/yourname.js' )
+                );
               }
-
-        //- Отключение и блокировка
-        details
-          summary Отключение и блокировка
+              add_action( 'enqueue_block_editor_assets', 'my_custom_block_scripts' );
           p.
-            В theme.json можем отключить глобальные настройки темы и блоков, которые отображаются на панели настроек<br>
-            В секции blocks отключаем настройки для конкретного блока<br>
-          a(href="https://github.com/ndiego/editor-curation-examples") Пример функций
+            добавить класс к блоку - на панели справа Advanced -> Additional CSS class:<br>
+            либо добавить код в functions.php:<br>
+            поменяет стили на фронте, использовать классы блоков с !importent.
+          pre
+            code.
+              function add_custom_class( $block_content, $block ) {
+                return str_replace( 'class="', 'class="my-custom-class ', $block_content );
+              }
+              add_filter( 'render_block', 'add_custom_class', 10, 2 );
+              <span>Добавить атрибут</span>
+              function add_custom_attribute( $block_content, $block ) {
+                return str_replace(
+                  '&lt;div',
+                  '&lt;div data-my-custom-attribute="my-custom-attribute-value"',
+                  $block_content
+                );
+              }
+              add_filter( 'render_block', 'add_custom_attribute', 10, 2 );
 
-        //- wp-config.php
-        details
-          summary wp-config.php
+
+
+
+
+
+
+
+
+
+
+              
+
+
+
+      //- wp-config.php
+      details
+        summary.menu__submenu wp-config.php
+        pre
           code.
             if ( ! defined( 'WP_DEBAG' ) ) {
               define('WP_DEBAG', true);
