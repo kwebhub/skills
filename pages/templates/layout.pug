@@ -1,0 +1,18 @@
+include ../data/vars
+include ../data/english/words
+include ../data/english/irregular_verbs
+include ../data/deutsch/verben
+include ../data/deutsch/worten
+include ../mixins/mixins
+
+doctype html
+html(lang="ru")
+  include ../includes/head
+  body
+    .wrapper
+      include ../includes/header
+      main
+        nav.menu
+          block menu
+            h2 Generic content
+      include ../includes/footer

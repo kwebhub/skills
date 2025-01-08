@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sections</title>
+
+  <script>
+    window.onpopstate = function(event) {
+      showSection(event.state.section);
+    }
+
+    function showSection(section) {
+      fetch(`/sections/${section}`)
+      .then(response => response.text())
+      .then(text => {
+        document.querySelector('#content').innerHTML = text;
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      document.querySelectorAll('button').forEach(button => {
+        button.onclick = function() {
+          const section = this.dataset.section;
+          history.pushState({section: section}, "", `section${section}`);
+          showSection(section);
+        };
+      });
+    });
+  </script>
+
+  <style>
+    body {
+      font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+      color: #fff;
+      background-color: #262c37;
+    }
+  </style>
+</head>
+<body>
+  <h1>Hello!</h1>
+  <button data-section="1">Section 1</button>
+  <button data-section="2">Section 2</button>
+  <button data-section="3">Section 3</button>
+  <div id="content">
+    Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quia officiis est corrupti repudiandae alias doloribus facere labore eius fuga neque pariatur voluptate animi harum, inventore, praesentium incidunt vel nam. Repellendus quos harum at soluta officiis impedit molestias ipsam velit. Eaque beatae sit odio rem mollitia, sequi architecto neque ab alias adipisci aspernatur aut fugit facilis! Nemo explicabo eligendi repellat, voluptate eius blanditiis dicta molestias odit aperiam? Perferendis blanditiis eos quod ipsam deserunt maiores dolorum iure earum veniam obcaecati nam porro asperiores sint ipsa, doloremque dolorem itaque illum exercitationem id quidem. Laboriosam dolor quam, libero eius recusandae veniam aperiam at suscipit odio eaque temporibus minima itaque minus harum tempore placeat eveniet. Maxime, officiis perspiciatis vel odit recusandae fugiat voluptatem doloremque eaque minima quam ullam nam architecto molestias totam voluptas cum quisquam soluta adipisci sint facilis excepturi quo temporibus laborum? Quis corrupti cupiditate accusamus totam libero hic. Rem voluptatibus ut natus quaerat?
+  </div>
+</body>
+</html>
