@@ -3980,7 +3980,7 @@ If there is no ELSE part and no conditions are true, it returns NULL.</p><pre><c
 В PostgreSQL <dfn>START TRANSACTION</dfn> и <dfn>AUTOCOMMIT</dfn> включён по умолчанию.<br>
 <dfn>SET AUTOCOMMIT</dfn> = value; value может быть 1 (ON) либо 0 (OFF)<br>
 <dfn>SAVEPOINT</dfn> - делит транзакцию на более мелкие участки
-</p></details></details><details><summary>WordPress</summary><details><summary class="menu__submenu">Источники</summary><a href="https://developer.wordpress.org/">WordPress<br></a><a href="https://developer.wordpress.org/block-editor/reference-guides/">Guides<br></a><a href="https://developer.wordpress.org/reference/functions/">wp core functions<br></a><a href="https://codex.wordpress.org/">Codex<br></a><a href="https://codex.wordpress.org/Theme_Unit_Test">Theme_Unit_Test<br></a><a href="https://wordpress.org/plugins/theme-check/">Theme-check<br></a><a href="https://wordpress.org/plugins/debug-bar/">Debug-bar<br></a><a href="https://wordpress.org/plugins/query-monitor/">Query-monitor<br></a><a href="https://wordpress.org/plugins/cmb2/">custom fields & metaboxes classic theme PHP adding<br></a><a href="https://gutenberg.10up.com/">custom fields & metaboxes block theme React adding<br></a><a href="https://happyprime.github.io/wphtml-converter/">Convert WordPress block HTML to its JavaScript object or PHP array forms.<br></a><a href="https://wp-kama.ru">WP-Kama<br></a><a href="https://developer.woocommerce.com/docs/">Woocommerce<br></a><a href="https://github.com/ndiego/editor-curation-examples">Отключение и блокировка блоков</a><p>Plugins:<br>
+</p></details></details><details><summary>WordPress</summary><details><summary class="menu__submenu">Источники</summary><a href="https://developer.wordpress.org/">WordPress<br></a><a href="https://developer.wordpress.org/block-editor/reference-guides/">Guides<br></a><a href="https://developer.wordpress.org/reference/functions/">wp core functions<br></a><a href="https://wordpress.github.io/gutenberg/?path=/docs/docs-introduction--page/">wp story book<br></a><a href="https://codex.wordpress.org/">Codex<br></a><a href="https://codex.wordpress.org/Theme_Unit_Test">Theme_Unit_Test<br></a><a href="https://wordpress.org/plugins/theme-check/">Theme-check<br></a><a href="https://wordpress.org/plugins/debug-bar/">Debug-bar<br></a><a href="https://wordpress.org/plugins/query-monitor/">Query-monitor<br></a><a href="https://wordpress.org/plugins/cmb2/">custom fields & metaboxes classic theme PHP adding<br></a><a href="https://gutenberg.10up.com/">custom fields & metaboxes block theme React adding<br></a><a href="https://happyprime.github.io/wphtml-converter/">Convert WordPress block HTML to its JavaScript object or PHP array forms.<br></a><a href="https://wp-kama.ru">WP-Kama<br></a><a href="https://developer.woocommerce.com/docs/">Woocommerce<br></a><a href="https://github.com/ndiego/editor-curation-examples">Отключение и блокировка блоков</a><a href="https://www.briancoords.com/">Brian Coords</a><p>Plugins:<br>
 Advanced Custom Fields PRO<br>
 Contact Form 7<br>
 Site Kit by Google<br>
@@ -4277,7 +4277,7 @@ function my_custom_block() {
     'style'         => 'my-custom-block',
   ) );
 }
-add_action( 'init', 'my_custom_block' );</code><p>добавить папку blocks в папку темы и создать файл yourname.php:</p><pre><code>function my_custom_block_styles() {
+add_action( 'init', 'my_custom_block' );</code></pre><p>добавить папку blocks в папку темы и создать файл yourname.php:</p><pre><code>function my_custom_block_styles() {
   wp_enqueue_style( 'my-custom-block-styles',
     get_template_directory_uri() . '/styles/yourname.css',
     array( 'wp-edit-blocks' ),
@@ -4305,4 +4305,4 @@ function add_custom_attribute( $block_content, $block ) {
     $block_content
   );
 }
-add_filter( 'render_block', 'add_custom_attribute', 10, 2 );</code></pre></pre></details></details></div></nav></main><footer> </footer></div></body></html>
+add_filter( 'render_block', 'add_custom_attribute', 10, 2 );</code></pre></details></details></div></nav></main><footer> </footer></div></body></html>
