@@ -49,8 +49,8 @@ block menu
         <br>
         <dfn>RPC</dfn> (Remote Procedure Call) <br>
         <dfn>Удаленный вызов процедур</dfn> — класс технологий, позволяющих компьютерным программам вызывать функции или процедуры в другом адресном пространстве (как правило, на удалённых компьютерах). <br>
-      img(src="./assets/images/content/web/rpc.png" alt="")
-      img(src="./assets/images/content/web/rpc1.png" alt="")
+      img(src="./img/web/rpc.png" alt="")
+      img(src="./img/web/rpc1.png" alt="")
       br
       p.
         <dfn>REST</dfn> (Representational State Transfer) <br>
@@ -79,13 +79,13 @@ block menu
         - POST /book/3 — изменить книгу (данные в теле запроса)<br>
         - POST /book/3 — удалить книгу (тело запроса пустое)<br>
         <br>
-      img(src="./assets/images/content/web/MicroService.png" alt="")
+      img(src="./img/web/MicroService.png" alt="")
       p.
         RPC: Мы отправляем сообщение, и это может привести к тому, что что-то сохранится в базе данных для сохранения истории, что может быть другим вызовом RPC, возможно, с теми же именами полей. <br>
         REST: Мы создаем ресурс сообщений в коллекции сообщений пользователя.<br>
         Мы можем легко увидеть историю этого, выполнив GET для того же URL.<br>
-      img(src="./assets/images/content/web/rpcrest.png" alt="")
-      img(src="./assets/images/content/web/rpcrest1.png" alt="")
+      img(src="./img/web/rpcrest.png" alt="")
+      img(src="./img/web/rpcrest1.png" alt="")
       p.
         API основанные на RPC прекрасно работают для действий (выполнения процедур или команд).<br>
         API основанные на REST хороши для моделирования сущностей и применения CRUD (create, read, update, delete) для данных.<br>
@@ -106,8 +106,8 @@ block menu
         Массивом<br>
         Булевым значением<br>
         null<br>
-      img(src="./assets/images/content/web/json1.png" alt="")
-      img(src="./assets/images/content/web/json2.png" alt="")
+      img(src="./img/web/json1.png" alt="")
+      img(src="./img/web/json2.png" alt="")
       p.
         JSON более компактный и не требует тегов закрытия как в XML.<br>
         Более того, XML не может использовать массивы, как в примере с JSON.
@@ -234,9 +234,9 @@ block menu
         Это делает XML очень универсальным. <br>
       code xml-stylesheet type="text/xsl" href="transform.xsl"
       br
-      img(src="./assets/images/content/web/XML_.png" alt="")
-      img(src="./assets/images/content/web/XMLDTD.png" alt="")
-      img(src="./assets/images/content/web/XMLEntities.png" alt="")
+      img(src="./img/web/XML_.png" alt="")
+      img(src="./img/web/XMLDTD.png" alt="")
+      img(src="./img/web/XMLEntities.png" alt="")
 
     //- HTML
     details
@@ -1610,7 +1610,7 @@ block menu
             <b>obj[Symbol.toPrimitive](hint)</b> - вызывается метод объекта если он существует<br>
             Если <b>hint = string</b>, то вызывается <b>obj.toString()</b>,<br>если такого нет, то <b>obj.valueOf()</b><br>
             Если <b>hint = number или default</b>, то вызывается <b>obj.valueOf()</b>,<br>если такого нет, то <b>obj.toString()</b>.
-          img(src="../assets/images/content/js/Прототип.png" alt="")
+          img(src="../img/js/Прототип.png" alt="")
       
       //- Регулярные выражения
       details
@@ -1880,7 +1880,7 @@ block menu
       //- Функция
       details
         summary Функция
-        img(src="../assets/images/content/js/Синтаксис.png" alt="")
+        img(src="../img/js/Синтаксис.png" alt="")
         <br>
         p.
           <dfn>Функция</dfn> - это значение, представляющее действие.<br>
@@ -2280,7 +2280,7 @@ block menu
       details
         summary Event loop
         <dfn>Event loop</dfn> - событийный цикл (бесконечный цикл):
-        img(src="../assets/images/content/js/EventLoop.png" alt="")
+        img(src="../img/js/EventLoop.png" alt="")
         p.
           1. Выполнить старейшую задачу из очереди макрозадач.<br>
           <b>setTimeout(f)</b> с нулевой задержкой добавляет в очередь новую макрозадачу.<br>
@@ -2562,7 +2562,7 @@ block menu
           <br>
           <dfn>reduceRight()</dfn> - так же как и reduce(), но справа на лево<br>
         br
-        img(src="../assets/images/content/js/Methods.jpg" alt="")
+        img(src="../img/js/Methods.jpg" alt="")
         br
         p.
           <dfn>Псевдомассив</dfn> - объекты, у которых есть индексы и свойство length,
@@ -2766,12 +2766,12 @@ block menu
         p.
           Динамический импорт работает в обычных скриптах и не требует указания <b>script type="module"</b>.<br>
           <em>import()</em> - это не функция, а спец.синтаксис, как <b>super()</b>.
-        img(src="../assets/images/content/js/promise.png" alt="")
+        img(src="../img/js/promise.png" alt="")
 
       //- Browser
       details
         summary Browser
-        img(src="../assets/images/content/js/windowJS.png" alt="")
+        img(src="../img/js/windowJS.png" alt="")
 
         //- Window
         details
@@ -2883,7 +2883,7 @@ block menu
         //- DOM-navigation
         details
           summary DOM-navigation
-          img(src="../assets/images/content/js/Навигация DOM.png" alt="")
+          img(src="../img/js/Навигация DOM.png" alt="")
           p.
             <dfn>Дочерние узлы (дети)</dfn> - непосредственные дети-элементы узла.<br>
             <dfn>Потомки</dfn> - все элементы, внутри данного, ключая детей, их детей и т.д.<br>
@@ -2951,7 +2951,7 @@ block menu
           code document.getElementsByName(атрибут name);
           br
           p живая коллекция - содержит в себе всегда актуальную информацию с учетом изменений в дереве DOM<br>
-          img(src="../assets/images/content/js/querySelector.png" alt="")
+          img(src="../img/js/querySelector.png" alt="")
           br
           p ищет ближайшего предка, который соответствует указанному css-селектору
           code elem.closest(css)
@@ -3525,13 +3525,13 @@ block menu
             <em>element.removeAttribute('some-name')</em>; - удалить аттрибут name<br>
             <em>element.tagName</em> - показывает какой тег у объекта<br>
             <em>element.hidden = true</em>; - скрыть или показать объект<br>
-          img(src="../assets/images/content/js/JS58.png" alt="")
+          img(src="../img/js/JS58.png" alt="")
           br
-          img(src="../assets/images/content/js/JS59.png" alt="")
+          img(src="../img/js/JS59.png" alt="")
           br
-          img(src="../assets/images/content/js/JS60.png" alt="")
+          img(src="../img/js/JS60.png" alt="")
           br
-          img(src="../assets/images/content/js/JS61.png" alt="")
+          img(src="../img/js/JS61.png" alt="")
           br
           br
           p.
@@ -3558,7 +3558,7 @@ block menu
               );
           br
           p <dfn>Метрики</dfn><br>
-          img(src="../assets/images/content/js/metrics.png" alt="")
+          img(src="../img/js/metrics.png" alt="")
           p.
             <em>element.offsetParent</em>; - получаем родительский элемент, относительно которого позиционирован eldfnent<br>
             <em>element.offsetLeft</em>; - отступ слева от родительского элемента element.offsetParent<br>
@@ -4605,42 +4605,42 @@ block menu
             }&lt;/b&gt;
           на сайте.
       br
-      img(src="../assets/images/content/js/react/react.png" alt="")
-      img(src="../assets/images/content/js/react/react0.png" alt="")
-      img(src="../assets/images/content/js/react/React1.png" alt="")
-      img(src="../assets/images/content/js/react/React2.png" alt="")
-      img(src="../assets/images/content/js/react/React3.png" alt="")
-      img(src="../assets/images/content/js/react/React4.png" alt="")
-      img(src="../assets/images/content/js/react/React5.png" alt="")
-      img(src="../assets/images/content/js/react/React6.png" alt="")
-      img(src="../assets/images/content/js/react/React7.png" alt="")
-      img(src="../assets/images/content/js/react/React8.png" alt="")
-      img(src="../assets/images/content/js/react/React9.png" alt="")
-      img(src="../assets/images/content/js/react/React10.png" alt="")
-      img(src="../assets/images/content/js/react/React11.png" alt="")
-      img(src="../assets/images/content/js/react/React12.png" alt="")
-      img(src="../assets/images/content/js/react/React13.png" alt="")
-      img(src="../assets/images/content/js/react/React14.png" alt="")
-      img(src="../assets/images/content/js/react/React15.png" alt="")
-      img(src="../assets/images/content/js/react/React16.png" alt="")
-      img(src="../assets/images/content/js/react/React17.png" alt="")
-      img(src="../assets/images/content/js/react/React18.png" alt="")
-      img(src="../assets/images/content/js/react/React19.png" alt="")
-      img(src="../assets/images/content/js/react/React20.png" alt="")
-      img(src="../assets/images/content/js/react/React21.png" alt="")
-      img(src="../assets/images/content/js/react/React22.png" alt="")
-      img(src="../assets/images/content/js/react/React23.png" alt="")
-      img(src="../assets/images/content/js/react/React24.png" alt="")
-      img(src="../assets/images/content/js/react/React25.png" alt="")
-      img(src="../assets/images/content/js/react/React26.png" alt="")
-      img(src="../assets/images/content/js/react/React27.png" alt="")
-      img(src="../assets/images/content/js/react/React28.png" alt="")
-      img(src="../assets/images/content/js/react/React29.png" alt="")
-      img(src="../assets/images/content/js/react/React30.png" alt="")
-      img(src="../assets/images/content/js/react/React31.png" alt="")
-      img(src="../assets/images/content/js/react/React32.png" alt="")
-      img(src="../assets/images/content/js/react/React33.png" alt="")
-      img(src="../assets/images/content/js/react/React34.png" alt="")
+      img(src="../img/js/react/react.png" alt="")
+      img(src="../img/js/react/react0.png" alt="")
+      img(src="../img/js/react/React1.png" alt="")
+      img(src="../img/js/react/React2.png" alt="")
+      img(src="../img/js/react/React3.png" alt="")
+      img(src="../img/js/react/React4.png" alt="")
+      img(src="../img/js/react/React5.png" alt="")
+      img(src="../img/js/react/React6.png" alt="")
+      img(src="../img/js/react/React7.png" alt="")
+      img(src="../img/js/react/React8.png" alt="")
+      img(src="../img/js/react/React9.png" alt="")
+      img(src="../img/js/react/React10.png" alt="")
+      img(src="../img/js/react/React11.png" alt="")
+      img(src="../img/js/react/React12.png" alt="")
+      img(src="../img/js/react/React13.png" alt="")
+      img(src="../img/js/react/React14.png" alt="")
+      img(src="../img/js/react/React15.png" alt="")
+      img(src="../img/js/react/React16.png" alt="")
+      img(src="../img/js/react/React17.png" alt="")
+      img(src="../img/js/react/React18.png" alt="")
+      img(src="../img/js/react/React19.png" alt="")
+      img(src="../img/js/react/React20.png" alt="")
+      img(src="../img/js/react/React21.png" alt="")
+      img(src="../img/js/react/React22.png" alt="")
+      img(src="../img/js/react/React23.png" alt="")
+      img(src="../img/js/react/React24.png" alt="")
+      img(src="../img/js/react/React25.png" alt="")
+      img(src="../img/js/react/React26.png" alt="")
+      img(src="../img/js/react/React27.png" alt="")
+      img(src="../img/js/react/React28.png" alt="")
+      img(src="../img/js/react/React29.png" alt="")
+      img(src="../img/js/react/React30.png" alt="")
+      img(src="../img/js/react/React31.png" alt="")
+      img(src="../img/js/react/React32.png" alt="")
+      img(src="../img/js/react/React33.png" alt="")
+      img(src="../img/js/react/React34.png" alt="")
 
     //- Redux
     details
@@ -4889,7 +4889,7 @@ block menu
               }
             }
         br
-        img(src="../assets/images/content/js/react/redux.jpg" alt="")
+        img(src="../img/js/react/redux.jpg" alt="")
 
     //- SQL
     details
@@ -4935,7 +4935,7 @@ block menu
           <em>Один ко многим (one-to-many)</em> <br>
           <em>Многие к одному (many-to-one)</em> <br>
           <em>Многие ко многим (many-to-many, реализуется через отдельную таблицу)</em> <br>
-        img(src="../assets/images/content/sql/SQL12.png" alt="")
+        img(src="../img/sql/SQL12.png" alt="")
         p Источник:
           a(href="https://drawsql.app/") Рисовать диаграмму БД онлайн
           a(href="https://sql-ex.ru/?Lang=0") sql-ex
@@ -5772,6 +5772,7 @@ block menu
         a(href="https://wp-kama.ru") WP-Kama<br>
         a(href="https://developer.woocommerce.com/docs/") Woocommerce<br>
         a(href="https://github.com/ndiego/editor-curation-examples") Отключение и блокировка блоков
+        a(href="https://www.briancoords.com/") Brian Coords
 
         p.
           Plugins:<br>
@@ -5969,6 +5970,31 @@ block menu
         code &lt;img(src="&lt;?php echo esc_url( get_theme_file_uri( 'assets/img/example.webp' ) ); ?&gt;" alt="" /&gt;
         p Шрифты подключать через theme.json
       
+      //- wp-config.php
+      details
+        summary.menu__submenu wp-config.php
+        pre
+          code.
+            if ( ! defined( 'WP_DEBAG' ) ) {
+              define('WP_DEBAG', true);
+            }
+
+            if ( ! defined( 'SCRIPT_DEBUG' ) ) {
+              define('SCRIPT_DEBUG', true);
+            }
+
+            if ( ! defined( 'WP_DEBUG_DISPLAY' ) ) {
+              define('WP_DEBUG_DISPLAY', false);
+            }
+
+            if ( ! defined( 'WP_DEBUG_LOG' ) ) {
+              define('WP_DEBUG_LOG', ABSPATH . '/wp-content/' . date('Y-m-d', strtotime('now')) . '-debug.log');
+            }
+
+            if ( ! defined( 'WP_DEVELOPMENT_MODE' ) ) {
+              define('WP_DEVELOPMENT_MODE', 'all');
+            }
+            
       //- block
       details
         summary.menu__submenu block
@@ -6151,83 +6177,44 @@ block menu
               ) );
             }
             add_action( 'init', 'my_custom_block' );
-          p добавить папку blocks в папку темы и создать файл yourname.php:
-          pre
-            code.
-              function my_custom_block_styles() {
-                wp_enqueue_style( 'my-custom-block-styles',
-                  get_template_directory_uri() . '/styles/yourname.css',
-                  array( 'wp-edit-blocks' ),
-                  filemtime( get_template_directory() . '/styles/yourname.css' )
-                );
-              }
-              add_action( 'enqueue_block_editor_assets', 'my_custom_block_styles' );
-          p добавить папку blocks в папку темы и создать файл yourname.js:
-          pre
-            code.
-              function my_custom_block_scripts() {
-                wp_enqueue_script( 'my-custom-block-editor',
-                  get_template_directory_uri() . '/blocks/yourname.js',
-                  array( 'wp-blocks', 'wp-element', 'wp-editor' ),
-                  filemtime( get_template_directory() . '/blocks/yourname.js' )
-                );
-              }
-              add_action( 'enqueue_block_editor_assets', 'my_custom_block_scripts' );
-          p.
-            добавить класс к блоку - на панели справа Advanced -> Additional CSS class:<br>
-            либо добавить код в functions.php:<br>
-            поменяет стили на фронте, использовать классы блоков с !importent.
-          pre
-            code.
-              function add_custom_class( $block_content, $block ) {
-                return str_replace( 'class="', 'class="my-custom-class ', $block_content );
-              }
-              add_filter( 'render_block', 'add_custom_class', 10, 2 );
-              <span>Добавить атрибут</span>
-              function add_custom_attribute( $block_content, $block ) {
-                return str_replace(
-                  '&lt;div',
-                  '&lt;div data-my-custom-attribute="my-custom-attribute-value"',
-                  $block_content
-                );
-              }
-              add_filter( 'render_block', 'add_custom_attribute', 10, 2 );
-
-
-
-
-
-
-
-
-
-
-
-              
-
-
-
-      //- wp-config.php
-      details
-        summary.menu__submenu wp-config.php
+        p добавить папку blocks в папку темы и создать файл yourname.php:
         pre
           code.
-            if ( ! defined( 'WP_DEBAG' ) ) {
-              define('WP_DEBAG', true);
+            function my_custom_block_styles() {
+              wp_enqueue_style( 'my-custom-block-styles',
+                get_template_directory_uri() . '/styles/yourname.css',
+                array( 'wp-edit-blocks' ),
+                filemtime( get_template_directory() . '/styles/yourname.css' )
+              );
             }
-
-            if ( ! defined( 'SCRIPT_DEBUG' ) ) {
-              define('SCRIPT_DEBUG', true);
+            add_action( 'enqueue_block_editor_assets', 'my_custom_block_styles' );
+        p добавить папку blocks в папку темы и создать файл yourname.js:
+        pre
+          code.
+            function my_custom_block_scripts() {
+              wp_enqueue_script( 'my-custom-block-editor',
+                get_template_directory_uri() . '/blocks/yourname.js',
+                array( 'wp-blocks', 'wp-element', 'wp-editor' ),
+                filemtime( get_template_directory() . '/blocks/yourname.js' )
+              );
             }
-
-            if ( ! defined( 'WP_DEBUG_DISPLAY' ) ) {
-              define('WP_DEBUG_DISPLAY', false);
+            add_action( 'enqueue_block_editor_assets', 'my_custom_block_scripts' );
+        p.
+          добавить класс к блоку - на панели справа Advanced -> Additional CSS class:<br>
+          либо добавить код в functions.php:<br>
+          поменяет стили на фронте, использовать классы блоков с !importent.
+        pre
+          code.
+            function add_custom_class( $block_content, $block ) {
+              return str_replace( 'class="', 'class="my-custom-class ', $block_content );
             }
-
-            if ( ! defined( 'WP_DEBUG_LOG' ) ) {
-              define('WP_DEBUG_LOG', ABSPATH . '/wp-content/' . date('Y-m-d', strtotime('now')) . '-debug.log');
+            add_filter( 'render_block', 'add_custom_class', 10, 2 );
+            <span>Добавить атрибут</span>
+            function add_custom_attribute( $block_content, $block ) {
+              return str_replace(
+                '&lt;div',
+                '&lt;div data-my-custom-attribute="my-custom-attribute-value"',
+                $block_content
+              );
             }
-
-            if ( ! defined( 'WP_DEVELOPMENT_MODE' ) ) {
-              define('WP_DEVELOPMENT_MODE', 'all');
-            }
+            add_filter( 'render_block', 'add_custom_attribute', 10, 2 );

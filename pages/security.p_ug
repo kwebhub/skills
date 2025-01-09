@@ -314,16 +314,16 @@ block menu
           Мы создаём новый канал, используя функцию mpsc::channel; mpsc означает несколько производителей, один потребитель (multiple producer, single consumer).<br>
           Несколько ручьёв втекают в одну большую реку: всё, что плывёт вниз по любому из ручьёв, в конце концов окажется в одной реке.<br>
         br
-        img(src="./assets/images/content/rust/Rust132.png" alt="")
-        img(src="./assets/images/content/rust/Rust133.png" alt="")
-        img(src="./assets/images/content/rust/Rust134.png" alt="")
-        img(src="./assets/images/content/rust/Rust135.png" alt="")
-        img(src="./assets/images/content/rust/Rust136.png" alt="")
-        img(src="./assets/images/content/rust/Rust137.png" alt="")
-        img(src="./assets/images/content/rust/Rust138.png" alt="")
-        img(src="./assets/images/content/rust/Rust139.png" alt="")
-        img(src="./assets/images/content/rust/Rust140.png" alt="")
-        img(src="./assets/images/content/rust/Rust141.png" alt="")
+        img(src="./img/rust/Rust132.png" alt="")
+        img(src="./img/rust/Rust133.png" alt="")
+        img(src="./img/rust/Rust134.png" alt="")
+        img(src="./img/rust/Rust135.png" alt="")
+        img(src="./img/rust/Rust136.png" alt="")
+        img(src="./img/rust/Rust137.png" alt="")
+        img(src="./img/rust/Rust138.png" alt="")
+        img(src="./img/rust/Rust139.png" alt="")
+        img(src="./img/rust/Rust140.png" alt="")
+        img(src="./img/rust/Rust141.png" alt="")
 
       //- Variable
       details
@@ -2440,9 +2440,9 @@ block menu
         - обноруживает и исправляет ошибки, <br>
         - управляет доступом к среде передачи данных (одномоментно передаёт только один.), <br>
         - физическая адресация (МАС). <br>
-      img(src="./assets/images/content/web/chenel.jpg" alt="")
-      img(src="./assets/images/content/web/chenel_.jpg" alt="")
-      img(src="./assets/images/content/web/MAC.jpg" alt="")
+      img(src="./img/web/chenel.jpg" alt="")
+      img(src="./img/web/chenel_.jpg" alt="")
+      img(src="./img/web/MAC.jpg" alt="")
       br
       p.
         <dfn>Сетевой уровень</dfn>: <br>
@@ -2472,15 +2472,15 @@ block menu
         - видео и аудио связь <br>
         - почта, <br>
         - доступ к файлам и т.д.<br>
-      img(src="./assets/images/content/web/OSI_.png" alt="")
-      img(src="./assets/images/content/web/OSI__.png" alt="")
-      img(src="./assets/images/content/web/OSI.jpg" alt="")
+      img(src="./img/web/OSI_.png" alt="")
+      img(src="./img/web/OSI__.png" alt="")
+      img(src="./img/web/OSI.jpg" alt="")
       a(href="https://kr-labs.com.ua/blog/model-osi/") osi   <br>
 
     //- TCP/IP
     details
       summary TCP/IP
-      img(src="./assets/images/content/web/TCP_IP.jpg" alt="")
+      img(src="./img/web/TCP_IP.jpg" alt="")
       p.
         <dfn>TCP/IP</dfn> - произошло от TCP и IP. <br>
         Набор правил, который позволяет обрабатывать сквозную передачу данных. <br>
@@ -2535,8 +2535,8 @@ block menu
           Примером URC будет индикатор для просмотра исходного кода веб-страницы:
         code>view-source:http://example.com/
         br
-        img(src="./assets/images/content/web/uri.png" alt="")
-        img(src="./assets/images/content/web/URL.png" alt="")
+        img(src="./img/web/uri.png" alt="")
+        img(src="./img/web/URL.png" alt="")
 
       //- DNS
       details
@@ -2546,8 +2546,8 @@ block menu
           Каждое доменное имя в Интернете является уникальным. <br>
           Максимальная длина доменного имени (между точками) – 63 символа. <br>
           Общая длина имени, включая поддомены, разделительные точки и имя зоны домена, может составлять до 255 знаков.<br>
-        img(src="./assets/images/content/web/domain.png" alt="")
-        img(src="./assets/images/content/web/domains.png" alt="")
+        img(src="./img/web/domain.png" alt="")
+        img(src="./img/web/domains.png" alt="")
         br
         p.
           <dfn>DNS</dfn> (англ. Domain Name System — система доменных имён) — компьютерная распределённая система для получения информации о доменах. <br>
@@ -2558,8 +2558,8 @@ block menu
           - домены уровня страны (.us) <br>
           - домены верхнего уровня (.com) <br>
           - поддомены.<br>
-        img(src="./assets/images/content/web/dns.png" alt="")
-        img(src="./assets/images/content/web/DNS.png" alt="")
+        img(src="./img/web/dns.png" alt="")
+        img(src="./img/web/DNS.png" alt="")
 
       //- ISP
       details
@@ -2597,9 +2597,9 @@ block menu
       //- Ethernet
       details
         summary Ethernet
-        img(src="./assets/images/content/web/Ethernet.jpg" alt="")
-        img(src="./assets/images/content/web/CSMA.jpg" alt="")
-        img(src="./assets/images/content/web/ICMP.png" alt="")
+        img(src="./img/web/Ethernet.jpg" alt="")
+        img(src="./img/web/CSMA.jpg" alt="")
+        img(src="./img/web/ICMP.png" alt="")
         p.
           После преамбулы все компьютеры в сети начинают записывать передаваемый кадр в свой буфер.<br>
           Первые 6 байт кадра содержат адрес получателя: <br>
@@ -2620,15 +2620,15 @@ block menu
           <br>
           В распределяемой среде возможны коллизии. <br>
           В коммутируемом Ethernet соединение Точка-Точка без разделяемой среды.<br>
-        img(src="./assets/images/content/web/net1.jpg" alt="")
-        img(src="./assets/images/content/web/net2.jpg" alt="")
-        img(src="./assets/images/content/web/Firewall.png" alt="")
-        img(src="./assets/images/content/web/Proxy.png" alt="")
-        img(src="./assets/images/content/web/ReverseProxy.png" alt="")
-        img(src="./assets/images/content/web/ReverseProxy_.png" alt="")
-        img(src="./assets/images/content/web/VLAN.png" alt="")
-        img(src="./assets/images/content/web/VPN.png" alt="")
-        img(src="./assets/images/content/web/VPN_.png" alt="")
+        img(src="./img/web/net1.jpg" alt="")
+        img(src="./img/web/net2.jpg" alt="")
+        img(src="./img/web/Firewall.png" alt="")
+        img(src="./img/web/Proxy.png" alt="")
+        img(src="./img/web/ReverseProxy.png" alt="")
+        img(src="./img/web/ReverseProxy_.png" alt="")
+        img(src="./img/web/VLAN.png" alt="")
+        img(src="./img/web/VPN.png" alt="")
+        img(src="./img/web/VPN_.png" alt="")
 
       //- Protocol
       details
@@ -2661,9 +2661,9 @@ block menu
         
         a(href="https://hyperhost.ua/info/uk/osnovni-protokoli-merezhi-navishcho-voni-vikoristovuyutsya") protokoli   <br>
         a(href="https://deltahost.ua/ua/tipi-merezhevix-protokoliv-i-ih-priznachennya-http-ip-ssh-ftp-pop3-mac.html") protokoli <br>
-        img(src="./assets/images/content/web/Protocol.png" alt="")
-        img(src="./assets/images/content/web/ProtocolCode.png" alt="")
-        img(src="./assets/images/content/web/ProtocolWeb.png" alt="")
+        img(src="./img/web/Protocol.png" alt="")
+        img(src="./img/web/ProtocolCode.png" alt="")
+        img(src="./img/web/ProtocolWeb.png" alt="")
 
         //- IP & Port
         details
@@ -2724,8 +2724,8 @@ block menu
             Команда ipconfig /renew запрашивает текущую конфигурацию с DHCP-сервера.
             Хост может содержать ошибочную или устаревшую информацию о конфигурации IP,
             и простое обновление этой информации – это все, что нужно для восстановления соединения.
-          img(src="./assets/images/content/web/Port.png" alt="")
-          img(src="./assets/images/content/web/Ports.pdf" alt="")              
+          img(src="./img/web/Port.png" alt="")
+          img(src="./img/web/Ports.pdf" alt="")              
         
         //- TCP
         details
@@ -2763,8 +2763,8 @@ block menu
             Такой случай возникает если для отправки сообщений в один адрес использовать два разных маршрута. <br>
             UDP не требует открывать соединение и данные могут быть отправлены сразу же как только они подготовлены. <br>
             UDP не отправляет подтверждающие сообщения, поэтому данные могут быть потеряны.
-          img(src="./assets/images/content/web/TCP__UDP.png" alt="")
-          img(src="./assets/images/content/web/TCP_UDP.png" alt="")
+          img(src="./img/web/TCP__UDP.png" alt="")
+          img(src="./img/web/TCP_UDP.png" alt="")
                                 
         //- SOAP
         details
@@ -2773,7 +2773,7 @@ block menu
             <dfn>SOAP</dfn> — протокол обмена структурированными сообщениями в распределённой вычислительной среде. <br>
             Первоначально SOAP предназначался, в основном, для реализации удалённого вызова процедур (RPC). <br>
             Сейчас протокол используется для обмена произвольными сообщениями в формате XML, а не только для вызова процедур.<br>        
-          img(src="./assets/images/content/web/soap.png" alt="")
+          img(src="./img/web/soap.png" alt="")
           br
           p.
             <dfn>SOAP-сообщение</dfn> представляет собой XML-документ; <br>
@@ -2801,12 +2801,12 @@ block menu
             Если SOAP-сервер, обрабатывая поступившее SOAP-сообщение, обнаружит ошибку, то он прекратит обработку и отправит клиенту SOAP-сообщение, содержащее один элемент Fault с сообщением об ошибке.<br>
             <br>
             REST vs SOAP - Простота VS Стандарты<br>
-          img(src="./assets/images/content/web/rs1.png" alt="")
-          img(src="./assets/images/content/web/rs2.png" alt="")
-          img(src="./assets/images/content/web/rs3.png" alt="")
-          img(src="./assets/images/content/web/rs4.png" alt="")
-          img(src="./assets/images/content/web/rs5.png" alt="")
-          img(src="./assets/images/content/web/rs6.png" alt="")
+          img(src="./img/web/rs1.png" alt="")
+          img(src="./img/web/rs2.png" alt="")
+          img(src="./img/web/rs3.png" alt="")
+          img(src="./img/web/rs4.png" alt="")
+          img(src="./img/web/rs5.png" alt="")
+          img(src="./img/web/rs6.png" alt="")
           br
           p.
             <dfn>WSDL</dfn> - Web Services Definition Language <br>
@@ -2816,7 +2816,7 @@ block menu
             - <dfn>элементы данных</dfn> (message) — сообщения, используемые web-сервисом<br>
             - <dfn>абстрактные операции</dfn> (portType) — список операций, которые могут быть выполнены с сообщениями<br>
             - <dfn>связывание сервисов</dfn> (binding) — способ, которым сообщение будет доставлено<br>
-          img(src="./assets/images/content/web/WSDL.png" alt="")
+          img(src="./img/web/WSDL.png" alt="")
 
         //- HTTP
         details
@@ -2825,9 +2825,9 @@ block menu
             <dfn>HyperText Transfer Protocol</dfn> — «протокол передачи гипертекста» — протокол прикладного уровня передачи данных. <br>
             Изначально — в виде гипертекстовых документов в формате HTML (документов, которые содержат ссылки, позволяющие переходить к другим документам). <br>
             В настоящий момент используется для передачи произвольных данных).<br>
-          img(src="./assets/images/content/web/request.png" alt="")
+          img(src="./img/web/request.png" alt="")
           p Основой HTTP является технология «клиент-сервер», то есть предполагается существование потребителей (клиентов), которые инициируют соединение и посылают запрос, и поставщиков (серверов), которые ожидают соединения для получения запроса, производят необходимые действия и возвращают обратно сообщение с результатом.<br>
-          img( src="./assets/images/content/web/ClientServer.png" alt="")
+          img( src="./img/web/ClientServer.png" alt="")
           p.
             Обычно с помощью протокола HTTP осуществляется обмен данными между вэб-браузером и вэб-сервером.<br>
             Благодаря протоколу HTTP обеспечивается работа всемирной паутины.<br>
@@ -2851,7 +2851,7 @@ block menu
                 - <dfn>Method</dfn> - метод запроса. <br>
                 - <dfn>URI</dfn> - путь к запрашиваемому документу. <br>
                 - <dfn>Version</dfn> - версия протокола, пара разделенных точкой цифр. Например: 1.0
-              img(src="./assets/images/content/web/req.png" alt="")
+              img(src="./img/web/req.png" alt="")
               p.
                 <dfn>Стартовая строка ответа</dfn> <br>
                 Version - Status Code - Reason Phrase <br>
@@ -2866,7 +2866,7 @@ block menu
                 По коду состояния определяется дальнейшее содержимое сообщения и поведение клиента. <br>
                 <dfn>Пояснение</dfn> (англ. Reason Phrase) — текстовое короткое пояснение к коду ответа для пользователя. <br>
                 Никак не влияет на сообщение и является необязательным. <br>
-              img(src="./assets/images/content/web/res.png" alt="")
+              img(src="./img/web/res.png" alt="")
               
             //- HTTP-mathods
             details
@@ -2900,8 +2900,8 @@ block menu
                 <br>
                 <br><dfn>CONNECT</dfn> - Преобразует соединение запроса в прозрачный TCP/IP-туннель, обычно чтобы содействовать установлению защищённого SSL-соединения через нешифрованный прокси.<br>
                 <br>
-              img(src="./assets/images/content/web/get.png" alt="")
-              img(src="./assets/images/content/web/post.png" alt="")
+              img(src="./img/web/get.png" alt="")
+              img(src="./img/web/post.png" alt="")
               
             //- HTTP-status
             details
@@ -2939,14 +2939,14 @@ block menu
                 <dfn>Заголовки HTTP</dfn> (англ. HTTP Headers) — это строки в HTTP-сообщении, содержащие разделённую двоеточием пару параметр-значение. <br>
                 Формат заголовков соответствует общему формату заголовков текстовых сетевых сообщений ARPA (см. RFC 822). <br>
                 Заголовки должны отделяться от тела сообщения хотя бы одной пустой строкой<br>
-              img(src="./assets/images/content/web/Header.png" alt="")
-              img(src="./assets/images/content/web/Headers.png" alt="")
+              img(src="./img/web/Header.png" alt="")
+              img(src="./img/web/Headers.png" alt="")
                 
             //- Message body
             details
               summary Message body
               p <dfn>Тело HTTP-сообщения</dfn> (message-body), если оно присутствует, используется для передачи тела объекта, связанного с запросом или ответом.<br>
-              img(src="./assets/images/content/web/Cookie.png" alt="")
+              img(src="./img/web/Cookie.png" alt="")
           
         //- HTTPS
         details
@@ -2954,13 +2954,13 @@ block menu
           p.
             <dfn>HTTPS</dfn> (Hypertext Transfer Protocol Secure) — защищённая версия HTTP. <br>
             Использует SSL-протокол, который активируется после установки SSL-сертификата и зашифровывает личную информацию, перед тем как передать её владельцу сайта<br>
-          img(src="./assets/images/content/web/connect.png" alt="")
+          img(src="./img/web/connect.png" alt="")
           p.
             Ключи шифрования HTTPS. <br>
             В основе любого метода шифрования лежит ключ. <br>
             <dfn>Ключ</dfn> — это способ зашифровать или расшифровать сообщение. <br>
             В работе SSL-сертификата участвуют три ключа: публичный, приватный и сеансовый<br>
-          img(src="./assets/images/content/web/key.png" alt="")
+          img(src="./img/web/key.png" alt="")
 
     //- Certifications
     details
@@ -3004,7 +3004,7 @@ block menu
       a(href="https://www.sans.org/") SANS, Cyber Security Training, Certifications, Degrees and Resources<br>
       a(href="https://www.amazon.jobs/de/teams/aws-security-engineer") AWS Security Engineer<br>
       a(href="https://www.isc2.org/") Сертифікації (ISC)2<br>
-      img(src="./assets/images/content/web/Cert.png" alt="")
+      img(src="./img/web/Cert.png" alt="")
 
     //- Вредоносное ПО
     details
@@ -3162,11 +3162,11 @@ block menu
           Разработчики и сотрудники отдела контроля качества должны включить функциональный модуль контроля доступа и интеграционные тесты. <br>
           a(href="https://cwe.mitre.org/data/index.html">CWE: 22, 23, 35, 59, 200, 201, 219, 264, 275, 276, 284, 285, 352, 359, 377, 402, 425. 441, 497, 538, 540, 548,
           552, 566, 601, 639, 651, 668, 706, 862, 863, 913, 922, 1275.              
-        img(src="./assets/images/content/web/Access.png" alt="")
-        img(src="./assets/images/content/web/Access_.png" alt="")
-        img(src="./assets/images/content/web/Access__.png" alt="")
-        img(src="./assets/images/content/web/Session.png" alt="")
-        img(src="./assets/images/content/web/Session_.png" alt="")
+        img(src="./img/web/Access.png" alt="")
+        img(src="./img/web/Access_.png" alt="")
+        img(src="./img/web/Access__.png" alt="")
+        img(src="./img/web/Session.png" alt="")
+        img(src="./img/web/Session_.png" alt="")
         br
         p.
           Burp Suite — це інтегрована платформа та графічний інструмент для тестування безпеки веб-додатків, 
@@ -3414,9 +3414,9 @@ block menu
           Завдання 5
           * Створити пару ключів в SSH
           ssh-keygen -t rsa -C "mykey" -b 4096
-        img(src="./assets/images/content/web/Coding.png" alt="")
-        img(src="./assets/images/content/web/Hash.png" alt="")
-        img(src="./assets/images/content/web/Hash_.png" alt="")
+        img(src="./img/web/Coding.png" alt="")
+        img(src="./img/web/Hash.png" alt="")
+        img(src="./img/web/Hash_.png" alt="")
         br
         p.
           bwapp & OpenVAS
@@ -3484,15 +3484,15 @@ block menu
         
           Проблема 3: Failed to find config 'daba56c8-73ec-11df-a475-002264764cea
           Після встановлення сканера повинна пройти оновлення та синхронізація бази його сигнатур. Тому потрібно просто почекати ~30 хвилин так спробувати запускати скан знову.
-        img(src="./assets/images/content/web/Scan.png" alt="")
+        img(src="./img/web/Scan.png" alt="")
       
       //- Cryptographic Failures
       details
         summary Cryptographic Failures
-        img(src="./assets/images/content/web/RSA.png" alt="")
-        img(src="./assets/images/content/web/Шифр.png" alt="")
-        img(src="./assets/images/content/web/СиметрШифр.png" alt="")
-        img(src="./assets/images/content/web/АсиметрШифр.png" alt="")
+        img(src="./img/web/RSA.png" alt="")
+        img(src="./img/web/Шифр.png" alt="")
+        img(src="./img/web/СиметрШифр.png" alt="")
+        img(src="./img/web/АсиметрШифр.png" alt="")
 
       //- Injection
       details
@@ -3867,10 +3867,10 @@ block menu
             * За допомогою sqlmap проексплуатуйте ін'єкції в bWAPP у задачах "SQL Injection- Blind -Time-based", "SQL Injection- Blind-Boolean-based". 
             * Прикріпіть скріншоти, на яких видно з якими параметрами ви запускали sqlmap та список існуючих таблиць в базі.
 
-          img(src="./assets/images/content/web/SQL inj.png" alt="")
-          img(src="./assets/images/content/web/HTMLinj.png" alt="")
-          img(src="./assets/images/content/web/SSTI1.png" alt="")
-          img(src="./assets/images/content/web/SSTI2.png" alt="")
+          img(src="./img/web/SQL inj.png" alt="")
+          img(src="./img/web/HTMLinj.png" alt="")
+          img(src="./img/web/SSTI1.png" alt="")
+          img(src="./img/web/SSTI2.png" alt="")
           a(href="https://book.hacktricks.xyz/pentesting-web/sql-injection") sql-injection <br>
           a(href="https://portswigger.net/web-security/sql-injection") sql-injection
 
@@ -3939,17 +3939,17 @@ block menu
           Вредоносный скрипт может получить доступ к любым файлам cookie, сессионным токенам или другой конфиденциальной информации о пользователе, и эти данные отправляются киберпреступнику.
           Получив эту информацию, киберпреступник может выдавать себя за пользователя.
         
-        img(src="./assets/images/content/web/DOMXSS.png" alt="")
-        img(src="./assets/images/content/web/enum.png" alt="")
-        img(src="./assets/images/content/web/enum_.png" alt="")
-        img(src="./assets/images/content/web/enum__.png" alt="")
-        img(src="./assets/images/content/web/RefXSS.png" alt="")
-        img(src="./assets/images/content/web/StoXSS.png" alt="")
-        img(src="./assets/images/content/web/XSS.png" alt="")
-        img(src="./assets/images/content/web/XSS_.png" alt="")
-        img(src="./assets/images/content/web/XXE.png" alt="")
-        img(src="./assets/images/content/web/XXE_.png" alt="")
-        img(src="./assets/images/content/web/XXE___.png" alt="")
+        img(src="./img/web/DOMXSS.png" alt="")
+        img(src="./img/web/enum.png" alt="")
+        img(src="./img/web/enum_.png" alt="")
+        img(src="./img/web/enum__.png" alt="")
+        img(src="./img/web/RefXSS.png" alt="")
+        img(src="./img/web/StoXSS.png" alt="")
+        img(src="./img/web/XSS.png" alt="")
+        img(src="./img/web/XSS_.png" alt="")
+        img(src="./img/web/XXE.png" alt="")
+        img(src="./img/web/XXE_.png" alt="")
+        img(src="./img/web/XXE___.png" alt="")
       
       //- SSTI
       details
@@ -3967,25 +3967,25 @@ block menu
         p.
           Подделка межсайтовых запросов (CSRF, Cross-Site Request Forgery) – это случай злонамеренного использования веб-сайта, при котором из браузера пользователя в надежное веб-приложение передаются несанкционированные команды.
           Злонамеренный веб-сайт может передавать такие команды с помощью специально созданных тегов изображений, скрытых форм или JavaScript-запросов – все они могут работать без ведома пользователя.
-        img(src="./assets/images/content/web/CSRF.png" alt="")
+        img(src="./img/web/CSRF.png" alt="")
       
       //- Identification and Authentication Failures
       details
         summary Identification and Authentication Failures
-        img(src="./assets/images/content/web/API.png" alt="")
-        img(src="./assets/images/content/web/API1.png" alt="")
-        img(src="./assets/images/content/web/API2.png" alt="")
-        img(src="./assets/images/content/web/API3.png" alt="")
-        img(src="./assets/images/content/web/API4.png" alt="")
-        img(src="./assets/images/content/web/APISec.png" alt="")
-        img(src="./assets/images/content/web/DIR.png" alt="")
-        img(src="./assets/images/content/web/DIR_.png" alt="")
-        img(src="./assets/images/content/web/DIR___.png" alt="")
-        img(src="./assets/images/content/web/JWT.png" alt="")
-        img(src="./assets/images/content/web/JWT_.png" alt="")
-        img(src="./assets/images/content/web/OAuth.png" alt="")
-        img(src="./assets/images/content/web/PKI.png" alt="")
-        img(src="./assets/images/content/web/SSO.png" alt="")
+        img(src="./img/web/API.png" alt="")
+        img(src="./img/web/API1.png" alt="")
+        img(src="./img/web/API2.png" alt="")
+        img(src="./img/web/API3.png" alt="")
+        img(src="./img/web/API4.png" alt="")
+        img(src="./img/web/APISec.png" alt="")
+        img(src="./img/web/DIR.png" alt="")
+        img(src="./img/web/DIR_.png" alt="")
+        img(src="./img/web/DIR___.png" alt="")
+        img(src="./img/web/JWT.png" alt="")
+        img(src="./img/web/JWT_.png" alt="")
+        img(src="./img/web/OAuth.png" alt="")
+        img(src="./img/web/PKI.png" alt="")
+        img(src="./img/web/SSO.png" alt="")
 
       //- SSRF
       details
@@ -4002,42 +4002,42 @@ block menu
         
           How AWS Instance Metadata Service Version 2 works
           https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/instance-metadata-v2-how-it-works.html
-        img(src="./assets/images/content/web/attack.png" alt="")
-        img(src="./assets/images/content/web/SSRF1.png" alt="")
-        img(src="./assets/images/content/web/SSRF2.png" alt="")
-        img(src="./assets/images/content/web/SSRF3.png" alt="")
-        img(src="./assets/images/content/web/SSRF4.png" alt="")
-        img(src="./assets/images/content/web/SSRF5.png" alt="")
-        img(src="./assets/images/content/web/Sec/Sec1.png" alt="")
-        img(src="./assets/images/content/web/Sec/Sec2.png" alt="")
-        img(src="./assets/images/content/web/Sec/Sec3.png" alt="")
-        img(src="./assets/images/content/web/Sec/Sec4.png" alt="")
-        img(src="./assets/images/content/web/Sec/Sec5.png" alt="")
-        img(src="./assets/images/content/web/Sec/Sec6.png" alt="")
-        img(src="./assets/images/content/web/Sec/Sec7.png" alt="")
-        img(src="./assets/images/content/web/Sec/Sec8.png" alt="")
-        img(src="./assets/images/content/web/Sec/Sec9.png" alt="")
-        img(src="./assets/images/content/web/Sec/Sec10.png" alt="")
-        img(src="./assets/images/content/web/Sec/Sec11.png" alt="")
-        img(src="./assets/images/content/web/Sec/Sec12.png" alt="")
-        img(src="./assets/images/content/web/Sec/Sec13.png" alt="")
-        img(src="./assets/images/content/web/Sec/Sec14.png" alt="")
-        img(src="./assets/images/content/web/Sec/Sec15.png" alt="")
-        img(src="./assets/images/content/web/Sec/Sec16.png" alt="")
-        img(src="./assets/images/content/web/Sec/Sec17.png" alt="")
-        img(src="./assets/images/content/web/Sec/Sec18.png" alt="")
-        img(src="./assets/images/content/web/Sec/Sec19.png" alt="")
-        img(src="./assets/images/content/web/Sec/Sec20.png" alt="")
-        img(src="./assets/images/content/web/Sec/Sec21.png" alt="")
-        img(src="./assets/images/content/web/Sec/Sec22.png" alt="")
-        img(src="./assets/images/content/web/Sec/Sec23.png" alt="")
-        img(src="./assets/images/content/web/Sec/Sec24.png" alt="")
-        img(src="./assets/images/content/web/Sec/Sec25.png" alt="")
-        img(src="./assets/images/content/web/Sec/Sec26.png" alt="")
-        img(src="./assets/images/content/web/Sec/Sec27.png" alt="")
-        img(src="./assets/images/content/web/Sec/Sec28.png" alt="")
-        img(src="./assets/images/content/web/Sec/Sec29.png" alt="")
-        img(src="./assets/images/content/web/Sec/Sec30.png" alt="")
+        img(src="./img/web/attack.png" alt="")
+        img(src="./img/web/SSRF1.png" alt="")
+        img(src="./img/web/SSRF2.png" alt="")
+        img(src="./img/web/SSRF3.png" alt="")
+        img(src="./img/web/SSRF4.png" alt="")
+        img(src="./img/web/SSRF5.png" alt="")
+        img(src="./img/web/Sec/Sec1.png" alt="")
+        img(src="./img/web/Sec/Sec2.png" alt="")
+        img(src="./img/web/Sec/Sec3.png" alt="")
+        img(src="./img/web/Sec/Sec4.png" alt="")
+        img(src="./img/web/Sec/Sec5.png" alt="")
+        img(src="./img/web/Sec/Sec6.png" alt="")
+        img(src="./img/web/Sec/Sec7.png" alt="")
+        img(src="./img/web/Sec/Sec8.png" alt="")
+        img(src="./img/web/Sec/Sec9.png" alt="")
+        img(src="./img/web/Sec/Sec10.png" alt="")
+        img(src="./img/web/Sec/Sec11.png" alt="")
+        img(src="./img/web/Sec/Sec12.png" alt="")
+        img(src="./img/web/Sec/Sec13.png" alt="")
+        img(src="./img/web/Sec/Sec14.png" alt="")
+        img(src="./img/web/Sec/Sec15.png" alt="")
+        img(src="./img/web/Sec/Sec16.png" alt="")
+        img(src="./img/web/Sec/Sec17.png" alt="")
+        img(src="./img/web/Sec/Sec18.png" alt="")
+        img(src="./img/web/Sec/Sec19.png" alt="")
+        img(src="./img/web/Sec/Sec20.png" alt="")
+        img(src="./img/web/Sec/Sec21.png" alt="")
+        img(src="./img/web/Sec/Sec22.png" alt="")
+        img(src="./img/web/Sec/Sec23.png" alt="")
+        img(src="./img/web/Sec/Sec24.png" alt="")
+        img(src="./img/web/Sec/Sec25.png" alt="")
+        img(src="./img/web/Sec/Sec26.png" alt="")
+        img(src="./img/web/Sec/Sec27.png" alt="")
+        img(src="./img/web/Sec/Sec28.png" alt="")
+        img(src="./img/web/Sec/Sec29.png" alt="")
+        img(src="./img/web/Sec/Sec30.png" alt="")
 
     //- Етапи
     details
@@ -4100,7 +4100,7 @@ block menu
             після успішного підключення має загорітись зелений індикатор
             запустіть машину, наприклад під назвою FunboxEasyEnum
             після успішного старту вам дадуть ip-адресу цієї машини
-          img(src="./assets/images/content/web/nmap.png" alt="")
+          img(src="./img/web/nmap.png" alt="")
                         
         //- DAST
         details
@@ -4111,12 +4111,12 @@ block menu
             - Додаткова інформація
             https://www.rapid7.com/fundamentals/dast/
             https://www.microfocus.com/en-us/what-is/dast                            
-          img src="./assets/images/content/web/DFD.png" alt="")
-          img src="./assets/images/content/web/ERD.png" alt="")
-          img src="./assets/images/content/web/UML.png" alt="")
-          img src="./assets/images/content/web/OSINT.png" alt="")
-          img src="./assets/images/content/web/Sens.png" alt="")
-          img src="./assets/images/content/web/subfinder.png" alt="")
+          img src="./img/web/DFD.png" alt="")
+          img src="./img/web/ERD.png" alt="")
+          img src="./img/web/UML.png" alt="")
+          img src="./img/web/OSINT.png" alt="")
+          img src="./img/web/Sens.png" alt="")
+          img src="./img/web/subfinder.png" alt="")
 
     //- Resources
     details
@@ -4193,12 +4193,12 @@ block menu
         - Software and Data Integrity Failures<br>
         - Security Logging and Monitoring Failures<br>
         - Server-Side Request Forgery<br>
-      img(src="./assets/images/content/web/OWASP.png" alt="")
-      img(src="./assets/images/content/web/project.png" alt="")
-      img(src="./assets/images/content/web/projectTask.png" alt="")
-      img(src="./assets/images/content/web/vulnerability.png" alt="")
-      img(src="./assets/images/content/web/AbbiSecur.jpeg" alt="")
-      img(src="./assets/images/content/web/Security.jpeg" alt="")
+      img(src="./img/web/OWASP.png" alt="")
+      img(src="./img/web/project.png" alt="")
+      img(src="./img/web/projectTask.png" alt="")
+      img(src="./img/web/vulnerability.png" alt="")
+      img(src="./img/web/AbbiSecur.jpeg" alt="")
+      img(src="./img/web/Security.jpeg" alt="")
       br
       a(href="https://www.indeed.com/") indeed<br>
       a(href="https://ua.linkedin.com/") linkedin<br>
