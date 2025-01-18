@@ -2756,7 +2756,7 @@ IndexedDB работает на стороне клиента (в браузер
 <br>
 &lt;div tabIndex=”0”&gt;&lt;/div&gt; - литералы в строке<br>
 &lt;img src={user.avatarUrl}&gt; - JS выражения в { }<br>
-<br></p><pre><code>const name = ‘Иван-Царевич’; <span>- создали переменную</span>
+<br></p><pre><code>const name = ‘Иван-Царевич’; <span> - создали переменную</span>
 <span>создали элемент с переменной внутри.</span>
 const element = &lt;h1&gt;Здравствуй, {name}!&lt;/h1&gt;;
 </code></pre><br><p>Элемент описывает то, что будет на экране.<br>
@@ -3400,7 +3400,7 @@ return &lt;GuestGreeting/&gt;;
   &lt;b&gt;{
     isLoggedIn ? 'сейчас' : 'не'
   }&lt;/b&gt;
-на сайте.</code></pre><br><img src="../img/js/react/react.png" alt=""><img src="../img/js/react/react0.png" alt=""><img src="../img/js/react/React1.png" alt=""><img src="../img/js/react/React2.png" alt=""><img src="../img/js/react/React3.png" alt=""><img src="../img/js/react/React4.png" alt=""><img src="../img/js/react/React5.png" alt=""><img src="../img/js/react/React6.png" alt=""><img src="../img/js/react/React7.png" alt=""><img src="../img/js/react/React8.png" alt=""><img src="../img/js/react/React9.png" alt=""><img src="../img/js/react/React10.png" alt=""><img src="../img/js/react/React11.png" alt=""><img src="../img/js/react/React12.png" alt=""><img src="../img/js/react/React13.png" alt=""><img src="../img/js/react/React14.png" alt=""><img src="../img/js/react/React15.png" alt=""><img src="../img/js/react/React16.png" alt=""><img src="../img/js/react/React17.png" alt=""><img src="../img/js/react/React18.png" alt=""><img src="../img/js/react/React19.png" alt=""><img src="../img/js/react/React20.png" alt=""><img src="../img/js/react/React21.png" alt=""><img src="../img/js/react/React22.png" alt=""><img src="../img/js/react/React23.png" alt=""><img src="../img/js/react/React24.png" alt=""><img src="../img/js/react/React25.png" alt=""><img src="../img/js/react/React26.png" alt=""><img src="../img/js/react/React27.png" alt=""><img src="../img/js/react/React28.png" alt=""><img src="../img/js/react/React29.png" alt=""><img src="../img/js/react/React30.png" alt=""><img src="../img/js/react/React31.png" alt=""><img src="../img/js/react/React32.png" alt=""><img src="../img/js/react/React33.png" alt=""><img src="../img/js/react/React34.png" alt=""></details><details><summary>Redux</summary><p>Весь базовый функционал redux умещается в малюсенький файлик</p><pre><code>function createStore(reducer, initialState) {
+на сайте.</code></pre><br><img src="../img/js/react/react.png" alt=""><img src="../img/js/react/react0.png" alt=""><img src="../img/js/react/React1.png" alt=""><img src="../img/js/react/React2.png" alt=""><img src="../img/js/react/React3.png" alt=""><img src="../img/js/react/React4.png" alt=""><img src="../img/js/react/React5.png" alt=""><img src="../img/js/react/React6.png" alt=""><img src="../img/js/react/React7.png" alt=""><img src="../img/js/react/React8.png" alt=""><img src="../img/js/react/React9.png" alt=""><img src="../img/js/react/React10.png" alt=""><img src="../img/js/react/React11.png" alt=""><img src="../img/js/react/React12.png" alt=""><img src="../img/js/react/React13.png" alt=""><img src="../img/js/react/React14.png" alt=""><img src="../img/js/react/React15.png" alt=""><img src="../img/js/react/React16.png" alt=""><img src="../img/js/react/React17.png" alt=""><img src="../img/js/react/React18.png" alt=""><img src="../img/js/react/React19.png" alt=""><img src="../img/js/react/React20.png" alt=""><img src="../img/js/react/React21.png" alt=""><img src="../img/js/react/React22.png" alt=""><img src="../img/js/react/React23.png" alt=""><img src="../img/js/react/React24.png" alt=""><img src="../img/js/react/React25.png" alt=""><img src="../img/js/react/React26.png" alt=""><img src="../img/js/react/React27.png" alt=""><img src="../img/js/react/React28.png" alt=""><img src="../img/js/react/React29.png" alt=""><img src="../img/js/react/React30.png" alt=""><img src="../img/js/react/React31.png" alt=""><img src="../img/js/react/React32.png" alt=""><img src="../img/js/react/React33.png" alt=""><img src="../img/js/react/React34.png" alt=""></details><details><summary>Redux</summary><a href="https://redux.js.org/introduction/getting-started">Redux</a><p>Весь базовый функционал redux умещается в малюсенький файлик</p><pre><code>function createStore(reducer, initialState) {
   let state = initialState
   return {
     dispatch: action => { state = reducer(state, action) },
@@ -4121,64 +4121,249 @@ if ( ! defined( 'WP_DEBUG_LOG' ) ) {
 if ( ! defined( 'WP_DEVELOPMENT_MODE' ) ) {
   define('WP_DEVELOPMENT_MODE', 'all');
 }
-</code></pre></details><details><summary class="menu__submenu">block</summary><p>block.json</p><pre><code>{
-  "$schema": "https://schemas.wp.org/trunk/block.json",
-  "apiVersion": 3,
-  "name": "namespace/block-slug",
-  "version": "0.1.0",
-  "title": "Block name",
-  "category": "widgets",
-  "icon": "some svg",
-  "description": "Some block description",
-  "example": {},
-  <span>Add store for custom data</span>
-  "attributes": {
-      "showCustomData": {
-          "type": "boolean"
-      },
-      "customData": {
-          "type": "string"
-      }
+</code></pre></details><details><summary class="menu__submenu">block</summary><details><summary>Создать блок</summary><p>Создать блок</p><code>npx @wordpress/create-block kweblock --namespace=kweb --variant=dynamic</code><p>Чтобы добавить ещё блок добавить --no-plugin</p><p>Автоформат добавить в package.json</p><code>"prettier": "@wordpress/prettier-config"</code><!-- https://developer.wordpress.org/block-editor/getting-started/fundamentals/registration-of-a-block/--><p>register_block_type() - регистрация нового блока php, возвращает WP_Block_Type,<br>
+                    с данными:<br>
+                    $attributes: Массив атрибутов блока.<br>
+                    $content: разметка блока, хранящаяся в базе данных, если таковая имеется.<br>
+                    $block: Экземпляр класса WP_Block, который представляет отображаемый блок (метаданные блока).<br>
+                    генерит разметку на фронте либо<br>
+                    render_block и render_callback() указывают что отобразить<br>
+registerBlockType() - регистрация нового блока index.js (@wordpress/blocks),<br>
+                    возвращает WPBlock и регистрирует edit.js в редакторе<br>
+wp_register_script() - регистрация скрипта, пакет @wordpress/scripts<br>
+wp_register_style() - регистрация стиля
+</p><p>установить @wordpress/scripts отдельно</p><code>npm install --save-dev @wordpress/scripts</code><p>добавить скрипты в package.json</p><pre><code>"scripts": {
+  "build": "wp-scripts build",
+  "format": "wp-scripts format",
+  "lint:js": "wp-scripts lint-js",
+  "start": "wp-scripts start"
+}</code></pre><p>Минимальный набор:
+в папке wp-content/plugins/my-app создать
+- my-app.php – для создания страницы плагина
+- src/index.js – для JavaScript-приложения
+- src/style.css – для стилей
+- package.json – для процесса сборки
+В файле package.json</p><pre><code>{
+  "name": my-app",
+  "version": "1.1.0",
+  "private": true,
+  "description": "My App",
+  "author": "Me",
+  "license": "GPL-2.0-or-later",
+  "keywords": [
+    "WordPress",
+    "block"
+  ],
+  "homepage": "https://github.com/WordPress/gutenberg-examples/",
+  "repository": "git+https://github.com/WordPress/gutenberg-examples.git",
+  "bugs": {
+    "url": "https://github.com/WordPress/gutenberg-examples/issues"
   },
-  <span>Add controls for admin panel</span>
-  "supports": {
-      "html": false
+  "main": "build/index.js",
+  "devDependencies": {
+    "@wordpress/scripts": "^24.0.0"
   },
-  "textdomain": "block-slug",
-  <span>Block register and functionality</span>
-  <span>from edit.js and save.js</span>
-  "editorScript": "file:./index.js",
-  <span>CSS only in editor</span>
-  "editorStyle": "file:./index.css",
-  <span>CSS in frontend & editor</span>
-  "style": "file:./style-index.css",
-  <span>Frontend dynamic render</span>
-  "render": "file:./render.php",
-  <span>JS in frontend</span>
-  "viewScript": "file:./view.js"
+  "scripts": {
+    "build": "wp-scripts build",
+    "format": "wp-scripts format",
+    "lint:js": "wp-scripts lint-js",
+    "packages-update": "wp-scripts packages-update",
+    "start": "wp-scripts start"
+  }
 }
-<span>Создать блок</span>
-npx @wordpress/create-block kweblock --namespace=kweb --variant=dynamic
-<span>добавить в package.json</span>
-"prettier": "@wordpress/prettier-config"
-<span>Создать файл webpack.config.js и добавить свой код для выполнения webpack</span>
-const defaultConfig = require("@wordpress/scripts/config/webpack.config");
+</code></pre><p>регистрирую блок в index.js<br>
+переопределять реализацию save() не нужно<br>
+edit() отображает блок в редакторе</p><pre><code>import { registerBlockType } from '@wordpress/blocks';
+import { useSelect } from '@wordpress/data';
+import { useBlockProps } from '@wordpress/block-editor';
+
+registerBlockType( 'gutenberg-examples/example-dynamic', {
+  apiVersion: 3,
+  title: 'Example: last post',
+  icon: 'megaphone',
+  category: 'widgets',
+
+  edit: () => {
+    const blockProps = useBlockProps();
+    const posts = useSelect( ( select ) => {
+      return select( 'core' ).getEntityRecords( 'postType', 'post' );
+    }, [] );
+
+    return (
+      &lt;div { ...blockProps }&gt;
+        { ! posts && 'Loading' }
+        { posts && posts.length === 0 && 'No Posts' }
+        { posts && posts.length > 0 && (
+          &lt;a href={ posts[ 0 ].link }&gt;
+            { posts[ 0 ].title.rendered }
+          &lt;/a&gt;
+        ) }
+      &lt;/div&gt;
+    );
+  },
+} );</code></pre><p>регистрирую блок в plugin.php<br>
+разметку возвращаю из gutenberg_examples_dynamic_render_callback()</p><pre><code><?php
+
+/**
+* Plugin Name: Gutenberg examples dynamic
+*/
+
+function gutenberg_examples_dynamic_render_callback( $block_attributes, $content ) {
+    $recent_posts = wp_get_recent_posts( array(
+        'numberposts' => 1,
+        'post_status' => 'publish',
+    ) );
+    if ( count( $recent_posts ) === 0 ) {
+        return 'No posts';
+    }
+    $post = $recent_posts[ 0 ];
+    $post_id = $post['ID'];
+    return sprintf(
+        '&lt;a class="wp-block-my-plugin-latest-post" href="%1$s"&gt;%2$s&lt;/a&gt;',
+        esc_url( get_permalink( $post_id ) ),
+        esc_html( get_the_title( $post_id ) )
+    );
+}
+
+function gutenberg_examples_dynamic() {
+    <span>automatically load dependencies and version</span>
+    $asset_file = include( plugin_dir_path( __FILE__ ) . 'build/index.asset.php');
+
+    wp_register_script(
+        'gutenberg-examples-dynamic',
+        plugins_url( 'build/block.js', __FILE__ ),
+        $asset_file['dependencies'],
+        $asset_file['version']
+    );
+
+    register_block_type( 'gutenberg-examples/example-dynamic', array(
+        'api_version' => 3,
+        'editor_script' => 'gutenberg-examples-dynamic',
+        'render_callback' => 'gutenberg_examples_dynamic_render_callback'
+    ) );
+
+}
+add_action( 'init', 'gutenberg_examples_dynamic' );</code></pre><p>Рендеринг на стороне сервера рассматривается как запасной вариант;<br>
+рендеринг на стороне клиента в JavaScript всегда предпочтительнее;<br>
+использует пакет wp-server-side-render</p><pre><code>import { registerBlockType } from '@wordpress/blocks';
+import ServerSideRender from '@wordpress/server-side-render';
+import { useBlockProps } from '@wordpress/block-editor';
+
+registerBlockType( 'gutenberg-examples/example-dynamic', {
+  apiVersion: 3,
+  title: 'Example: last post',
+  icon: 'megaphone',
+  category: 'widgets',
+
+  edit: function ( props ) {
+    const blockProps = useBlockProps();
+    return (
+      &lt:div { ...blockProps }&gt;
+        &lt:ServerSideRender
+          block="gutenberg-examples/example-dynamic"
+          attributes={ props.attributes }
+        /&gt;
+      &lt:/div&gt;
+    );
+  },
+} );
+</code></pre></details><details><summary>InnerBlocks<p>один блок может содержать только один InnerBlocks компонент.</p><pre><code>import { registerBlockType } from '@wordpress/blocks';
+import { InnerBlocks, useBlockProps } from '@wordpress/block-editor';
+
+registerBlockType( 'gutenberg-examples/example-06', {
+    // ...
+
+    edit: () => {
+        const blockProps = useBlockProps();
+
+        return (
+            &lt;div { ...blockProps }&gt;
+                &lt;InnerBlocks /&gt;
+            &lt;/div&gt;
+        );
+    },
+
+    save: () => {
+        const blockProps = useBlockProps.save();
+
+        return (
+            &lt;div { ...blockProps }&gt;
+                &lt;InnerBlocks.Content /&gt;
+            &lt;/div&gt;
+        );
+    },
+} );</code></pre><p>ограничитель какие блоки могут быть прямыми потомками</p><pre><code>const { allowedBlocks } = attributes;
+//...
+&lt;InnerBlocks allowedBlocks={ allowedBlocks } /&gt;;</code></pre><p>allowedBlocks - указывает какие потомки могут быть прямыми потомками<br>
+parent - для вложенного блока, может быть только прямым потомком<br>
+ancestor - для вложенного блока, может быть только потомком</p><pre><code>{
+  "title": "Column",
+  "name": "core/column",
+  "parent": [ "core/columns" ],
+}
+//...
+{
+  "title": "Comment Author Name",
+  "name": "core/comment-author-name",
+  "ancestor": [ "core/comment-template" ],
+}
+//...
+{
+  "title": "Navigation",
+  "name": "core/navigation",
+  "allowedBlocks": [ "core/navigation-link", "core/search", "core/social-links", "core/page-list", "core/spacer" ],
+}</code></pre><p>useInnerBlocksProps - хук для большего контроля над разметкой внутренних областей блоков</p><pre><code>import { registerBlockType } from '@wordpress/blocks';
+import { useBlockProps, useInnerBlocksProps } from '@wordpress/block-editor';
+
+registerBlockType( 'gutenberg-examples/example-06', {
+  edit: () => {
+    const blockProps = useBlockProps();
+    const { children, ...innerBlocksProps } = useInnerBlocksProps( blockProps );
+
+    return (
+      <div {...innerBlocksProps}>
+        { children }
+        <!-- Insert any arbitrary html here at the same level as the children -->
+      </div>
+    );
+  },
+} );</code></pre><p>по умолчанию блоки в InnerBlocks отображаются вертикально<br>
+горизонтально их ориентировать с помощью css</p><code>&lt;InnerBlocks orientation="horizontal" /&gt;</code><p>отображает значки перемещения блоков в дочерних блоках горизонтально и обеспечивает правильную работу перетаскивания.</p><p>блок по умолчанию из списка дозволенных</p><code>&lt;InnerBlocks defaultBlock={['core/paragraph', {placeholder: "Lorem ipsum..."}]} directInsert /&gt;</code><p>набор блоков, которые предварительно заполняют компонент InnerBlocks, пока нет своего содержимого.</p><pre><code>const MY_TEMPLATE = [
+    [ 'core/image', {} ],
+    [ 'core/heading', { placeholder: 'Book Title' } ],
+    [ 'core/paragraph', { placeholder: 'Summary' } ],
+];
+
+//...
+edit: () => {
+  return (
+    &lt;InnerBlocks
+      template={ MY_TEMPLATE }
+      templateLock="all"
+    /&gt;
+  )&gt;
+},</code></pre><p>templateLock - свойство, чтобы заблокировать шаблон</p><!-- https://github.com/WordPress/gutenberg/tree/HEAD/packages/block-editor/src/components/inner-blocks/README.md#templatelock--></summary></details><details><summary>Изменить блок<!-- https://developer.wordpress.org/block-editor/getting-started/fundamentals/javascript-in-the-block-editor/--><p>Создать файл webpack.config.js и добавить свой код для выполнения webpack</p><pre><code>const defaultConfig = require("@wordpress/scripts/config/webpack.config");
+
 var config = {
   ...defaultConfig,
   entry: {
     ...defaultConfig.entry(),
     "custom/index": "./src/custom/index.js",
   },
-};</code></pre><p>Внутри папки src создать папку custom и в ней файл index.js<br>
-Для примера отменим регистрацию блока core/verse при компиляции webpack.</p><pre><code>import { unregisterBlockType } from "@wordpress/blocks";
+};
+</code></pre><p>Внутри папки src создать папку custom и в ней файл index.js</p><pre><code>import { unregisterBlockType } from "@wordpress/blocks";
 import domReady from "@wordpress/dom-ready";
+
 const unregisterBlocks = ["core/verse"];
+
 domReady(function () {
   unregisterBlocks.forEach(block) => {
     unregisterBlockType(block);
   });
-});</code></pre><p>В файле kweblock.php добавить код для подключения функционала из custom/index.js</p><pre><code>function kweblock_enqueue_editor_modifications() {
+});
+</code></pre><p>В файле kweblock.php добавить код для подключения функционала из custom/index.js</p><pre><code>function kweblock_enqueue_editor_modifications() {
   $asset_file = include plugin_dir_path( __FILE__ ) . 'build/custom/index.assets.php';
+
   wp_enqueue_script(
     'kweblock_enqueue_editor_modifications',
     plugins_url( '/build/custom/index.js', __FILE__ ),
@@ -4187,122 +4372,202 @@ domReady(function () {
     true
   );
 }
-add_action( 'enqueue_block_editor_assets', 'kweblock_enqueue_editor_modifications' );</code></pre><p>Внутри папки scr создать папку kweblock_1 и переместить в неё содержимое папки src.<br>
-Перейти в папку src и добавить ещё блок.</p><pre><code>npx @wordpress/create-block kweblock_2 --no-plugin --namespace=kweb1 --variant=dynamic
-<span>В файле kweblock.php</span>
-function kweb_kweblock_block_init() {
-  register_block_type( __DIR__ . '/build/kweblock_1' );
-  register_block_type( __DIR__ . '/build/kweblock_2' );
+add_action( 'enqueue_block_editor_assets', 'kweblock_enqueue_editor_modifications' );
+</code></pre><!-- new variation for the Media & Text block--><pre><code>function example_enqueue_block_variations() {
+  wp_enqueue_script(
+    'example-enqueue-block-variations',
+    get_template_directory_uri() . '/assets/js/variations.js',
+    array( 'wp-blocks' ),
+    wp_get_theme()->get( 'Version' ),
+    false
+  );
 }
-add_action( 'init', 'kweb_kweblock_block_init' );</code></pre><p>В терминале npm start<br>
-В панели администратора активировать плагин<br>
+add_action( 'enqueue_block_editor_assets', 'example_enqueue_block_variations' );
+</code></pre><!-- in variations.js file:--><pre><code>wp.blocks.registerBlockVariation(
+  'core/media-text',
+  {
+    name: 'media-text-custom',
+    title: 'Media & Text Custom',
+    attributes: {
+      align: 'wide',
+      backgroundColor: 'tertiary'
+    },
+  }
+);</code></pre><p>создать шаблон блока типа post сразу с подгрузкой других блоков</p><pre><code>add_action( 'init', function() {
+  $post_type_object = get_post_type_object( 'post' );
+  $post_type_object->template = array(
+    array( 'core/image' ),
+    array( 'core/heading' )
+  );
+} );
+</code></pre><!-- https://developer.wordpress.org/block-editor/how-to-guides/block-tutorial/extending-the-query-loop-block/--><a href="https://developer.wordpress.org/block-editor/reference-guides/block-api/block-variations/">Вариации Query Loop block</a><p>Для того чтобы вариация цикла запросов работала правильно, нам необходимо:
+– Зарегистрировать вариацию блока для core/query блока с некоторыми значениями по умолчанию
+– Определить макет для вариации блока
+– Использовать namespaceатрибут в isActiveсвойстве вариации блока</p><pre><code>const MY_VARIATION_NAME = 'my-plugin/books-list';
+registerBlockVariation( 'core/query', {
+  name: MY_VARIATION_NAME,
+  title: 'Books List',
+  description: 'Displays a list of books',
+  <span>указываю активную вариацию, можно итак: isActive: [ 'namespace' ],</span>
+  isActive: ( { namespace, query } ) => {
+    return (
+      namespace === MY_VARIATION_NAME
+      && query.postType === 'book'
+    );
+  },
+  icon: <span>An SVG icon can go here</span>,
+  attributes: {
+    namespace: MY_VARIATION_NAME,
+    query: {
+      perPage: 6,
+      pages: 0,
+      offset: 0,
+      <span>предопределил тип записи для цикла запросов</span>
+      postType: 'book',
+      order: 'desc',
+      orderBy: 'date',
+      author: '',
+      search: '',
+      exclude: [],
+      sticky: '',
+      inherit: false,
+    },
+  },
+  <span>включил отображение блока в редакторе</span>
+  scope: [ 'inserter' ],
+  }
+);</code></pre><p>Блок Query Loop определяет, есть ли активная вариация и есть ли для неё шаблоны.<br>
+Если есть, то эти шаблоны будут единственными, если нет - шаблоны по умолчанию.</p><a href="https://developer.wordpress.org/block-editor/reference-guides/block-api/block-patterns/">привязать шаблон</a><p>отключить элементы управления запросами allowedControls<br>
+inherit – переключатель наследованияя запроса непосредственно из шаблона.<br>
+postType – список доступных типов сообщений.<br>
+order – список для выбора порядка запроса.<br>
+sticky – список для выбора способа обработки прикрепленных сообщений.<br>
+taxQuery – фильтры таксономий для текущего выбранного типа записи.<br>
+author – Показывает поле ввода для фильтрации запроса по автору.<br>
+search – Показывает поле ввода для фильтрации запроса по ключевым словам.<br>
+format – Показывает поле ввода для фильтрации запроса по массиву/коллекции форматов .<br>
+parents – Показывает поле ввода для фильтрации запроса с использованием родительской(их) сущности(ей).</p><pre><code>{
+  <span>variation properties</span>
+  allowedControls: [ 'inherit', 'order', 'taxQuery', 'search' ],
+}</code></pre><p>пустой массив скроет все элементы управления<br>
 <br>
-edit.js - пишем весь функционал блока и компоненты react для вывода в редакторе.<br>
-render.php - пишем код динамического фронтенда. Обновляет фронтенд динамически.<br>
-save.js - пишем весь функционал блока как в edit.js, но без компонентов react.<br>
-Сохранит разметку html в базу данных для вывода на фронтенд.<br>
-<br>
-index.js - отвечает за вызов registerBlockType(), импортирует файлы edit.js и save.js<br>
-свойствo edit = компонент react из edit.js<br>
-свойствo save = статическая html-разметка из save.js<br>
-<br>
-useBlockProps() - edit.js, включениe дополнительных классов и атрибутов в разметку блока в редакторе, передавая их в качестве аргументов<br>
-useBlockProps.save() - save.js, в html разметку фронтенда добавляются классы при добавлении supports<br>
-get_block_wrapper_attributes() - render.php, в динамический фронтенд добавляются классы и аттрибуты<br>
-<br>
-Пакет @wordpress/scripts настраивает webpack и Babel<br>
-Пакет @wordpress/components включает библиотеку общих компонентов WordPress для создания общих элементов пользовательского интерфейса для редактора блоков и панели управления WordPress.<br>
-Пакет @wordpress/block-editor включает библиотеку компонентов и хуков для редактора блоков, включая те, которые определяют пользовательские настройки элементов управления для блока.<br>
-- attributes: Объект всех атрибутов блока.<br>
-- setAttributes: Метод обновления объекта атрибутов.<br>
-- isSelected: Логическое значение, указывающее, выбран ли блок в данный момент.<br>
-<br>
-BlockControls - компонент react, отображает панель инструментов блока в редакторе.<br>
-InspectorControls - компонент react, отображает панель настроек блока в редакторе.<br>
-<br>
-wp:image - блоки ядра<br>
-wp:namespace/name - пользовательские блоки<br>
-<br>
-wp_enqueue_style() - добавляет стили в очередь для загрузки на странице.<br>
-wp_enqueue_script() - добавляет скрипт в очередь для загрузки на странице.<br>
-wp_localize_script() - добавляет данные JavaScript в объект window.<br>
-цепляем на хуки:<br>
+Подключить пользовательские элементы управления через хук React подключенный к фильтру блока</p><pre><code>import { InspectorControls } from '@wordpress/block-editor';
+
+export const withBookQueryControls = ( BlockEdit ) => ( props ) => {
+  <span>We only want to add these controls if it is our variation,</span>
+  <span>so here we can implement a custom logic to check for that, similar</span>
+  <span>to the `isActive` function described above.</span>
+  <span>The following assumes that you wrote a custom `isMyBooksVariation`</span>
+  <span>function to handle that.</span>
+  return isMyBooksVariation( props ) ? (
+    &lt;&gt;
+      &lt;BlockEdit key="edit" { ...props } /&gt;
+      &lt;InspectorControls&gt;
+        &lt;BookAuthorSelector /&gt; { /** Our custom component */ }
+      &lt;/InspectorControls&gt;
+    &lt;/&gt;
+  ) : (
+    &lt;BlockEdit key="edit" { ...props } /&gt;
+  );
+};
+
+addFilter( 'editor.BlockEdit', 'core/query', withBookQueryControls );</code></pre><p>Подключить пользовательские элементы управления через фильтр query_loop_block_query_vars</p><pre><code>{
+  <span>variation properties</span>
+  attributes: {
+    <span>variation attributes</span>
+    query: {
+      <span>more query settings if needed</span>
+      postType: 'book',
+      <span>Our custom query parameter</span>
+      bookAuthor: 'J. R. R. Tolkien'
+    }
+  }
+}</code></pre><p>подключаюсь к фильтру на фронте (когда есть доступ к блоку)</p><pre><code>if( 'my-plugin/books-list' === $block[ 'attrs' ][ 'namespace' ] ) {
+  add_filter(
+    'query_loop_block_query_vars',
+    function( $query ) {
+      <span>You can read your block custom query parameters here and build your query</span>
+    },
+  );
+}</code></pre><p>подключаюсь к запросу API записи в редакторе через фильтр rest_{$this->post_type}_query</p><pre><code>add_filter(
+  'rest_book_query',
+  function( $args, $request ) {
+    <span>We can access our custom parameters from here</span>
+    $book_author = $request->get_param( 'bookAuthor' );
+    <span>your custom query logic</span>
+  }
+);
+</code></pre><!-- https://developer.wordpress.org/block-editor/reference-guides/filters/block-filters/--><p>изменить поведение или отключить блок</p><!-- https://developer.wordpress.org/block-editor/reference-guides/packages/packages-plugins/--><!-- https://developer.wordpress.org/block-editor/reference-guides/packages/packages-edit-post/--><p>registerPlugin - определить все элементы пользовательского интерфейса плагина в одном месте</p><!-- https://developer.wordpress.org/block-editor/reference-guides/filters/editor-filters/--><p>отфильтровать редактор</p></summary></details><details><summary>CSS<!-- https://github.com/WordPress/block-development-examples--><p>Inline style - передаю стили в хук React useBlockProps</p><pre><code>import { registerBlockType } from '@wordpress/blocks';
+import { useBlockProps } from '@wordpress/block-editor';
+
+registerBlockType( 'gutenberg-examples/example-02-stylesheets', {
+    edit() {
+        const greenBackground = {
+            backgroundColor: '#090',
+            color: '#fff',
+            padding: '20px',
+        };
+
+        const blockProps = useBlockProps( { style: greenBackground } );
+
+        return (
+            &lt;p { ...blockProps }&gt;Hello World (from the editor, in green).&lt;/p&gt;
+        );
+    },
+    save() {
+        const redBackground = {
+            backgroundColor: '#900',
+            color: '#fff',
+            padding: '20px',
+        };
+
+        const blockProps = useBlockProps.save( { style: redBackground } );
+
+        return (
+            &lt;p { ...blockProps }&gt;Hello World (from the frontend, in red).&lt;/p&gt;
+        );
+    },
+} );</code></pre><!-- useBlockProps - обёртка блока--><!-- https://developer.wordpress.org/block-editor/reference-guides/block-api/block-edit-save/#block-wrapper-props--><p>Хук useBlockProps автоматически включает имя класса для блока,
+генерирует имя для каждого блока, используя имя блока с префиксом wp-block-,
+заменет / разделитель пространства имен символом -.
+</p><!-- https://developer.wordpress.org/block-editor/getting-started/fundamentals/block-in-the-editor/--><p>useBlockProps() - позволяет изменить аттрибуты в оболочке блока,
+                  определяет внешнюю разметку блока в редакторе
+                    (это хук из @wordpress/block-editor)
+useBlockProps.save() - добавляет классы и атрибуты при сохранении в базу
+get_block_wrapper_attributes() - добавляет классы и атрибуты при динамическом рендере
+wp-block - класс с общими для блоков настройками
+</p><!-- то же самое, но через отдельные файлы--><p>block.json</p><pre><code>{
+  "apiVersion": 3,
+  "name": "gutenberg-examples/example-02-stylesheets",
+  "title": "Example: Stylesheets",
+  "icon": "universal-access-alt",
+  "category": "layout",
+  "editorScript": "file:./block.js",
+  "editorStyle": "file:./editor.css",
+  "style": "file:./style.css"
+}</code></pre><p>editor.css - green background</p><pre><code>.wp-block-gutenberg-examples-example-02-stylesheets {
+    background: #090;
+    color: white;
+    padding: 20px;
+}</code></pre><p>style.css - red background</p><pre><code>.wp-block-gutenberg-examples-example-02-stylesheets {
+  background: #900;
+  color: white;
+  padding: 20px;
+}
+</code></pre><p>Если использовать `@wordpress/scripts`, то необходимо импортировать таблицу стилей в соответствующий файл JavaScript<br>
+В `edit.js` - `import './editor.scss';`<br>
+В `index.js` - `import './style.scss';`<br>
+В `view.js` - `import './view.scss';`
+</p><!-- wp_enqueue_style--><p>для включения нескольких файлов использовать wp_enqueue_style на хуках:<br>
 enqueue_block_editor_assets – загружать только в режиме редактора<br>
-enqueue_block_assets – загружается как в интерфейсе, так и в редакторе<br></p><pre><code><span>Block in theme</span>
-add_action( 'enqueue_block_editor_assets', function() {
-  wp_enqueue_script( 'my-custom-block-editor',
-    get_template_directory_uri() . '/blocks/my-custom-block/index.js',
-    array( 'wp-blocks', 'wp-element', 'wp-editor' ),
-    filemtime( get_template_directory() . '/blocks/my-custom-block/index.js' )
-  );
-  wp_enqueue_style( 'my-custom-block-editor',
-    get_template_directory_uri() . '/blocks/my-custom-block/index.css',
-    array( 'wp-edit-blocks' ),
-    filemtime( get_template_directory() . '/blocks/my-custom-block/index.css' )
-  );
-});
-<span>Block in plugin</span>
-add_action( 'enqueue_block_editor_assets', function() {
-  wp_enqueue_script( 'my-custom-block-editor',
-    plugins_url( 'blocks/my-custom-block/index.js', __FILE__ ),
-    array( 'wp-blocks', 'wp-element', 'wp-editor' ),
-    filemtime( plugin_dir_path( __FILE__ ) . 'blocks/my-custom-block/index.js' )
-  );
-  wp_enqueue_style( 'my-custom-block-editor',
-    plugins_url( 'blocks/my-custom-block/index.css', __FILE__ ),
-    array( 'wp-edit-blocks' ),
-    filemtime( plugin_dir_path( __FILE__ ) . 'blocks/my-custom-block/index.css' )
-  );
-});
-<span>Variations</span>
-function my_custom_block_register_block_variations() {
-  register_block_style(
-    'core/quote',
-    array(
-      'name'         => 'fancy-quote',
-      'label'        => 'Fancy Quote',
-      'inline_style' => '.wp-block-quote.is-style-fancy-quote {
-        background-color: #f00;
-        color: #fff; padding: 20px;
-      },
-    )
-  );
-}
-add_action( 'init', 'my_custom_block_register_block_variations' );
-<span>Добавить блок в теме</span>
-function my_custom_block() {
-  register_block_type( 'my-custom-block', array(
-    'editor_script' => 'my-custom-block-editor',
-    'editor_style'  => 'my-custom-block-editor',
-    'style'         => 'my-custom-block',
-  ) );
-}
-add_action( 'init', 'my_custom_block' );</code></pre><p>добавить папку blocks в папку темы и создать файл yourname.php:</p><pre><code>function my_custom_block_styles() {
-  wp_enqueue_style( 'my-custom-block-styles',
-    get_template_directory_uri() . '/styles/yourname.css',
-    array( 'wp-edit-blocks' ),
-    filemtime( get_template_directory() . '/styles/yourname.css' )
-  );
-}
-add_action( 'enqueue_block_editor_assets', 'my_custom_block_styles' );</code></pre><p>добавить папку blocks в папку темы и создать файл yourname.js:</p><pre><code>function my_custom_block_scripts() {
-  wp_enqueue_script( 'my-custom-block-editor',
-    get_template_directory_uri() . '/blocks/yourname.js',
-    array( 'wp-blocks', 'wp-element', 'wp-editor' ),
-    filemtime( get_template_directory() . '/blocks/yourname.js' )
-  );
-}
-add_action( 'enqueue_block_editor_assets', 'my_custom_block_scripts' );</code></pre><p>добавить класс к блоку - на панели справа Advanced -> Additional CSS class:<br>
-либо добавить код в functions.php:<br>
-поменяет стили на фронте, использовать классы блоков с !importent.</p><pre><code>function add_custom_class( $block_content, $block ) {
-  return str_replace( 'class="', 'class="my-custom-class ', $block_content );
-}
-add_filter( 'render_block', 'add_custom_class', 10, 2 );
-<span>Добавить атрибут</span>
-function add_custom_attribute( $block_content, $block ) {
-  return str_replace(
-    '&lt;div',
-    '&lt;div data-my-custom-attribute="my-custom-attribute-value"',
-    $block_content
-  );
-}
-add_filter( 'render_block', 'add_custom_attribute', 10, 2 );</code></pre></details></details></div></nav></main><footer> </footer></div></body></html>
+enqueue_block_assets – загружается как в интерфейсе, так и в редакторе
+</p></summary></details><details><summary>Editor<p>@wordpress/block-editor - пакет позволяет создавать автономные редакторы блоков,
+библиотека JavaScript, которая обеспечивает основную функциональность редактора.</p><a href="https://developer.wordpress.org/block-editor/how-to-guides/platform/custom-block-editor/">Собственный редактор блоков</a><p>@wordpress/components and @wordpress/block-editor - пакеты для редактора<br>
+для отдельной установки:</p><code>npm install --save @wordpress/components</code><p>storybook - https://wordpress.github.io/gutenberg/?path=/docs/docs-introduction--page<br>
+Block Toolbar - компонент BlockControls (@wordpress/block-editor)<br>
+Settings Sidebar - компонент InspectorControls (@wordpress/block-editor)<br>
+CSS компонентов находится по адресу node_modules/@wordpress/components/build-style/style.css<br>
+
+
+в консоле браузера wp.data.select('core/editor').getBlocks() - вернет все доступные блоки
+</p></summary></details><details><summary>Работа с данными<p>@wordpress/core-data - предоставляет resolvers, selectors и actions для работы с API ядра WordPress</p></summary></details></details></details></div></nav></main><footer> </footer></div></body></html>
