@@ -33,6 +33,57 @@ details
       wp_register_script() - регистрация скрипта, пакет @wordpress/scripts<br>
       wp_register_style() - регистрация стиля
 
+    // @wordpress/scripts
+    p установить @wordpress/scripts отдельно
+    code npm install --save-dev @wordpress/scripts
+    p добавить скрипты в package.json
+    pre
+      code.
+        "scripts": {
+          "build": "wp-scripts build",
+          "format": "wp-scripts format",
+          "lint:js": "wp-scripts lint-js",
+          "start": "wp-scripts start"
+        }
+    p.
+      Минимальный набор:
+      в папке wp-content/plugins/my-app создать
+      - my-app.php – для создания страницы плагина
+      - src/index.js – для JavaScript-приложения
+      - src/style.css – для стилей
+      - package.json – для процесса сборки
+      В файле package.json
+    pre
+      code.
+        {
+          "name": my-app",
+          "version": "1.1.0",
+          "private": true,
+          "description": "My App",
+          "author": "Me",
+          "license": "GPL-2.0-or-later",
+          "keywords": [
+            "WordPress",
+            "block"
+          ],
+          "homepage": "https://github.com/WordPress/gutenberg-examples/",
+          "repository": "git+https://github.com/WordPress/gutenberg-examples.git",
+          "bugs": {
+            "url": "https://github.com/WordPress/gutenberg-examples/issues"
+          },
+          "main": "build/index.js",
+          "devDependencies": {
+            "@wordpress/scripts": "^24.0.0"
+          },
+          "scripts": {
+            "build": "wp-scripts build",
+            "format": "wp-scripts format",
+            "lint:js": "wp-scripts lint-js",
+            "packages-update": "wp-scripts packages-update",
+            "start": "wp-scripts start"
+          }
+        }
+
     // Dynamic blocks
     p.
       регистрирую блок в index.js<br>
@@ -563,7 +614,6 @@ details
           padding: 20px;
         }
 
-    // @wordpress/scripts
     p.
       Если использовать `@wordpress/scripts`, то необходимо импортировать таблицу стилей в соответствующий файл JavaScript<br>
       В `edit.js` - `import './editor.scss';`<br>
@@ -580,9 +630,25 @@ details
 details
   summary Editor
     p.
+      @wordpress/block-editor - пакет позволяет создавать автономные редакторы блоков,
+      библиотека JavaScript, которая обеспечивает основную функциональность редактора.
+    a(href="https://developer.wordpress.org/block-editor/how-to-guides/platform/custom-block-editor/") Собственный редактор блоков
+    p.
       @wordpress/components and @wordpress/block-editor - пакеты для редактора<br>
+      для отдельной установки:
+    code npm install --save @wordpress/components
+    p.
       storybook - https://wordpress.github.io/gutenberg/?path=/docs/docs-introduction--page<br>
       Block Toolbar - компонент BlockControls (@wordpress/block-editor)<br>
       Settings Sidebar - компонент InspectorControls (@wordpress/block-editor)<br>
+      CSS компонентов находится по адресу node_modules/@wordpress/components/build-style/style.css<br>
+
 
       в консоле браузера wp.data.select('core/editor').getBlocks() - вернет все доступные блоки
+
+//- Работа с данными
+details
+  summary Работа с данными
+    p.
+      @wordpress/core-data - предоставляет resolvers, selectors и actions для работы с API ядра WordPress
+    
