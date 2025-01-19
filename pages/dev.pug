@@ -6579,7 +6579,11 @@ block menu
           p.
             для включения нескольких файлов использовать wp_enqueue_style на хуках:<br>
             enqueue_block_editor_assets – загружать только в режиме редактора<br>
-            enqueue_block_assets – загружается как в интерфейсе, так и в редакторе
+            enqueue_block_assets – загружается как в интерфейсе, так и в редакторе<br>
+            переменная стиля из theme.json в style.scss:
+          code var(--wp--preset--color--contrast)
+          p переменная стиля из theme.json в json файле:
+          code var:preset|color|contrast
 
         //- Editor
         details

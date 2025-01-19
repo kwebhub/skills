@@ -4524,8 +4524,8 @@ wp-block - класс с общими для блоков настройками
 В `index.js` - `import './style.scss';`<br>
 В `view.js` - `import './view.scss';`</p><p>для включения нескольких файлов использовать wp_enqueue_style на хуках:<br>
 enqueue_block_editor_assets – загружать только в режиме редактора<br>
-enqueue_block_assets – загружается как в интерфейсе, так и в редакторе
-</p></details><details><summary>Editor</summary><p>@wordpress/block-editor - пакет позволяет создавать автономные редакторы блоков,
+enqueue_block_assets – загружается как в интерфейсе, так и в редакторе<br>
+переменная стиля из theme.json в style.scss:</p><code>var(--wp--preset--color--contrast)</code><p>переменная стиля из theme.json в json файле:</p><code>var:preset|color|contrast</code></details><details><summary>Editor</summary><p>@wordpress/block-editor - пакет позволяет создавать автономные редакторы блоков,
 библиотека JavaScript, которая обеспечивает основную функциональность редактора.</p><a href="https://developer.wordpress.org/block-editor/how-to-guides/platform/custom-block-editor/">Собственный редактор блоков</a><p>@wordpress/components and @wordpress/block-editor - пакеты для редактора<br>
 для отдельной установки:</p><code>npm install --save @wordpress/components</code><p>storybook - https://wordpress.github.io/gutenberg/?path=/docs/docs-introduction--page<br>
 Block Toolbar - компонент BlockControls (@wordpress/block-editor)<br>
