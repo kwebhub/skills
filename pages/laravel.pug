@@ -1,0 +1,188 @@
+p.
+  laravel new projectName<br>
+  папка resources позволяет кешировать и отслеживать изменения содержимого<br>
+  resources/views/components/layout.blade.php создаю компонент layout
+code &lt;x-layout&gt;&lt;/x-layout&gt;
+p подключил лого
+code &lt;img src="{{ Vite::asset('resources/images/logo.svg') }}" alt=""&gt;
+p запутисть режим разработки
+code npm run dev
+p собрать на продакшн
+code npm run build
+p подключить стили и скрипты
+code @vite(['resources/css/app.css', 'resources/js/app.js'])
+p в SPA-приложении css поключаем в js-файле, поэтому подключаем только js
+code @vite('resources/js/app.js')
+p resources/js/app.js запихиваю картинки глобально, чтобы их учесть при npm run build
+pre
+  code.
+    import.meta.glob([
+      '../images/**'
+    ]);
+p.
+  разбить макет на компоненты<br>
+  в компоненте задать класс по умолчанию с общими настройками компонента
+pre
+  code.
+    @php
+      $classes = 'className1 className2';
+    @endphp
+
+    &lt;div {{ $attributes(['class' => $classes]) }}&gt;
+      {{ $slot }}
+    &lt;/div&gt;
+p задаю свойства компонента, которые можно указывать в вёрстке и менять вид компонента
+pre
+  code.
+    @props(['size' => 'base'])
+
+    @php
+      $classes = "className1 className2";
+      if ($size === 'base') {
+        $classes .= " className3";
+      }
+      if ($size === 'small') {
+        $classes .= " className4";
+      }
+    @endphp
+
+    &lt;a href="#" class="{{ $classes }}"&gt;{{ $slot }}&lt;/a&gt;
+p создать таблицу базы данных
+code php artisan make:migration create_employers_table
+p.
+  создаст файл database/migrations/2024_05_06_132745_create_employers_table<br>
+  в файле описываю поля таблицы<br>
+  и запихиваю таблицу в базу данных
+code php artisan migrate
+p.
+  в файле config/queue.php меняю название таблиц по умолчанию<br>
+  к названию таблицы добавляю слово queue
+pre
+  code.
+    'database' => [
+      'driver' => 'database',
+      'connection' => env('DB_QUEUE_CONNECTION'),
+      'table' => env('DB_QUEUE_TABLE', 'queued_jobs'),
+      'queue' => env('DB_QUEUE', 'default'),
+      'retry_after' => (int) env('DB_QUEUE_RETRY_AFTER', 90),
+      'after_commit' => false,
+    ],
+
+    'batching' => [
+      'database' => env('DB_CONNECTION', 'sqlite'),
+      'table' => 'queued_job_batches',
+    ],
+    'failed' => [
+        'driver' => env('QUEUE_FAILED_DRIVER', 'database-uuids'),
+        'database' => env('DB_CONNECTION', 'sqlite'),
+        'table' => 'queued_failed_jobs',
+    ],
+p.
+  в папке database/migrations/<br>
+  к названию файла по умолчанию добавляю слово queue
+code 0001_01_01_000002_create_queued_jobs_table.php
+p в нутри файлf к названиям таблиц добавляю слово queue
+pre
+  code.
+    Schema::create('queued_jobs', function (Blueprint $table) {
+      ...
+    Schema::create('queued_job_batches', function (Blueprint $table) {
+      ...
+    Schema::create('queued_failed_jobs', function (Blueprint $table) {
+p удаляю старые файлы и создаю новые с учётом изменений
+code php artisan migrate:fresh
+p помощь по созданию модели
+code php artisan help make:model
+p создаю модель в полном комплекте (Model, Migration, Factory, Seeder, Request, Controller, Policy)
+code php artisan make:model Employer -a
+p создать модель без миграции
+code php artisan make:model Employer -cfs --policy
+p.
+  то что не будет использовано можно будет удалить.
+  чтобы внести изменения миграций в базу данных:
+code php artisan migrate
+p в моделях app/Models/ указать связи
+pre
+  code.
+    class Employer extends Model
+    {
+      use HasFactory;
+      public function user(): BelongsTo
+      {
+        return $this->belongsTo(User::class);
+      }
+      public function jobs(): HasMany
+      {
+        return $this->hasMany(Job::class);
+      }
+    }
+p.
+  в database/factories заполнить фабрики для создания тестового контента<br>
+  pest - это обёртка для phpunit.<br>
+  раскомментировать в phpunit.xml строки:
+pre
+  code.
+    &lt;env name="DB_CONNECTION" value="sqlite"/&gt;
+    &lt;env name="DB_DATABASE" value=":memory:"/&gt;
+p.
+  подходит для маленьких проектов, высокая скорость<br>
+  создаю тест
+code php artisan make:test
+p запускаю тест
+code php artisan test
+p.
+  в папке tests/Unit и tests/Feature удалить ExampleTest.php<br>
+  файл tests/Pest.php - конфигурация тестов<br>
+  в файле Providers/AppServiceProvider.php
+pre
+  code.
+    public function boot(): void
+    {
+      Model::unguard();
+    }
+p.
+  в файлах database/seeders/ создать контент
+  Sequence меняет значения полей для каждой итерации цикла создания данных
+pre
+  code.
+    public function run(): void
+    {
+      $tags = Tag::factory(3)->create();
+      Job::factory(20)->hasAttached($tags)->create(new Sequence([
+        'featured' => false,
+        'schedule' => 'Full Time',
+      ], [
+        'featured' => true,
+        'schedule' => 'Part Time',
+      ]));
+    }
+p заполнить базу данных данными
+code php artisan db:seed
+p удалить таблицы, создать новые и заполнить данными
+code php artisan migrate:fresh --seed
+p создать контроллер с типовыми методами
+code php artisan make:controller SessionController -r
+p.
+  в файле .env указать место хранения загружаемых файлов<br>
+  варианты значений в файле config/filesystems.php
+code FILESYSTEM_DISK=public
+p.
+  при загрузке изображения онобудет сохранено в storage/app/public<br>
+  чтобы оно отображалось сделать ссылку:
+code php artisan storage:link
+p.
+  public function __invoke(){} метод применяется в контроллерах с одним действием<br>
+  запрос на получение данных из базы данных:
+pre
+  code.
+    public function __invoke()
+    {
+      $jobs = Job::query()
+        ->with(['employer', 'tags'])
+        ->where('title', 'LIKE', '%'.request('q').'%')
+        ->get();
+      return view('results', ['jobs' => $jobs]);
+    }
+p.
+  with(['employer', 'tags']) нужен для того, чтобы не создать n+1 проблему<br>
+  когда каждая строка таблицы данных будет будет вызываться отдельным запросом
