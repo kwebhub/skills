@@ -186,3 +186,52 @@ pre
 p.
   with(['employer', 'tags']) нужен для того, чтобы не создать n+1 проблему<br>
   когда каждая строка таблицы данных будет будет вызываться отдельным запросом
+
+
+
+a(href="https://laravel.com/docs/11.x/sail") laravel
+a(href="https://herd.laravel.com") Herd 
+
+//- Install Docker
+details
+  summary Install Docker
+p.
+  В винде установить docker, wsl и ubuntu в ней по умолчанию<br>
+  Открыть папку проекта в vscode, открыть wsl терминал
+pre
+  code.
+    curl -s "https://laravel.build/projectName" | bash
+    cd projectName/vendor/bin
+    ./sail up -d
+    ./sail artisan migrate
+    ./sail npm install
+    ./sail npm run build
+    ./sail composer run dev
+
+p.
+  Открыть в браузере http://localhost
+  Остановить контейнер
+code ./sail down
+
+p Посмотреть список таблиц и свойства таблицы
+pre
+  code.
+    php artisan db:show
+    php artisan db:table users
+
+p Посмотреть содержимое таблицы БД
+pre
+  code.
+    ./sail php artisan tinker
+    App\Models\User::all();
+
+//- Install Herd
+details
+  summary Istall Herd
+  p.
+    Установить Herd<br>
+    Открыть vscode в папке ~/Herd<br>
+    Создать новый проект
+  code laravel new projectName
+  p Открой http://projectName.test
+  
