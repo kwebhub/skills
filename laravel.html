@@ -1,0 +1,232 @@
+<a href="https://laravel.com/docs/11.x/sail">laravel</a><details><summary>Install</summary><details><summary>Install Docker</summary><p>В винде установить docker, wsl и ubuntu в ней по умолчанию<br>
+Открыть папку проекта в vscode, открыть wsl терминал</p><pre><code>curl -s "https://laravel.build/projectName" | bash
+cd projectName/vendor/bin
+./sail up -d
+./sail artisan migrate
+./sail npm install
+./sail npm run build
+./sail composer run dev
+</code></pre><p>Открыть в браузере http://localhost
+Остановить контейнер</p><code>./sail down</code><p>Посмотреть список таблиц и свойства таблицы</p><pre><code>php artisan db:show
+php artisan db:table users
+</code></pre><p>Посмотреть содержимое таблицы БД</p><pre><code>./sail php artisan tinker
+App\Models\User::all();
+</code></pre></details><details><summary>Istall Herd</summary><a href="https://herd.laravel.com">Herd</a><p>Установить Herd<br>
+Открыть vscode в папке ~/Herd<br>
+Создать новый проект</p><code>laravel new projectName</code><p>Открой http://projectName.test</p></details><details><summary>Локальный сервер</summary><a href="https://windows.php.net/">PHP</a><a href="https://dev.mysql.com/downloads/">MySQL server only</a><a href="https://github.com/coreybutler/nvm-windows">NVM</a><a href="https://getcomposer.org/download/">Composer</a><a href="https://laravel.com/">Laravel</a><a href="https://livewire.laravel.com/docs/quickstart">Livewire</a><p>Установить PHP<br>
+В php.ini раскомментировать fileinfo и pdo_mysql<br>
+Установить nodejs</p><pre><code>nvm -v
+nvm install lts
+nvm use 23.6.1</code></pre><p>Установить composer, mysql (server only)<br>
+Установить laravel</p><pre><code>composer create-project laravel/laravel projectName
+cd projectName
+composer update</code></pre><p>В файле .env сгенерить ключ и прописать настройки водключения к базе данных<br>
+Если базы данных нет, то создаст новую</p><pre><code>php artisan key:generate
+php artisan migrate
+</code></pre><p>Установить livewire</p><code>composer require livewire/livewire</code><p>Установить node_modules и собрать</p><pre><code>npm install
+npm run build
+</code></pre><p>Отслеживать изменения только на фронте</p><code>npm run dev</code><p>Запустить веб-сервер и отслеживать изменения и на фронте и на беке</p><code>composer run dev</code><p>В отдельном терминале запустить веб-сервер</p><pre><code>cd projectName/public
+php -S localhost:8080
+</code></pre></details></details><details><summary>Assets</summary><p>vite компелирует, кеширует и отслеживает изменения в папке resources<br>
+resources/views/components/layout.blade.php создаю компонент layout<br>
+вставляю компонент на страницу</p><code>&lt;x-layout&gt;&lt;/x-layout&gt;</code><p>подключил лого</p><code>&lt;img src="{{ Vite::asset('resources/images/logo.svg') }}" alt=""&gt;</code><p>подключить стили и скрипты</p><code>@vite(['resources/css/app.css', 'resources/js/app.js'])</code><p>в SPA-приложении css поключаем в js-файле, поэтому подключаем только js</p><code>@vite('resources/js/app.js')</code><p>resources/js/app.js запихиваю картинки глобально, чтобы их учесть при npm run build</p><pre><code>import.meta.glob([
+  '../images/**',
+  '../fonts/**',
+]);</code></pre><p>в файле .env указать место хранения загружаемых файлов<br>
+варианты значений в файле config/filesystems.php</p><code>FILESYSTEM_DISK=public</code><p>при загрузке изображения оно будет сохранено в storage/app/public<br>
+чтобы оно отображалось сделать ссылку:</p><code>php artisan storage:link</code></details><details><summary>Component</summary><details><summary>Component styles</summary><p>разбить макет на компоненты<br>
+в компоненте задать класс по умолчанию с общими настройками компонента</p><pre><code>@php
+  $classes = 'className1 className2';
+@endphp
+
+&lt;div {{ $attributes(['class' => $classes]) }}&gt;
+  {{ $slot }}
+&lt;/div&gt;
+</code></pre></details><details><summary>Component properties</summary><p>задаю свойства компонента, которые можно указывать в вёрстке и менять вид компонента</p><pre><code>@props(['size' => 'base'])
+
+@php
+  $classes = "className1 className2";
+  if ($size === 'base') {
+    $classes .= " className3";
+  }
+  if ($size === 'small') {
+    $classes .= " className4";
+  }
+@endphp
+
+&lt;a href="#" class="{{ $classes }}"&gt;{{ $slot }}&lt;/a&gt;
+</code></pre></details></details><details><summary>Database</summary><details><summary>Create table</summary><p>создать таблицу базы данных</p><code>php artisan make:migration create_employers_table</code><p>создаст файл database/migrations/2024_05_06_132745_create_employers_table<br>
+в файле описываю поля таблицы<br>
+и запихиваю таблицу в базу данных</p><code>php artisan migrate</code></details><details><summary>Rename table</summary><p>в файле config/queue.php меняю название таблиц по умолчанию<br>
+к названию таблицы добавляю слово queue</p><pre><code>'database' => [
+  'driver' => 'database',
+  'connection' => env('DB_QUEUE_CONNECTION'),
+  'table' => env('DB_QUEUE_TABLE', 'queued_jobs'),
+  'queue' => env('DB_QUEUE', 'default'),
+  'retry_after' => (int) env('DB_QUEUE_RETRY_AFTER', 90),
+  'after_commit' => false,
+],
+
+'batching' => [
+  'database' => env('DB_CONNECTION', 'sqlite'),
+  'table' => 'queued_job_batches',
+],
+'failed' => [
+    'driver' => env('QUEUE_FAILED_DRIVER', 'database-uuids'),
+    'database' => env('DB_CONNECTION', 'sqlite'),
+    'table' => 'queued_failed_jobs',
+],</code></pre><p>в папке database/migrations/<br>
+к названию файла по умолчанию добавляю слово queue</p><code>0001_01_01_000002_create_queued_jobs_table.php</code><p>в нутри файлa к названиям таблиц добавляю слово queue</p><pre><code>Schema::create('queued_jobs', function (Blueprint $table) {
+  ...
+Schema::create('queued_job_batches', function (Blueprint $table) {
+  ...
+Schema::create('queued_failed_jobs', function (Blueprint $table) {</code></pre><p>удаляю старые файлы и создаю новые с учётом изменений</p><code>php artisan migrate:fresh</code><p>чтобы внести изменения в базу данных:</p><code>php artisan migrate</code></details><details><summary>Factories</summary><p>в database/factories заполнить фабрики для создания тестового контента<br></p></details><details><summary>Seeders</summary><p>в файлах database/seeders/ создать контент
+Sequence меняет значения полей для каждой итерации цикла создания данных</p><pre><code>public function run(): void
+{
+  $tags = Tag::factory(3)->create();
+  Job::factory(20)->hasAttached($tags)->create(new Sequence([
+    'featured' => false,
+    'schedule' => 'Full Time',
+  ], [
+    'featured' => true,
+    'schedule' => 'Part Time',
+  ]));
+}</code></pre><p>заполнить базу данных данными</p><code>php artisan db:seed</code><p>удалить таблицы, создать новые и заполнить данными</p><code>php artisan migrate:fresh --seed</code></details></details><details><summary>Models</summary><p>помощь по созданию модели</p><code>php artisan help make:model</code><p>создаю модель в полном комплекте (Model, Migration, Factory, Seeder, Request, Controller, Policy)</p><code>php artisan make:model Employer -a</code><p>создать модель без миграции</p><code>php artisan make:model Employer -cfs --policy</code><p>то что не будет использовано можно будет удалить.<br>
+в моделях app/Models/ указать связи</p><pre><code>class Employer extends Model
+{
+  use HasFactory;
+  public function user(): BelongsTo
+  {
+    return $this->belongsTo(User::class);
+  }
+  public function jobs(): HasMany
+  {
+    return $this->hasMany(Job::class);
+  }
+}</code></pre><p>в файле Providers/AppServiceProvider.php</p><pre><code>public function boot(): void
+{
+  Model::unguard();
+}</code></pre><p>Показать содажимое таблицы БД</p><pre><code>php artisan tinker
+User::all();
+</code></pre></details><details><summary>Controllers</summary><p>создать контроллер с типовыми методами</p><code>php artisan make:controller SessionController -r</code><p>public function __invoke(){} метод применяется в контроллерах с одним действием<br>
+запрос на получение данных из базы данных:</p><pre><code>public function __invoke()
+{
+  $jobs = Job::query()
+    ->with(['employer', 'tags'])
+    ->where('title', 'LIKE', '%'.request('q').'%')
+    ->get();
+  return view('results', ['jobs' => $jobs]);
+}</code></pre><p>with(['employer', 'tags']) нужен для того, чтобы не создать n+1 проблему<br>
+когда каждая строка таблицы данных будет будет вызываться отдельным запросом
+</p></details><details><summary>Tests</summary><p>pest - это обёртка для phpunit.<br>
+раскомментировать в phpunit.xml строки:</p><pre><code>&lt;env name="DB_CONNECTION" value="sqlite"/&gt;
+&lt;env name="DB_DATABASE" value=":memory:"/&gt;</code></pre><p>подходит для маленьких проектов, высокая скорость<br>
+создаю тест</p><code>php artisan make:test</code><p>запускаю тест</p><code>php artisan test</code><p>в папке tests/Unit и tests/Feature удалить ExampleTest.php<br>
+файл tests/Pest.php - конфигурация тестов
+</p></details><details><summary>Routes</summary><p>просмотреть список роутов</p><code>php artisan route:list --except-vendor</code><p>просто выдать страницу без дополнительных действий</p><code>Route::view('/', 'home');</code><pre><code>code Route::view('/', 'welcome')->name('home');
+
+<span>welcome.blade.php</span>
+&lt;nav&gt;
+  &lt;a href="{{ route('home') }}"&gt;Home&lt;/a&gt;
+&lt;/nav&gt;
+</code></pre><pre><code>Route::get('test', function () {
+  $job = Job::first();
+
+  TranslateJob::dispatch($job);
+
+  return 'Done';
+});
+</code></pre><p>wildcard {job} and parametr of function $job<br>
+type of parametr function (Job $job)<br>
+ларавель понимает, что нужен объект модели Job с данными из таблицы<br>
+этот объект он отбирает из БД по значению {job}<br>
+по умолчанию {job} - это id, но можно задать своё значение {job:name}</p><pre><code>Route::get('/jobs/{job}', function (Job $job) {
+  return view('jobs.show', ['job' => $job]);
+});
+</code></pre><p>вызываю метод index из класса контроллера JobController при переходе на /jobs</p><code>Route::get('/jobs', [JobController::class, 'index']);</code><p>объединяю роуты с одним и тем же контроллером</p><pre><code>Route::controller(JobController::class)->group( function()
+{
+  Route::get('/jobs', 'index');
+  Route::get('/jobs/create', 'create');
+  Route::get('/jobs/{job}', 'show');
+  Route::get('/jobs/{job}/edit', 'edit');
+  Route::post('/jobs', 'store');
+  Route::patch('/jobs/{job}', 'update');
+  Route::delete('/jobs/{job}', 'destroy');
+});
+</code></pre><p>сформирует для методов класса контроллера роуты:
+jobs.index <span>- показать всё списком</span>
+jobs.show <span>- показать один</span>
+jobs.create <span>- создать</span>
+jobs.edit <span>- редактировать</span>
+jobs.store <span>- сохранить</span>
+jobs.update <span>- обновить</span>
+jobs.destroy <span>- уничтожить</span>
+названия методов контроллера - это дефолтные названия ларавел.</p><pre><code>Route::resource('uri', controller);
+Route::resource('jobs', JobController::class);</code></pre><p>можно форимровать роуты выборочно</p><pre><code>Route::resource('jobs', JobController::class, [
+  'only' => ['index', 'show']
+]);
+Route::resource('jobs', JobController::class, [
+  'except' => ['edit']
+]);
+</code></pre></details><details><summary>Localization</summary><p>Создать папку для переводов</p><code>php artisan lang:publish</code><p>Скопировать папку en, переименовать в ru и вставить переводы в файлах</p></details><details><summary>Livewire</summary><p>Создать компонент</p><pre><code>php artisan make:livewire ComponentName
+<span>or</span>
+php artisan make:livewire component-name
+</code></pre><p>Создать компонент в папке</p><pre><code>php artisan make:livewire Folder\\ComponentName
+<span>or</span>
+php artisan make:livewire folder.component-name
+</code></pre><a href="https://livewire.laravel.com/docs/validation">Валидация</a><p>В основном такая же как в ларавел, но метод validate() применяется на объекте компонента<br>
+Метод validate() возвращает массив отвалидированных данных либо массив ошибок</p><pre><code>public function save()
+{
+  $validated = $this->validate([ 
+    'title' => 'required|min:3',
+    'content' => 'required|min:3',
+  ]);
+  Post::create($validated);
+  return redirect()->to('/posts');
+}</code></pre><p>В форме ввода не фронте отобразить ошибку валидации с помощью<br>
+директивы @error(), по ключу title выводиться значение $message</p><pre><code>&lt;input type="text" wire:model="title"&gt;
+&lt;div&gt;@error('title') {{ $message }} @enderror&lt;/div&gt;</code></pre><p>Задать правила валидации можно разными способами</p><pre><code><span>методом validate()</span>
+$validated = $this->validate([
+  <span>массивом</span>
+  'name' => ['required', 'min:2', 'max:30'],
+  <span>строкой через разделитель</span>
+  'email' => 'required|email|max:30',
+  'password' => 'required|min:6',
+]);
+<span>параметром <Validate></Validate></span>
+<span>отслеживает изменение значений</span>
+<span>использует стандартные валидаторы ларавел</span>
+<span>свой текст сообщения</span>
+<Validate required="required" message:="message:" Имя обязательно="Имя обязательно"></Validate>
+<span>своё имя поля в соощении</span>
+<Validate min:2="min:2" as:="as:" Name="Name"></Validate>
+<Validate max:30="max:30"></Validate>
+public string $name;
+<span>написать свои правила валидации</span>
+protected function rules(): array
+{
+  return [
+    'name' => ['required', 'min:2', 'max:30'],
+    'email' => 'required|email|max:30',
+    'password' => 'required|min:6',
+  ];
+}
+<span>написать свои тексты сообщений об ошибке</span>
+protected function messages(): array
+{
+  return [
+    <span>название поля.валидатор => текст ошибки</span>
+    'name.required' => 'Имя обязательно!',
+    'name.min' => 'Имя должно быть длиннее!',
+    'email.required' => 'Введите почту!',
+    'password.required' => 'Пароль обязателен!',
+  ];
+}</code></pre><p>Если правила валидации заданы параметром <Validate></Validate>
+или методом rules(),
+то метод validate() вызываем без параметров</p><code>$validated = $this->validate();</code><p>Создаю пользователя в БД</p><code>User::create($validated);</code><p>wire:model.blur="name" - real-time validation<br>
+срабатывает по событию либо .live либо .blur<br>
+работает при использовании параметра валидирования <Validate></Validate>
+
+</p><p>Получить все данные формы</p><code>$this->all();</code><p>Получить данные выборочных полей</p><code>$this->only(['name', 'email'])</code><p>Метод pull() - это метод only() + reset()<br>
+Заберёт из формы данные полей name и email<br>
+и очистит поля формы name и email</p><code>$this->pull(['name', 'email'])</code><p>заберёт из формы все данные и очистит форму</p><code>$this->pull();</code></details>
