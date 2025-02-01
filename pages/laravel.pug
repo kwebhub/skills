@@ -93,7 +93,9 @@ details
     code npm run dev
     
     p Запустить веб-сервер и отслеживать изменения и на фронте и на беке
-    code composer run dev
+    code.
+      composer run dev
+      localhost:8000
 
     p В отдельном терминале запустить веб-сервер
     pre
@@ -101,243 +103,8 @@ details
         cd projectName/public
         php -S localhost:8080
 
-//- Assets
-details
-  summary Assets
-  p.
-    vite компелирует, кеширует и отслеживает изменения в папке resources<br>
-    resources/views/components/layout.blade.php создаю компонент layout<br>
-    вставляю компонент на страницу
-  code &lt;x-layout&gt;&lt;/x-layout&gt;
-  p подключил лого
-  code &lt;img src="{{ Vite::asset('resources/images/logo.svg') }}" alt=""&gt;
-  p подключить стили и скрипты
-  code @vite(['resources/css/app.css', 'resources/js/app.js'])
-  p в SPA-приложении css поключаем в js-файле, поэтому подключаем только js
-  code @vite('resources/js/app.js')
-  p resources/js/app.js запихиваю картинки глобально, чтобы их учесть при npm run build
-  pre
-    code.
-      import.meta.glob([
-        '../images/**',
-        '../fonts/**',
-      ]);
-  p.
-    в файле .env указать место хранения загружаемых файлов<br>
-    варианты значений в файле config/filesystems.php
-  code FILESYSTEM_DISK=public
-  p.
-    при загрузке изображения оно будет сохранено в storage/app/public<br>
-    чтобы оно отображалось сделать ссылку:
-  code php artisan storage:link
-
-//- Component
-details
-  summary Component
-
-  //- Component styles
-  details
-    summary Component styles
-    p.
-      разбить макет на компоненты<br>
-      в компоненте задать класс по умолчанию с общими настройками компонента
-    pre
-      code.
-        @php
-          $classes = 'className1 className2';
-        @endphp
-
-        &lt;div {{ $attributes(['class' => $classes]) }}&gt;
-          {{ $slot }}
-        &lt;/div&gt;
-
-  //- Component properties
-  details
-    summary Component properties
-    p задаю свойства компонента, которые можно указывать в вёрстке и менять вид компонента
-    pre
-      code.
-        @props(['size' => 'base'])
-
-        @php
-          $classes = "className1 className2";
-          if ($size === 'base') {
-            $classes .= " className3";
-          }
-          if ($size === 'small') {
-            $classes .= " className4";
-          }
-        @endphp
-
-        &lt;a href="#" class="{{ $classes }}"&gt;{{ $slot }}&lt;/a&gt;
-
-//- Database
-details
-  summary Database
-
-  //- Create table
-  details
-    summary Create table
-    p создать таблицу базы данных
-    code php artisan make:migration create_employers_table
-    p.
-      создаст файл database/migrations/2024_05_06_132745_create_employers_table<br>
-      в файле описываю поля таблицы<br>
-      и запихиваю таблицу в базу данных
-    code php artisan migrate
-
-  //- Rename table
-  details
-    summary Rename table
-    p.
-      в файле config/queue.php меняю название таблиц по умолчанию<br>
-      к названию таблицы добавляю слово queue
-    pre
-      code.
-        'database' => [
-          'driver' => 'database',
-          'connection' => env('DB_QUEUE_CONNECTION'),
-          'table' => env('DB_QUEUE_TABLE', 'queued_jobs'),
-          'queue' => env('DB_QUEUE', 'default'),
-          'retry_after' => (int) env('DB_QUEUE_RETRY_AFTER', 90),
-          'after_commit' => false,
-        ],
-
-        'batching' => [
-          'database' => env('DB_CONNECTION', 'sqlite'),
-          'table' => 'queued_job_batches',
-        ],
-        'failed' => [
-            'driver' => env('QUEUE_FAILED_DRIVER', 'database-uuids'),
-            'database' => env('DB_CONNECTION', 'sqlite'),
-            'table' => 'queued_failed_jobs',
-        ],
-    p.
-      в папке database/migrations/<br>
-      к названию файла по умолчанию добавляю слово queue
-    code 0001_01_01_000002_create_queued_jobs_table.php
-    p в нутри файлa к названиям таблиц добавляю слово queue
-    pre
-      code.
-        Schema::create('queued_jobs', function (Blueprint $table) {
-          ...
-        Schema::create('queued_job_batches', function (Blueprint $table) {
-          ...
-        Schema::create('queued_failed_jobs', function (Blueprint $table) {
-    p удаляю старые файлы и создаю новые с учётом изменений
-    code php artisan migrate:fresh
-    p чтобы внести изменения в базу данных:
-    code php artisan migrate
-
-  //- Factories
-  details
-    summary Factories
-    p в database/factories заполнить фабрики для создания тестового контента<br>
-
-  //- Seeders
-  details
-    summary Seeders
-    p.
-      в файлах database/seeders/ создать контент
-      Sequence меняет значения полей для каждой итерации цикла создания данных
-    pre
-      code.
-        public function run(): void
-        {
-          $tags = Tag::factory(3)->create();
-          Job::factory(20)->hasAttached($tags)->create(new Sequence([
-            'featured' => false,
-            'schedule' => 'Full Time',
-          ], [
-            'featured' => true,
-            'schedule' => 'Part Time',
-          ]));
-        }
-    p заполнить базу данных данными
-    code php artisan db:seed
-    p удалить таблицы, создать новые и заполнить данными
-    code php artisan migrate:fresh --seed
-
-//- Models
-details
-  summary Models
-  p помощь по созданию модели
-  code php artisan help make:model
-  p создаю модель в полном комплекте (Model, Migration, Factory, Seeder, Request, Controller, Policy)
-  code php artisan make:model Employer -a
-  p создать модель без миграции
-  code php artisan make:model Employer -cfs --policy
-  p.
-    то что не будет использовано можно будет удалить.<br>
-    в моделях app/Models/ указать связи
-  pre
-    code.
-      class Employer extends Model
-      {
-        use HasFactory;
-        public function user(): BelongsTo
-        {
-          return $this->belongsTo(User::class);
-        }
-        public function jobs(): HasMany
-        {
-          return $this->hasMany(Job::class);
-        }
-      }
-  p в файле Providers/AppServiceProvider.php
-  pre
-    code.
-      public function boot(): void
-      {
-        Model::unguard();
-      }
-  p Показать содажимое таблицы БД
-  pre
-    code.
-      php artisan tinker
-      User::all();
-
-//- Controllers
-details
-  summary Controllers
-  p создать контроллер с типовыми методами
-  code php artisan make:controller SessionController -r
-  p.
-    public function __invoke(){} метод применяется в контроллерах с одним действием<br>
-    запрос на получение данных из базы данных:
-  pre
-    code.
-      public function __invoke()
-      {
-        $jobs = Job::query()
-          ->with(['employer', 'tags'])
-          ->where('title', 'LIKE', '%'.request('q').'%')
-          ->get();
-        return view('results', ['jobs' => $jobs]);
-      }
-  p.
-    with(['employer', 'tags']) нужен для того, чтобы не создать n+1 проблему<br>
-    когда каждая строка таблицы данных будет будет вызываться отдельным запросом
-
-//- Tests
-details
-  summary Tests
-  p.
-    pest - это обёртка для phpunit.<br>
-    раскомментировать в phpunit.xml строки:
-  pre
-    code.
-      &lt;env name="DB_CONNECTION" value="sqlite"/&gt;
-      &lt;env name="DB_DATABASE" value=":memory:"/&gt;
-  p.
-    подходит для маленьких проектов, высокая скорость<br>
-    создаю тест
-  code php artisan make:test
-  p запускаю тест
-  code php artisan test
-  p.
-    в папке tests/Unit и tests/Feature удалить ExampleTest.php<br>
-    файл tests/Pest.php - конфигурация тестов
+    p Панель отладки в браузере
+    code composer require --dev barryvdh/laravel-debugbar
 
 //- Routes
 details
@@ -427,13 +194,253 @@ details
         'except' => ['edit']
       ]);
 
+//- Assets
+details
+  summary Assets
+  p.
+    vite компелирует, кеширует и отслеживает изменения в папке resources<br>
+    resources/views/components/layout.blade.php создаю компонент layout<br>
+    вставляю компонент на страницу
+  code &lt;x-layout&gt;&lt;/x-layout&gt;
+  p подключил лого
+  code &lt;img src="{{ Vite::asset('resources/images/logo.svg') }}" alt=""&gt;
+  p подключить стили и скрипты
+  code @vite(['resources/css/app.css', 'resources/js/app.js'])
+  p в SPA-приложении css поключаем в js-файле, поэтому подключаем только js
+  code @vite('resources/js/app.js')
+  p resources/js/app.js запихиваю картинки глобально, чтобы их учесть при npm run build
+  pre
+    code.
+      import.meta.glob([
+        '../images/**',
+        '../fonts/**',
+      ]);
+  p.
+    в файле .env указать место хранения загружаемых файлов<br>
+    варианты значений в файле config/filesystems.php
+  code FILESYSTEM_DISK=public
+  p.
+    при загрузке изображения оно будет сохранено в storage/app/public<br>
+    чтобы оно отображалось сделать ссылку:
+  code php artisan storage:link
+
+//- Component
+details
+  summary Component
+
+  //- Component styles
+  details
+    summary Component styles
+    p.
+      разбить макет на компоненты<br>
+      в компоненте задать класс по умолчанию с общими настройками компонента
+    pre
+      code.
+        @php
+          $classes = 'className1 className2';
+        @endphp
+
+        &lt;div {{ $attributes(['class' => $classes]) }}&gt;
+          {{ $slot }}
+        &lt;/div&gt;
+
+  //- Component properties
+  details
+    summary Component properties
+    p задаю свойства компонента, которые можно указывать в вёрстке и менять вид компонента
+    pre
+      code.
+        @props(['size' => 'base'])
+
+        @php
+          $classes = "className1 className2";
+          if ($size === 'base') {
+            $classes .= " className3";
+          }
+          if ($size === 'small') {
+            $classes .= " className4";
+          }
+        @endphp
+
+        &lt;a href="#" class="{{ $classes }}"&gt;{{ $slot }}&lt;/a&gt;
+
+//- Database
+details
+  summary Database
+
+  //- Models
+  details
+    summary Models
+    p помощь по созданию модели
+    code php artisan help make:model
+    p создаю модель в полном комплекте (Model, Migration, Factory, Seeder, Request, Controller, Policy)
+    code php artisan make:model Employer -a
+    p создать модель без миграции
+    code php artisan make:model Employer -cfs --policy
+    p.
+      то что не будет использовано можно будет удалить.<br>
+      в моделях app/Models/ указать связи
+    pre
+      code.
+        class Employer extends Model
+        {
+          use HasFactory;
+          public function user(): BelongsTo
+          {
+            return $this->belongsTo(User::class);
+          }
+          public function jobs(): HasMany
+          {
+            return $this->hasMany(Job::class);
+          }
+        }
+    p в файле Providers/AppServiceProvider.php
+    pre
+      code.
+        public function boot(): void
+        {
+          Model::unguard();
+        }
+    p Показать содажимое БД
+    code php artisan db:show
+    p Показать содажимое таблицы БД
+    pre
+      code.
+        php artisan tinker
+        User::all();
+    p при типе связи $this->belongsToMany() создать pivot table
+
+  //- Controllers
+  details
+    summary Controllers
+    p создать контроллер с типовыми методами
+    code php artisan make:controller SessionController -r
+    p.
+      public function __invoke(){} метод применяется в контроллерах с одним действием<br>
+      запрос на получение данных из базы данных:
+    pre
+      code.
+        public function __invoke()
+        {
+          $jobs = Job::query()
+            ->with(['employer', 'tags'])
+            ->where('title', 'LIKE', '%'.request('q').'%')
+            ->get();
+          return view('results', ['jobs' => $jobs]);
+        }
+    p.
+      with(['employer', 'tags']) нужен для того, чтобы не создать n+1 проблему<br>
+      когда каждая строка таблицы данных будет будет вызываться отдельным запросом
+
+  //- Create table
+  details
+    summary Create table
+    p создать таблицу базы данных
+    code php artisan make:migration create_employers_table
+    p.
+      создаст файл database/migrations/2024_05_06_132745_create_employers_table<br>
+      в файле описываю поля таблицы<br>
+      и запихиваю таблицу в базу данных
+    code php artisan migrate
+
+  //- Rename table
+  details
+    summary Rename table
+    p.
+      в файле config/queue.php меняю название таблиц по умолчанию<br>
+      к названию таблицы добавляю слово queue
+    pre
+      code.
+        'database' => [
+          'driver' => 'database',
+          'connection' => env('DB_QUEUE_CONNECTION'),
+          'table' => env('DB_QUEUE_TABLE', 'queued_jobs'),
+          'queue' => env('DB_QUEUE', 'default'),
+          'retry_after' => (int) env('DB_QUEUE_RETRY_AFTER', 90),
+          'after_commit' => false,
+        ],
+
+        'batching' => [
+          'database' => env('DB_CONNECTION', 'sqlite'),
+          'table' => 'queued_job_batches',
+        ],
+        'failed' => [
+            'driver' => env('QUEUE_FAILED_DRIVER', 'database-uuids'),
+            'database' => env('DB_CONNECTION', 'sqlite'),
+            'table' => 'queued_failed_jobs',
+        ], 
+    p.
+      в папке database/migrations/<br>
+      к названию файла по умолчанию добавляю слово queue
+    code 0001_01_01_000002_create_queued_jobs_table.php
+    p в нутри файлa к названиям таблиц добавляю слово queue
+    pre
+      code.
+        Schema::create('queued_jobs', function (Blueprint $table) {
+          ...
+        Schema::create('queued_job_batches', function (Blueprint $table) {
+          ...
+        Schema::create('queued_failed_jobs', function (Blueprint $table) {
+    p удаляю старые файлы и создаю новые с учётом изменений
+    code php artisan migrate:fresh
+    p чтобы внести изменения в базу данных:
+    code php artisan migrate
+
+  //- Factories
+  details
+    summary Factories
+    p в database/factories заполнить фабрики для создания тестового контента<br>
+
+  //- Seeders
+  details
+    summary Seeders
+    p.
+      в файлах database/seeders/ создать контент
+      Sequence меняет значения полей для каждой итерации цикла создания данных
+    pre
+      code.
+        public function run(): void
+        {
+          $tags = Tag::factory(3)->create();
+          Job::factory(20)->hasAttached($tags)->create(new Sequence([
+            'featured' => false,
+            'schedule' => 'Full Time',
+          ], [
+            'featured' => true,
+            'schedule' => 'Part Time',
+          ]));
+        }
+    p заполнить базу данных данными
+    code php artisan db:seed
+    p удалить таблицы, создать новые и заполнить данными
+    code php artisan migrate:fresh --seed
+
+//- Tests
+details
+  summary Tests
+  p.
+    pest - это обёртка для phpunit.<br>
+    раскомментировать в phpunit.xml строки:
+  pre
+    code.
+      &lt;env name="DB_CONNECTION" value="sqlite"/&gt;
+      &lt;env name="DB_DATABASE" value=":memory:"/&gt;
+  p.
+    подходит для маленьких проектов, высокая скорость<br>
+    создаю тест
+  code php artisan make:test
+  p запускаю тест
+  code php artisan test
+  p.
+    в папке tests/Unit и tests/Feature удалить ExampleTest.php<br>
+    файл tests/Pest.php - конфигурация тестов
+
 //- Localization
 details
   summary Localization
   p Создать папку для переводов
   code php artisan lang:publish
   p Скопировать папку en, переименовать в ru и вставить переводы в файлах
-
 
 //- Livewire
 details
@@ -486,6 +493,7 @@ details
         'email' => 'required|email|max:30',
         'password' => 'required|min:6',
       ]);
+
       <span>параметром #[Validate()]</span>
       <span>отслеживает изменение значений</span>
       <span>использует стандартные валидаторы ларавел</span>
@@ -495,6 +503,7 @@ details
       #[Validate('min:2', as: 'Name')]
       #[Validate('max:30')]
       public string $name;
+
       <span>написать свои правила валидации</span>
       protected function rules(): array
       {
@@ -504,6 +513,7 @@ details
           'password' => 'required|min:6',
         ];
       }
+
       <span>написать свои тексты сообщений об ошибке</span>
       protected function messages(): array
       {
@@ -524,10 +534,10 @@ details
   code User::create($validated);
   p.
     wire:model.blur="name" - real-time validation<br>
-    срабатывает по событию либо .live либо .blur<br>
+    срабатывает по событию либо <dfn>.live</dfn> либо <dfn>.blur</dfn><br>
     работает при использовании параметра валидирования #[Validate()]
 
-
+  //- Форма
   p Получить все данные формы
   code $this->all();
   p Получить данные выборочных полей
@@ -539,3 +549,23 @@ details
   code $this->pull(['name', 'email'])
   p заберёт из формы все данные и очистит форму
   code $this->pull();
+  p.
+    Создать класс формы
+    Создаст app/Livewire/Forms/FormName.php
+  code php artisan livewire:form FormName
+  p.
+    При создании компонентов CreatePost, UpdatePost и т.д.
+    в классах компонентов будут вызываться методы и свойства класса FormName.php.
+    Т.е. все свойства и методы формы в одном классе и исспользуются разными компонентами.
+    Для доступа к свойствам и методам калсса формы в классе компонента создаётся её объект form
+    и обращение к свойствам и методам через объект.
+    В классе компонента:
+  pre
+    code.
+      public UserForm $form;
+      public function save()
+      {
+          $this->form->saveUser();
+      }
+  p В шаблоне компонента:
+  code wire:model="form.name"
