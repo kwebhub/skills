@@ -445,127 +445,198 @@ details
 //- Livewire
 details
   summary Livewire
-  p Создать компонент
-  pre
-    code.
-      php artisan make:livewire ComponentName
-      <span>or</span>
-      php artisan make:livewire component-name
-      
-  p Создать компонент в папке
-  pre
-    code.
-      php artisan make:livewire Folder\\ComponentName
-      <span>or</span>
-      php artisan make:livewire folder.component-name
 
-  //- Валидация
-  a(href="https://livewire.laravel.com/docs/validation") Валидация
-  p.
-    В основном такая же как в ларавел, но метод validate() применяется на объекте компонента<br>
-    Метод validate() возвращает массив отвалидированных данных либо массив ошибок
-  pre
-    code.
-      public function save()
-      {
-        $validated = $this->validate([ 
-          'title' => 'required|min:3',
-          'content' => 'required|min:3',
-        ]);
-        Post::create($validated);
-        return redirect()->to('/posts');
-      }
-  p.
-    В форме ввода не фронте отобразить ошибку валидации с помощью<br>
-    директивы @error(), по ключу title выводиться значение $message
-  pre
-    code.
-      &lt;input type="text" wire:model="title"&gt;
-      &lt;div&gt;@error('title') {{ $message }} @enderror&lt;/div&gt;
-  p Задать правила валидации можно разными способами
-  pre
-    code.
-      <span>методом validate()</span>
-      $validated = $this->validate([
-        <span>массивом</span>
-        'name' => ['required', 'min:2', 'max:30'],
-        <span>строкой через разделитель</span>
-        'email' => 'required|email|max:30',
-        'password' => 'required|min:6',
-      ]);
+  //- Create component
+  details
+    summary Create component
+    p Создать компонент
+    pre
+      code.
+        php artisan make:livewire ComponentName
+        <span>or</span>
+        php artisan make:livewire component-name
+        
+    p Создать компонент в папке
+    pre
+      code.
+        php artisan make:livewire Folder\\ComponentName
+        <span>or</span>
+        php artisan make:livewire folder.component-name
 
-      <span>параметром #[Validate()]</span>
-      <span>отслеживает изменение значений</span>
-      <span>использует стандартные валидаторы ларавел</span>
-      <span>свой текст сообщения</span>
-      #[Validate('required', message: 'Имя обязательно')]
-      <span>своё имя поля в соощении</span>
-      #[Validate('min:2', as: 'Name')]
-      #[Validate('max:30')]
-      public string $name;
-
-      <span>написать свои правила валидации</span>
-      protected function rules(): array
-      {
-        return [
+  //- Validation
+  details
+    summary Validation
+    p.
+      В основном такая же как в ларавел, но метод validate() применяется на объекте компонента<br>
+      Метод validate() возвращает массив отвалидированных данных либо массив ошибок
+    pre
+      code.
+        public function save()
+        {
+          $validated = $this->validate([ 
+            'title' => 'required|min:3',
+            'content' => 'required|min:3',
+          ]);
+          Post::create($validated);
+          return redirect()->to('/posts');
+        }
+    p.
+      В форме ввода не фронте отобразить ошибку валидации с помощью<br>
+      директивы @error(), по ключу title выводиться значение $message
+    pre
+      code.
+        &lt;input type="text" wire:model="title"&gt;
+        &lt;div&gt;@error('title') {{ $message }} @enderror&lt;/div&gt;
+    p Задать правила валидации можно разными способами
+    pre
+      code.
+        <span>методом validate()</span>
+        $validated = $this->validate([
+          <span>массивом</span>
           'name' => ['required', 'min:2', 'max:30'],
+          <span>строкой через разделитель</span>
           'email' => 'required|email|max:30',
           'password' => 'required|min:6',
-        ];
-      }
+        ]);
 
-      <span>написать свои тексты сообщений об ошибке</span>
-      protected function messages(): array
-      {
-        return [
-          <span>название поля.валидатор => текст ошибки</span>
-          'name.required' => 'Имя обязательно!',
-          'name.min' => 'Имя должно быть длиннее!',
-          'email.required' => 'Введите почту!',
-          'password.required' => 'Пароль обязателен!',
-        ];
-      }
-  p.
-    Если правила валидации заданы параметром #[Validate()]
-    или методом rules(),
-    то метод validate() вызываем без параметров
-  code $validated = $this->validate();
-  p Создаю пользователя в БД
-  code User::create($validated);
-  p.
-    wire:model.blur="name" - real-time validation<br>
-    срабатывает по событию либо <dfn>.live</dfn> либо <dfn>.blur</dfn><br>
-    работает при использовании параметра валидирования #[Validate()]
+        <span>параметром #[Validate()]</span>
+        <span>отслеживает изменение значений</span>
+        <span>использует стандартные валидаторы ларавел</span>
+        <span>свой текст сообщения</span>
+        #[Validate('required', message: 'Имя обязательно')]
+        <span>своё имя поля в соощении</span>
+        #[Validate('min:2', as: 'Name')]
+        #[Validate('max:30')]
+        public string $name;
 
-  //- Форма
-  p Получить все данные формы
-  code $this->all();
-  p Получить данные выборочных полей
-  code $this->only(['name', 'email'])
-  p.
-    Метод pull() - это метод only() + reset()<br>
-    Заберёт из формы данные полей name и email<br>
-    и очистит поля формы name и email
-  code $this->pull(['name', 'email'])
-  p заберёт из формы все данные и очистит форму
-  code $this->pull();
-  p.
-    Создать класс формы
-    Создаст app/Livewire/Forms/FormName.php
-  code php artisan livewire:form FormName
-  p.
-    При создании компонентов CreatePost, UpdatePost и т.д.
-    в классах компонентов будут вызываться методы и свойства класса FormName.php.
-    Т.е. все свойства и методы формы в одном классе и исспользуются разными компонентами.
-    Для доступа к свойствам и методам калсса формы в классе компонента создаётся её объект form
-    и обращение к свойствам и методам через объект.
-    В классе компонента:
-  pre
-    code.
-      public UserForm $form;
-      public function save()
-      {
-          $this->form->saveUser();
-      }
-  p В шаблоне компонента:
-  code wire:model="form.name"
+        <span>написать свои правила валидации</span>
+        protected function rules(): array
+        {
+          return [
+            'name' => ['required', 'min:2', 'max:30'],
+            'email' => 'required|email|max:30',
+            'password' => 'required|min:6',
+          ];
+        }
+
+        <span>написать свои тексты сообщений об ошибке</span>
+        protected function messages(): array
+        {
+          return [
+            <span>название поля.валидатор => текст ошибки</span>
+            'name.required' => 'Имя обязательно!',
+            'name.min' => 'Имя должно быть длиннее!',
+            'email.required' => 'Введите почту!',
+            'password.required' => 'Пароль обязателен!',
+          ];
+        }
+    p.
+      Если правила валидации заданы параметром #[Validate()]
+      или методом rules(),
+      то метод validate() вызываем без параметров
+    code $validated = $this->validate();
+    p Создаю пользователя в БД
+    code User::create($validated);
+    p.
+      wire:model.blur="name" - real-time validation<br>
+      срабатывает по событию либо <dfn>.live</dfn> либо <dfn>.blur</dfn><br>
+      работает при использовании параметра валидирования #[Validate()]
+
+  //- Form
+  details
+    summary Form
+    p.
+      В компоненте создаю форму<br>
+      В форме создаю поля для ввода данных<br>
+      В полях ввода данных привязываю данные к свойствам компонента<br>
+      В кнопке отправки формы вызываю метод сохранения данных
+    pre
+      code.
+        &lt;form wire:submit.prevent="save"&gt;
+          &lt;input type="text" wire:model="name"&gt;
+          &lt;input type="email" wire:model="email"&gt;
+          &lt;button type="submit"&gt;Save&lt;/button&gt;
+        &lt;/form&gt;
+    p.
+      В методе сохранения данных вызываю метод валидации данных<br>
+      Если данные валидны, то сохраняю данные в БД<br>
+      Если данные не валидны, то вывожу ошибку
+    pre
+      code.
+        public function save()
+        {
+          $validated = $this->validate([
+            'name' => 'required|min:3',
+            'email' => 'required|email',
+          ]);
+          User::create($validated);
+        }
+    p.
+      Вывести ошибку валидации можно с помощью директивы @error()<br>
+      По ключу name выводится значение $message
+    pre
+      code.
+        &lt;input type="text" wire:model="name"&gt;
+        &lt;div&gt;@error('name') {{ $message }} @enderror&lt;/div&gt;
+    p.
+      Вывести ошибку валидации можно с помощью директивы @error()<br>
+      По ключу name выводится значение $message
+    pre
+      code.
+        &lt;input type="text" wire:model="name"&gt;
+        &lt;div&gt;@error('name') {{ $message }} @enderror&lt;/div&gt;
+    p.
+      Вывести ошибку валидации можно с помощью директивы @error()<br>
+      По ключу name выводится значение $message
+    pre
+      code.
+        &lt;input type="text" wire:model="name"&gt;
+    p Получить все данные формы
+    code $this->all();
+    p Получить данные выборочных полей
+    code $this->only(['name', 'email'])
+    p.
+      Метод pull() - это метод only() + reset()<br>
+      Заберёт из формы данные полей name и email<br>
+      и очистит поля формы name и email
+    code $this->pull(['name', 'email'])
+    p заберёт из формы все данные и очистит форму
+    code $this->pull();
+    p.
+      Создать класс формы
+      Создаст app/Livewire/Forms/FormName.php
+    code php artisan livewire:form FormName
+    p.
+      При создании компонентов CreatePost, UpdatePost и т.д.
+      в классах компонентов будут вызываться методы и свойства класса FormName.php.
+      Т.е. все свойства и методы формы в одном классе и исспользуются разными компонентами.
+      Для доступа к свойствам и методам калсса формы в классе компонента создаётся её объект form
+      и обращение к свойствам и методам через объект.
+      В классе компонента:
+    pre
+      code.
+        public UserForm $form;
+        public function save()
+        {
+            $this->form->saveUser();
+        }
+    p В шаблоне компонента:
+    code wire:model="form.name"
+
+  //- Events
+  details
+    summary Events
+      p.
+        События позволяю прослушивать события в другом компоненте.
+        Сгенерировать событие: метод dispatch()
+      code.
+        $this->dispatch('eventname');
+        <span>or</span>
+        $this->dispatch('eventname', title: $post->title);
+      p В другом (других) компоненте добавить слушателя события
+      code.
+        use Livewire\Attributes\On;
+
+        #[On('eventname')]
+        public function updatePost($title) {}
+
