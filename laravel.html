@@ -169,13 +169,13 @@ Sequence меняет значения полей для каждой итера
 &lt;env name="DB_DATABASE" value=":memory:"/&gt;</code></pre><p>подходит для маленьких проектов, высокая скорость<br>
 создаю тест</p><code>php artisan make:test</code><p>запускаю тест</p><code>php artisan test</code><p>в папке tests/Unit и tests/Feature удалить ExampleTest.php<br>
 файл tests/Pest.php - конфигурация тестов
-</p></details><details><summary>Localization</summary><p>Создать папку для переводов</p><code>php artisan lang:publish</code><p>Скопировать папку en, переименовать в ru и вставить переводы в файлах</p></details><details><summary>Livewire</summary><p>Создать компонент</p><pre><code>php artisan make:livewire ComponentName
+</p></details><details><summary>Localization</summary><p>Создать папку для переводов</p><code>php artisan lang:publish</code><p>Скопировать папку en, переименовать в ru и вставить переводы в файлах</p></details><details><summary>Livewire</summary><details><summary>Create component</summary><p>Создать компонент</p><pre><code>php artisan make:livewire ComponentName
 <span>or</span>
 php artisan make:livewire component-name
 </code></pre><p>Создать компонент в папке</p><pre><code>php artisan make:livewire Folder\\ComponentName
 <span>or</span>
 php artisan make:livewire folder.component-name
-</code></pre><a href="https://livewire.laravel.com/docs/validation">Валидация</a><p>В основном такая же как в ларавел, но метод validate() применяется на объекте компонента<br>
+</code></pre></details><details><summary>Validation</summary><p>В основном такая же как в ларавел, но метод validate() применяется на объекте компонента<br>
 Метод validate() возвращает массив отвалидированных данных либо массив ошибок</p><pre><code>public function save()
 {
   $validated = $this->validate([ 
@@ -230,7 +230,28 @@ protected function messages(): array
 то метод validate() вызываем без параметров</p><code>$validated = $this->validate();</code><p>Создаю пользователя в БД</p><code>User::create($validated);</code><p>wire:model.blur="name" - real-time validation<br>
 срабатывает по событию либо <dfn>.live</dfn> либо <dfn>.blur</dfn><br>
 работает при использовании параметра валидирования <Validate></Validate>
-</p><p>Получить все данные формы</p><code>$this->all();</code><p>Получить данные выборочных полей</p><code>$this->only(['name', 'email'])</code><p>Метод pull() - это метод only() + reset()<br>
+</p></details><details><summary>Form</summary><p>В компоненте создаю форму<br>
+В форме создаю поля для ввода данных<br>
+В полях ввода данных привязываю данные к свойствам компонента<br>
+В кнопке отправки формы вызываю метод сохранения данных</p><pre><code>&lt;form wire:submit.prevent="save"&gt;
+  &lt;input type="text" wire:model="name"&gt;
+  &lt;input type="email" wire:model="email"&gt;
+  &lt;button type="submit"&gt;Save&lt;/button&gt;
+&lt;/form&gt;</code></pre><p>В методе сохранения данных вызываю метод валидации данных<br>
+Если данные валидны, то сохраняю данные в БД<br>
+Если данные не валидны, то вывожу ошибку</p><pre><code>public function save()
+{
+  $validated = $this->validate([
+    'name' => 'required|min:3',
+    'email' => 'required|email',
+  ]);
+  User::create($validated);
+}</code></pre><p>Вывести ошибку валидации можно с помощью директивы @error()<br>
+По ключу name выводится значение $message</p><pre><code>&lt;input type="text" wire:model="name"&gt;
+&lt;div&gt;@error('name') {{ $message }} @enderror&lt;/div&gt;</code></pre><p>Вывести ошибку валидации можно с помощью директивы @error()<br>
+По ключу name выводится значение $message</p><pre><code>&lt;input type="text" wire:model="name"&gt;
+&lt;div&gt;@error('name') {{ $message }} @enderror&lt;/div&gt;</code></pre><p>Вывести ошибку валидации можно с помощью директивы @error()<br>
+По ключу name выводится значение $message</p><pre><code>&lt;input type="text" wire:model="name"&gt;</code></pre><p>Получить все данные формы</p><code>$this->all();</code><p>Получить данные выборочных полей</p><code>$this->only(['name', 'email'])</code><p>Метод pull() - это метод only() + reset()<br>
 Заберёт из формы данные полей name и email<br>
 и очистит поля формы name и email</p><code>$this->pull(['name', 'email'])</code><p>заберёт из формы все данные и очистит форму</p><code>$this->pull();</code><p>Создать класс формы
 Создаст app/Livewire/Forms/FormName.php</p><code>php artisan livewire:form FormName</code><p>При создании компонентов CreatePost, UpdatePost и т.д.
@@ -242,4 +263,10 @@ protected function messages(): array
 public function save()
 {
     $this->form->saveUser();
-}</code></pre><p>В шаблоне компонента:</p><code>wire:model="form.name"</code></details>
+}</code></pre><p>В шаблоне компонента:</p><code>wire:model="form.name"</code></details><details><summary>Events<p>События позволяю прослушивать события в другом компоненте.
+Сгенерировать событие: метод dispatch()</p><code>$this->dispatch('eventname');
+<span>or</span>
+$this->dispatch('eventname', title: $post->title);</code><p>В другом (других) компоненте добавить слушателя события</p><code>use Livewire\Attributes\On;
+
+<On eventname="eventname"></On>
+public function updatePost($title) {}</code></summary></details></details>
