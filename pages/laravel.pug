@@ -6,8 +6,7 @@ details
   details
     summary Install Docker
     p.
-      В винде установить docker, wsl и ubuntu в ней по умолчанию<br>
-      Открыть папку проекта в vscode, открыть wsl терминал
+      Установить docker
     pre
       code.
         curl -s "https://laravel.build/projectName" | bash
@@ -20,20 +19,20 @@ details
 
     p.
       Открыть в браузере http://localhost
-      Остановить контейнер
+      Удалить контейнеры
     code ./sail down
 
     p Посмотреть список таблиц и свойства таблицы
     pre
       code.
-        php artisan db:show
-        php artisan db:table users
+        ./sail artisan db:show
+        ./sail artisan db:table users
 
     p Посмотреть содержимое таблицы БД
     pre
       code.
-        ./sail php artisan tinker
-        App\Models\User::all();
+        ./sail tinker
+        User::all();
 
   //- Install Herd
   details
@@ -106,167 +105,29 @@ details
     p Панель отладки в браузере
     code composer require --dev barryvdh/laravel-debugbar
 
-//- Routes
+//- Test
 details
-  summary Routes
-  p просмотреть список роутов
-  code php artisan route:list --except-vendor
-  
-  //- Route::view
-  p просто выдать страницу без дополнительных действий
-  code Route::view('/', 'home');
-
-  //- Name for route
-  pre
-    code.
-      code Route::view('/', 'welcome')->name('home');
-      
-      <span>welcome.blade.php</span>
-      &lt;nav&gt;
-        &lt;a href="{{ route('home') }}"&gt;Home&lt;/a&gt;
-      &lt;/nav&gt;
-  
-  //- Execute test
-  pre
-    code.
-      Route::get('test', function () {
-        $job = Job::first();
-
-        TranslateJob::dispatch($job);
-
-        return 'Done';
-      });
-  
-  //- Model binding
+  summary Test
   p.
-    wildcard {job} and parametr of function $job<br>
-    type of parametr function (Job $job)<br>
-    ларавель понимает, что нужен объект модели Job с данными из таблицы<br>
-    этот объект он отбирает из БД по значению {job}<br>
-    по умолчанию {job} - это id, но можно задать своё значение {job:name}
+    pest - это обёртка для phpunit.<br>
+    раскомментировать в phpunit.xml строки:
   pre
     code.
-      Route::get('/jobs/{job}', function (Job $job) {
-        return view('jobs.show', ['job' => $job]);
-      });
-  
-  //- Controller classes
-  p вызываю метод index из класса контроллера JobController при переходе на /jobs
-  code Route::get('/jobs', [JobController::class, 'index']);
-
-  //- Route groups
-  p объединяю роуты с одним и тем же контроллером
-  pre
-    code.
-      Route::controller(JobController::class)->group( function()
-      {
-        Route::get('/jobs', 'index');
-        Route::get('/jobs/create', 'create');
-        Route::get('/jobs/{job}', 'show');
-        Route::get('/jobs/{job}/edit', 'edit');
-        Route::post('/jobs', 'store');
-        Route::patch('/jobs/{job}', 'update');
-        Route::delete('/jobs/{job}', 'destroy');
-      });
-
-  //- Route Resources
+      &lt;env name="DB_CONNECTION" value="sqlite"/&gt;
+      &lt;env name="DB_DATABASE" value=":memory:"/&gt;
   p.
-    сформирует для методов класса контроллера роуты:
-    jobs.index <span>- показать всё списком</span>
-    jobs.show <span>- показать один</span>
-    jobs.create <span>- создать</span>
-    jobs.edit <span>- редактировать</span>
-    jobs.store <span>- сохранить</span>
-    jobs.update <span>- обновить</span>
-    jobs.destroy <span>- уничтожить</span>
-    названия методов контроллера - это дефолтные названия ларавел.
-  pre
-    code.
-      Route::resource('uri', controller);
-      Route::resource('jobs', JobController::class);
-  p можно форимровать роуты выборочно
-  pre
-    code.
-      Route::resource('jobs', JobController::class, [
-        'only' => ['index', 'show']
-      ]);
-      Route::resource('jobs', JobController::class, [
-        'except' => ['edit']
-      ]);
+    подходит для маленьких проектов, высокая скорость<br>
+    создаю тест
+  code php artisan make:test
+  p запускаю тест
+  code php artisan test
+  p.
+    в папке tests/Unit и tests/Feature удалить ExampleTest.php<br>
+    файл tests/Pest.php - конфигурация тестов
 
-//- Assets
+//- Model
 details
-  summary Assets
-  p.
-    vite компелирует, кеширует и отслеживает изменения в папке resources<br>
-    resources/views/components/layout.blade.php создаю компонент layout<br>
-    вставляю компонент на страницу
-  code &lt;x-layout&gt;&lt;/x-layout&gt;
-  p подключил лого
-  code &lt;img src="{{ Vite::asset('resources/images/logo.svg') }}" alt=""&gt;
-  p подключить стили и скрипты
-  code @vite(['resources/css/app.css', 'resources/js/app.js'])
-  p в SPA-приложении css поключаем в js-файле, поэтому подключаем только js
-  code @vite('resources/js/app.js')
-  p resources/js/app.js запихиваю картинки глобально, чтобы их учесть при npm run build
-  pre
-    code.
-      import.meta.glob([
-        '../images/**',
-        '../fonts/**',
-      ]);
-  p.
-    в файле .env указать место хранения загружаемых файлов<br>
-    варианты значений в файле config/filesystems.php
-  code FILESYSTEM_DISK=public
-  p.
-    при загрузке изображения оно будет сохранено в storage/app/public<br>
-    чтобы оно отображалось сделать ссылку:
-  code php artisan storage:link
-
-//- Component
-details
-  summary Component
-
-  //- Component styles
-  details
-    summary Component styles
-    p.
-      разбить макет на компоненты<br>
-      в компоненте задать класс по умолчанию с общими настройками компонента
-    pre
-      code.
-        @php
-          $classes = 'className1 className2';
-        @endphp
-
-        &lt;div {{ $attributes(['class' => $classes]) }}&gt;
-          {{ $slot }}
-        &lt;/div&gt;
-
-  //- Component properties
-  details
-    summary Component properties
-    p задаю свойства компонента, которые можно указывать в вёрстке и менять вид компонента
-    pre
-      code.
-        @props(['size' => 'base'])
-
-        @php
-          $classes = "className1 className2";
-          if ($size === 'base') {
-            $classes .= " className3";
-          }
-          if ($size === 'small') {
-            $classes .= " className4";
-          }
-        @endphp
-
-        &lt;a href="#" class="{{ $classes }}"&gt;{{ $slot }}&lt;/a&gt;
-
-//- Database
-details
-  summary Database
+  summary Model
 
   //- Models
   details
@@ -309,28 +170,6 @@ details
         php artisan tinker
         User::all();
     p при типе связи $this->belongsToMany() создать pivot table
-
-  //- Controllers
-  details
-    summary Controllers
-    p создать контроллер с типовыми методами
-    code php artisan make:controller SessionController -r
-    p.
-      public function __invoke(){} метод применяется в контроллерах с одним действием<br>
-      запрос на получение данных из базы данных:
-    pre
-      code.
-        public function __invoke()
-        {
-          $jobs = Job::query()
-            ->with(['employer', 'tags'])
-            ->where('title', 'LIKE', '%'.request('q').'%')
-            ->get();
-          return view('results', ['jobs' => $jobs]);
-        }
-    p.
-      with(['employer', 'tags']) нужен для того, чтобы не создать n+1 проблему<br>
-      когда каждая строка таблицы данных будет будет вызываться отдельным запросом
 
   //- Create table
   details
@@ -381,7 +220,7 @@ details
         Schema::create('queued_job_batches', function (Blueprint $table) {
           ...
         Schema::create('queued_failed_jobs', function (Blueprint $table) {
-    p удаляю старые файлы и создаю новые с учётом изменений
+    p удаляю старые файлы и создаю новые c учётом изменений
     code php artisan migrate:fresh
     p чтобы внести изменения в базу данных:
     code php artisan migrate
@@ -415,228 +254,585 @@ details
     p удалить таблицы, создать новые и заполнить данными
     code php artisan migrate:fresh --seed
 
-//- Tests
+//- View
 details
-  summary Tests
+  summary View
   p.
-    pest - это обёртка для phpunit.<br>
-    раскомментировать в phpunit.xml строки:
+    vite компелирует, кеширует и отслеживает изменения в папке resources<br>
+    resources/views/components/layout.blade.php создаю компонент layout<br>
+    вставляю компонент на страницу
+  code &lt;x-layout&gt;&lt;/x-layout&gt;
+  p подключил лого
+  code &lt;img src="{{ Vite::asset('resources/images/logo.svg') }}" alt=""&gt;
+  p подключить стили и скрипты
+  code @vite(['resources/css/app.css', 'resources/js/app.js'])
+  p в SPA-приложении css поключаем в js-файле, поэтому подключаем только js
+  code @vite('resources/js/app.js')
+  p resources/js/app.js запихиваю картинки глобально, чтобы их учесть при npm run build
   pre
     code.
-      &lt;env name="DB_CONNECTION" value="sqlite"/&gt;
-      &lt;env name="DB_DATABASE" value=":memory:"/&gt;
+      import.meta.glob([
+        '../images/**',
+        '../fonts/**',
+      ]);
   p.
-    подходит для маленьких проектов, высокая скорость<br>
-    создаю тест
-  code php artisan make:test
-  p запускаю тест
-  code php artisan test
+    в файле .env указать место хранения загружаемых файлов<br>
+    варианты значений в файле config/filesystems.php
+  code FILESYSTEM_DISK=public
   p.
-    в папке tests/Unit и tests/Feature удалить ExampleTest.php<br>
-    файл tests/Pest.php - конфигурация тестов
+    при загрузке изображения оно будет сохранено в storage/app/public<br>
+    чтобы оно отображалось сделать ссылку:
+  code php artisan storage:link
+  p Встроенные шаблоны для писем
+  code ./sail artisan vendor:publish --tag=laravel-mail
 
-//- Localization
-details
-  summary Localization
-  p Создать папку для переводов
-  code php artisan lang:publish
-  p Скопировать папку en, переименовать в ru и вставить переводы в файлах
-
-//- Livewire
-details
-  summary Livewire
-
-  //- Create component
+  //- Component
   details
-    summary Create component
-    p Создать компонент
-    pre
-      code.
-        php artisan make:livewire ComponentName
-        <span>or</span>
-        php artisan make:livewire component-name
-        
-    p Создать компонент в папке
-    pre
-      code.
-        php artisan make:livewire Folder\\ComponentName
-        <span>or</span>
-        php artisan make:livewire folder.component-name
+    summary Component
 
-  //- Validation
+    //- Component styles
+    details
+      summary Component styles
+      p.
+        разбить макет на компоненты<br>
+        в компоненте задать класс по умолчанию c общими настройками компонента
+      pre
+        code.
+          @php
+            $classes = 'className1 className2';
+          @endphp
+
+          &lt;div {{ $attributes(['class' => $classes]) }}&gt;
+            {{ $slot }}
+          &lt;/div&gt;
+
+    //- Component properties
+    details
+      summary Component properties
+      p задаю свойства компонента, которые можно указывать в вёрстке и менять вид компонента
+      pre
+        code.
+          @props(['size' => 'base'])
+
+          @php
+            $classes = "className1 className2";
+            if ($size === 'base') {
+              $classes .= " className3";
+            }
+            if ($size === 'small') {
+              $classes .= " className4";
+            }
+          @endphp
+
+          &lt;a href="#" class="{{ $classes }}"&gt;{{ $slot }}&lt;/a&gt;
+
+  //- Localization
   details
-    summary Validation
-    p.
-      В основном такая же как в ларавел, но метод validate() применяется на объекте компонента<br>
-      Метод validate() возвращает массив отвалидированных данных либо массив ошибок
-    pre
-      code.
-        public function save()
-        {
-          $validated = $this->validate([ 
-            'title' => 'required|min:3',
-            'content' => 'required|min:3',
-          ]);
-          Post::create($validated);
-          return redirect()->to('/posts');
-        }
-    p.
-      В форме ввода не фронте отобразить ошибку валидации с помощью<br>
-      директивы @error(), по ключу title выводиться значение $message
-    pre
-      code.
-        &lt;input type="text" wire:model="title"&gt;
-        &lt;div&gt;@error('title') {{ $message }} @enderror&lt;/div&gt;
-    p Задать правила валидации можно разными способами
-    pre
-      code.
-        <span>методом validate()</span>
-        $validated = $this->validate([
-          <span>массивом</span>
-          'name' => ['required', 'min:2', 'max:30'],
-          <span>строкой через разделитель</span>
-          'email' => 'required|email|max:30',
-          'password' => 'required|min:6',
-        ]);
+    summary Localization
+    p Создать папку для переводов
+    code php artisan lang:publish
+    p Скопировать папку en, переименовать в ru и вставить переводы в файлах
 
-        <span>параметром #[Validate()]</span>
-        <span>отслеживает изменение значений</span>
-        <span>использует стандартные валидаторы ларавел</span>
-        <span>свой текст сообщения</span>
-        #[Validate('required', message: 'Имя обязательно')]
-        <span>своё имя поля в соощении</span>
-        #[Validate('min:2', as: 'Name')]
-        #[Validate('max:30')]
-        public string $name;
+  //- Livewire
+  details
+    summary Livewire
 
-        <span>написать свои правила валидации</span>
-        protected function rules(): array
-        {
-          return [
+    //- Create component
+    details
+      summary Create component
+      p Компонент имеет доступ к публичным свойствам и методам своего класса
+      pre
+        code.
+          php artisan make:livewire ComponentName
+          <span>or</span>
+          php artisan make:livewire component-name
+          
+      p Создать компонент в папке
+      pre
+        code.
+          php artisan make:livewire FolderName\\ComponentName
+          <span>or</span>
+          php artisan make:livewire folder-name.component-name
+      p В livewire можно укзавыть роут на класс компонента
+      pre
+        code.
+          Route::get('/posts', ShowPosts::class);
+          Route::get('/posts/create', CreatePost::class);
+      p.
+        для этого необходимо создать шаблон для всех компонентов<br>
+        (components.layouts.app.blade.php)
+      code ./sail artisan livewire:layout
+          
+
+    //- Validation
+    details
+      summary Validation
+      p.
+        В основном такая же как в ларавел, но метод validate() применяется на объекте компонента<br>
+        Метод validate() возвращает массив отвалидированных данных либо массив ошибок
+      pre
+        code.
+          public function save()
+          {
+            $validated = $this->validate([ 
+              'title' => 'required|min:3',
+              'content' => 'required|min:3',
+            ]);
+            Post::create($validated);
+            return redirect()->to('/posts');
+          }
+      p.
+        В форме ввода не фронте отобразить ошибку валидации с помощью<br>
+        директивы @error(), по ключу title выводиться значение $message
+      pre
+        code.
+          &lt;input type="text" wire:model="title"&gt;
+          &lt;div&gt;@error('title') {{ $message }} @enderror&lt;/div&gt;
+      p Задать правила валидации можно разными способами
+      pre
+        code.
+          <span>методом validate()</span>
+          $validated = $this->validate([
+            <span>массивом</span>
             'name' => ['required', 'min:2', 'max:30'],
+            <span>строкой через разделитель</span>
             'email' => 'required|email|max:30',
             'password' => 'required|min:6',
-          ];
-        }
-
-        <span>написать свои тексты сообщений об ошибке</span>
-        protected function messages(): array
-        {
-          return [
-            <span>название поля.валидатор => текст ошибки</span>
-            'name.required' => 'Имя обязательно!',
-            'name.min' => 'Имя должно быть длиннее!',
-            'email.required' => 'Введите почту!',
-            'password.required' => 'Пароль обязателен!',
-          ];
-        }
-    p.
-      Если правила валидации заданы параметром #[Validate()]
-      или методом rules(),
-      то метод validate() вызываем без параметров
-    code $validated = $this->validate();
-    p Создаю пользователя в БД
-    code User::create($validated);
-    p.
-      wire:model.blur="name" - real-time validation<br>
-      срабатывает по событию либо <dfn>.live</dfn> либо <dfn>.blur</dfn><br>
-      работает при использовании параметра валидирования #[Validate()]
-
-  //- Form
-  details
-    summary Form
-    p.
-      В компоненте создаю форму<br>
-      В форме создаю поля для ввода данных<br>
-      В полях ввода данных привязываю данные к свойствам компонента<br>
-      В кнопке отправки формы вызываю метод сохранения данных
-    pre
-      code.
-        &lt;form wire:submit.prevent="save"&gt;
-          &lt;input type="text" wire:model="name"&gt;
-          &lt;input type="email" wire:model="email"&gt;
-          &lt;button type="submit"&gt;Save&lt;/button&gt;
-        &lt;/form&gt;
-    p.
-      В методе сохранения данных вызываю метод валидации данных<br>
-      Если данные валидны, то сохраняю данные в БД<br>
-      Если данные не валидны, то вывожу ошибку
-    pre
-      code.
-        public function save()
-        {
-          $validated = $this->validate([
-            'name' => 'required|min:3',
-            'email' => 'required|email',
           ]);
-          User::create($validated);
-        }
-    p.
-      Вывести ошибку валидации можно с помощью директивы @error()<br>
-      По ключу name выводится значение $message
-    pre
-      code.
-        &lt;input type="text" wire:model="name"&gt;
-        &lt;div&gt;@error('name') {{ $message }} @enderror&lt;/div&gt;
-    p.
-      Вывести ошибку валидации можно с помощью директивы @error()<br>
-      По ключу name выводится значение $message
-    pre
-      code.
-        &lt;input type="text" wire:model="name"&gt;
-        &lt;div&gt;@error('name') {{ $message }} @enderror&lt;/div&gt;
-    p.
-      Вывести ошибку валидации можно с помощью директивы @error()<br>
-      По ключу name выводится значение $message
-    pre
-      code.
-        &lt;input type="text" wire:model="name"&gt;
-    p Получить все данные формы
-    code $this->all();
-    p Получить данные выборочных полей
-    code $this->only(['name', 'email'])
-    p.
-      Метод pull() - это метод only() + reset()<br>
-      Заберёт из формы данные полей name и email<br>
-      и очистит поля формы name и email
-    code $this->pull(['name', 'email'])
-    p заберёт из формы все данные и очистит форму
-    code $this->pull();
-    p.
-      Создать класс формы
-      Создаст app/Livewire/Forms/FormName.php
-    code php artisan livewire:form FormName
-    p.
-      При создании компонентов CreatePost, UpdatePost и т.д.
-      в классах компонентов будут вызываться методы и свойства класса FormName.php.
-      Т.е. все свойства и методы формы в одном классе и исспользуются разными компонентами.
-      Для доступа к свойствам и методам калсса формы в классе компонента создаётся её объект form
-      и обращение к свойствам и методам через объект.
-      В классе компонента:
-    pre
-      code.
-        public UserForm $form;
-        public function save()
-        {
-            $this->form->saveUser();
-        }
-    p В шаблоне компонента:
-    code wire:model="form.name"
 
-  //- Events
-  details
-    summary Events
+          <span>параметром #[Validate()]</span>
+          <span>отслеживает изменение значений</span>
+          <span>использует стандартные валидаторы ларавел</span>
+          <span>свой текст сообщения</span>
+          #[Validate('required', message: 'Имя обязательно')]
+          <span>своё имя поля в сообщении</span>
+          #[Validate('min:2', as: 'Name')]
+          #[Validate('max:30')]
+          public string $name;
+
+          <span>написать свои правила валидации</span>
+          protected function rules(): array
+          {
+            return [
+              'name' => ['required', 'min:2', 'max:30'],
+              'email' => 'required|email|max:30',
+              'password' => 'required|min:6',
+            ];
+          }
+
+          <span>написать свои тексты сообщений об ошибке</span>
+          protected function messages(): array
+          {
+            return [
+              <span>название поля.валидатор => текст ошибки</span>
+              'name.required' => 'Имя обязательно!',
+              'name.min' => 'Имя должно быть длиннее!',
+              'email.required' => 'Введите почту!',
+              'password.required' => 'Пароль обязателен!',
+            ];
+          }
       p.
-        События позволяю прослушивать события в другом компоненте.
-        Сгенерировать событие: метод dispatch()
-      code.
-        $this->dispatch('eventname');
-        <span>or</span>
-        $this->dispatch('eventname', title: $post->title);
-      p В другом (других) компоненте добавить слушателя события
-      code.
-        use Livewire\Attributes\On;
+        Если правила валидации заданы параметром #[Validate()]<br>
+        или методом rules(),<br>
+        то метод validate() вызываем без параметров
+      code $validated = $this->validate();
+      p Создаю пользователя в БД
+      code User::create($validated);
+      p.
+        wire:model.blur="name" - real-time validation<br>
+        срабатывает по событию либо <dfn>.live</dfn> либо <dfn>.blur</dfn><br>
+        работает при использовании параметра валидирования #[Validate()]<br>
+        wire:model.live="name" - отправляет на сервер введенный знак сразу<br>
+        wire:model.live.debounce="name" - отправляет на сервер введенное значение через 200мс после последнего нажатия<br>
+        wire:model.live.debounce.5ms="name" - отправляет на сервер введенное значение через 5мс после нажатия<br>
 
-        #[On('eventname')]
-        public function updatePost($title) {}
+    //- Form
+    details
+      summary Form
+      p.
+        B компоненте создаю форму и меняю действие по умолчанию на вызов метода save из класса<br>
+        Форма вызывает метод обработки при надатии на enter или на кнопку Save<br>
+        B полях ввода данных привязываю данные к свойствам компонента<br>
+        Свойство компонента wire:model привязывает к полю ввода свойство класса wire:model="name"<br>
+      pre
+        code.
+          &lt;form wire:submit.prevent="save"&gt;
+            &lt;input type="text" wire:model="name"&gt;
+            &lt;input type="email" wire:model="email"&gt;
+            &lt;button type="submit"&gt;Save&lt;/button&gt;
+          &lt;/form&gt;
+      p.
+        B методе сохранения данных вызываю метод валидации данных<br>
+        Если данные валидны, то сохраняю данные в БД<br>
+        Если данные не валидны, то вывожу ошибку
+      pre
+        code.
+          public function save()
+          {
+            $validated = $this->validate([
+              'name' => 'required|min:3',
+              'email' => 'required|email',
+            ]);
+            User::create($validated);
+          }
+      p.
+        Вывести ошибку валидации можно c помощью директивы @error()<br>
+        По ключу name выводится значение $message
+      pre
+        code.
+          &lt;input type="text" wire:model="name"&gt;
+          &lt;div&gt;@error('name') {{ $message }} @enderror&lt;/div&gt;
+      p.
+        Вывести ошибку валидации можно c помощью директивы @error()<br>
+        По ключу name выводится значение $message
+      pre
+        code.
+          &lt;input type="text" wire:model="name"&gt;
+          &lt;div&gt;@error('name') {{ $message }} @enderror&lt;/div&gt;
+      p.
+        Вывести ошибку валидации можно c помощью директивы @error()<br>
+        По ключу name выводится значение $message
+      pre
+        code.
+          &lt;input type="text" wire:model="name"&gt;
+      p Получить все данные формы
+      code $this->all();
+      p Получить данные выборочных полей
+      code $this->only(['name', 'email'])
+      p.
+        Метод pull() - это метод only() + reset()<br>
+        Заберёт из формы данные полей name и email<br>
+        и очистит поля формы name и email
+      code $this->pull(['name', 'email'])
+      p заберёт из формы все данные и очистит форму
+      code $this->pull();
+      p.
+        Создать класс формы
+        Создаст app/Livewire/Forms/FormName.php
+      code php artisan livewire:form FormName
+      p.
+        При создании компонентов CreatePost, UpdatePost и т.д.
+        в классах компонентов будут вызываться методы и свойства класса FormName.php.
+        T.e. все свойства и методы формы в одном классе и исспользуются разными компонентами.
+        Для доступа к свойствам и методам калсса формы в классе компонента создаётся её объект form
+        и обращение к свойствам и методам через объект.
+        B классе компонента:
+      pre
+        code.
+          public UserForm $form;
+          public function save()
+          {
+              $this->form->saveUser();
+          }
+      p B шаблоне компонента:
+      code wire:model="form.name"
 
+    //- Events
+    details
+      summary Events
+        p.
+          События позволяю прослушивать события в другом компоненте.
+          Сгенерировать событие: метод dispatch()
+        code.
+          $this->dispatch('eventname');
+          <span>or</span>
+          $this->dispatch('eventname', title: $post->title);
+        p В другом (других) компоненте добавить слушателя события
+        code.
+          use Livewire\Attributes\On;
+
+          #[On('eventname')]
+          public function updatePost($title) {}
+
+//- Controller
+details
+  summary Controller
+    
+  //- Routes
+  details
+    summary Routes
+    p просмотреть список роутов
+    code php artisan route:list --except-vendor
+    
+    //- Route::view
+    p просто выдать страницу без дополнительных действий
+    code Route::view('/', 'home');
+
+    //- Name for route
+    pre
+      code.
+        code Route::view('/', 'welcome')->name('home');
+        
+        <span>welcome.blade.php</span>
+        &lt;nav&gt;
+          &lt;a href="{{ route('home') }}"&gt;Home&lt;/a&gt;
+        &lt;/nav&gt;
+    
+    //- Execute test
+    pre
+      code.
+        Route::get('test', function () {
+          $job = Job::first();
+
+          TranslateJob::dispatch($job);
+
+          return 'Done';
+        });
+    
+    //- Model binding
+    p.
+      wildcard {job} and parametr of function $job<br>
+      type of parametr function (Job $job)<br>
+      ларавель понимает, что нужен объект модели Job c данными из таблицы<br>
+      этот объект он отбирает из БД по значению {job}<br>
+      по умолчанию {job} - это id, но можно задать своё значение {job:name}
+    pre
+      code.
+        Route::get('/jobs/{job}', function (Job $job) {
+          return view('jobs.show', ['job' => $job]);
+        });
+    
+    //- Controller classes
+    p вызываю метод index из класса контроллера JobController при переходе на /jobs
+    code Route::get('/jobs', [JobController::class, 'index']);
+
+    //- Route groups
+    p объединяю роуты c одним и тем же контроллером
+    pre
+      code.
+        Route::controller(JobController::class)->group( function()
+        {
+          Route::get('/jobs', 'index');
+          Route::get('/jobs/create', 'create');
+          Route::get('/jobs/{job}', 'show');
+          Route::get('/jobs/{job}/edit', 'edit');
+          Route::post('/jobs', 'store');
+          Route::patch('/jobs/{job}', 'update');
+          Route::delete('/jobs/{job}', 'destroy');
+        });
+
+    //- Route Resources
+    p.
+      сформирует для методов класса контроллера роуты:
+      jobs.index <span>- показать всё списком</span>
+      jobs.show <span>- показать один</span>
+      jobs.create <span>- создать</span>
+      jobs.edit <span>- редактировать</span>
+      jobs.store <span>- сохранить</span>
+      jobs.update <span>- обновить</span>
+      jobs.destroy <span>- уничтожить</span>
+      названия методов контроллера - это дефолтные названия ларавел.
+    pre
+      code.
+        Route::resource('uri', controller);
+        Route::resource('jobs', JobController::class);
+    p можно форимровать роуты выборочно
+    pre
+      code.
+        Route::resource('jobs', JobController::class, [
+          'only' => ['index', 'show']
+        ]);
+        Route::resource('jobs', JobController::class, [
+          'except' => ['edit']
+        ]);
+    
+  //- Controllers
+  details
+    summary Controllers
+
+    table
+      caption Methods
+      thead
+        tr
+          th Controller Method 
+          th Action
+      tbody
+        tr
+          td index
+          td view all
+        tr
+          td show
+          td view one
+        tr
+          td create
+          td show form for create
+        tr
+          td store
+          td create
+        tr
+          td edit
+          td show form for edit
+        tr
+          td update
+          td update
+        tr
+          td destroy
+          td delete
+ 	
+    //- Create controller
+    details
+      summary Create controller
+      p создать контроллер c типовыми методами
+      code php artisan make:controller SessionController -r
+      p.
+        public function __invoke(){} метод применяется в контроллерах c одним действием<br>
+        запрос на получение данных из базы данных:
+      pre
+        code.
+          public function __invoke()
+          {
+            $jobs = Job::query()
+              ->with(['employer', 'tags'])
+              ->where('title', 'LIKE', '%'.request('q').'%')
+              ->get();
+            return view('results', ['jobs' => $jobs]);
+          }
+      p.
+        with(['employer', 'tags']) нужен для того, чтобы не создать n+1 проблему<br>
+        когда каждая строка таблицы данных будет будет вызываться отдельным запросом
+
+    //- Authentication
+    details
+      summary Authentication
+
+    //- Authorization
+    details
+      summary Authorization
+      
+      //- Gates
+      details
+        summary Gates
+        p.
+          Gate - объявляется в App\Providers\AppServiceProvider методом boot(),<br>
+          исспользуется для простых ограничений ролей.<br>
+          Аргументом всегда принимает пользоватля, к которому применяет ограничения.<br>
+          Дополнительные аргументы по необходимости.
+        pre
+          code.
+            use App\Models\Post;
+            use App\Models\User;
+            use Illuminate\Support\Facades\Gate;
+
+            public function boot(): void
+            {
+              Gate::define('update-post', function (User $user, Post $post) {
+                return $user->id === $post->user_id;
+              });
+            }
+        p.
+          Gate::define - объявляю Gate,<br>
+          'update-post' - название возможности предоставляемой пользователю<br>
+          function (User $user, Post $post) - вернёт true/false,<br>
+          true - этому пользователю можно пользоваться этой возможностью<br>
+          false - этому пользователю нельзя пользоваться этой возможностью<br>
+          <br>
+          Можно вынести логику в отдельный класс (политику)
+        pre
+          code.
+            use App\Policies\PostPolicy;
+            use Illuminate\Support\Facades\Gate;
+            
+            public function boot(): void
+            {
+              Gate::define('update-post', [PostPolicy::class, 'update']);
+            }
+        p.
+          После этого в любом контроллере можем проверять роль конкрено указав пользователя
+        pre
+          code.
+            if (Gate::forUser($user)->allows('update-post', $post)) {}
+            
+            if (Gate::forUser($user)->denies('update-post', $post)) {}
+        p.
+          allows - разрешено ли<br>
+          denies - запрещено ли<br>
+          <br>
+          Проверять роль текущего пользователя с кастомным условием
+        pre
+          code.
+            if (! Gate::allows('update-post', $post)) {
+              abort(403);
+            }
+            if (Gate::denies('update-post', $post)) {
+              abort(403);
+            }
+        p.
+          Проверять роль текущего пользователя встроенным методом
+        pre
+          code Gate::authorize('update-post', $post);
+        p.
+          Проверить несколько возможностей
+        pre
+          code.
+            if (Gate::any(['update-post', 'delete-post'], $post)) {
+              // The user can update or delete the post...
+            }
+    
+            if (Gate::none(['update-post', 'delete-post'], $post)) {
+              // The user can't update or delete the post...
+            }
+
+      //- Policies
+      details
+        summary Policies
+        p.
+          Политика всегда относится к какой-то модели.<br>
+          Создать политику можно при создании модели либо отдельно.<br>
+          По конвенции название политики содержит название модели.
+        code php artisan make:policy PostPolicy
+        p Создать политику с методами для модели Post
+        code php artisan make:policy PostPolicy --model=Post
+        p.
+          Назвать политику можно не по конвенции,<br>
+          но тогда её нужно зарегистрировать в<br>
+          App\Providers\AppServiceProvider методом boot()
+        pre
+          code.
+            use App\Models\ModelName;
+            use App\Policies\PolicyName;
+            use Illuminate\Support\Facades\Gate;
+            
+            public function boot(): void
+            {
+                Gate::policy(ModelName::class, PolicyName::class);
+            }
+        table
+          caption Methods
+          thead
+            tr
+              th Policy Method 
+              th Action
+          tbody
+            tr
+              td viewAny
+              td view all
+            tr
+              td view
+              td view one
+            tr
+              td create
+              td create & store
+            tr
+              td update
+              td edit
+            tr
+              td delete
+              td mark as delete
+            tr
+              td restore
+              td unmark as delete
+            tr
+              td forceDelete
+              td permanently delete
+        p.
+          В контроллере гейт может обратиться к политике.<br>
+          Первый параметр это название политики,<br>
+          второй - либо объект модели, если есть, либо класс модели
+        pre
+          code.
+            Gate::authorize('update', $post);
+            <span>or</span>
+            Gate::authorize('update', App\Models\Post::class);
+        p Политика
+        pre
+          code.
