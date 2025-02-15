@@ -1,7 +1,10 @@
-a(href="https://laravel.com/docs/11.x/sail") laravel
-a(href="https://jetstream.laravel.com/introduction.html") jetstream
-a(href="https://livewire.laravel.com/") livewire
-a(href="https://alpinejs.dev/") alpinejs
+//- Resources
+details
+  summary Resources
+    a(href="https://laravel.com/docs/11.x/sail") laravel<br>
+    a(href="https://jetstream.laravel.com/introduction.html") jetstream<br>
+    a(href="https://livewire.laravel.com/") livewire<br>
+    a(href="https://alpinejs.dev/") alpinejs
 
 //- Install
 details
@@ -608,11 +611,13 @@ details
         use Livewire\Attributes\Title;
         #[Title('title')]
       p Подстановка title динамически
-      public function render()
-      {
-        return view('livewire.create-post')
-          ->title('Create Post'); 
-      }
+      pre
+        code.
+          public function render()
+          {
+            return view('livewire.create-post')
+              ->title('Create Post'); 
+          }
 
       p задаю свойства livewire компонента в классе
       code public $title = 'Post title...';
