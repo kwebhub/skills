@@ -7409,12 +7409,12 @@ block menu
 
                 @vite(['resources/css/app.css', 'resources/js/app.js'])
             
-            //- Actions
+            // Actions
             p $refresh - проверяет БД и отображает на странице
-            code <button type="button" wire:click="$refresh">...</button>
+            code &lt;button type="button" wire:click="$refresh"&gt;...&lt;/button&gt;
             p $commit - отслеживает изменения компонета на сервере
-            code <button type="button" wire:click="$commit">...</button>
-            //- Event listeners
+            code &lt;button type="button" wire:click="$commit"&gt;...&lt;/button&gt;
+            // Event listeners
             p.
               wire:click<br>
               wire:submit<br>
@@ -7422,8 +7422,9 @@ block menu
               wire:keyup<br>
               wire:mouseenter<br>
               wire:* - любой текст после wire: может быть названием события<br>
-              Livewire поддерживает любые событыя браузера, например wire:transitionend
-            a(href="https://livewire.laravel.com/docs/actions") слушатели событий
+              Livewire поддерживает любые событыя браузера, например wire:transitionend<br>
+            a(href="https://livewire.laravel.com/docs/actions") слушатели событий<br>
+            br
             p.
               wire:loading - загрузчик<br>
               wire:click="delete({{ $post->id }})" - передать в класс параметр<br>
@@ -7673,19 +7674,18 @@ block menu
         //- Events
         details
           summary Events
-            p.
-              События позволяю прослушивать события в другом компоненте.
-              Сгенерировать событие: метод dispatch()
-            code.
-              $this->dispatch('eventname');
-              <span>or</span>
-              $this->dispatch('eventname', title: $post->title);
-            p В другом (других) компоненте добавить слушателя события
-            code.
-              use Livewire\Attributes\On;
-
-              #[On('eventname')]
-              public function updatePost($title) {}
+          p.
+            События позволяю прослушивать события в другом компоненте.
+            Сгенерировать событие: метод dispatch()
+          code.
+            $this->dispatch('eventname');
+            <span>or</span>
+            $this->dispatch('eventname', title: $post->title);
+          p В другом (других) компоненте добавить слушателя события
+          code.
+            use Livewire\Attributes\On;
+            #[On('eventname')]
+            public function updatePost($title) {}
 
         //- Alpinejs
         details
