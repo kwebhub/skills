@@ -4545,7 +4545,8 @@ cd projectName/vendor/bin
 ./sail up -d
 ./sail composer require laravel/jetstream
 ./sail artisan jetstream:install livewire
-./sail composer run dev</code></pre><p>удалить контейнеры</p><code>./sail down</code></details><details><summary>Test</summary><p>pest - это обёртка для phpunit.<br>
+./sail composer run dev</code></pre><p>удалить контейнеры</p><code>./sail down</code><p>все настройки в файлах папки config.<br>
+импортировать из ядра файл настройки livewire в папку config</p><code>php artisan livewire:publish --config</code></details><details><summary>Test</summary><p>pest - это обёртка для phpunit.<br>
 файл tests/Pest.php - конфигурация тестов<br>
 создаю тест</p><code>php artisan make:test</code><p>запускаю тест</p><code>php artisan test</code></details><details><summary>Model</summary><details><summary>Models</summary><p>помощь по созданию модели</p><code>php artisan help make:model</code><p>создаю модель в полном комплекте (Model, Migration, Factory, Seeder, Request, Controller, Policy)</p><code>php artisan make:model Employer -a</code><p>создать модель без миграции</p><code>php artisan make:model Employer -cfs --policy</code><p>то что не будет использовано можно будет удалить.<br>
 в моделях app/Models/ указать связи</p><pre><code>class Employer extends Model
@@ -5009,4 +5010,12 @@ public function updatePost($title) {}
 </code></details><details><summary>Alpinejs</summary><p>Фреймворк js включён по умолчанию в livewire<br>
 встраивается в разметку<br>
 работает в браузере без отправки запроса на сервер<br>
-имеет доступ к полям и методам объекта компонента через $wire.</p></details></details></details></div></nav></main><footer> </footer></div></body></html>
+имеет доступ к полям и методам объекта компонента через $wire.
+</p></details></details><details> <summary>Api</summary><p>Создать роут, миграцию personal_access_tokens_table и токен аутентификацию для api</p><code>./sail artisan install:api</code><p>Создать модель с миграцией</p><code>./sail artisan make:model Category -m</code><p>Обновить таблицы</p><code>./sail artisan migrate</code><p>создать контроллер в отдельной структуре папок (v1 - версия)
+--model=Category - привязка к модели
+--api - методы апи контроллера
+--requests - вынос валидации в отдельные классы</p><code>./sail artisan make:controller Api/V1/CategoryController --model=Category --api --requests</code><p>сгруппировать роуты по версиям и создать рессурсный роут</p><code>use App\Http\Controllers\Api\V1\CategoryController;
+Route::prefix('v1')->group(function()
+{
+    Route::apiResource('categories', CategoryController::class);
+});</code><p>просмотреть список роутов</p><code>./sail artisan route:list --except-vendor</code></details></details></div></nav></main><footer> </footer></div></body></html>

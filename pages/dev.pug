@@ -6647,6 +6647,10 @@ block menu
             ./sail composer run dev
         p удалить контейнеры
         code ./sail down
+        p.
+          все настройки в файлах папки config.<br>
+          импортировать из ядра файл настройки livewire в папку config
+        code php artisan livewire:publish --config
           
       //- Test
       details
@@ -7695,3 +7699,28 @@ block menu
             встраивается в разметку<br>
             работает в браузере без отправки запроса на сервер<br>
             имеет доступ к полям и методам объекта компонента через $wire.
+      
+      //- Api
+      details 
+        summary Api
+        p Создать роут, миграцию personal_access_tokens_table и токен аутентификацию для api
+        code ./sail artisan install:api
+        p Создать модель с миграцией
+        code ./sail artisan make:model Category -m
+        p Обновить таблицы
+        code ./sail artisan migrate
+        p.
+          создать контроллер в отдельной структуре папок (v1 - версия)
+          --model=Category - привязка к модели
+          --api - методы апи контроллера
+          --requests - вынос валидации в отдельные классы
+        code ./sail artisan make:controller Api/V1/CategoryController --model=Category --api --requests
+        p сгруппировать роуты по версиям и создать рессурсный роут
+        code.
+          use App\Http\Controllers\Api\V1\CategoryController;
+          Route::prefix('v1')->group(function()
+          {
+              Route::apiResource('categories', CategoryController::class);
+          });
+        p просмотреть список роутов
+        code ./sail artisan route:list --except-vendor
