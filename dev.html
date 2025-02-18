@@ -3567,7 +3567,7 @@ export default mongoose.model('PostMessage', postSchdfna);</code></pre><br><p><d
       return [ …posts, action.payload ];
     default: return posts;
   }
-}</code></pre><br><img src="../img/js/react/redux.jpg" alt=""></details><details><summary>SQL</summary><details><summary>Определение (Definition)</summary><p><dfn>SQL</dfn> — применяется для создания, модификации и управления данными в реляционной базе данных, 
+}</code></pre><br><img src="../img/js/react/redux.jpg" alt=""></details><details><summary>SQL</summary><a href="https://dbdiagram.io/home">Diagram</a><details><summary>Определение (Definition)</summary><p><dfn>SQL</dfn> — применяется для создания, модификации и управления данными в реляционной базе данных, 
 управляемой соответствующей системой управления базами данных.<br>
 В базовом варианте SQL является информационно-логическим языком, а не языком программирования. <br>
 <br>
@@ -5018,4 +5018,28 @@ public function updatePost($title) {}
 Route::prefix('v1')->group(function()
 {
     Route::apiResource('categories', CategoryController::class);
-});</code><p>просмотреть список роутов</p><code>./sail artisan route:list --except-vendor</code><p>В файле bootstrap/app.php можно добавить свой обработчик ошибок</p><code></code></details></details></div></nav></main><footer> </footer></div></body></html>
+});</code><p>просмотреть список роутов</p><code>./sail artisan route:list --except-vendor</code><p>В файле bootstrap/app.php можно добавить свой обработчик ошибок</p><code>use Illuminate\Foundation\Configuration\Exceptions;
+->withExceptions(function (Exceptions $exceptions) {
+  $exceptions->render(function (NotFoundHttpException $e, Request $request) {
+    if ($request->is('api/*')) {
+      return response()->json([
+        'message' => 'Record not found.'
+      ], 404);
+    }
+  });
+})</code><p>Чтобы задать формат api ответа создать Resources</p><code>./sail artisan make:resource Api/V1/CategoryResource</code><p>в контроллере возврат данных таблицы через рессурс-коллекцию для массива данных</p><code>return CategoryResource::collection(Category::all());</code><p>для возврата одной записи из таблицы данных</p><code>new CategoryResource(Category::findOrFail($id));</code><p>либо</p><code>public function show(Category $category)
+{
+  return new CategoryResource($category);
+}</code><p>в Api/V1/PostResource задаю условие: поле "content" показывать если роут posts.show</p><code>"content"=> $this->when(Route::currentRouteName() == 'posts.show', $this->content),</code><p>в Api/V1/PostResource по связи метода category из модели получаю свойство категории</p><code>"categoryName" => $this->category->title,</code><p>в Models/Post задаю связь с таблицей category методом category</p><code>public function category()
+{
+  return $this->belongsTo(Category::class);
+}</code><p>в Models/Post задаю список полей, которые не участвуют в работе методов</p><code>protected $hidden = [
+  "created_at",
+];</code><p>в PostController по связи метода category из модели Models/Post получаю всё одним запросом
+и вывожу частями по 5 постов</p><code>return PostResource::collection(Post::with('category')->paginate(5));</code><p>для ограничения количества запросов в App\Providers\AppServiceProvider добавить в метод boot()</p><code>use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\RateLimiter;
+RateLimiter::for('api', function (Request $request) {
+  return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
+});</code><p>ключить ограничение middleware(['throttle:api', 'auth:sanctum']) в роуты</p><code>Route::prefix('v1')->middleware(['throttle:api'])->group(function()</code><p>для доступа к данным апи через токен добавить в модель User</p><code>use Laravel\Sanctum\HasApiTokens;
+use HasApiTokens</code></details></details></div></nav></main><footer> </footer></div></body></html>
