@@ -6613,21 +6613,14 @@ block menu
     //- Laravel
     details
       summary Laravel
-
-      //- Resources
-      details
-        summary Resources
-        a(href="https://laravel.com/docs/11.x/sail") laravel<br>
-        a(href="https://jetstream.laravel.com/introduction.html") jetstream<br>
-        a(href="https://livewire.laravel.com/") livewire<br>
-        a(href="https://alpinejs.dev/") alpinejs<br>
+      a(href="https://laravel.com") laravel<br>
       
       //- Install
       details
         summary Install
         p.
           Установить docker<br>
-          Установить laravel + livewire без авторизации и аутентификации
+          Установить laravel
         pre
           code.
             curl -s "https://laravel.build/projectName" | bash
@@ -6637,21 +6630,8 @@ block menu
             ./sail npm install && npm run build
             ./sail artisan migrate
             ./sail composer run dev
-        p Установить laravel + livewire c авторизацией и аутентификацией
-        pre
-          code.
-            curl -s "https://laravel.build/projectName" | bash
-            cd projectName/vendor/bin
-            ./sail up -d
-            ./sail composer require laravel/jetstream
-            ./sail artisan jetstream:install livewire
-            ./sail composer run dev
         p удалить контейнеры
         code ./sail down
-        p.
-          все настройки в файлах папки config.<br>
-          импортировать из ядра файл настройки livewire в папку config
-        code php artisan livewire:publish --config
           
       //- Test
       details
@@ -6719,7 +6699,7 @@ block menu
           p создать таблицу базы данных
           code php artisan make:migration create_employers_table
           p.
-            создаст файл database/migrations/2024_05_06_132745_create_employers_table<br>
+            создаст файл database/migrations/ 2024_05_06_132745_create_employers_table<br>
             в файле описываю поля таблицы<br>
             и запихиваю таблицу в базу данных
           code php artisan migrate
@@ -6990,6 +6970,16 @@ block menu
               Gate::authorize('update', $post);
               <span>or</span>
               Gate::authorize('update', App\Models\Post::class);
+        
+        //- Fortify
+        details
+          summary Fortify
+          p установить Fortify
+          code ./sail composer require laravel/fortify
+          p создать папки и роуты Fortify
+          code ./sail artisan fortify:install
+          p обновить БД
+          code ./sail artisan migrate
 
       //- Routes
       details
@@ -7695,16 +7685,99 @@ block menu
         //- Alpinejs
         details
           summary Alpinejs
+          a(href="https://alpinejs.dev/") alpinejs<br>
           p.
             Фреймворк js включён по умолчанию в livewire<br>
             встраивается в разметку<br>
             работает в браузере без отправки запроса на сервер<br>
             имеет доступ к полям и методам объекта компонента через $wire.
-      
+          p К событию JS нужно добавить @. Например @click. 
+          a(href="https://developer.mozilla.org/ru/docs/Web/Events") Events
+
+          //- Directives
+          table
+            caption Directives
+            thead
+              tr 
+                th Directive
+                th Description
+            tbody 
+              tr
+                td 
+                  a(href="https://alpinejs.dev/directives/data") x-data
+                td определяет часть HTML как компонент Alpinejs и предоставляет ему данные 
+
+          //- Magics
+          table
+            caption Magics
+            thead
+              tr
+                th Magic
+                th Description
+            tbody 
+              tr
+                td 
+                  a(href="https://alpinejs.dev/magics/el") $el
+                td выбирает текущий элемент
+              tr
+                td
+                  a(href="https://alpinejs.dev/magics/refs") $refs
+                td выбирает элемент c x-ref
+              tr
+                td
+                  a(href="https://alpinejs.dev/magics/store") $store
+                td доступ к глобальному хранилищу, созданного через Alpine.store()
+              tr
+                td
+                  a(href="https://alpinejs.dev/magics/watch") $watch
+                td наблюдает за указанным элементом
+              tr
+                td
+                  a(href="https://alpinejs.dev/magics/dispatch") $dispatch
+                td создает события браузера
+              tr
+                td
+                  a(href="https://alpinejs.dev/magics/nextTick") $nextTick
+                td выполняет действие после после выполнения первого
+              tr
+                td
+                  a(href="https://alpinejs.dev/magics/root") $root
+                td выбирает ближайший родительский элемент с x-data
+              tr
+                td
+                  a(href="https://alpinejs.dev/magics/data") $data
+                td содежит значения всех x-data, через которых всплывает событие
+              tr
+                td
+                  a(href="https://alpinejs.dev/magics/id") $id
+                td создаёт id для элементов избегая конфликтов одинаковых имён
+
+          //- Globals
+          table
+            caption Globals
+            thead
+              tr
+                th Global
+                th Description
+            tbody 
+              tr
+                td 
+                  a(href="https://alpinejs.dev/globals/alpine-data") Alpine.data()
+                td вынести контекст x-data в отдельную функцию и переиспользовать
+              tr
+                td 
+                  a(href="https://alpinejs.dev/globals/alpine-bind") Alpine.bind()
+                td вынести контекст x-data в отдельную функцию и переиспользовать
+              tr
+                td 
+                  a(href="https://alpinejs.dev/globals/alpine-store") Alpine.store()
+                td управление глобальным хранилищем
+
+
       //- Api
       details 
         summary Api
-        p Создать роут, миграцию personal_access_tokens_table и токен аутентификацию для api
+        p Установить пакет Sanctum, создать роут, миграцию personal_access_tokens_table и токен аутентификацию для api
         code ./sail artisan install:api
         p Создать модель с миграцией
         code ./sail artisan make:model Category -m
@@ -7782,3 +7855,9 @@ block menu
         code.
           use Laravel\Sanctum\HasApiTokens;
           use HasApiTokens
+        p установить срок жизни токена в минутах в config/sanctum.php          
+        code 'expiration' = 10,
+        p просроченные токены удалять командой sanctum:prune-expired
+        code.
+          use Illuminate\Support\Facades\Schedule;
+          Schedule::command('sanctum:prune-expired --hours=24')->daily();

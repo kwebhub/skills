@@ -4533,20 +4533,14 @@ Settings Sidebar - компонент InspectorControls (@wordpress/block-editor
 CSS компонентов находится по адресу node_modules/@wordpress/components/build-style/style.css<br>
 в консоле браузера wp.data.select('core/editor').getBlocks() - вернет все доступные блоки
 </p></details><details><summary>Работа с данными</summary><p>@wordpress/core-data - предоставляет resolvers, selectors и actions для работы с API ядра WordPress
-</p></details></details></details><details><summary>Laravel</summary><details><summary>Resources</summary><a href="https://laravel.com/docs/11.x/sail">laravel<br></a><a href="https://jetstream.laravel.com/introduction.html">jetstream<br></a><a href="https://livewire.laravel.com/">livewire<br></a><a href="https://alpinejs.dev/">alpinejs<br></a></details><details><summary>Install</summary><p>Установить docker<br>
-Установить laravel + livewire без авторизации и аутентификации</p><pre><code>curl -s "https://laravel.build/projectName" | bash
+</p></details></details></details><details><summary>Laravel</summary><a href="https://laravel.com">laravel<br></a><details><summary>Install</summary><p>Установить docker<br>
+Установить laravel</p><pre><code>curl -s "https://laravel.build/projectName" | bash
 cd projectName/vendor/bin
 ./sail up -d
 ./sail composer require livewire/livewire
 ./sail npm install && npm run build
 ./sail artisan migrate
-./sail composer run dev</code></pre><p>Установить laravel + livewire c авторизацией и аутентификацией</p><pre><code>curl -s "https://laravel.build/projectName" | bash
-cd projectName/vendor/bin
-./sail up -d
-./sail composer require laravel/jetstream
-./sail artisan jetstream:install livewire
-./sail composer run dev</code></pre><p>удалить контейнеры</p><code>./sail down</code><p>все настройки в файлах папки config.<br>
-импортировать из ядра файл настройки livewire в папку config</p><code>php artisan livewire:publish --config</code></details><details><summary>Test</summary><p>pest - это обёртка для phpunit.<br>
+./sail composer run dev</code></pre><p>удалить контейнеры</p><code>./sail down</code></details><details><summary>Test</summary><p>pest - это обёртка для phpunit.<br>
 файл tests/Pest.php - конфигурация тестов<br>
 создаю тест</p><code>php artisan make:test</code><p>запускаю тест</p><code>php artisan test</code></details><details><summary>Model</summary><details><summary>Models</summary><p>помощь по созданию модели</p><code>php artisan help make:model</code><p>создаю модель в полном комплекте (Model, Migration, Factory, Seeder, Request, Controller, Policy)</p><code>php artisan make:model Employer -a</code><p>создать модель без миграции</p><code>php artisan make:model Employer -cfs --policy</code><p>то что не будет использовано можно будет удалить.<br>
 в моделях app/Models/ указать связи</p><pre><code>class Employer extends Model
@@ -4565,7 +4559,7 @@ cd projectName/vendor/bin
   Model::unguard();
 }</code></pre><p>Показать содажимое БД</p><pre><code>./sail artisan db:show
 ./sail artisan db:table users</code></pre><p>Показать содажимое таблицы БД</p><pre><code>php artisan tinker
-User::all();</code></pre><p>при типе связи $this->belongsToMany() создать pivot table</p></details><details><summary>Create table</summary><p>создать таблицу базы данных</p><code>php artisan make:migration create_employers_table</code><p>создаст файл database/migrations/2024_05_06_132745_create_employers_table<br>
+User::all();</code></pre><p>при типе связи $this->belongsToMany() создать pivot table</p></details><details><summary>Create table</summary><p>создать таблицу базы данных</p><code>php artisan make:migration create_employers_table</code><p>создаст файл database/migrations/ 2024_05_06_132745_create_employers_table<br>
 в файле описываю поля таблицы<br>
 и запихиваю таблицу в базу данных</p><code>php artisan migrate</code></details><details><summary>Rename table</summary><p>в файле config/queue.php меняю название таблиц по умолчанию<br>
 к названию таблицы добавляю слово queue</p><pre><code>'database' => [
@@ -4668,7 +4662,7 @@ public function boot(): void
 второй - либо объект модели, если есть, либо класс модели</p><pre><code>Gate::authorize('update', $post);
 <span>or</span>
 Gate::authorize('update', App\Models\Post::class);
-</code></pre></details></details><details><summary>Routes</summary><p>просмотреть список роутов</p><code>php artisan route:list --except-vendor</code><p>просто выдать страницу без дополнительных действий</p><code>Route::view('/', 'home');</code><pre><code>code Route::view('/', 'welcome')->name('home');
+</code></pre></details><details><summary>Fortify</summary><p>установить Fortify</p><code>./sail composer require laravel/fortify</code><p>создать папки и роуты Fortify</p><code>./sail artisan fortify:install</code><p>обновить БД</p><code>./sail artisan migrate</code></details></details><details><summary>Routes</summary><p>просмотреть список роутов</p><code>php artisan route:list --except-vendor</code><p>просто выдать страницу без дополнительных действий</p><code>Route::view('/', 'home');</code><pre><code>code Route::view('/', 'welcome')->name('home');
 
 <span>welcome.blade.php</span>
 &lt;nav&gt;
@@ -5007,11 +5001,10 @@ public function save()
 $this->dispatch('eventname', title: $post->title);</code><p>В другом (других) компоненте добавить слушателя события</p><code>use Livewire\Attributes\On;
 <On eventname></On>
 public function updatePost($title) {}
-</code></details><details><summary>Alpinejs</summary><p>Фреймворк js включён по умолчанию в livewire<br>
+</code></details><details><summary>Alpinejs</summary><a href="https://alpinejs.dev/">alpinejs<br></a><p>Фреймворк js включён по умолчанию в livewire<br>
 встраивается в разметку<br>
 работает в браузере без отправки запроса на сервер<br>
-имеет доступ к полям и методам объекта компонента через $wire.
-</p></details></details><details> <summary>Api</summary><p>Создать роут, миграцию personal_access_tokens_table и токен аутентификацию для api</p><code>./sail artisan install:api</code><p>Создать модель с миграцией</p><code>./sail artisan make:model Category -m</code><p>Обновить таблицы</p><code>./sail artisan migrate</code><p>создать контроллер в отдельной структуре папок (v1 - версия)
+имеет доступ к полям и методам объекта компонента через $wire.</p><p>К событию JS нужно добавить @. Например @click. </p><a href="https://developer.mozilla.org/ru/docs/Web/Events">Events</a><table><caption>Directives</caption><thead><tr> <th>Directive</th><th>Description</th></tr></thead><tbody> <tr><td> <a href="https://alpinejs.dev/directives/data">x-data</a></td><td>определяет часть HTML как компонент Alpinejs и предоставляет ему данные </td></tr></tbody></table><table><caption>Magics</caption><thead><tr><th>Magic</th><th>Description</th></tr></thead><tbody> <tr><td> <a href="https://alpinejs.dev/magics/el">$el</a></td><td>выбирает текущий элемент</td></tr><tr><td><a href="https://alpinejs.dev/magics/refs">$refs</a></td><td>выбирает элемент c x-ref</td></tr><tr><td><a href="https://alpinejs.dev/magics/store">$store</a></td><td>доступ к глобальному хранилищу, созданного через Alpine.store()</td></tr><tr><td><a href="https://alpinejs.dev/magics/watch">$watch</a></td><td>наблюдает за указанным элементом</td></tr><tr><td><a href="https://alpinejs.dev/magics/dispatch">$dispatch</a></td><td>создает события браузера</td></tr><tr><td><a href="https://alpinejs.dev/magics/nextTick">$nextTick</a></td><td>выполняет действие после после выполнения первого</td></tr><tr><td><a href="https://alpinejs.dev/magics/root">$root</a></td><td>выбирает ближайший родительский элемент с x-data</td></tr><tr><td><a href="https://alpinejs.dev/magics/data">$data</a></td><td>содежит значения всех x-data, через которых всплывает событие</td></tr><tr><td><a href="https://alpinejs.dev/magics/id">$id</a></td><td>создаёт id для элементов избегая конфликтов одинаковых имён</td></tr></tbody></table><table><caption>Globals</caption><thead><tr><th>Global</th><th>Description</th></tr></thead><tbody> <tr><td> <a href="https://alpinejs.dev/globals/alpine-data">Alpine.data()</a></td><td>вынести контекст x-data в отдельную функцию и переиспользовать</td></tr><tr><td> <a href="https://alpinejs.dev/globals/alpine-bind">Alpine.bind()</a></td><td>вынести контекст x-data в отдельную функцию и переиспользовать</td></tr><tr><td> <a href="https://alpinejs.dev/globals/alpine-store">Alpine.store()</a></td><td>управление глобальным хранилищем</td></tr></tbody></table></details></details><details> <summary>Api</summary><p>Установить пакет Sanctum, создать роут, миграцию personal_access_tokens_table и токен аутентификацию для api</p><code>./sail artisan install:api</code><p>Создать модель с миграцией</p><code>./sail artisan make:model Category -m</code><p>Обновить таблицы</p><code>./sail artisan migrate</code><p>создать контроллер в отдельной структуре папок (v1 - версия)
 --model=Category - привязка к модели
 --api - методы апи контроллера
 --requests - вынос валидации в отдельные классы</p><code>./sail artisan make:controller Api/V1/CategoryController --model=Category --api --requests</code><p>сгруппировать роуты по версиям и создать рессурсный роут</p><code>use App\Http\Controllers\Api\V1\CategoryController;
@@ -5042,4 +5035,5 @@ use Illuminate\Support\Facades\RateLimiter;
 RateLimiter::for('api', function (Request $request) {
   return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
 });</code><p>ключить ограничение middleware(['throttle:api', 'auth:sanctum']) в роуты</p><code>Route::prefix('v1')->middleware(['throttle:api'])->group(function()</code><p>для доступа к данным апи через токен добавить в модель User</p><code>use Laravel\Sanctum\HasApiTokens;
-use HasApiTokens</code></details></details></div></nav></main><footer> </footer></div></body></html>
+use HasApiTokens</code><p>установить срок жизни токена в минутах в config/sanctum.php          </p><code>'expiration' = 10,</code><p>просроченные токены удалять командой sanctum:prune-expired</p><code>use Illuminate\Support\Facades\Schedule;
+Schedule::command('sanctum:prune-expired --hours=24')->daily();</code></details></details></div></nav></main><footer> </footer></div></body></html>
