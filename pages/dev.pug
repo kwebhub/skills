@@ -4645,253 +4645,411 @@ block menu
 
     //- Redux
     details
-        summary Redux
-        a(href="https://redux.js.org/introduction/getting-started") Redux
-        p Весь базовый функционал redux умещается в малюсенький файлик
-        pre
-          code.
-            function createStore(reducer, initialState) {
-              let state = initialState
-              return {
-                dispatch: action => { state = reducer(state, action) },
-                getState: () => state
-              }
+      summary Redux
+      a(href="https://redux.js.org/introduction/getting-started") Redux
+      p Весь базовый функционал redux умещается в малюсенький файлик
+      pre
+        code.
+          function createStore(reducer, initialState) {
+            let state = initialState
+            return {
+              dispatch: action => { state = reducer(state, action) },
+              getState: () => state
             }
-        br
-        p.
-          <dfn>createStore</dfn> - возвращает объект с полем “dispatch”.<br>
-          <dfn>dispatch</dfn> - это функция, которая всего лишь применяет редюсер к нашему текущему состоянию
-          <b>(newState = reducer(state, action))</b>.<br>
-          <br>
-          С этими 7 строками уже можно писать TodoApp.<br>
-          Инициализация хранилища:
-        pre
-          code.
-            function todosReducer(state, action) {
-              switch (action.type) {
-                case 'ADD_TODO':
-                  return [
-                    ...state,
-                    {
-                      id: action.id,
-                      text: action.text,
-                      completed: false
-                    }
-                  ]
-                case 'TOGGLE_TODO':
-                  return state.map(todo => {
-                    if (todo.id === action.id) {
-                      return { ...todo, completed: !todo.completed }
-                    }
-                    return todo
-                  })
-                  default: return state
-              }
-            }
-
-            const initialTodos = []
-
-            const store = createStore(todoReducer, initialTodos)
-        br
-        p Использование:
-        pre
-          code.
-            store.dispatch({
-              type: 'ADD_TODO',
-              id: 1,
-              text: 'Понять на сколько redux прост'
-            })
-
-            store.getState() -  [{ 
-                                  id: 1,
-                                  text: ‘Понять насколько redux прост’,
-                                  completed: false
-                                }]
-            store.dispatch({
-              type: 'TOGGLE_TODO',
-              id: 1
-            })
-
-            store.getState() -  [{
-                                  id: 1,
-                                  text: ‘Понять насколько redux прост’,
-                                  completed: true
-                                }]
-        br
-        p Метод combineReducers позволяет вместо того, чтобы создавать один огромный reducer для всего состояния приложения сразу, разбивать его на отдельные модули.
-        pre
-          code.
-            function counterReducer(state, action) {
-              if (action.type === 'ADD') {
-                return state + 1
-              } else {
-                return state
-              }
-            }
-
-            const reducer = combineReducers({
-              todoState: todoReducer, 
-              counterState: counterReducer
-            })
-
-            const initialState = {
-              todoState: [],
-              counterState: 0,
-            }
-
-            const store = createStore(reducer, initialState)
-        br
-        p Если упростить, то:
-        pre
-          code.
-            function reducer(state, action) {
-              return {
-                todoState: todoReducer(state, action),
-                counterState: counterReducer(state, action),
-              }
-            }
-        br
-        p.
-          Но этот код плохо масштабируется.<br>
-          Если у нас 2 “под-состояния”, нам нужно дважды написать (state, action),
-          а хорошие программисты так не делают.<br>
-          Если редюсоров и стэйтов много, то через обработку коллекции редюсеров:
-        pre
-          code.
-            function combineReducers(reducersMap) {
-              return function combinationReducer(state, action) {
-                const nextState = {}
-                Object.entries(reducersMap).forEach(([key, reducer]) => {
-                  nextState[key] =  reducer(state[key], action)
-                })
-                return nextState
-              }
-            }
-        br
-        p <dfn>middleware в разрезе redux</dfn> - это какая-то штука, которая слушает все dispatch и при определенных условиях делает что-то.
-        pre
-          code.
-            const createStoreWithMiddleware = applyMiddleware(somdfniddleware)(createStore)
-            const store = createStoreWithMiddleware(reducer, initialState)
-        br
-        p.
-          <dfn>applyMiddleware</dfn> переопределяет метод dispatch, добавляя перед (или после) обновлением состояния какую-то пользовательскую логику.<br>
-          самый популярный middleware от создателей redux - <dfn>redux-thunk</dfn>, чаще всего используют при асинхронных операциях.<br>
-          Его смысл сводится к тому, что можно передавать в store.dispatch сложные функции<br>
-        pre
-          code.
-            const thunk = store => dispatch => action => {
-              if (typeof action === 'function') {
-                return action(store.dispatch, store.getState)
-              }
-              return dispatch(action)
-            }
-        br
-        p.
-          метод createStore принимал атрибуты (reducer, initialState) и возвращал объект с ключами { dispatch, getSate }.<br>
-          метод applyMiddleware берёт уже реализованный метод createStore и переопределяет его возвращаемое значение:
-        pre
-          code.
-            function applyMiddleware(middleware) {
-              return function createStoreWithMiddleware(createStore) {
-                return (reducer, state) => {
-                  const store = createStore(reducer, state)
-                  return {
-                    dispatch: action => middleware(store)(store.dispatch)(action),
-                    getState: store.getState,
+          }
+      br
+      p.
+        <dfn>createStore</dfn> - возвращает объект с полем “dispatch”.<br>
+        <dfn>dispatch</dfn> - это функция, которая всего лишь применяет редюсер к нашему текущему состоянию
+        <b>(newState = reducer(state, action))</b>.<br>
+        <br>
+        С этими 7 строками уже можно писать TodoApp.<br>
+        Инициализация хранилища:
+      pre
+        code.
+          function todosReducer(state, action) {
+            switch (action.type) {
+              case 'ADD_TODO':
+                return [
+                  ...state,
+                  {
+                    id: action.id,
+                    text: action.text,
+                    completed: false
                   }
+                ]
+              case 'TOGGLE_TODO':
+                return state.map(todo => {
+                  if (todo.id === action.id) {
+                    return { ...todo, completed: !todo.completed }
+                  }
+                  return todo
+                })
+                default: return state
+            }
+          }
+
+          const initialTodos = []
+
+          const store = createStore(todoReducer, initialTodos)
+      br
+      p Использование:
+      pre
+        code.
+          store.dispatch({
+            type: 'ADD_TODO',
+            id: 1,
+            text: 'Понять на сколько redux прост'
+          })
+
+          store.getState() -  [{ 
+                                id: 1,
+                                text: ‘Понять насколько redux прост’,
+                                completed: false
+                              }]
+          store.dispatch({
+            type: 'TOGGLE_TODO',
+            id: 1
+          })
+
+          store.getState() -  [{
+                                id: 1,
+                                text: ‘Понять насколько redux прост’,
+                                completed: true
+                              }]
+      br
+      p Метод combineReducers позволяет вместо того, чтобы создавать один огромный reducer для всего состояния приложения сразу, разбивать его на отдельные модули.
+      pre
+        code.
+          function counterReducer(state, action) {
+            if (action.type === 'ADD') {
+              return state + 1
+            } else {
+              return state
+            }
+          }
+
+          const reducer = combineReducers({
+            todoState: todoReducer, 
+            counterState: counterReducer
+          })
+
+          const initialState = {
+            todoState: [],
+            counterState: 0,
+          }
+
+          const store = createStore(reducer, initialState)
+      br
+      p Если упростить, то:
+      pre
+        code.
+          function reducer(state, action) {
+            return {
+              todoState: todoReducer(state, action),
+              counterState: counterReducer(state, action),
+            }
+          }
+      br
+      p.
+        Но этот код плохо масштабируется.<br>
+        Если у нас 2 “под-состояния”, нам нужно дважды написать (state, action),
+        а хорошие программисты так не делают.<br>
+        Если редюсоров и стэйтов много, то через обработку коллекции редюсеров:
+      pre
+        code.
+          function combineReducers(reducersMap) {
+            return function combinationReducer(state, action) {
+              const nextState = {}
+              Object.entries(reducersMap).forEach(([key, reducer]) => {
+                nextState[key] =  reducer(state[key], action)
+              })
+              return nextState
+            }
+          }
+      br
+      p <dfn>middleware в разрезе redux</dfn> - это какая-то штука, которая слушает все dispatch и при определенных условиях делает что-то.
+      pre
+        code.
+          const createStoreWithMiddleware = applyMiddleware(somdfniddleware)(createStore)
+          const store = createStoreWithMiddleware(reducer, initialState)
+      br
+      p.
+        <dfn>applyMiddleware</dfn> переопределяет метод dispatch, добавляя перед (или после) обновлением состояния какую-то пользовательскую логику.<br>
+        самый популярный middleware от создателей redux - <dfn>redux-thunk</dfn>, чаще всего используют при асинхронных операциях.<br>
+        Его смысл сводится к тому, что можно передавать в store.dispatch сложные функции<br>
+      pre
+        code.
+          const thunk = store => dispatch => action => {
+            if (typeof action === 'function') {
+              return action(store.dispatch, store.getState)
+            }
+            return dispatch(action)
+          }
+      br
+      p.
+        метод createStore принимал атрибуты (reducer, initialState) и возвращал объект с ключами { dispatch, getSate }.<br>
+        метод applyMiddleware берёт уже реализованный метод createStore и переопределяет его возвращаемое значение:
+      pre
+        code.
+          function applyMiddleware(middleware) {
+            return function createStoreWithMiddleware(createStore) {
+              return (reducer, state) => {
+                const store = createStore(reducer, state)
+                return {
+                  dispatch: action => middleware(store)(store.dispatch)(action),
+                  getState: store.getState,
                 }
               }
             }
-        br
-        p <dfn>form</dfn>:
-        pre
-          code.
-            import { useDispatch } from 'react-redux'
-            import { createPost } from 'actions/posts'
+          }
+      br
+      p <dfn>form</dfn>:
+      pre
+        code.
+          import { useDispatch } from 'react-redux'
+          import { createPost } from 'actions/posts'
 
-            const [postData, setPostData] = useState({
-              creator: ' ',
-              title: ' ',
-              message: ' '
+          const [postData, setPostData] = useState({
+            creator: ' ',
+            title: ' ',
+            message: ' '
+          })
+
+          const dispatch = useDispatch()
+
+          const handleSubmit = (e) => {
+            e.preventDefault()
+            dispatch(createPost(postData))
+          }
+      br
+      p <dfn>action</dfn>:
+      pre
+        code.
+          export const createPost = (post) => async (dispatch) => {
+          try {
+            const { data } = await api.createPost(post)
+            dispatch ({ type: 'CREATE', payload: data })
+            } catch (error) {
+              console.log(error)
+            }
+          }
+      br
+      p <dfn>api</dfn>:
+      code export const createPost = (newPost) => axios.post(url, newPost)
+      br
+      p <dfn>server/controllers</dfn>:
+      pre
+        code.
+          export const createPost = async (req, res) => {
+            const post = req.body;
+            const newPostMessage = new PostMessage({
+              …post,
+              creator: req.userId,
+              createdAt: new Date().toISOString()
             })
 
-            const dispatch = useDispatch()
-
-            const handleSubmit = (e) => {
-              e.preventDefault()
-              dispatch(createPost(postData))
-            }
-        br
-        p <dfn>action</dfn>:
-        pre
-          code.
-            export const createPost = (post) => async (dispatch) => {
             try {
-              const { data } = await api.createPost(post)
-              dispatch ({ type: 'CREATE', payload: data })
-              } catch (error) {
-                console.log(error)
-              }
+              await newPostMessage.save();
+              res.status(201).json(newPostMessage);
+            } catch (error) {
+              res.status(409).json({ message: error.message });
             }
-        br
-        p <dfn>api</dfn>:
-        code export const createPost = (newPost) => axios.post(url, newPost)
-        br
-        p <dfn>server/controllers</dfn>:
-        pre
-          code.
-            export const createPost = async (req, res) => {
-              const post = req.body;
-              const newPostMessage = new PostMessage({
-                …post,
-                creator: req.userId,
-                createdAt: new Date().toISOString()
-              })
+          }
+      br
+      p <dfn>server/models</dfn>:
+      pre
+        code.
+          import mongoose from 'mongoose'
 
-              try {
-                await newPostMessage.save();
-                res.status(201).json(newPostMessage);
-              } catch (error) {
-                res.status(409).json({ message: error.message });
-              }
+          const postSchdfna = mongoose.Schdfna({
+            title: String,
+            message: String,
+            name: String,
+            creator: String,
+            tags: [String],
+            selectedFile: String,
+            likes: { type: [String], default: [] },
+            createdAt: {
+              type: Date,
+              default: new Date(),
+            },
+          })
+
+          export default mongoose.model('PostMessage', postSchdfna);
+      br
+      p <dfn>reducers</dfn>:
+      pre
+        code.
+          export default (post = [ ], action) => {
+            switch (action.type) {
+              case 'FATCH_ALL':
+                return action.payload;
+              case 'CREATE':
+                return [ …posts, action.payload ];
+              default: return posts;
             }
-        br
-        p <dfn>server/models</dfn>:
-        pre
-          code.
-            import mongoose from 'mongoose'
+          }
+      br
+      img(src="../img/js/react/redux.jpg" alt="")
 
-            const postSchdfna = mongoose.Schdfna({
-              title: String,
-              message: String,
-              name: String,
-              creator: String,
-              tags: [String],
-              selectedFile: String,
-              likes: { type: [String], default: [] },
-              createdAt: {
-                type: Date,
-                default: new Date(),
-              },
-            })
+    //- Alpinejs
+    details
+      summary Alpinejs
+      a(href="https://alpinejs.dev/") alpinejs<br>
+      p К событию JS нужно добавить @. Например @click. 
+      a(href="https://developer.mozilla.org/ru/docs/Web/Events") Events
 
-            export default mongoose.model('PostMessage', postSchdfna);
-        br
-        p <dfn>reducers</dfn>:
-        pre
-          code.
-            export default (post = [ ], action) => {
-              switch (action.type) {
-                case 'FATCH_ALL':
-                  return action.payload;
-                case 'CREATE':
-                  return [ …posts, action.payload ];
-                default: return posts;
-              }
-            }
-        br
-        img(src="../img/js/react/redux.jpg" alt="")
+      //- Directives
+      table
+        caption Directives
+        thead
+          tr 
+            th Directive
+            th Description
+        tbody 
+          tr
+            td 
+              a(href="https://alpinejs.dev/directives/data") x-data
+            td определяет часть HTML как компонент Alpinejs и предоставляет ему данные 
+          tr
+            td 
+              a(href="https://alpinejs.dev/directives/init") x-init
+            td позволяет выполнить действие в момент когда Alpinejs инициализирует элемент 
+          tr
+            td 
+              a(href="https://alpinejs.dev/directives/show") x-show
+            td показывает или прячет DOM элемент
+          tr
+            td 
+              a(href="https://alpinejs.dev/directives/bind") x-bind
+            td устанавливает атрибуты HTML элемента на основании вычислений
+          tr
+            td 
+              a(href="https://alpinejs.dev/directives/on") x-on
+            td выполняет код при получении события
+          tr
+            td 
+              a(href="https://alpinejs.dev/directives/text") x-text
+            td вставляет текст в элемент
+          tr
+            td 
+              a(href="https://alpinejs.dev/directives/html") x-html
+            td вставляет html разметку в элемент
+          tr
+            td 
+              a(href="https://alpinejs.dev/directives/model") x-model
+            td связавыет значение с данными
+          tr
+            td 
+              a(href="https://alpinejs.dev/directives/modelable") x-modelable
+            td указывает значение, которое нужно связать со значением x-model
+          tr
+            td 
+              a(href="https://alpinejs.dev/directives/for") x-for
+            td создаёт DOM элементы перебирая массивы и объекты
+          tr
+            td 
+              a(href="https://alpinejs.dev/directives/transition") x-transition
+            td плавное появление и исчезновение элемента
+          tr
+            td 
+              a(href="https://alpinejs.dev/directives/effect") x-effect
+            td меняет элемент когда меняются его зависимости
+          tr
+            td 
+              a(href="https://alpinejs.dev/directives/ignore") x-ignore
+            td Alpine пропускает этот элемент во время инициализации
+          tr
+            td 
+              a(href="https://alpinejs.dev/directives/ref") x-ref
+            td обозначает элемент для $refs
+          tr
+            td 
+              a(href="https://alpinejs.dev/directives/cloak") x-cloak
+            td.
+              скрывает элемент пока не загрузится Alpine<br>
+              add to CSS [x-cloak] { display: none !important; }
+          tr
+            td 
+              a(href="https://alpinejs.dev/directives/teleport") x-teleport
+            td переносит часть шаблона < template > в другую часть страницы
+          tr
+            td 
+              a(href="https://alpinejs.dev/directives/if") x-if
+            td добавляет и удаляет элементы по словию
+          tr
+            td 
+              a(href="https://alpinejs.dev/directives/id") x-id
+            td.
+              собирает в массив id сгенерированные с помощью $id<br>
+              создаёт им scope и добавляет к ним суффикс
+
+      //- Magics
+      table
+        caption Magics
+        thead
+          tr
+            th Magic
+            th Description
+        tbody 
+          tr
+            td 
+              a(href="https://alpinejs.dev/magics/el") $el
+            td выбирает текущий элемент
+          tr
+            td
+              a(href="https://alpinejs.dev/magics/refs") $refs
+            td выбирает элемент c x-ref
+          tr
+            td
+              a(href="https://alpinejs.dev/magics/store") $store
+            td доступ к глобальному хранилищу, созданного через Alpine.store()
+          tr
+            td
+              a(href="https://alpinejs.dev/magics/watch") $watch
+            td наблюдает за указанным элементом
+          tr
+            td
+              a(href="https://alpinejs.dev/magics/dispatch") $dispatch
+            td создает события браузера
+          tr
+            td
+              a(href="https://alpinejs.dev/magics/nextTick") $nextTick
+            td выполняет действие после после выполнения первого
+          tr
+            td
+              a(href="https://alpinejs.dev/magics/root") $root
+            td выбирает ближайший родительский элемент с x-data
+          tr
+            td
+              a(href="https://alpinejs.dev/magics/data") $data
+            td содежит значения всех x-data, через которых всплывает событие
+          tr
+            td
+              a(href="https://alpinejs.dev/magics/id") $id
+            td создаёт id для элементов избегая конфликтов одинаковых имён
+
+      //- Globals
+      table
+        caption Globals
+        thead
+          tr
+            th Global
+            th Description
+        tbody 
+          tr
+            td 
+              a(href="https://alpinejs.dev/globals/alpine-data") Alpine.data()
+            td вынести контекст x-data в отдельную функцию и переиспользовать
+          tr
+            td 
+              a(href="https://alpinejs.dev/globals/alpine-bind") Alpine.bind()
+            td вынести контекст x-data в отдельную функцию и переиспользовать
+          tr
+            td 
+              a(href="https://alpinejs.dev/globals/alpine-store") Alpine.store()
+            td управление глобальным хранилищем
 
     //- SQL
     details
@@ -7682,93 +7840,7 @@ block menu
             #[On('eventname')]
             public function updatePost($title) {}
 
-        //- Alpinejs
-        details
-          summary Alpinejs
-          a(href="https://alpinejs.dev/") alpinejs<br>
-          p К событию JS нужно добавить @. Например @click. 
-          a(href="https://developer.mozilla.org/ru/docs/Web/Events") Events
-
-          //- Directives
-          table
-            caption Directives
-            thead
-              tr 
-                th Directive
-                th Description
-            tbody 
-              tr
-                td 
-                  a(href="https://alpinejs.dev/directives/data") x-data
-                td определяет часть HTML как компонент Alpinejs и предоставляет ему данные 
-
-          //- Magics
-          table
-            caption Magics
-            thead
-              tr
-                th Magic
-                th Description
-            tbody 
-              tr
-                td 
-                  a(href="https://alpinejs.dev/magics/el") $el
-                td выбирает текущий элемент
-              tr
-                td
-                  a(href="https://alpinejs.dev/magics/refs") $refs
-                td выбирает элемент c x-ref
-              tr
-                td
-                  a(href="https://alpinejs.dev/magics/store") $store
-                td доступ к глобальному хранилищу, созданного через Alpine.store()
-              tr
-                td
-                  a(href="https://alpinejs.dev/magics/watch") $watch
-                td наблюдает за указанным элементом
-              tr
-                td
-                  a(href="https://alpinejs.dev/magics/dispatch") $dispatch
-                td создает события браузера
-              tr
-                td
-                  a(href="https://alpinejs.dev/magics/nextTick") $nextTick
-                td выполняет действие после после выполнения первого
-              tr
-                td
-                  a(href="https://alpinejs.dev/magics/root") $root
-                td выбирает ближайший родительский элемент с x-data
-              tr
-                td
-                  a(href="https://alpinejs.dev/magics/data") $data
-                td содежит значения всех x-data, через которых всплывает событие
-              tr
-                td
-                  a(href="https://alpinejs.dev/magics/id") $id
-                td создаёт id для элементов избегая конфликтов одинаковых имён
-
-          //- Globals
-          table
-            caption Globals
-            thead
-              tr
-                th Global
-                th Description
-            tbody 
-              tr
-                td 
-                  a(href="https://alpinejs.dev/globals/alpine-data") Alpine.data()
-                td вынести контекст x-data в отдельную функцию и переиспользовать
-              tr
-                td 
-                  a(href="https://alpinejs.dev/globals/alpine-bind") Alpine.bind()
-                td вынести контекст x-data в отдельную функцию и переиспользовать
-              tr
-                td 
-                  a(href="https://alpinejs.dev/globals/alpine-store") Alpine.store()
-                td управление глобальным хранилищем
-
-
+      
       //- Api
       details 
         summary Api
