@@ -5004,7 +5004,6 @@ public function save()
 $this->dispatch('eventname', title: $post->title);</code><p>В другом (других) компоненте добавить слушателя события</p><code>use Livewire\Attributes\On;
 <On eventname></On>
 public function updatePost($title) {}
-
 </code></details></details><details> <summary>Api</summary><p>Установить пакет Sanctum, создать роут, миграцию personal_access_tokens_table и токен аутентификацию для api</p><code>./sail artisan install:api</code><p>Создать модель с миграцией</p><code>./sail artisan make:model Category -m</code><p>Обновить таблицы</p><code>./sail artisan migrate</code><p>создать контроллер в отдельной структуре папок (v1 - версия)
 --model=Category - привязка к модели
 --api - методы апи контроллера
