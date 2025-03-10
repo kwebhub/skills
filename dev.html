@@ -2741,7 +2741,7 @@ IndexedDB работает на стороне клиента (в браузер
 Если данных не помещаются в памяти, то используй курсор.
 </p></details></details></details><details><summary>React</summary><p><b>npx create-react-app название папки (проекта)</b><br>
   - создаст папку с названием проекта и стартовым шаблоном внутри.<br>
-<dfn>JSX</dfn>:<br>
+<em>JSX</em>:<br>
   - это синтаксический сахар для React.createElement.<br>
   - это расширение JS, чтобы объяснить React как выглядит UI.<br>
   - напоминает язык шаблонов, наделённый силой JavaScript.<br>
@@ -2770,20 +2770,20 @@ const element = &lt;h1&gt;Здравствуй, {name}!&lt;/h1&gt;;
 Первоначальный рендеринг компонента в DOM называется “монтированием” - (mounting).<br>
 Каждый раз когда DOM-узел, созданный компанентом, удаляется, происходит “размонтирование” - (unmounting).<br>
 <br>
-<dfn>Методы жизненного цикла</dfn>:<br>
+<em>Методы жизненного цикла</em>:<br>
 <em>componentDidMount() {...}</em> - запускается после того, как компонент отрендерился в DOM<br>
 <em>componentWillUnmount() {...}</em> - запускается перед размонтированием<br>
 <br>
-Поля <dfn>this.props</dfn> и <dfn>this.state</dfn> в классах особенные, и их устанавливает сам React.<br>
+Поля <em>this.props</em> и <em>this.state</em> в классах особенные, и их устанавливает сам React.<br>
 Присвоить значение this.state можно только в конструкторе,
 в остальных случаях только через изменение: <b>this.state({comment: ‘Привет’})</b>.<br>
 Родитель-компонент передаёт своё состояние дочерним компонентам в виде пропса.<br>
 Это однонаправленный поток данных.<br>
 <br>
-<dfn>this.props</dfn> и <dfn>this.state</dfn> могут обновляться асинхронно поэтому операции с ними нужно проводить внутри функции,
+<em>this.props</em> и <em>this.state</em> могут обновляться асинхронно поэтому операции с ними нужно проводить внутри функции,
 получая текущие значения в качестве параметров:<br></p><code>this.setState((state.props) => ({
-  counter: state.counter + props.incrdfnent
-}))</code><br><p><dfn>Обработка событий</dfn>:<br>
+  counter: state.counter + props.increment
+}))</code><br><p><em>Обработка событий</em>:<br>
 HTML: &lt;button onclick="activateLasers()"&gt; Активировать лазеры &lt;/button&gt;<br>
 React: &lt;button onClick={activateLasers}&gt; Активировать лазеры &lt;/button&gt;<br>
 activateLasers - это функция-обработчик события<br>
@@ -2827,7 +2827,7 @@ activateLasers - это функция-обработчик события<br>
 Если этот коллбэк попадает как проп в дочерние компоненты, эти компоненты могут быть отрендерены снова.<br>
 Снижение производительности.<br>
 <br>
-<dfn>Структура проекта</dfn>:<br>
+<em>Структура проекта</em>:<br>
 <em>index.html</em> - точка входа в сайт<br>
 <em>index.js</em> - подключает необходимое окружение (react, react-dom, index.css, App.js, serviceWorker.js)<br>
 <em>index.css</em> - задаёт стили<br>
@@ -2837,7 +2837,7 @@ activateLasers - это функция-обработчик события<br>
 <em>App.js</em> - подключает (объединяет) все компоненты<br>
 Файл .css можно не импортировать, т.к. React ищет его сам в своей папке, либо в папках выше.<br>
 <br>
-<dfn>Компонент</dfn>:<br>
+<em>Компонент</em>:<br>
 Это функция или класс (работают одинаково).<br>
 Один компонент - одна ответственность.<br>
 Компонент содержит логику и разметку в JSX.<br>
@@ -2850,7 +2850,7 @@ activateLasers - это функция-обработчик события<br>
 <br>
 Сначала создаём самый маленький компонент, потом вверх по иерархии.<br>
 <br>
-<dfn>Компонент в виде класса</dfn>:</p><pre><code>class Example extends React.Component {
+<em>Компонент в виде класса</em>:</p><pre><code>class Example extends React.Component {
   <span>конструктор объектов</span>
   constractor (props) {
   <span>обязательная ссылка на родителя</span>
@@ -2863,11 +2863,11 @@ activateLasers - это функция-обработчик события<br>
     <span>возвращает JSX объект</span>
     return…
   }
-}</code></pre><p>В JS - классах всегда нужно вызывать <dfn>super</dfn> при объявлении конструктора подкласса.
+}</code></pre><p>В JS - классах всегда нужно вызывать <em>super</em> при объявлении конструктора подкласса.
 Все классовые React - компоненты, у которых есть constractor 
 должны начинаться с вызова <b>super (props)</b>.
 <br>
-<dfn>Компонент в виде функции (функциональный компонент)</dfn>:</p><pre><code><span>подключение</span>
+<em>Компонент в виде функции (функциональный компонент)</em>:</p><pre><code><span>подключение</span>
 import React from 'react';
 …
 const styles = { }
@@ -2936,13 +2936,13 @@ class Clock extends React.Component {
 
 ReactDOM.render(
   &lt;Clock/&gt;,
-  document.getEldfnentById('root')
-);</code></pre><br><p><dfn>Пропс</dfn>:<br>
+  document.getElementById('root')
+);</code></pre><br><p><em>Пропс</em>:<br>
 <em>JSON</em> - объявляем объект в переменную:</p><pre><code>const user = {
   firstName = ‘Марья’,
   lastName = ‘Маревна’
 }</code></pre><p>и обращаемся к пропсам:</p><pre><code>user.firstName
-user.lastName</code></pre><br><p><dfn>this.props</dfn> - объект, кототрый содержит свойства, которые были определены тем, кто вызывает этот компонент.<br>
+user.lastName</code></pre><br><p><em>this.props</em> - объект, кототрый содержит свойства, которые были определены тем, кто вызывает этот компонент.<br>
 Вложенный контент может быть доступен через <b>props.children</b></p><pre><code><span>в props получаем значения value и onClick
 из класса Board ниже</span>
 function Square (props) { 
@@ -3002,10 +3002,10 @@ class Welcome extends React.Component {
   }
 }
 
-const eldfnent = &lt;Welcome name="Алиса"/&gt;;
+const element = &lt;Welcome name="Алиса"/&gt;;
 ReactDOM.render(
-  eldfnent,
-  document.getEldfnentById('root')
+  element,
+  document.getElementById('root')
 );</code></pre><p>name=”Алиса” - передаётся в функцию Welcome в виде объекта <b>{name: 'Алиса'}</b> - это props.<br>
 Функция Welcome возвращает элемент &lt;h1&gt;Привет, Алиса!&lt;/h1&gt; в ReactDOM.<br>
 <br>
@@ -3021,7 +3021,7 @@ function withdraw(account, amount) {
 напрямую с помощью <b>React.createContext()</b>.<br>
 Для этого создаём отдельный файл context.js и используем &lt;Context.Provider&gt;.<br>
 <br>
-<dfn>Файл context.js</dfn>:</p><pre><code>import React from 'react'
+<em>Файл context.js</em>:</p><pre><code>import React from 'react'
 const Context = React.createContext()
 export default Context
 <span>с помощью Context.Provider
@@ -3031,8 +3031,8 @@ export default Context
 &lt;h1&gt; Hello world! &lt;/h1&gt;
 &lt;Example/&gt;
 &lt;/div&gt;
-&lt;/Context.Provider&gt;</code></pre><p><dfn>Состояние</dfn>:<br>
-Сохранять и изменять можно только состояния <dfn>(state)</dfn>.<br>
+&lt;/Context.Provider&gt;</code></pre><p><em>Состояние</em>:<br>
+Сохранять и изменять можно только состояния <em>(state)</em>.<br>
 Конкретный state контролируется и доступен только конкретному компоненту.<br>
 Состояние содержит данные, специфичные для этого компонента. Они могут изменятся со временем.<br>
 Состояние определяется пользователем и должно быть простым объектом JS.<br>
@@ -3047,7 +3047,7 @@ export default Context
 Родительский компонент может передать состояние обратно дочерним элементам с помощью пропсов.<br>
 Это поддерживает синхронизацию дочерних компонентов друг с другом и с родительким компонентом.<br>
 <br>
-<dfn>Хуки</dfn>:</p><code>const [todos, setTodos] = React.useState([ ])</code><p>Это функции, с которыми можно “подцепиться” к состоянию
+<em>Хуки</em>:</p><code>const [todos, setTodos] = React.useState([ ])</code><p>Это функции, с которыми можно “подцепиться” к состоянию
 и к методам жизненного цикла React из функциональных компонентов.<br>
 Хуки не работают в классах, а используются вместо них.<br>
 Хуки вызывают только на верхнем уровне (не в циклах, условиях и т.д.)<br>
@@ -3055,11 +3055,11 @@ export default Context
 Если имя функции начинается с use (useSamething) и использует другие хуки,
 то такая функция это пользовательский хук.<br>
 <br>
-<dfn>useState(i)</dfn> - возвращает массив из двух элементов:<br>
+<em>useState(i)</em> - возвращает массив из двух элементов:<br>
   состояние (это state - состояние) и функцию, которая изменяет это состояние.<br>
   Имена даём возвращаемому состоянию и функции произвольно.<br>
 <br>
-<dfn>useEffect(i)</dfn> - React запускает эффекты useEffect(() => {...}) после каждого рендера, включая первый рендер.</p><pre><code>useEffect(() => {
+<em>useEffect(i)</em> - React запускает эффекты useEffect(() => {...}) после каждого рендера, включая первый рендер.</p><pre><code>useEffect(() => {
 fetch('http://…')
   .then(responce=>responce.json())
   .then(todos=>{
@@ -3069,7 +3069,7 @@ fetch('http://…')
 useEffect(i) {...}
 <span>либо</span>
 React.useEffect(i) {...}</code></pre><br><p>Сравнение хука и класса:<br>
-<dfn>Хук</dfn>:</p><pre><code><span>подключение хука</span>
+<em>Хук</em>:</p><pre><code><span>подключение хука</span>
 import React, {useState} from 'react'
 function Example() {
   <span>0 это начальное состояние,
@@ -3085,7 +3085,7 @@ function Example() {
       &lt;/button&gt;
     &lt;/div&gt;
   )
-}</code></pre><br><p><dfn>Класс</dfn>:</p><pre><code>class Example extends React.Component {
+}</code></pre><br><p><em>Класс</em>:</p><pre><code>class Example extends React.Component {
   constractor (props) {
     super (props)
     this.state = {
@@ -3110,12 +3110,12 @@ function Example() {
   }
 }</code></pre><p>Чтобы наделить функциональный компонент состоянием нужно либо преобразовать его в класс, либо добавить в него хук.<br>
 React запоминает значение переменной состояния между вызовами функции.<br>
-<dfn>Итого</dfn>:</p><pre><code><span>подключаем хук</span>
+<em>Итого</em>:</p><pre><code><span>подключаем хук</span>
 import React, {useState} from 'react'
 <span>добавляем переменную в функцию</span>
 const [count, setCount] = useState(0)
 <span>вызываем функцию изменения</span>
-&lt;button onClick={() => setCount(count + 1)}&gt;</code></pre><br><p><dfn>Хук еффекта выполняет побочные действия</dfn>:<br>
+&lt;button onClick={() => setCount(count + 1)}&gt;</code></pre><br><p><em>Хук еффекта выполняет побочные действия</em>:<br>
 - загрузка данных<br>
 - оформление подписки и изменение DOM вручную<br>
 - представляет собой совокупность методов componentDidMount, componentDidUpdate и componentWillUnmount.<br>
@@ -3169,7 +3169,7 @@ useEffect(() => {
 по которому будет сравнение первого аргумента:
 повторно подписаться только если
 props.friend.id изменился.</span>
-[props.friend.id])</code></pre><br><p><dfn>Обычный эффект без сброса</dfn>:</p><pre><code>import React, {useState, useEffect} from 'react'
+[props.friend.id])</code></pre><br><p><em>Обычный эффект без сброса</em>:</p><pre><code>import React, {useState, useEffect} from 'react'
 function Example() {
   const [count, setCount] = useState(0)
   useEffect(() => {
@@ -3230,11 +3230,11 @@ function ThemedButton() {
   return (
     &lt;button style={{background: theme.background, color: theme.foreground}}&gt; Я стилизован темой из контекста! &lt;/button&gt;
   )
-}</code></pre><br><p><dfn>Управляемый компонент</dfn>:<br>
+}</code></pre><br><p><em>Управляемый компонент</em>:<br>
 Если форму обрбатывать с помощью JS-функции, у которой есть доступ к введённым данным,
 то такая форма называется “управляемым компонентом”.<br>
 Библиотека Formik.<br>
-Или, другими словами, <dfn>управляемый компонент</dfn> - это элемент формы рендер,
+Или, другими словами, <em>управляемый компонент</em> - это элемент формы рендер,
 поведение при пользовательском вводе и значение которого контролирует React.<br></p><pre><code>class NameForm extends React.Component{
   constructor(props){
     super(props)
@@ -3300,7 +3300,7 @@ function ThemedButton() {
   - это водопад пропсов от родителя к потомку,
 в который каждый компонент добавляет свой state в виде пропса (props).<br>
 <br>
-<dfn>Композиция</dfn>:<br>
+<em>Композиция</em>:<br>
 Вместо наследования:</p><pre><code>function FancyBorder(props) {
   return (
       <span>поместить в div всё,
@@ -3340,8 +3340,8 @@ function WelcomDialog() {
 ReactDOM.render(
   &lt;WelcomDialog/&gt;,
   document.getElementById('root')
-)</code></pre><br><p><dfn>Ключи</dfn>:<br>
-Ключи помогают React определить, какие элементы были изменены, добавлены или удалены.</p><pre><code>const todoItdfns = todos.map((todo) => 
+)</code></pre><br><p><em>Ключи</em>:<br>
+Ключи помогают React определить, какие элементы были изменены, добавлены или удалены.</p><pre><code>const todoItems = todos.map((todo) => 
   &lt;li key={todo.id}&gt;
     {todo.text}
   &lt;/li&gt;
@@ -3375,7 +3375,7 @@ function NumberList(props) {
       )}
     &lt;/ul&gt;
   )
-}</code></pre><br><p><dfn>Валидирование типов</dfn>:<br>
+}</code></pre><br><p><em>Валидирование типов</em>:<br>
 Библиотека prop-types нужна для задания типов переменных:<br>
 <b>npm i prop-types</b>.</p><pre><code>import PropTypes from 'prop-types'
 
@@ -3385,7 +3385,7 @@ Example.propTypes={
   prop2: PropTypes.number,
   prop3: PropTypes.func.isRequired,
 }
-export default Example</code></pre><br><p><dfn>Условный рендеринг</dfn>:</p><pre><code>if (isLoggedIn) {
+export default Example</code></pre><br><p><em>Условный рендеринг</em>:</p><pre><code>if (isLoggedIn) {
   return &lt;UserGreeting/&gt;;
 }
 return &lt;GuestGreeting/&gt;;
