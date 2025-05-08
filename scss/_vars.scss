@@ -1,0 +1,28 @@
+@use "sass:math";
+
+// шрифт по умолчанию
+$fontFamily: "Poppins", sans-serif;
+$fontWeightBase: 500;
+$fontSizeBase: 1rem;
+$colorBase: #ABABAB;
+$colorBG: #262c37;
+
+// основные цвета дизайна
+$colorText:    #525e74;
+$colorLogo:    #97af6e;
+$colorMenu:    #b69b7f;
+$colorSubMenu: #7b4fa2;
+$colorAccent1: #dac924;
+$colorAccent2: #3fc028;
+$colorAccent3: #8dc5c5;
+$colorBgTable: #71989866;
+
+$fontSizeLogo: 2rem;
+$fontSizeMenu: 1.5rem;
+$fontSizeSub: .875rem;
+
+$fontWeightLogo: 700;
+
+// основные размеры страницы
+$minWidthPage: 20rem;
+$maxWidthPage: 120rem;

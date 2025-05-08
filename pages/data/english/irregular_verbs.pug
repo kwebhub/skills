@@ -1,0 +1,2040 @@
+-
+  const ir_verbs = [
+    {
+      "v1": "abide",
+      "v2": "abode",
+      "v3": "abode",
+      "transcrip": "эбайд",
+      "translate": "пребывать"
+    },
+    {
+      "v1": "arise",
+      "v2": "arose",
+      "v3": "arisen",
+      "transcrip": "эрайз",
+      "translate": "возникать"
+    },
+    {
+      "v1": "backbite",
+      "v2": "backbitten",
+      "v3": "backbitten",
+      "transcrip": "бэкбайт",
+      "translate": "клеветать"
+    },
+    {
+      "v1": "backslide",
+      "v2": "backslid",
+      "v3": "backslid",
+      "transcrip": "бэкслайд",
+      "translate": "отпадать"
+    },
+    {
+      "v1": "be",
+      "v2": "was (were)",
+      "v3": "been",
+      "transcrip": "би",
+      "translate": "быть"
+    },
+    {
+      "v1": "bear",
+      "v2": "bore",
+      "v3": "borne",
+      "transcrip": "биэ",
+      "translate": "выдерживать"
+    },
+    {
+      "v1": "beat",
+      "v2": "beat",
+      "v3": "beaten",
+      "transcrip": "бит",
+      "translate": "бить"
+    },
+    {
+      "v1": "become",
+      "v2": "became",
+      "v3": "become",
+      "transcrip": "бикам",
+      "translate": "становиться"
+    },
+    {
+      "v1": "befall",
+      "v2": "befell",
+      "v3": "befallen",
+      "transcrip": "бифол",
+      "translate": "случиться"
+    },
+    {
+      "v1": "beget",
+      "v2": "begot",
+      "v3": "begotten",
+      "transcrip": "бифгет",
+      "translate": "порождать"
+    },
+    {
+      "v1": "begin",
+      "v2": "began",
+      "v3": "begun",
+      "transcrip": "бигин",
+      "translate": "начинать"
+    },
+    {
+      "v1": "begird",
+      "v2": "begirt",
+      "v3": "begirt",
+      "transcrip": "бигёт",
+      "translate": "опоясывать"
+    },
+    {
+      "v1": "behold",
+      "v2": "beheld",
+      "v3": "beheld",
+      "transcrip": "бихолд",
+      "translate": "замечать"
+    },
+    {
+      "v1": "bend",
+      "v2": "bent",
+      "v3": "bended",
+      "transcrip": "бэнд",
+      "translate": "гнуть(ся)"
+    },
+    {
+      "v1": "bereave",
+      "v2": "bereft",
+      "v3": "bereft",
+      "transcrip": "бирив",
+      "translate": "лишать"
+    },
+    {
+      "v1": "beseech",
+      "v2": "besought",
+      "v3": "besought",
+      "transcrip": "бисич",
+      "translate": "умолять"
+    },
+    {
+      "v1": "beset",
+      "v2": "beset",
+      "v3": "beset",
+      "transcrip": "бисэт",
+      "translate": "осаждать"
+    },
+    {
+      "v1": "bespeak",
+      "v2": "bespoke",
+      "v3": "bespoken",
+      "transcrip": "биспик",
+      "translate": "заказывать"
+    },
+    {
+      "v1": "bespit",
+      "v2": "bespat",
+      "v3": "bespat",
+      "transcrip": "биспит",
+      "translate": "заплевывать"
+    },
+    {
+      "v1": "bestride",
+      "v2": "bestrode",
+      "v3": "bestridden",
+      "transcrip": "бистрайд",
+      "translate": "сидеть верхом"
+    },
+    {
+      "v1": "bet",
+      "v2": "bet",
+      "v3": "bet",
+      "transcrip": "бэт",
+      "translate": "держать пари, спорить"
+    },
+    {
+      "v1": "betake",
+      "v2": "betook",
+      "v3": "betaken",
+      "transcrip": "битэйк",
+      "translate": "приниматься, отправляться"
+    },
+    {
+      "v1": "bid",
+      "v2": "bad",
+      "v3": "bid",
+      "transcrip": "бид",
+      "translate": "велеть, просить"
+    },
+    {
+      "v1": "bite",
+      "v2": "bit",
+      "v3": "bitten",
+      "transcrip": "байт",
+      "translate": "кусать"
+    },
+    {
+      "v1": "bind",
+      "v2": "bound",
+      "v3": "bound",
+      "transcrip": "байнд",
+      "translate": "связать"
+    },
+    {
+      "v1": "bleed",
+      "v2": "bled",
+      "v3": "bled",
+      "transcrip": "блид",
+      "translate": "кровоточить"
+    },
+    {
+      "v1": "bless",
+      "v2": "blessed",
+      "v3": "blessed",
+      "transcrip": "блэс",
+      "translate": "благословлять"
+    },
+    {
+      "v1": "blow",
+      "v2": "blew",
+      "v3": "blown",
+      "transcrip": "блоу",
+      "translate": "дуть"
+    },
+    {
+      "v1": "break",
+      "v2": "broke",
+      "v3": "broken",
+      "transcrip": "брэйк",
+      "translate": "ломать"
+    },
+    {
+      "v1": "breed",
+      "v2": "bred",
+      "v3": "bred",
+      "transcrip": "брид",
+      "translate": "выращивать, порода, поколение и т д."
+    },
+    {
+      "v1": "bring",
+      "v2": "brought",
+      "v3": "brought",
+      "transcrip": "брин",
+      "translate": "приносить"
+    },
+    {
+      "v1": "broadcast",
+      "v2": "broadcasted",
+      "v3": "broadcasted",
+      "transcrip": "броэдкэст",
+      "translate": "распространять, разбрасывать"
+    },
+    {
+      "v1": "browbeat",
+      "v2": "browbeat",
+      "v3": "browbeaten",
+      "transcrip": "броубит",
+      "translate": "запугивать"
+    },
+    {
+      "v1": "build",
+      "v2": "built",
+      "v3": "built",
+      "transcrip": "билд",
+      "translate": "строить"
+    },
+    {
+      "v1": "burn",
+      "v2": "burnt",
+      "v3": "burnt",
+      "transcrip": "бёрн",
+      "translate": "гореть, обжигаться"
+    },
+    {
+      "v1": "burst",
+      "v2": "burst",
+      "v3": "burst",
+      "transcrip": "бёрст",
+      "translate": "разразиться, взорваться"
+    },
+    {
+      "v1": "bust",
+      "v2": "busted",
+      "v3": "busted",
+      "transcrip": "баст",
+      "translate": "разжаловать"
+    },
+    {
+      "v1": "buy",
+      "v2": "bought",
+      "v3": "bought",
+      "transcrip": "бай",
+      "translate": "покупать"
+    },
+    {
+      "v1": "can",
+      "v2": "could",
+      "v3": "been able",
+      "transcrip": "кэн",
+      "translate": "мочь, уметь"
+    },
+    {
+      "v1": "cast",
+      "v2": "cast",
+      "v3": "cast",
+      "transcrip": "кэст",
+      "translate": "бросать, кидать"
+    },
+    {
+      "v1": "catch",
+      "v2": "caught",
+      "v3": "caught",
+      "transcrip": "кэтч",
+      "translate": "ловить, схватывать"
+    },
+    {
+      "v1": "chide",
+      "v2": "chided",
+      "v3": "chidden",
+      "transcrip": "чайд",
+      "translate": "бранить"
+    },
+    {
+      "v1": "choose",
+      "v2": "chose",
+      "v3": "chosen",
+      "transcrip": "чуз",
+      "translate": "выбирать"
+    },
+    {
+      "v1": "cleave",
+      "v2": "cleft",
+      "v3": "cleft",
+      "transcrip": "клив",
+      "translate": "рассечь"
+    },
+    {
+      "v1": "cling",
+      "v2": "clung",
+      "v3": "clung",
+      "transcrip": "клин",
+      "translate": "цеплять(ся)"
+    },
+    {
+      "v1": "come",
+      "v2": "came",
+      "v3": "come",
+      "transcrip": "кам",
+      "translate": "приходить"
+    },
+    {
+      "v1": "cost",
+      "v2": "cost",
+      "v3": "cost",
+      "transcrip": "кост",
+      "translate": "стоить"
+    },
+    {
+      "v1": "countersink",
+      "v2": "countersink",
+      "v3": "countersunk",
+      "transcrip": "каунтесинк",
+      "translate": "зенковать"
+    },
+    {
+      "v1": "creep",
+      "v2": "crept",
+      "v3": "crept",
+      "transcrip": "крип",
+      "translate": "гад, урод, ползти, красться"
+    },
+    {
+      "v1": "crow",
+      "v2": "crew",
+      "v3": "crowed",
+      "transcrip": "кроу",
+      "translate": "петь (петух)"
+    },
+    {
+      "v1": "cut",
+      "v2": "cut",
+      "v3": "cut",
+      "transcrip": "кат",
+      "translate": "резать"
+    },
+    {
+      "v1": "dare",
+      "v2": "dared",
+      "v3": "durst",
+      "transcrip": "дэр",
+      "translate": "сметь"
+    },
+    {
+      "v1": "deal",
+      "v2": "dealt",
+      "v3": "dealt",
+      "transcrip": "жиэл",
+      "translate": "иметь дело"
+    },
+    {
+      "v1": "dig",
+      "v2": "dug",
+      "v3": "dug",
+      "transcrip": "диг",
+      "translate": "копать"
+    },
+    {
+      "v1": "dive",
+      "v2": "dove",
+      "v3": "dived",
+      "transcrip": "дайв",
+      "translate": "нырять, погружаться"
+    },
+    {
+      "v1": "do",
+      "v2": "did",
+      "v3": "done",
+      "transcrip": "ду",
+      "translate": "делать"
+    },
+    {
+      "v1": "draw",
+      "v2": "draw",
+      "v3": "drawn",
+      "transcrip": "дроу",
+      "translate": "рисовать, тащить"
+    },
+    {
+      "v1": "dream",
+      "v2": "dreamt",
+      "v3": "dreamt",
+      "transcrip": "дрим",
+      "translate": "мечтать, видеть сны"
+    },
+    {
+      "v1": "drink",
+      "v2": "drank",
+      "v3": "drunk",
+      "transcrip": "дринк",
+      "translate": "пить"
+    },
+    {
+      "v1": "drive",
+      "v2": "drove",
+      "v3": "driven",
+      "transcrip": "драйв",
+      "translate": "везти, приводить в движение"
+    },
+    {
+      "v1": "dwell",
+      "v2": "dwelt",
+      "v3": "dwelt",
+      "transcrip": "двэл",
+      "translate": "обитать"
+    },
+    {
+      "v1": "eat",
+      "v2": "ate",
+      "v3": "eaten",
+      "transcrip": "ит",
+      "translate": "кушать"
+    },
+    {
+      "v1": "fall",
+      "v2": "fell",
+      "v3": "fallen",
+      "transcrip": "фол",
+      "translate": "падать"
+    },
+    {
+      "v1": "feed",
+      "v2": "fed",
+      "v3": "fed",
+      "transcrip": "фид",
+      "translate": "кормить(ся)"
+    },
+    {
+      "v1": "feel",
+      "v2": "felt",
+      "v3": "felt",
+      "transcrip": "фил",
+      "translate": "чувствовать"
+    },
+    {
+      "v1": "fight",
+      "v2": "fought",
+      "v3": "fought",
+      "transcrip": "файт",
+      "translate": "сражаться"
+    },
+    {
+      "v1": "find",
+      "v2": "found",
+      "v3": "found",
+      "transcrip": "файнд",
+      "translate": "находить"
+    },
+    {
+      "v1": "fit",
+      "v2": "fit",
+      "v3": "fit",
+      "transcrip": "фит",
+      "translate": "годиться, подходить"
+    },
+    {
+      "v1": "flee",
+      "v2": "fled",
+      "v3": "fled",
+      "transcrip": "фли",
+      "translate": "бежать, спасаться"
+    },
+    {
+      "v1": "fling",
+      "v2": "flung",
+      "v3": "flung",
+      "transcrip": "флин",
+      "translate": "швырять"
+    },
+    {
+      "v1": "floodlight",
+      "v2": "floodlit",
+      "v3": "floodlit",
+      "transcrip": "флудлайт",
+      "translate": "освещать прожектором"
+    },
+    {
+      "v1": "fly",
+      "v2": "flew",
+      "v3": "flown",
+      "transcrip": "флай",
+      "translate": "летать"
+    },
+    {
+      "v1": "forbear",
+      "v2": "forbore",
+      "v3": "forborne",
+      "transcrip": "фобиэ",
+      "translate": "воздерживаться"
+    },
+    {
+      "v1": "forbid",
+      "v2": "forbade",
+      "v3": "forbidden",
+      "transcrip": "фобид",
+      "translate": "запрещать"
+    },
+    {
+      "v1": "forecast",
+      "v2": "forecast",
+      "v3": "forecast",
+      "transcrip": "форкэст",
+      "translate": "предвещать"
+    },
+    {
+      "v1": "foresee",
+      "v2": "foresaw",
+      "v3": "foreseen",
+      "transcrip": "форси",
+      "translate": "предвидеть"
+    },
+    {
+      "v1": "foretell",
+      "v2": "foretold",
+      "v3": "foretold",
+      "transcrip": "фортэл",
+      "translate": "предсказывать"
+    },
+    {
+      "v1": "forget",
+      "v2": "forgot",
+      "v3": "forgotten",
+      "transcrip": "фогэт",
+      "translate": "забывать"
+    },
+    {
+      "v1": "forgive",
+      "v2": "forgave",
+      "v3": "forgiven",
+      "transcrip": "фогив",
+      "translate": "прощать"
+    },
+    {
+      "v1": "forsake",
+      "v2": "forsook",
+      "v3": "forsaken",
+      "transcrip": "фосэйк",
+      "translate": "покидать"
+    },
+    {
+      "v1": "forswear",
+      "v2": "forswore",
+      "v3": "forsworn",
+      "transcrip": "фосвэ",
+      "translate": "отрекаться"
+    },
+    {
+      "v1": "freeze",
+      "v2": "froze",
+      "v3": "frozen",
+      "transcrip": "фриз",
+      "translate": "замерзать"
+    },
+    {
+      "v1": "gainsay",
+      "v2": "gainsaid",
+      "v3": "gainsaid",
+      "transcrip": "гэйнсэй",
+      "translate": "отрицать, противоречить"
+    },
+    {
+      "v1": "get",
+      "v2": "got",
+      "v3": "got",
+      "transcrip": "гэт",
+      "translate": "получать"
+    },
+    {
+      "v1": "gild",
+      "v2": "gilt",
+      "v3": "gilt",
+      "transcrip": "гилд",
+      "translate": "позолотить"
+    },
+    {
+      "v1": "gird",
+      "v2": "gird",
+      "v3": "gird",
+      "transcrip": "гёд",
+      "translate": "опоясывать"
+    },
+    {
+      "v1": "give",
+      "v2": "gave",
+      "v3": "given",
+      "transcrip": "гив",
+      "translate": "давать"
+    },
+    {
+      "v1": "go",
+      "v2": "went",
+      "v3": "gone",
+      "transcrip": "гоу",
+      "translate": "идти, ехать"
+    },
+    {
+      "v1": "grave",
+      "v2": "graved",
+      "v3": "graved",
+      "transcrip": "грэйв",
+      "translate": "гравировать"
+    },
+    {
+      "v1": "grind",
+      "v2": "ground",
+      "v3": "ground",
+      "transcrip": "гринд",
+      "translate": "точить, молоть"
+    },
+    {
+      "v1": "grow",
+      "v2": "grew",
+      "v3": "grown",
+      "transcrip": "гроу",
+      "translate": "расти"
+    },
+    {
+      "v1": "hamstring",
+      "v2": "hamstrung",
+      "v3": "hamstrung",
+      "transcrip": "хэмстрин",
+      "translate": "подрезать поджилки"
+    },
+    {
+      "v1": "hang",
+      "v2": "hung",
+      "v3": "hung",
+      "transcrip": "хан",
+      "translate": "висеть, вешать"
+    },
+    {
+      "v1": "have",
+      "v2": "had",
+      "v3": "had",
+      "transcrip": "хэд",
+      "translate": "иметь"
+    },
+    {
+      "v1": "hear",
+      "v2": "heard",
+      "v3": "heard",
+      "transcrip": "хиэ",
+      "translate": "слышать"
+    },
+    {
+      "v1": "heave",
+      "v2": "hove",
+      "v3": "hove",
+      "transcrip": "хив",
+      "translate": "подыматься"
+    },
+    {
+      "v1": "hew",
+      "v2": "hewed",
+      "v3": "hewn",
+      "transcrip": "хью",
+      "translate": "рубить, тесать"
+    },
+    {
+      "v1": "hide",
+      "v2": "hid",
+      "v3": "hidden",
+      "transcrip": "хайд",
+      "translate": "прятать"
+    },
+    {
+      "v1": "hit",
+      "v2": "hit",
+      "v3": "hit",
+      "transcrip": "хит",
+      "translate": "ударить"
+    },
+    {
+      "v1": "hold",
+      "v2": "held",
+      "v3": "held",
+      "transcrip": "холд",
+      "translate": "держать"
+    },
+    {
+      "v1": "hurt",
+      "v2": "hurt",
+      "v3": "hurt",
+      "transcrip": "хёрт",
+      "translate": "повредить, ушебить"
+    },
+    {
+      "v1": "inlay",
+      "v2": "inlaid",
+      "v3": "inlaid",
+      "transcrip": "инлэй",
+      "translate": "вкладывать, инкрустировать"
+    },
+    {
+      "v1": "input",
+      "v2": "input",
+      "v3": "input",
+      "transcrip": "инпут",
+      "translate": "вводить (в компьютер)"
+    },
+    {
+      "v1": "insert",
+      "v2": "insert",
+      "v3": "insert",
+      "transcrip": "инсёт",
+      "translate": "вставлять, вкладывать"
+    },
+    {
+      "v1": "interweave",
+      "v2": "interwove",
+      "v3": "interwoven",
+      "transcrip": "интервив",
+      "translate": "воткать"
+    },
+    {
+      "v1": "keep",
+      "v2": "kept",
+      "v3": "kept",
+      "transcrip": "кип",
+      "translate": "хранить"
+    },
+    {
+      "v1": "ken",
+      "v2": "kent",
+      "v3": "kenned",
+      "transcrip": "кен",
+      "translate": "узнавать по виду"
+    },
+    {
+      "v1": "kneel",
+      "v2": "knelt",
+      "v3": "knelt",
+      "transcrip": "нил",
+      "translate": "становиться на колени"
+    },
+    {
+      "v1": "knit",
+      "v2": "knit",
+      "v3": "knit",
+      "transcrip": "нит",
+      "translate": "вязать"
+    },
+    {
+      "v1": "know",
+      "v2": "knew",
+      "v3": "known",
+      "transcrip": "ноу",
+      "translate": "знать"
+    },
+    {
+      "v1": "lade",
+      "v2": "laded",
+      "v3": "laded",
+      "transcrip": "лэйд",
+      "translate": "грузить"
+    },
+    {
+      "v1": "lay",
+      "v2": "laid",
+      "v3": "laid",
+      "transcrip": "лэй",
+      "translate": "класть"
+    },
+    {
+      "v1": "lead",
+      "v2": "led",
+      "v3": "led",
+      "transcrip": "лид",
+      "translate": "руководить, вести за собой"
+    },
+    {
+      "v1": "lean",
+      "v2": "leant",
+      "v3": "leant",
+      "transcrip": "лин",
+      "translate": "опираться"
+    },
+    {
+      "v1": "leap",
+      "v2": "leapt",
+      "v3": "leapt",
+      "transcrip": "лип",
+      "translate": "прыгать"
+    },
+    {
+      "v1": "learn",
+      "v2": "learnt",
+      "v3": "learnt",
+      "transcrip": "лён",
+      "translate": "изучать, узнавать"
+    },
+    {
+      "v1": "leave",
+      "v2": "left",
+      "v3": "left",
+      "transcrip": "лив",
+      "translate": "оставлять, покидать"
+    },
+    {
+      "v1": "lend",
+      "v2": "lent",
+      "v3": "lent",
+      "transcrip": "лэнд",
+      "translate": "давать взаймы"
+    },
+    {
+      "v1": "let",
+      "v2": "let",
+      "v3": "let",
+      "transcrip": "лэт",
+      "translate": "позволять"
+    },
+    {
+      "v1": "lie",
+      "v2": "lay",
+      "v3": "lain",
+      "transcrip": "лаи",
+      "translate": "лежать"
+    },
+    {
+      "v1": "light",
+      "v2": "lit",
+      "v3": "lit",
+      "transcrip": "лайт",
+      "translate": "осветить"
+    },
+    {
+      "v1": "lose",
+      "v2": "lost",
+      "v3": "lost",
+      "transcrip": "луз",
+      "translate": "терять"
+    },
+    {
+      "v1": "make",
+      "v2": "made",
+      "v3": "made",
+      "transcrip": "мэйк",
+      "translate": "изготавливать (делать)"
+    },
+    {
+      "v1": "may",
+      "v2": "might",
+      "v3": "might",
+      "transcrip": "мэй",
+      "translate": "иметь возможность"
+    },
+    {
+      "v1": "mean",
+      "v2": "meant",
+      "v3": "meant",
+      "transcrip": "мин",
+      "translate": "означать"
+    },
+    {
+      "v1": "meet",
+      "v2": "met",
+      "v3": "met",
+      "transcrip": "мит",
+      "translate": "встречать"
+    },
+    {
+      "v1": "miscast",
+      "v2": "miscast",
+      "v3": "miscast",
+      "transcrip": "мискэст",
+      "translate": "неправильно распределять роли"
+    },
+    {
+      "v1": "misdeal",
+      "v2": "misdealt",
+      "v3": "misdealt",
+      "transcrip": "мисдиэл",
+      "translate": "поступать неправильно"
+    },
+    {
+      "v1": "misgive",
+      "v2": "misgave",
+      "v3": "misgiven",
+      "transcrip": "мисгив",
+      "translate": "внушать опасения"
+    },
+    {
+      "v1": "mishear",
+      "v2": "misheard",
+      "v3": "misheard",
+      "transcrip": "мисхиэ",
+      "translate": "ослышаться"
+    },
+    {
+      "v1": "mishit",
+      "v2": "mishit",
+      "v3": "mishit",
+      "transcrip": "мисшит",
+      "translate": "промахнуться"
+    },
+    {
+      "v1": "mislay",
+      "v2": "mislaid",
+      "v3": "mislaid",
+      "transcrip": "мислэй",
+      "translate": "не на место"
+    },
+    {
+      "v1": "mislead",
+      "v2": "misled",
+      "v3": "misled",
+      "transcrip": "мислид",
+      "translate": "вводить в заблуждение"
+    },
+    {
+      "v1": "misread",
+      "v2": "misread",
+      "v3": "misread",
+      "transcrip": "мисрид",
+      "translate": "неправильно истолковывать"
+    },
+    {
+      "v1": "misspell",
+      "v2": "misspelt",
+      "v3": "misspelt",
+      "transcrip": "мисспэл",
+      "translate": "писать с ошибками"
+    },
+    {
+      "v1": "misspend",
+      "v2": "misspent",
+      "v3": "misspent",
+      "transcrip": "мисспэнд",
+      "translate": "экономить"
+    },
+    {
+      "v1": "mistake",
+      "v2": "mistook",
+      "v3": "mistaken",
+      "transcrip": "мистэйк",
+      "translate": "ошибаться"
+    },
+    {
+      "v1": "misunderstand",
+      "v2": "misunderstood",
+      "v3": "misunderstood",
+      "transcrip": "мисандэстэнд",
+      "translate": "неправильно понимать"
+    },
+    {
+      "v1": "mow",
+      "v2": "mowed",
+      "v3": "mowed",
+      "transcrip": "моу",
+      "translate": "косить"
+    },
+    {
+      "v1": "outbid",
+      "v2": "outbid",
+      "v3": "outbid",
+      "transcrip": "аутбид",
+      "translate": "перебивать цену"
+    },
+    {
+      "v1": "outdo",
+      "v2": "outdid",
+      "v3": "outdone",
+      "transcrip": "аутду",
+      "translate": "превзойти"
+    },
+    {
+      "v1": "outfight",
+      "v2": "outfought",
+      "v3": "outfought",
+      "transcrip": "аутфайт",
+      "translate": "побеждать в сражении"
+    },
+    {
+      "v1": "outgrow",
+      "v2": "outgrew",
+      "v3": "outgrown",
+      "transcrip": "аутгроу",
+      "translate": "выростать из"
+    },
+    {
+      "v1": "output",
+      "v2": "output",
+      "v3": "output",
+      "transcrip": "аутпут",
+      "translate": "выходить"
+    },
+    {
+      "v1": "outrun",
+      "v2": "outran",
+      "v3": "outrun",
+      "transcrip": "аутран",
+      "translate": "перегонять, опережать"
+    },
+    {
+      "v1": "outsell",
+      "v2": "outsold",
+      "v3": "outsold",
+      "transcrip": "аутсэл",
+      "translate": "продавать лучше или дороже"
+    },
+    {
+      "v1": "outshine",
+      "v2": "outshone",
+      "v3": "outshone",
+      "transcrip": "аутшайн",
+      "translate": "затмевать"
+    },
+    {
+      "v1": "overbid",
+      "v2": "overbid",
+      "v3": "overbid",
+      "transcrip": "овербид",
+      "translate": "повелевать"
+    },
+    {
+      "v1": "overcome",
+      "v2": "overcame",
+      "v3": "overcome",
+      "transcrip": "оверкам",
+      "translate": "преодолевать"
+    },
+    {
+      "v1": "overdo",
+      "v2": "overdid",
+      "v3": "overdone",
+      "transcrip": "оверду",
+      "translate": "переборщить"
+    },
+    {
+      "v1": "overdraw",
+      "v2": "overdrew",
+      "v3": "overdrawn",
+      "transcrip": "овердроу",
+      "translate": "превысить лимит"
+    },
+    {
+      "v1": "overeat",
+      "v2": "overate",
+      "v3": "overeaten",
+      "transcrip": "оверит",
+      "translate": "объедаться"
+    },
+    {
+      "v1": "overfly",
+      "v2": "overflew",
+      "v3": "overflown",
+      "transcrip": "оверфлай",
+      "translate": "перелетать"
+    },
+    {
+      "v1": "overhang",
+      "v2": "overhung",
+      "v3": "overhung",
+      "transcrip": "оверхэн",
+      "translate": "нависать"
+    },
+    {
+      "v1": "overhear",
+      "v2": "overheard",
+      "v3": "overheard",
+      "transcrip": "оверхиэ",
+      "translate": "подслушивать"
+    },
+    {
+      "v1": "overlay",
+      "v2": "overlaid",
+      "v3": "overlaid",
+      "transcrip": "оверлэй",
+      "translate": "покрывать"
+    },
+    {
+      "v1": "overpay",
+      "v2": "overpaid",
+      "v3": "overpaid",
+      "transcrip": "оверпэй",
+      "translate": "переплачивать"
+    },
+    {
+      "v1": "override",
+      "v2": "overrode",
+      "v3": "overridden",
+      "transcrip": "оверрайд",
+      "translate": "отвергать"
+    },
+    {
+      "v1": "overrun",
+      "v2": "overran",
+      "v3": "overrun",
+      "transcrip": "оверран",
+      "translate": "захлестнуть"
+    },
+    {
+      "v1": "oversee",
+      "v2": "oversaw",
+      "v3": "overseen",
+      "transcrip": "оверси",
+      "translate": "надзирать"
+    },
+    {
+      "v1": "overshoot",
+      "v2": "overshot",
+      "v3": "overshot",
+      "transcrip": "овершут",
+      "translate": "расстрелять"
+    },
+    {
+      "v1": "oversleep",
+      "v2": "overslept",
+      "v3": "overslept",
+      "transcrip": "оверслеп",
+      "translate": "проспать"
+    },
+    {
+      "v1": "overtake",
+      "v2": "overtook",
+      "v3": "overtaken",
+      "transcrip": "овертэйк",
+      "translate": "обогнать"
+    },
+    {
+      "v1": "overthrow",
+      "v2": "overthrew",
+      "v3": "overthrown",
+      "transcrip": "оверфроу",
+      "translate": "свергать"
+    },
+    {
+      "v1": "partake",
+      "v2": "partook",
+      "v3": "partaken",
+      "transcrip": "па:тэйк",
+      "translate": "принимать участие"
+    },
+    {
+      "v1": "pay",
+      "v2": "paid",
+      "v3": "paid",
+      "transcrip": "пай",
+      "translate": "платить"
+    },
+    {
+      "v1": "plead",
+      "v2": "pled",
+      "v3": "pled",
+      "transcrip": "плид",
+      "translate": "просить"
+    },
+    {
+      "v1": "prepay",
+      "v2": "prepaid",
+      "v3": "prepaid",
+      "transcrip": "препэй",
+      "translate": "платить вперед"
+    },
+    {
+      "v1": "prove",
+      "v2": "proved",
+      "v3": "proven",
+      "transcrip": "прув",
+      "translate": "доказывать"
+    },
+    {
+      "v1": "put",
+      "v2": "put",
+      "v3": "put",
+      "transcrip": "пут",
+      "translate": "положить"
+    },
+    {
+      "v1": "quit",
+      "v2": "quit",
+      "v3": "quit",
+      "transcrip": "квит",
+      "translate": "покидать"
+    },
+    {
+      "v1": "read",
+      "v2": "read",
+      "v3": "read",
+      "transcrip": "рид",
+      "translate": "читать"
+    },
+    {
+      "v1": "rebind",
+      "v2": "rebound",
+      "v3": "rebound",
+      "transcrip": "ребайнд",
+      "translate": "перевязывать"
+    },
+    {
+      "v1": "rebuild",
+      "v2": "rebuilt",
+      "v3": "rebuilt",
+      "transcrip": "ребилд",
+      "translate": "перестроить"
+    },
+    {
+      "v1": "recast",
+      "v2": "recast",
+      "v3": "recast",
+      "transcrip": "рекэст",
+      "translate": "преобразовывать"
+    },
+    {
+      "v1": "redo",
+      "v2": "redid",
+      "v3": "redone",
+      "transcrip": "реду",
+      "translate": "сделать ещё раз"
+    },
+    {
+      "v1": "rehear",
+      "v2": "reheard",
+      "v3": "reheard",
+      "transcrip": "рехиэ",
+      "translate": "слушать ещё раз"
+    },
+    {
+      "v1": "remake",
+      "v2": "remade",
+      "v3": "remade",
+      "transcrip": "ремэйк",
+      "translate": "изготовить ещё раз"
+    },
+    {
+      "v1": "rend",
+      "v2": "rent",
+      "v3": "rent",
+      "transcrip": "рэнд",
+      "translate": "раздирать"
+    },
+    {
+      "v1": "repay",
+      "v2": "repaid",
+      "v3": "repaid",
+      "transcrip": "репэй",
+      "translate": "отдать долг"
+    },
+    {
+      "v1": "rerun",
+      "v2": "reran",
+      "v3": "rerun",
+      "transcrip": "реран",
+      "translate": "выполнить ещё раз"
+    },
+    {
+      "v1": "resell",
+      "v2": "resold",
+      "v3": "resold",
+      "transcrip": "ресэл",
+      "translate": "перепродать"
+    },
+    {
+      "v1": "reset",
+      "v2": "reset",
+      "v3": "reset",
+      "transcrip": "ресэт",
+      "translate": "переустановить"
+    },
+    {
+      "v1": "retake",
+      "v2": "retook",
+      "v3": "retaken",
+      "transcrip": "ретэйк",
+      "translate": "взять ещё раз"
+    },
+    {
+      "v1": "retell",
+      "v2": "retold",
+      "v3": "retold",
+      "transcrip": "ретэл",
+      "translate": "пересказывать"
+    },
+    {
+      "v1": "rewrite",
+      "v2": "rewrote",
+      "v3": "rewritten",
+      "transcrip": "рерайт",
+      "translate": "перезаписать"
+    },
+    {
+      "v1": "rid",
+      "v2": "rid",
+      "v3": "rid",
+      "transcrip": "рид",
+      "translate": "избавлять"
+    },
+    {
+      "v1": "ride",
+      "v2": "rode",
+      "v3": "ridden",
+      "transcrip": "райд",
+      "translate": "ехать"
+    },
+    {
+      "v1": "ring",
+      "v2": "rang",
+      "v3": "rung",
+      "transcrip": "рин",
+      "translate": "звонить, звенеть"
+    },
+    {
+      "v1": "rise",
+      "v2": "rose",
+      "v3": "risen",
+      "transcrip": "райз",
+      "translate": "поднимать(ся), восходить"
+    },
+    {
+      "v1": "rive",
+      "v2": "rived",
+      "v3": "riven",
+      "transcrip": "райв",
+      "translate": "рассекать"
+    },
+    {
+      "v1": "run",
+      "v2": "ran",
+      "v3": "run",
+      "transcrip": "ран",
+      "translate": "бежать"
+    },
+    {
+      "v1": "saw",
+      "v2": "sawed",
+      "v3": "sawn",
+      "transcrip": "соу",
+      "translate": "пилить"
+    },
+    {
+      "v1": "say",
+      "v2": "said",
+      "v3": "said",
+      "transcrip": "сэй",
+      "translate": "говорить"
+    },
+    {
+      "v1": "see",
+      "v2": "saw",
+      "v3": "seen",
+      "transcrip": "си",
+      "translate": "видеть"
+    },
+    {
+      "v1": "seek",
+      "v2": "sought",
+      "v3": "sought",
+      "transcrip": "сик",
+      "translate": "искать"
+    },
+    {
+      "v1": "sell",
+      "v2": "sold",
+      "v3": "sold",
+      "transcrip": "сэл",
+      "translate": "продавать"
+    },
+    {
+      "v1": "send",
+      "v2": "sent",
+      "v3": "sent",
+      "transcrip": "сэнд",
+      "translate": "отправлять, посылать"
+    },
+    {
+      "v1": "set",
+      "v2": "set",
+      "v3": "set",
+      "transcrip": "сэт",
+      "translate": "устанавливать"
+    },
+    {
+      "v1": "sew",
+      "v2": "sewed",
+      "v3": "sewn",
+      "transcrip": "сью",
+      "translate": "шить"
+    },
+    {
+      "v1": "shake",
+      "v2": "shook",
+      "v3": "shaken",
+      "transcrip": "шэйк",
+      "translate": "трясти"
+    },
+    {
+      "v1": "shave",
+      "v2": "shaved",
+      "v3": "shaven",
+      "transcrip": "шэйв",
+      "translate": "бриться"
+    },
+    {
+      "v1": "shear",
+      "v2": "sheared",
+      "v3": "shorn",
+      "transcrip": "шэ:",
+      "translate": "стричь"
+    },
+    {
+      "v1": "shed",
+      "v2": "shed",
+      "v3": "shed",
+      "transcrip": "шэд",
+      "translate": "проливать, терять, сбрасывать, сарай, ангар"
+    },
+    {
+      "v1": "shine",
+      "v2": "shone",
+      "v3": "shone",
+      "transcrip": "шайн",
+      "translate": "сиять, светить"
+    },
+    {
+      "v1": "shoe",
+      "v2": "shod",
+      "v3": "shod",
+      "transcrip": "шу",
+      "translate": "обувать"
+    },
+    {
+      "v1": "shoot",
+      "v2": "shot",
+      "v3": "shot",
+      "transcrip": "шут",
+      "translate": "стрелять, снимать, фотографировать"
+    },
+    {
+      "v1": "shred",
+      "v2": "shred",
+      "v3": "shred",
+      "transcrip": "шред",
+      "translate": "кромсать"
+    },
+    {
+      "v1": "shrink",
+      "v2": "shrank",
+      "v3": "shrunk",
+      "transcrip": "шринк",
+      "translate": "сокращаться"
+    },
+    {
+      "v1": "shrive",
+      "v2": "shrove",
+      "v3": "shriven",
+      "transcrip": "шрайв",
+      "translate": "исповедь"
+    },
+    {
+      "v1": "shut",
+      "v2": "shut",
+      "v3": "shut",
+      "transcrip": "шат",
+      "translate": "закрывать"
+    },
+    {
+      "v1": "sing",
+      "v2": "sang",
+      "v3": "sung",
+      "transcrip": "син",
+      "translate": "петь"
+    },
+    {
+      "v1": "sink",
+      "v2": "sank",
+      "v3": "sank",
+      "transcrip": "синк",
+      "translate": "опускаться, тонуть"
+    },
+    {
+      "v1": "sit",
+      "v2": "sat",
+      "v3": "sat",
+      "transcrip": "сит",
+      "translate": "сидеть"
+    },
+    {
+      "v1": "slay",
+      "v2": "slew",
+      "v3": "slain",
+      "transcrip": "слэй",
+      "translate": "умертвить"
+    },
+    {
+      "v1": "sleep",
+      "v2": "slept",
+      "v3": "slept",
+      "transcrip": "слип",
+      "translate": "спать"
+    },
+    {
+      "v1": "slide",
+      "v2": "slid",
+      "v3": "slid",
+      "transcrip": "слайд",
+      "translate": "скользить"
+    },
+    {
+      "v1": "sling",
+      "v2": "slung",
+      "v3": "slung",
+      "transcrip": "слин",
+      "translate": "швырять"
+    },
+    {
+      "v1": "slink",
+      "v2": "slunk",
+      "v3": "slunk",
+      "transcrip": "слинк",
+      "translate": "красться"
+    },
+    {
+      "v1": "slit",
+      "v2": "slit",
+      "v3": "slit",
+      "transcrip": "слит",
+      "translate": "разрезать"
+    },
+    {
+      "v1": "smell",
+      "v2": "smelt",
+      "v3": "smelt",
+      "transcrip": "смэл",
+      "translate": "пахнуть"
+    },
+    {
+      "v1": "smite",
+      "v2": "smote",
+      "v3": "smitten",
+      "transcrip": "смайт",
+      "translate": "разбивать"
+    },
+    {
+      "v1": "sow",
+      "v2": "sowed",
+      "v3": "sown",
+      "transcrip": "соу",
+      "translate": "сеять"
+    },
+    {
+      "v1": "speak",
+      "v2": "spoke",
+      "v3": "spoken",
+      "transcrip": "спик",
+      "translate": "разговаривать"
+    },
+    {
+      "v1": "speed",
+      "v2": "sped",
+      "v3": "sped",
+      "transcrip": "спид",
+      "translate": "ускорять"
+    },
+    {
+      "v1": "spell",
+      "v2": "spelt",
+      "v3": "spelt",
+      "transcrip": "спэл",
+      "translate": "по буквам"
+    },
+    {
+      "v1": "spend",
+      "v2": "spent",
+      "v3": "spent",
+      "transcrip": "спэнд",
+      "translate": "тратить (время, деньги)"
+    },
+    {
+      "v1": "spill",
+      "v2": "spilt",
+      "v3": "spilt",
+      "transcrip": "спил",
+      "translate": "пролить"
+    },
+    {
+      "v1": "spin",
+      "v2": "spun",
+      "v3": "spun",
+      "transcrip": "спин",
+      "translate": "прясть"
+    },
+    {
+      "v1": "spit",
+      "v2": "spit",
+      "v3": "spit",
+      "transcrip": "спит",
+      "translate": "плевать"
+    },
+    {
+      "v1": "split",
+      "v2": "split",
+      "v3": "split",
+      "transcrip": "сплит",
+      "translate": "расколоть"
+    },
+    {
+      "v1": "spoil",
+      "v2": "spoilt",
+      "v3": "spoilt",
+      "transcrip": "споил",
+      "translate": "портить"
+    },
+    {
+      "v1": "spotlight",
+      "v2": "spotlit",
+      "v3": "spotlit",
+      "transcrip": "спотлайт",
+      "translate": "осветить"
+    },
+    {
+      "v1": "spread",
+      "v2": "spread",
+      "v3": "spread",
+      "transcrip": "спрэд",
+      "translate": "распространяться"
+    },
+    {
+      "v1": "spring",
+      "v2": "sprang",
+      "v3": "sprung",
+      "transcrip": "сприн",
+      "translate": "возникнуть"
+    },
+    {
+      "v1": "stand",
+      "v2": "stood",
+      "v3": "stood",
+      "transcrip": "стэнд",
+      "translate": "стоять"
+    },
+    {
+      "v1": "stave",
+      "v2": "stove",
+      "v3": "stove",
+      "transcrip": "стэйв",
+      "translate": "колоть"
+    },
+    {
+      "v1": "steal",
+      "v2": "stole",
+      "v3": "stolen",
+      "transcrip": "стил",
+      "translate": "красть, воровать"
+    },
+    {
+      "v1": "stick",
+      "v2": "stuck",
+      "v3": "stuck",
+      "transcrip": "стик",
+      "translate": "приклеить"
+    },
+    {
+      "v1": "sting",
+      "v2": "stаng",
+      "v3": "stung",
+      "transcrip": "стин",
+      "translate": "ужалить"
+    },
+    {
+      "v1": "stink",
+      "v2": "stank",
+      "v3": "stunk",
+      "transcrip": "стинк",
+      "translate": "вонять"
+    },
+    {
+      "v1": "strew",
+      "v2": "strewed",
+      "v3": "strewn",
+      "transcrip": "стрю",
+      "translate": "усеять"
+    },
+    {
+      "v1": "stride",
+      "v2": "strode",
+      "v3": "stridden",
+      "transcrip": "страйд",
+      "translate": "шагать"
+    },
+    {
+      "v1": "strike",
+      "v2": "struck",
+      "v3": "struck",
+      "transcrip": "страйк",
+      "translate": "ударить"
+    },
+    {
+      "v1": "string",
+      "v2": "strung",
+      "v3": "strung",
+      "transcrip": "стрин",
+      "translate": "натянуть"
+    },
+    {
+      "v1": "strive",
+      "v2": "strove",
+      "v3": "striven",
+      "transcrip": "страйв",
+      "translate": "стараться, стремиться, добиваться"
+    },
+    {
+      "v1": "sublet",
+      "v2": "sublet",
+      "v3": "sublet",
+      "transcrip": "саблет",
+      "translate": "сдавать в субаренду"
+    },
+    {
+      "v1": "swear",
+      "v2": "swore",
+      "v3": "sworn",
+      "transcrip": "свэ:",
+      "translate": "клясться"
+    },
+    {
+      "v1": "sweep",
+      "v2": "swept",
+      "v3": "swept",
+      "transcrip": "свип",
+      "translate": "мести"
+    },
+    {
+      "v1": "swell",
+      "v2": "swelled",
+      "v3": "swollen",
+      "transcrip": "свэл",
+      "translate": "вздуться"
+    },
+    {
+      "v1": "swim",
+      "v2": "swam",
+      "v3": "swum",
+      "transcrip": "свим",
+      "translate": "плавать"
+    },
+    {
+      "v1": "swing",
+      "v2": "swung",
+      "v3": "swung",
+      "transcrip": "свин",
+      "translate": "качаться"
+    },
+    {
+      "v1": "take",
+      "v2": "taken",
+      "v3": "swung",
+      "transcrip": "тэйк",
+      "translate": "взять"
+    },
+    {
+      "v1": "teach",
+      "v2": "taught",
+      "v3": "taught",
+      "transcrip": "тич",
+      "translate": "обучать, учить кого-то"
+    },
+    {
+      "v1": "tear",
+      "v2": "tore",
+      "v3": "torn",
+      "transcrip": "ти:",
+      "translate": "рвать"
+    },
+    {
+      "v1": "tell",
+      "v2": "told",
+      "v3": "told",
+      "transcrip": "тэл",
+      "translate": "рассказывать"
+    },
+    {
+      "v1": "think",
+      "v2": "thought",
+      "v3": "thought",
+      "transcrip": "финк",
+      "translate": "думать"
+    },
+    {
+      "v1": "thrive",
+      "v2": "throve",
+      "v3": "throve",
+      "transcrip": "фрайв",
+      "translate": "процветать"
+    },
+    {
+      "v1": "throw",
+      "v2": "threw",
+      "v3": "thrown",
+      "transcrip": "фроу",
+      "translate": "бросать"
+    },
+    {
+      "v1": "thrust",
+      "v2": "thrust",
+      "v3": "thrust",
+      "transcrip": "фраст",
+      "translate": "толкнуть"
+    },
+    {
+      "v1": "tread",
+      "v2": "trod",
+      "v3": "trod",
+      "transcrip": "трид",
+      "translate": "ступать"
+    },
+    {
+      "v1": "unbend",
+      "v2": "unbent",
+      "v3": "unbent",
+      "transcrip": "анбэнд",
+      "translate": "разогнуться"
+    },
+    {
+      "v1": "underbit",
+      "v2": "underbit",
+      "v3": "underbit",
+      "transcrip": "андэбид",
+      "translate": "снижать цену"
+    },
+    {
+      "v1": "undercut",
+      "v2": "undercut",
+      "v3": "undercut",
+      "transcrip": "андэкат",
+      "translate": "подрезать"
+    },
+    {
+      "v1": "undergo",
+      "v2": "underwent",
+      "v3": "undergone",
+      "transcrip": "андэгоу",
+      "translate": "проходить"
+    },
+    {
+      "v1": "underlie",
+      "v2": "underlay",
+      "v3": "underlain",
+      "transcrip": "андэлаи",
+      "translate": "лежать в основе"
+    },
+    {
+      "v1": "underpay",
+      "v2": "underpaid",
+      "v3": "underpaid",
+      "transcrip": "андэпэй",
+      "translate": "оплачивать слишком низко"
+    },
+    {
+      "v1": "undersell",
+      "v2": "undersold",
+      "v3": "undersold",
+      "transcrip": "андэсэлл",
+      "translate": "продавать дешевле"
+    },
+    {
+      "v1": "understand",
+      "v2": "understood",
+      "v3": "understood",
+      "transcrip": "андэстэнд",
+      "translate": "понимать"
+    },
+    {
+      "v1": "undertake",
+      "v2": "undertook",
+      "v3": "undertaken",
+      "transcrip": "андэтэйк",
+      "translate": "предпринять"
+    },
+    {
+      "v1": "underwrite",
+      "v2": "underwrote",
+      "v3": "underwritten",
+      "transcrip": "андэрайт",
+      "translate": "подписываться"
+    },
+    {
+      "v1": "undo",
+      "v2": "undid",
+      "v3": "undone",
+      "transcrip": "анду",
+      "translate": "уничтожать сделанное"
+    },
+    {
+      "v1": "unfreeze",
+      "v2": "unfroze",
+      "v3": "unfrozen",
+      "transcrip": "анфриз",
+      "translate": "размораживать"
+    },
+    {
+      "v1": "unsay",
+      "v2": "unsaid",
+      "v3": "unsaid",
+      "transcrip": "ансэй",
+      "translate": "брать назад свои слова"
+    },
+    {
+      "v1": "unwind",
+      "v2": "unwound",
+      "v3": "unwound",
+      "transcrip": "анвинд",
+      "translate": "развертывать"
+    },
+    {
+      "v1": "uphold",
+      "v2": "upheld",
+      "v3": "upheld",
+      "transcrip": "анхолд",
+      "translate": "поддерживать"
+    },
+    {
+      "v1": "upset",
+      "v2": "upset",
+      "v3": "upset",
+      "transcrip": "апсэт",
+      "translate": "опрокинуться"
+    },
+    {
+      "v1": "wake",
+      "v2": "woke",
+      "v3": "woken",
+      "transcrip": "вэйк",
+      "translate": "просыпаться"
+    },
+    {
+      "v1": "waylay",
+      "v2": "waylaid",
+      "v3": "waylaid",
+      "transcrip": "вэйлэй",
+      "translate": "подстерегать"
+    },
+    {
+      "v1": "wear",
+      "v2": "wore",
+      "v3": "worn",
+      "transcrip": "вэ:",
+      "translate": "носить"
+    },
+    {
+      "v1": "weave",
+      "v2": "wove",
+      "v3": "woven",
+      "transcrip": "вив",
+      "translate": "ткать"
+    },
+    {
+      "v1": "wed",
+      "v2": "wed",
+      "v3": "wed",
+      "transcrip": "вэд",
+      "translate": "выдавать замуж"
+    },
+    {
+      "v1": "wet",
+      "v2": "wet",
+      "v3": "wet",
+      "transcrip": "вэт",
+      "translate": "мочить"
+    },
+    {
+      "v1": "weep",
+      "v2": "wept",
+      "v3": "wept",
+      "transcrip": "вип",
+      "translate": "плакать"
+    },
+    {
+      "v1": "win",
+      "v2": "won",
+      "v3": "won",
+      "transcrip": "вин",
+      "translate": "выигрывать"
+    },
+    {
+      "v1": "wind",
+      "v2": "wound",
+      "v3": "wound",
+      "transcrip": "винд",
+      "translate": "заводить (механизм), наматывать, виться, петлять"
+    },
+    {
+      "v1": "withdraw",
+      "v2": "withdrew",
+      "v3": "withdrawn",
+      "transcrip": "вивдроу",
+      "translate": "взять назад"
+    },
+    {
+      "v1": "withhold",
+      "v2": "withheld",
+      "v3": "withheld",
+      "transcrip": "вивхолд",
+      "translate": "удерживать"
+    },
+    {
+      "v1": "withstand",
+      "v2": "withstood",
+      "v3": "withstood",
+      "transcrip": "вивстэнд",
+      "translate": "противиться"
+    },
+    {
+      "v1": "wring",
+      "v2": "wrung",
+      "v3": "wrung",
+      "transcrip": "рин",
+      "translate": "скрутить"
+    },
+    {
+      "v1": "write",
+      "v2": "wrote",
+      "v3": "written",
+      "transcrip": "райт",
+      "translate": "писать"
+    },
+  ]

@@ -1,0 +1,63 @@
+- var wdnum = 1;
+- var wenum = 1;
+- var vnum = 1;
+- var vdnum = 1;
+
+mixin worten(wort, transcr, transl, plural)
+  tr
+    td= wdnum++
+    td #{wort}
+    td <small>[#{transcr}]</small>
+    td #{transl}
+    td #{plural}
+
+mixin verben(pronom, verb, transcr, transl_pronom, transl_verb)
+  tr
+    td #{pronom}
+    td #{verb}
+    td <small>[#{transcr}]</small>
+    td #{transl_pronom}
+    td #{transl_verb}
+
+mixin verb_form(pronom, verb, transcr, transl_pronom, transl_verb)
+  tr
+    td #{verb} #{pronom}?
+    td #{pronom} #{verb} <small>[#{transcr}]</small> #{transl_pronom} #{transl_verb}
+    td #{pronom} #{verb} nicht
+
+mixin verb_form_past(pronom, verb, verb_past, transcr, transl_pronom, transl_verb)
+  tr
+    td #{verb} #{pronom} #{verb_past}?
+    td #{pronom} #{verb} #{verb_past} <small>[#{transcr}]</small> #{transl_pronom} #{transl_verb}
+    td #{pronom} #{verb} nicht #{verb_past}
+
+mixin verbs(word, transcrip, translate)
+  tr
+    td= vdnum++
+    td #{word}
+    td <small>[#{transcrip}]</small>
+    td #{translate}
+
+mixin verbs_aus(word, aus, transcrip, translate, exam)
+  tr
+    td #{word}
+    td #{aus}
+    td <small>[#{transcrip}]</small>
+    td #{translate}
+    td #{exam}
+
+mixin words(word, transcrip, translate)
+  tr
+    td= wenum++
+    td #{word}
+    td <small>[#{transcrip}]</small>
+    td #{translate}
+
+mixin ir_verbs(v1, v2, v3, transcrip, translate)
+  tr
+    td= vnum++
+    td #{v1}
+    td #{v2}
+    td #{v3}
+    td <small>[#{transcrip}]</small>
+    td #{translate}

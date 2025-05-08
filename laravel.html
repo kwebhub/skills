@@ -1,0 +1,480 @@
+<details><summary>Resources<a href="https://laravel.com/docs/11.x/sail">laravel<br></a><a href="https://jetstream.laravel.com/introduction.html">jetstream<br></a><a href="https://livewire.laravel.com/">livewire<br></a><a href="https://alpinejs.dev/">alpinejs</a></summary></details><details><summary>Install<p>Установить docker<br>
+Установить laravel + livewire без авторизации и аутентификации</p><pre><code>curl -s "https://laravel.build/projectName" | bash
+cd projectName/vendor/bin
+./sail up -d
+./sail composer require livewire/livewire
+./sail npm install && npm run build
+./sail artisan migrate
+./sail composer run dev
+</code></pre><p>Установить laravel + livewire c авторизацией и аутентификацией</p><pre><code>curl -s "https://laravel.build/projectName" | bash
+cd projectName/vendor/bin
+./sail up -d
+./sail composer require laravel/jetstream
+./sail artisan jetstream:install livewire
+./sail composer run dev
+</code></pre><p>удалить контейнеры</p><code>./sail down</code></summary></details><details><summary>Test</summary><p>pest - это обёртка для phpunit.<br>
+файл tests/Pest.php - конфигурация тестов<br>
+создаю тест</p><code>php artisan make:test</code><p>запускаю тест</p><code>php artisan test</code></details><details><summary>Model</summary><details><summary>Models</summary><p>помощь по созданию модели</p><code>php artisan help make:model</code><p>создаю модель в полном комплекте (Model, Migration, Factory, Seeder, Request, Controller, Policy)</p><code>php artisan make:model Employer -a</code><p>создать модель без миграции</p><code>php artisan make:model Employer -cfs --policy</code><p>то что не будет использовано можно будет удалить.<br>
+в моделях app/Models/ указать связи</p><pre><code>class Employer extends Model
+{
+  use HasFactory;
+  public function user(): BelongsTo
+  {
+    return $this->belongsTo(User::class);
+  }
+  public function jobs(): HasMany
+  {
+    return $this->hasMany(Job::class);
+  }
+}</code></pre><p>в файле Providers/AppServiceProvider.php</p><pre><code>public function boot(): void
+{
+  Model::unguard();
+}</code></pre><p>Показать содажимое БД</p><pre><code>./sail artisan db:show
+./sail artisan db:table users</code></pre><p>Показать содажимое таблицы БД</p><pre><code>php artisan tinker
+User::all();</code></pre><p>при типе связи $this->belongsToMany() создать pivot table</p></details><details><summary>Create table</summary><p>создать таблицу базы данных</p><code>php artisan make:migration create_employers_table</code><p>создаст файл database/migrations/2024_05_06_132745_create_employers_table<br>
+в файле описываю поля таблицы<br>
+и запихиваю таблицу в базу данных</p><code>php artisan migrate</code></details><details><summary>Rename table</summary><p>в файле config/queue.php меняю название таблиц по умолчанию<br>
+к названию таблицы добавляю слово queue</p><pre><code>'database' => [
+  'driver' => 'database',
+  'connection' => env('DB_QUEUE_CONNECTION'),
+  'table' => env('DB_QUEUE_TABLE', 'queued_jobs'),
+  'queue' => env('DB_QUEUE', 'default'),
+  'retry_after' => (int) env('DB_QUEUE_RETRY_AFTER', 90),
+  'after_commit' => false,
+],
+
+'batching' => [
+  'database' => env('DB_CONNECTION', 'sqlite'),
+  'table' => 'queued_job_batches',
+],
+'failed' => [
+    'driver' => env('QUEUE_FAILED_DRIVER', 'database-uuids'),
+    'database' => env('DB_CONNECTION', 'sqlite'),
+    'table' => 'queued_failed_jobs',
+], </code></pre><p>в папке database/migrations/<br>
+к названию файла по умолчанию добавляю слово queue</p><code>0001_01_01_000002_create_queued_jobs_table.php</code><p>в нутри файлa к названиям таблиц добавляю слово queue</p><pre><code>Schema::create('queued_jobs', function (Blueprint $table) {
+  ...
+Schema::create('queued_job_batches', function (Blueprint $table) {
+  ...
+Schema::create('queued_failed_jobs', function (Blueprint $table) {</code></pre><p>удаляю старые файлы и создаю новые c учётом изменений</p><code>php artisan migrate:fresh</code><p>чтобы внести изменения в базу данных:</p><code>php artisan migrate</code></details><details><summary>Factories</summary><p>в database/factories заполнить фабрики для создания тестового контента<br></p></details><details><summary>Seeders</summary><p>в файлах database/seeders/ создать контент
+Sequence меняет значения полей для каждой итерации цикла создания данных</p><pre><code>public function run(): void
+{
+  $tags = Tag::factory(3)->create();
+  Job::factory(20)->hasAttached($tags)->create(new Sequence([
+    'featured' => false,
+    'schedule' => 'Full Time',
+  ], [
+    'featured' => true,
+    'schedule' => 'Part Time',
+  ]));
+}</code></pre><p>заполнить базу данных данными</p><code>php artisan db:seed</code><p>удалить таблицы, создать новые и заполнить данными</p><code>php artisan migrate:fresh --seed</code></details><details><summary>Controllers</summary><table><caption>Methods</caption><thead><tr><th>Controller Method </th><th>Action</th></tr></thead><tbody><tr><td>index</td><td>view all</td></tr><tr><td>show</td><td>view one</td></tr><tr><td>create</td><td>show form for create</td></tr><tr><td>store</td><td>create</td></tr><tr><td>edit</td><td>show form for edit</td></tr><tr><td>update</td><td>update</td></tr><tr><td>destroy</td><td>delete</td></tr></tbody></table><details><summary>Create controller</summary><p>создать контроллер c типовыми методами</p><code>php artisan make:controller SessionController -r</code><p>public function __invoke(){} метод применяется в контроллерах c одним действием<br>
+запрос на получение данных из базы данных:</p><pre><code>public function __invoke()
+{
+  $jobs = Job::query()
+    ->with(['employer', 'tags'])
+    ->where('title', 'LIKE', '%'.request('q').'%')
+    ->get();
+  return view('results', ['jobs' => $jobs]);
+}</code></pre><p>with(['employer', 'tags']) нужен для того, чтобы не создать n+1 проблему<br>
+когда каждая строка таблицы данных будет будет вызываться отдельным запросом
+</p></details></details></details><details><summary>Authorization</summary><details><summary>Gates</summary><p>Gate - объявляется в App\Providers\AppServiceProvider методом boot(),<br>
+исспользуется для простых ограничений ролей.<br>
+Аргументом всегда принимает пользоватля, к которому применяет ограничения.<br>
+Дополнительные аргументы по необходимости.</p><pre><code>use App\Models\Post;
+use App\Models\User;
+use Illuminate\Support\Facades\Gate;
+
+public function boot(): void
+{
+  Gate::define('update-post', function (User $user, Post $post) {
+    return $user->id === $post->user_id;
+  });
+}</code></pre><p>Gate::define - объявляю Gate,<br>
+'update-post' - название возможности предоставляемой пользователю<br>
+function (User $user, Post $post) - вернёт true/false,<br>
+true - этому пользователю можно пользоваться этой возможностью<br>
+false - этому пользователю нельзя пользоваться этой возможностью<br>
+<br>
+Можно вынести логику в отдельный класс (политику)</p><pre><code>use App\Policies\PostPolicy;
+use Illuminate\Support\Facades\Gate;
+
+public function boot(): void
+{
+  Gate::define('update-post', [PostPolicy::class, 'update']);
+}</code></pre><p>После этого в любом контроллере можем проверять роль конкрено указав пользователя</p><pre><code>if (Gate::forUser($user)->allows('update-post', $post)) {}
+
+if (Gate::forUser($user)->denies('update-post', $post)) {}</code></pre><p>allows - разрешено ли<br>
+denies - запрещено ли<br>
+<br>
+Проверять роль текущего пользователя с кастомным условием</p><pre><code>if (! Gate::allows('update-post', $post)) {
+  abort(403);
+}
+if (Gate::denies('update-post', $post)) {
+  abort(403);
+}</code></pre><p>Проверять роль текущего пользователя встроенным методом</p><pre><code>Gate::authorize('update-post', $post);</code></pre><p>Проверить несколько возможностей</p><pre><code>if (Gate::any(['update-post', 'delete-post'], $post)) {
+  // The user can update or delete the post...
+}
+
+if (Gate::none(['update-post', 'delete-post'], $post)) {
+  // The user can't update or delete the post...
+}
+</code></pre></details><details><summary>Policies</summary><p>Политика всегда относится к какой-то модели.<br>
+Создать политику можно при создании модели либо отдельно.<br>
+По конвенции название политики содержит название модели.</p><code>php artisan make:policy PostPolicy</code><p>Создать политику с методами для модели Post</p><code>php artisan make:policy PostPolicy --model=Post</code><p>Назвать политику можно не по конвенции,<br>
+но тогда её нужно зарегистрировать в<br>
+App\Providers\AppServiceProvider методом boot()</p><pre><code>use App\Models\ModelName;
+use App\Policies\PolicyName;
+use Illuminate\Support\Facades\Gate;
+
+public function boot(): void
+{
+    Gate::policy(ModelName::class, PolicyName::class);
+}</code></pre><table><caption>Methods</caption><thead><tr><th>Policy Method </th><th>Action</th></tr></thead><tbody><tr><td>viewAny</td><td>view all</td></tr><tr><td>view</td><td>view one</td></tr><tr><td>create</td><td>create & store</td></tr><tr><td>update</td><td>edit</td></tr><tr><td>delete</td><td>mark as delete</td></tr><tr><td>restore</td><td>unmark as delete</td></tr><tr><td>forceDelete</td><td>permanently delete</td></tr></tbody></table><p>В контроллере гейт может обратиться к политике.<br>
+Первый параметр это название политики,<br>
+второй - либо объект модели, если есть, либо класс модели</p><pre><code>Gate::authorize('update', $post);
+<span>or</span>
+Gate::authorize('update', App\Models\Post::class);
+</code></pre></details></details><details><summary>Routes</summary><p>просмотреть список роутов</p><code>php artisan route:list --except-vendor</code><p>просто выдать страницу без дополнительных действий</p><code>Route::view('/', 'home');</code><pre><code>code Route::view('/', 'welcome')->name('home');
+
+<span>welcome.blade.php</span>
+&lt;nav&gt;
+  &lt;a href="{{ route('home') }}"&gt;Home&lt;/a&gt;
+&lt;/nav&gt;
+</code></pre><pre><code>Route::get('test', function () {
+  $job = Job::first();
+
+  TranslateJob::dispatch($job);
+
+  return 'Done';
+});
+</code></pre><p>wildcard {job} and parametr of function $job<br>
+type of parametr function (Job $job)<br>
+ларавель понимает, что нужен объект модели Job c данными из таблицы<br>
+этот объект он отбирает из БД по значению {job}<br>
+по умолчанию {job} - это id, но можно задать своё значение {job:name}</p><pre><code>Route::get('/jobs/{job}', function (Job $job) {
+  return view('jobs.show', ['job' => $job]);
+});
+</code></pre><p>вызываю метод index из класса контроллера JobController при переходе на /jobs</p><code>Route::get('/jobs', [JobController::class, 'index']);</code><p>В livewire можно укзавыть роут на класс компонента</p><pre><code>Route::get('/posts', ShowPosts::class);
+Route::get('/posts/create', CreatePost::class);</code></pre><p>для этого необходимо создать шаблон для всех компонентов<br>
+(components.layouts.app.blade.php)</p><code>./sail artisan livewire:layout</code><p>объединяю роуты c одним и тем же контроллером</p><pre><code>Route::controller(JobController::class)->group( function()
+{
+  Route::get('/jobs', 'index');
+  Route::get('/jobs/create', 'create');
+  Route::get('/jobs/{job}', 'show');
+  Route::get('/jobs/{job}/edit', 'edit');
+  Route::post('/jobs', 'store');
+  Route::patch('/jobs/{job}', 'update');
+  Route::delete('/jobs/{job}', 'destroy');
+});
+</code></pre><p>сформирует для методов класса контроллера роуты:
+jobs.index <span>- показать всё списком</span>
+jobs.show <span>- показать один</span>
+jobs.create <span>- создать</span>
+jobs.edit <span>- редактировать</span>
+jobs.store <span>- сохранить</span>
+jobs.update <span>- обновить</span>
+jobs.destroy <span>- уничтожить</span>
+названия методов контроллера - это дефолтные названия ларавел.</p><pre><code>Route::resource('uri', controller);
+Route::resource('jobs', JobController::class);</code></pre><p>можно форимровать роуты выборочно</p><pre><code>Route::resource('jobs', JobController::class, [
+  'only' => ['index', 'show']
+]);
+Route::resource('jobs', JobController::class, [
+  'except' => ['edit']
+]);
+</code></pre></details><details><summary>View</summary><p>vite компелирует, кеширует и отслеживает изменения в папке resources<br>
+resources/views/components/layout.blade.php создаю компонент layout<br>
+вставляю компонент на страницу</p><code>&lt;x-layout&gt;&lt;/x-layout&gt;</code><p>подключил лого</p><code>&lt;img src="{{ Vite::asset('resources/images/logo.svg') }}" alt=""&gt;</code><p>подключить стили и скрипты</p><code>@vite(['resources/css/app.css', 'resources/js/app.js'])</code><p>в SPA-приложении css поключаем в js-файле, поэтому подключаем только js</p><code>@vite('resources/js/app.js')</code><p>resources/js/app.js запихиваю картинки глобально, чтобы их учесть при npm run build</p><pre><code>import.meta.glob([
+  '../images/**',
+  '../fonts/**',
+]);</code></pre><p>в файле .env указать место хранения загружаемых файлов<br>
+варианты значений в файле config/filesystems.php</p><code>FILESYSTEM_DISK=public</code><p>при загрузке изображения оно будет сохранено в storage/app/public<br>
+чтобы оно отображалось сделать ссылку:</p><code>php artisan storage:link</code><p>Встроенные шаблоны для писем</p><code>./sail artisan vendor:publish --tag=laravel-mail</code><details><summary>Localization</summary><p>Создать папку для переводов</p><code>php artisan lang:publish</code><p>Скопировать папку en, переименовать в ru и вставить переводы в файлах</p></details><details><summary>Component</summary><details><summary>Component styles</summary><p>разбить макет на компоненты<br>
+в компоненте задать класс по умолчанию c общими настройками компонента</p><pre><code>@php
+  $classes = 'className1 className2';
+@endphp
+
+&lt;div {{ $attributes(['class' => $classes]) }}&gt;
+  {{ $slot }}
+&lt;/div&gt;
+</code></pre></details><details><summary>Component properties</summary><p>задаю свойства компонента, которые можно указывать в вёрстке и менять вид компонента</p><pre><code>@props(['size' => 'base'])
+
+@php
+  $classes = "className1 className2";
+  if ($size === 'base') {
+    $classes .= " className3";
+  }
+  if ($size === 'small') {
+    $classes .= " className4";
+  }
+@endphp
+
+&lt;a href="#" class="{{ $classes }}"&gt;{{ $slot }}&lt;/a&gt;
+</code></pre></details><details><summary>Create component Livewire</summary><p>Компонент имеет доступ к публичным свойствам и методам своего класса</p><pre><code>php artisan make:livewire ComponentName
+<span>or</span>
+php artisan make:livewire component-name
+</code></pre><p>Создать компонент в папке</p><pre><code>php artisan make:livewire FolderName\\ComponentName
+<span>or</span>
+php artisan make:livewire folder-name.component-name
+</code></pre><p>Создать компонент с тестом</p><code>code ./sail artisan make:livewire create-post --pest</code><p>Создать шаблон для компонентов livewire</p><code>./sail artisan livewire:layout</code><p>Выбирать разные шаблоны на весь класс</p><pre><code><Layout layouts.app="layouts.app"></Layout> 
+class CreatePost extends Component
+{
+    // ...
+}</code></pre><p>Выбирать разные шаблоны на методе</p><pre><code><Layout layouts.app="layouts.app"></Layout> 
+public function render()
+{
+  return view('livewire.create-post');
+}</code></pre><p>Выбирать разные шаблоны динамически</p><pre><code>public function render()
+{
+  return view('livewire.create-post')
+    ->layout('layouts.app'); 
+}</code></pre><p>Через @yield('content') указываю файл шаблона</p><pre><code>&lt;body&gt;
+  @yield('content')
+&lt;/body&gt;</code></pre><p>Метод render() можно не указывать<br>
+Livewire будет автоматически выводить view с названием как у класса
+</p><p>В класс User.php добавить подстановку title в шаблон</p><code>use Livewire\Attributes\Title;
+<Title title="title"></Title></code><p>Подстановка title динамически</p><pre><code>public function render()
+{
+  return view('livewire.create-post')
+    ->title('Create Post'); 
+}
+</code></pre><p>задаю свойства livewire компонента в классе</p><code>public $title = 'Post title...';</code><p>задаю свойства livewire компонента в виде</p><code><h1>Title: "{{ $title }}"</h1></code><p>Дополнительные свойства при рендере в классе</p><code>return view('livewire.create-post')->with([
+  'author' => Auth::user()->name,
+]);
+</code><p>Дополнительные свойства при рендере в виде</p><code>Author: {{ $author }}</code><p>При выводе в любом цикле всегда указывать ключ</p><pre><code>@foreach ($posts as $post)
+  &lt;livewire:post-item :$post :key="$post->id"&gt;
+  @livewire(PostItem::class, ['post' => $post], key($post->id))
+@endforeach
+</code></pre><p>Привязка ввода к свойству класса</p><code>&lt;input type="text" id="title" wire:model="title"&gt;</code><p>Привязка ввода к методу класса</p><pre><code>&lt;form wire:submit="save"&gt;
+  &lt;button type="submit"&gt;Save&lt;/button&gt;
+&lt;/form&gt;
+</code></pre><p>Получить значения и очистить поля ввода</p><pre><code>class ManageTodos extends Component
+{
+  public $todos = [];
+  public $todo = '';
+  public function addTodo()
+  {
+    $this->todos[] = $this->todo;
+    $this->reset('todo'); 
+  }
+}</code></pre><p>Получить значения и очистить поля ввода</p><pre><code>class ManageTodos extends Component
+{
+  public $todos = [];
+
+  public $todo = '';
+
+  public function addTodo()
+  {
+    $this->todos[] = $this->pull('todo');
+  }
+}
+// The same as $this->all() and $this->reset();
+$this->pull();
+
+// The same as $this->only(...) and $this->reset(...);
+$this->pull(['title', 'content']);
+</code></pre><p>Только авторизированный пользователь может изменить данные</p><pre><code>public function update()
+{
+  $post = Post::findOrFail($this->id);
+  $this->authorize('update', $post); 
+  $post->update(...);
+}</code></pre><p>Изменение свойства возможно только внутри класса</p><pre><code>class UpdatePost extends Component
+{
+  <Locked></Locked> 
+  public $id;
+}</code></pre><p>Свойства Eloquent моделей по умолчанию изменять возможно только внутри класса</p><pre><code>class UpdatePost extends Component
+{
+  public Post $post; 
+  public $title;
+  public $content;
+  
+  public function update()
+  {
+    $this->post->update([
+      'title' => $this->title,
+      'content' => $this->content,
+    ]);
+    session()->flash('message', 'Post updated successfully!');
+  }
+}
+</code></pre><p>Свойство <Computed></Computed> кеширует запрошенные данные,<br>
+чтобы отправлять каждый раз новый запрос.<br>
+Обращаться к свойству через объект $this->todos</p><pre><code>use Livewire\Attributes\Computed;
+
+<Computed></Computed>
+public function todos()
+{
+  return Auth::user()
+    ->todos()
+    ->select(['title', 'content'])
+    ->get();
+}
+
+public function markAllComplete() 
+{
+  $this->todos->each->complete();
+}
+</code></pre><p>Вывод компонента в Blade view</p><code>&lt;livewire:create-post /&gt;</code><p>Вывод компонента в Blade view со значением</p><code>&lt;livewire:create-post title="Initial Title" /&gt;</code><p>Вывод компонента в Blade view с динамическим значением переменной</p><code>&lt;livewire:create-post :title="$initialTitle" /&gt;</code><p>Инициализация переменной в классе при подключении компонента</p><pre><code>class CreatePost extends Component
+{
+  public $title;
+  public function mount($title = null)
+  {
+    $this->title = $title;
+  }
+}
+</code></pre><p>livewire инициализирует переменную автоматически</p><pre><code>class CreatePost extends Component
+{
+  public $title;
+}
+</code></pre><p>Инлайн компонент - это один файл где разметка внутри метода render()</p><code>./sail artisan make:livewire CreatePost --inline</code><p>В routes/web.php добавить</p><pre><code>use App\Livewire\User\User;
+Route::get('user', User::class);</code></pre><p>В классе UserCreate.php добавить переход на страницу uri без перезагрузки страницы с сервера</p><code>$this->redirect('/user', navigate: true);</code><p>Свойства и методы формы вынесены в отдельный класс UserForm<br>
+В компоненте User объект класса UserForm определён как form<br>
+Обращения к свойствам класса UserForm через form<br></p><p>Подключить assets в layout/app.blade.php</p><pre><code>@assets
+  &lt;script src="https://cdn.jsdelivr.net/npm/pikaday/pikaday.js" defer&gt;&lt;/script&gt;
+  &lt;link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/pikaday/css/pikaday.css"&gt;
+@endassets
+
+@vite(['resources/css/app.css', 'resources/js/app.js'])
+</code></pre><p>$refresh - проверяет БД и отображает на странице</p><code><button type="button" wire:click="$refresh">...</button></code><p>$commit - отслеживает изменения компонета на сервере</p><code><button type="button" wire:click="$commit">...</button></code><p>wire:click<br>
+wire:submit<br>
+wire:keydown<br>
+wire:keyup<br>
+wire:mouseenter<br>
+wire:* - любой текст после wire: может быть названием события<br>
+Livewire поддерживает любые событыя браузера, например wire:transitionend</p><a href="https://livewire.laravel.com/docs/actions">слушатели событий</a><p>wire:loading - загрузчик<br>
+wire:click="delete({{ $post->id }})" - передать в класс параметр<br>
+wire:click="$parent.removePost({{ $post->id }})" - обращаюсь к методу родительского компонента<br>
+wire:click="$set('query', '')" - заменил значение свойства query на пустую строку<br>
+wire:click="$toggle('sortAsc')" - при каждом нажатии меняет true/false</p><pre><code>&lt;button wire:click="$toggle('sortAsc')"&gt;
+  Sort {{ $sortAsc ? 'Descending' : 'Ascending' }}
+&lt;/button&gt;</code></pre><p>wire:click="$dispatch('post-deleted')" - срабатывает событие<br>
+$event - даёт доступ к событиям JS, например при нажатии enter<br>
+передать значение ввода в search() - метод класса компонента</p><code>&lt;input type="text" wire:keydown.enter="search($event.target.value)"&gt;</code><p>При выполнении метода с <Renderless></Renderless> метод render() этого же класса не выполняется,<br>
+либо skipRender() внутри метода<br></p><pre><code><Renderless></Renderless> 
+public function incrementViewCount()
+{
+  $this->post->incrementViewCount();
+}
+
+public function incrementViewCount()
+{
+  $this->post->incrementViewCount();
+  $this->skipRender(); 
+}</code></pre><p>wire:dirty.class="border-yellow" - позволяет менять класс<br>
+если значение поля отличается от значения этого поля в БД</p><code>&lt;input type="text" wire:model.blur="title" wire:dirty.class="border-yellow"&gt;</code><p>Пока поле ввода title будет в фокусе, будет Unsaved...<br>
+когда фокус уйдёт, значение будет записано в БД и Unsaved... исчезнет</p><pre><code>&lt;input type="text" wire:model.blur="title"&gt;
+&lt;div wire:dirty wire:target="title"&gt;Unsaved...&lt;/div&gt;</code></pre><p>Можно выносить части Livewire компонентов в Blade компоненты</p><pre><code>&lt;form wire:submit="save"&gt;
+  &lt;x-input-text name="title" wire:model="title" /&gt;
+  &lt;x-input-text name="content" wire:model="content" /&gt;
+  &lt;button type="submit"&gt;Save&lt;/button&gt;
+&lt;/form&gt;</code></pre><p>Blade компонент</p><pre><code>@props(['name'])
+&lt;input type="text" name="{{ $name }}" {{ $attributes }}&gt;
+&lt;div&gt;
+    @error($name) &lt;span class="error"&gt;{{ $message }}&lt;/span&gt; @enderror
+&lt;/div&gt;
+</code></pre><p>породить событие post-created</p><code>$this->dispatch('post-created', title: $post->title);</code><p>по событию выполнить метод</p><pre><code><On post-created="post-created"></On> 
+public function updatePostList($title) { }</code></pre><p>породить событие post-created с динамическим аттрибутом</p><pre><code>$this->dispatch("post-updated.{$post->id}");
+
+<On post-updated.{post.id}="post-updated.{post.id}"></On></code></pre><p>презагрузить родительский компонент,<br>
+если в дочернем компоненте будет событие saved</p><code>&lt;livewire:edit-post @saved="$refresh"&gt;</code><p>вызвать метод close() родительского компонента<br>
+если в дочернем компоненте будет saved конткретного postId</p><code>&lt;livewire:edit-post @saved="close($event.detail.postId)"&gt;</code></details></details><details><summary>Validation</summary><p>В основном такая же как в ларавел, но метод validate() применяется на объекте компонента<br>
+Метод validate() возвращает массив отвалидированных данных либо массив ошибок</p><pre><code>public function save()
+{
+  $validated = $this->validate([ 
+    'title' => 'required|min:3',
+    'content' => 'required|min:3',
+  ]);
+  Post::create($validated);
+  return redirect()->to('/posts');
+}</code></pre><p>В форме ввода не фронте отобразить ошибку валидации с помощью<br>
+директивы @error(), по ключу title выводиться значение $message</p><pre><code>&lt;input type="text" wire:model="title"&gt;
+&lt;div&gt;@error('title') {{ $message }} @enderror&lt;/div&gt;</code></pre><p>Задать правила валидации можно разными способами</p><pre><code><span>методом validate()</span>
+$validated = $this->validate([
+  <span>массивом</span>
+  'name' => ['required', 'min:2', 'max:30'],
+  <span>строкой через разделитель</span>
+  'email' => 'required|email|max:30',
+  'password' => 'required|min:6',
+]);
+
+<span>параметром <Validate></Validate></span>
+<span>отслеживает изменение значений</span>
+<span>использует стандартные валидаторы ларавел</span>
+<span>свой текст сообщения</span>
+<Validate required="required" message:="message:" Имя обязательно="Имя обязательно"></Validate>
+<span>своё имя поля в сообщении</span>
+<Validate min:2="min:2" as:="as:" Name="Name"></Validate>
+<Validate max:30="max:30"></Validate>
+public string $name;
+
+<span>написать свои правила валидации</span>
+protected function rules(): array
+{
+  return [
+    'name' => ['required', 'min:2', 'max:30'],
+    'email' => 'required|email|max:30',
+    'password' => 'required|min:6',
+  ];
+}
+
+<span>написать свои тексты сообщений об ошибке</span>
+protected function messages(): array
+{
+  return [
+    <span>название поля.валидатор => текст ошибки</span>
+    'name.required' => 'Имя обязательно!',
+    'name.min' => 'Имя должно быть длиннее!',
+    'email.required' => 'Введите почту!',
+    'password.required' => 'Пароль обязателен!',
+  ];
+}</code></pre><p>Если правила валидации заданы параметром <Validate></Validate><br>
+или методом rules(),<br>
+то метод validate() вызываем без параметров</p><code>$validated = $this->validate();</code><p>Создаю пользователя в БД</p><code>User::create($validated);</code><p>wire:model.blur="name" - real-time validation<br>
+срабатывает по событию либо <dfn>.live</dfn> либо <dfn>.blur</dfn><br>
+работает при использовании параметра валидирования <Validate></Validate><br>
+wire:model.live="name" - отправляет на сервер введенный знак сразу<br>
+wire:model.live.debounce="name" - отправляет на сервер введенное значение через 200мс после последнего нажатия<br>
+wire:model.live.debounce.5ms="name" - отправляет на сервер введенное значение через 5мс после нажатия<br>
+</p></details><details><summary>Form</summary><p>B компоненте создаю форму и меняю действие по умолчанию на вызов метода save из класса<br>
+Форма вызывает метод обработки при надатии на enter или на кнопку Save<br>
+B полях ввода данных привязываю данные к свойствам компонента<br>
+Свойство компонента wire:model привязывает к полю ввода свойство класса wire:model="name"<br></p><pre><code>&lt;form wire:submit.prevent="save"&gt;
+  &lt;input type="text" wire:model="name"&gt;
+  &lt;input type="email" wire:model="email"&gt;
+  &lt;button type="submit"&gt;Save&lt;/button&gt;
+&lt;/form&gt;</code></pre><p>B методе сохранения данных вызываю метод валидации данных<br>
+Если данные валидны, то сохраняю данные в БД<br>
+Если данные не валидны, то вывожу ошибку</p><pre><code>public function save()
+{
+  $validated = $this->validate([
+    'name' => 'required|min:3',
+    'email' => 'required|email',
+  ]);
+  User::create($validated);
+}</code></pre><p>Вывести ошибку валидации можно c помощью директивы @error()<br>
+По ключу name выводится значение $message</p><pre><code>&lt;input type="text" wire:model="name"&gt;
+&lt;div&gt;@error('name') {{ $message }} @enderror&lt;/div&gt;</code></pre><p>Вывести ошибку валидации можно c помощью директивы @error()<br>
+По ключу name выводится значение $message</p><pre><code>&lt;input type="text" wire:model="name"&gt;
+&lt;div&gt;@error('name') {{ $message }} @enderror&lt;/div&gt;</code></pre><p>Вывести ошибку валидации можно c помощью директивы @error()<br>
+По ключу name выводится значение $message</p><pre><code>&lt;input type="text" wire:model="name"&gt;</code></pre><p>Получить все данные формы</p><code>$this->all();</code><p>Получить данные выборочных полей</p><code>$this->only(['name', 'email'])</code><p>Метод pull() - это метод only() + reset()<br>
+Заберёт из формы данные полей name и email<br>
+и очистит поля формы name и email</p><code>$this->pull(['name', 'email'])</code><p>заберёт из формы все данные и очистит форму</p><code>$this->pull();</code><p>Создать класс формы
+Создаст app/Livewire/Forms/FormName.php</p><code>php artisan livewire:form FormName</code><p>При создании компонентов CreatePost, UpdatePost и т.д.
+в классах компонентов будут вызываться методы и свойства класса FormName.php.
+T.e. все свойства и методы формы в одном классе и исспользуются разными компонентами.
+Для доступа к свойствам и методам калсса формы в классе компонента создаётся её объект form
+и обращение к свойствам и методам через объект.
+B классе компонента:</p><pre><code>public UserForm $form;
+public function save()
+{
+    $this->form->saveUser();
+}</code></pre><p>B шаблоне компонента:</p><code>wire:model="form.name"</code></details><details><summary>Events<p>События позволяю прослушивать события в другом компоненте.
+Сгенерировать событие: метод dispatch()</p><code>$this->dispatch('eventname');
+<span>or</span>
+$this->dispatch('eventname', title: $post->title);</code><p>В другом (других) компоненте добавить слушателя события</p><code>use Livewire\Attributes\On;
+
+<On eventname="eventname"></On>
+public function updatePost($title) {}
+</code></summary></details><details><summary>Alpinejs</summary><p>Фреймворк js включён по умолчанию в livewire<br>
+встраивается в разметку<br>
+работает в браузере без отправки запроса на сервер<br>
+имеет доступ к полям и методам объекта компонента через $wire.</p></details></details>

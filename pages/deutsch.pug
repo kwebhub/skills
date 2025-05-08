@@ -1,0 +1,1311 @@
+extends templates/layout
+
+block menu
+  .menu__inner
+    //- Слова
+    details
+      summary Слова
+      p.
+        Все существительные всегда пишуться с заглавной буквы.<br>
+        <em>nen</em> - <small>[нэн]</small> - окончание множественного числа <br>
+        <b>Freunde</b> - друзья; <b>Freunden</b> - друзьям<br>
+        <b>Kinder</b> - дети; <b>Kindern</b> - детям<br>
+      br
+      p.
+        Существительные с окончанием<br>
+        <em>-ung</em><br>
+        <em>-schaft</em><br>
+        <em>-heit</em><br>
+        <em>-keit</em><br>
+        это всегда женский род<br>
+        <b>die Schuld</b> - вина<br>
+        <b>die Entschuldigung</b> - извинение<br>
+        <b>die Bruderschaft</b> - братство<br>
+        <b>die Freundschaft</b> - дружба<br>
+
+      //- Worten
+      table
+        caption <em>Worten</em>
+        thead
+          tr
+            th #
+            th <em>Wort</em>
+            th <em>[...]</em>
+            th <em>Übersetzung</em>
+            th <em>Plural (мн.ч.)</em>
+        tbody
+          each wort in worten
+            +worten(wort.wort, wort.transcr, wort.transl, wort.plural)
+
+    //- Местоимения
+    details
+      summary Местоимения
+
+      //- Personalpronomen
+      table
+        caption <b>Personalpronomen</b>
+        tbody
+          tr
+            td.
+              <b>Nominativ</b> <br>
+              Wer? <small>[вэр]</small> - кто?<br>
+              Was? <small>[вас]</small> - что? 
+            td.
+              <b>Akkusativ</b> <br>
+              Wen?  <small>[вэн]</small> - кого?<br>
+              Was?  <small>[вас]</small> - что? <br>
+              Wohin?  <small>[вохин]</small> - куда?
+            td.
+              <b>Dativ</b> <br>
+              Wem?  <small>[вэм]</small> - кому? <br>
+              Wo? <small>[во]</small> - где?
+          tr
+            td ich <small>[их]</small> я
+            td mich <small>[мих]</small>меня
+            td mir <small>[мир]</small> мне
+          tr
+            td du <small>[ду]</small> ты
+            td dich <small>[дих]</small> тебя
+            td dir <small>[дир]</small> тебе
+          tr
+            td er <small>[эр]</small> он
+            td ihn <small>[ин]</small> его
+            td ihm <small>[им]</small> ему
+          tr
+            td sie <small>[зи]</small> она
+            td sie <small>[зи]</small> её
+            td ihr <small>[ир]</small> ей
+          tr
+            td es <small>[эс]</small> оно
+            td es <small>[эс]</small> его
+            td ihm <small>[им]</small> ему
+          tr
+            td wir <small>[вир]</small> мы
+            td uns <small>[унс]</small> нас
+            td uns <small>[унс]</small> нам
+          tr
+            td ihr <small>[ир]</small> вы <br>
+              <small>(множ.)</small>
+            td euch <small>[ойх]</small> вас
+            td euch <small>[ойх]</small> вам
+          tr
+            td sie <small>[зи]</small> они
+            td sie <small>[зи]</small> их
+            td ihnen <small>[и:нэн]</small> им
+          tr
+            td Sie <small>[зи]</small> Вы <br>
+              <small>(уважительно)</small>
+            td Sie <small>[зи]</small> Вас
+            td Ihnen <small>[и:нэн]</small> Вам
+
+      //- Possessivpronomen
+      table
+        caption <b>Possessivpronomen</b>
+        tbody
+          tr
+            td падеж
+            td <b>Maskulin (м.р.)</b>
+            td <b>Neutrum (ср.р.)</b>
+            td <b>Feminin (ж.р.)</b>
+            td <b>Plural (мн.ч.)</b>
+          tr
+            td.
+              <b>Nominativ</b><br>
+              Wer? <small>[вэр]</small> - кто?<br>
+              Was? <small>[вас]</small> - что?
+            td.
+              mein <small>[майн]</small> мой<br>
+              dein <small>[дайн]</small> твой<br>
+              sein <small>[зайн]</small> его<br>
+              ihr <small>[ир]</small> её<br>
+              unser <small>[унзэр]</small> ваш<br>
+              euer <small>[ойэр]</small> наш<br>
+              ihr <small>[ир]</small> их<br>
+              Ihr <small>[ир]</small> Ваш
+            td.
+              mein <small>[майн]</small> моё <br>
+              dein <small>[дайн]</small> твоё <br>
+              sein <small>[зайн]</small> его <br>
+              ihr <small>[ир]</small> её <br>
+              unser <small>[унзэр]</small> ваше <br>
+              euer <small>[ойэр]</small> наше <br>
+              ihr <small>[ир]</small> их <br>
+              Ihr <small>[ир]</small> Ваше
+            td.
+              mein<b>e</b> <small>[майнэ]</small> моя<br>
+              dein<b>e</b> <small>[дайнэ]</small> твоя<br>
+              sein<b>e</b> <small>[зайнэ]</small> его <br>
+              ihr<b>e</b> <small>[ирэ]</small> её <br>
+              unser<b>e</b> <small>[унзэрэ]</small> ваша <br>
+              eu<b>re</b> <small>[ойрэ]</small> наша <br>
+              ihr<b>e</b> <small>[ирэ]</small> их <br>
+              Ihr<b>e</b> <small>[ирэ]</small> Ваша
+            td.
+              mein<b>e</b> <small>[майнэ]</small> мои <br>
+              dein<b>e</b> <small>[дайнэ]</small> твои <br>
+              sein<b>e</b> <small>[зайнэ]</small> его <br>
+              ihr<b>e</b> <small>[ирэ]</small> её <br>
+              unser<b>e</b> <small>[унзэрэ]</small> ваши <br>
+              eu<b>re</b> <small>[ойрэ]</small> наши <br>
+              ihr<b>e</b> <small>[ирэ]</small> их <br>
+              Ihr<b>e</b> <small>[ирэ]</small> Ваши
+          tr
+            td.
+              <b>Akkusativ</b> <br>
+              Wen?  <small>[вэн]</small> - кого?<br>
+              Was?  <small>[вас]</small> - что? <br>
+              Wohin?  <small>[вохин]</small> - куда?
+            td.
+              mein<b>en</b> <small>[майнэн]</small> моего <br>
+              dein<b>en</b> <small>[дайнэн]</small> твоего <br>
+              sein<b>en</b> <small>[зайнэн]</small> его <br>
+              ihr<b>en</b> <small>[ирэн]</small> её <br>
+              unser<b>en</b> <small>[унзэрэн]</small> вашего <br>
+              euer<b>en</b> <small>[ойэрэн]</small> нашего<br>
+              ihr<b>en</b> <small>[ирэн]</small> их<br>
+              Ihr<b>en</b> <small>[ирэн]</small> Вашего
+            td.
+              mein<b>en</b> <small>[майн]</small> моего <br>
+              dein<b>en</b> <small>[дайн]</small> твоего <br>
+              sein<b>en</b> <small>[зайн]</small> его <br>
+              ihr<b>en</b> <small>[ир]</small> её <br>
+              unser<b>en</b> <small>[унзер]</small> вашего <br>
+              euer<b>en</b> <small>[ойэр]</small> нашего <br>
+              ihr<b>en</b> <small>[ир]</small> их <br>
+              Ihr<b>en</b> <small>[ир]</small> Вашего
+            td.
+              mein<b>e</b> <small>[майнэ]</small> мою <br>
+              dein<b>e</b> <small>[дайнэ]</small> твою <br>
+              sein<b>e</b> <small>[зайнэ]</small> его <br>
+              ihr<b>e</b> <small>[ирэ]</small> её <br>
+              unser<b>e</b> <small>[унзэрэ]</small> вашу <br>
+              eu<b>re</b> <small>[ойрэ]</small> нашу <br>
+              ihr<b>e</b> <small>[ирэ]</small> их <br>
+              Ihr<b>e</b> <small>[ирэ]</small> Вашу
+            td.
+              mein<b>e</b> <small>[майнэ]</small> моих <br>
+              dein<b>e</b> <small>[дайнэ]</small> твоих <br>
+              sein<b>e</b> <small>[зайнэ]</small> его <br>
+              ihr<b>e</b> <small>[ирэ]</small> её <br>
+              unser<b>e</b> <small>[унзэрэ]</small> ваших <br>
+              eu<b>re</b> <small>[ойрэ]</small> наших <br>
+              ihr<b>e</b> <small>[ирэ]</small> их <br>
+              Ihr<b>e</b> <small>[ирэ]</small> Ваших
+          tr
+            td.
+              <b>Dativ</b><br>
+              Wem?  <small>[вэм]</small> - кому?<br>
+              Wo? <small>[во]</small> - где?
+            td.
+              mein<b>em</b> <small>[майнэм]</small> моему<br>
+              dein<b>em</b> <small>[дайнэм]</small> твоему<br>
+              sein<b>em</b> <small>[зайнэм]</small> его<br>
+              ihr<b>em</b> <small>[ирэм]</small> её<br>
+              unser<b>em</b> <small>[унзэрэм]</small> вашему<br>
+              euer<b>em</b> <small>[ойрэм]</small> нашему<br>
+              ihr<b>em</b> <small>[ирэм]</small> их<br>
+              Ihr<b>em</b> <small>[ирэм]</small> Вашему
+            td.
+              mein<b>em</b> <small>[майнэм]</small> моему<br>
+              dein<b>em</b> <small>[дайнэм]</small> твоему<br>
+              sein<b>em</b> <small>[зайнэм]</small> его<br>
+              ihr<b>em</b> <small>[ирэм]</small> её<br>
+              unser<b>em</b> <small>[унзэрэм]</small> вашему<br>
+              euer<b>em</b> <small>[ойрэм]</small> нашему<br>
+              ihr<b>em</b> <small>[ирэм]</small> их<br>
+              Ihr<b>em</b> <small>[ирэм]</small> Вашему 
+            td.
+              mein<b>er</b> <small>[майнер]</small> моей<br>
+              dein<b>er</b> <small>[дайнер]</small> твоей<br>
+              sein<b>er</b> <small>[зайнер]</small> его<br>
+              ihr<b>er</b> <small>[ирер]</small> её<br>
+              unser<b>er</b> <small>[унзэрэр]</small> вашей<br>
+              eu<b>rer</b> <small>[ойрэр]</small> нашей<br>
+              ihr<b>er</b> <small>[ирер]</small> их<br>
+              Ihr<b>er</b> <small>[ирер]</small> Вашей
+            td.
+              mein<b>en</b> <small>[майнэн]</small> моим<br>
+              dein<b>en</b> <small>[дайнэн]</small> твоим<br>
+              sein<b>en</b> <small>[зайнэн]</small> его<br>
+              ihr<b>en</b> <small>[ирэн]</small> её<br>
+              unser<b>en</b> <small>[унзэрэн]</small> вашим<br>
+              eu<b>ren</b> <small>[ойрэн]</small> нашим<br>
+              ihr<b>en</b> <small>[ирэн]</small> их<br>
+              Ihr<b>en</b> <small>[ирэн]</small> Вашим
+          tr
+            td.
+              <b>Genitiv</b><br>
+              Wessen? <small>[вэсэн]</small> - чей?
+            td.
+              mein<b>es</b> <small>[майнэс]</small> мой<br>
+              dein<b>es</b> <small>[дайнэс]</small> твой<br>
+              sein<b>es</b> <small>[зайнэс]</small> его<br>
+              ihr<b>es</b> <small>[ирэс]</small> её<br>
+              unser<b>es</b> <small>[унзэрэс]</small> ваш<br>
+              euer<b>es</b> <small>[ойрэс]</small> наш<br>
+              ihr<b>es</b> <small>[ирэс]</small> их<br>
+              Ihr<b>es</b> <small>[ирэс]</small> Ваш
+            td.
+              mein<b>es</b> <small>[майнэс]</small> моё<br>
+              dein<b>es</b> <small>[дайнэс]</small> твоё<br>
+              sein<b>es</b> <small>[зайнэс]</small> его<br>
+              ihr<b>es</b> <small>[ирэс]</small> её<br>
+              unser<b>es</b> <small>[унзэрэс]</small> ваше<br>
+              euer<b>es</b> <small>[ойрэс]</small> наше<br>
+              ihr<b>es</b> <small>[ирэс]</small> их<br>
+              Ihr<b>es</b> <small>[ирэс]</small> Ваше
+            td.
+              mein<b>er</b> <small>[майнэр]</small> моя<br>
+              dein<b>er</b> <small>[дайнэр]</small> твоя<br>
+              sein<b>er</b> <small>[зайнэр]</small> его<br>
+              ihr<b>er</b> <small>[ирэр]</small> её<br>
+              unser<b>er</b> <small>[унзэрэр]</small> ваша<br>
+              eu<b>rer</b> <small>[ойрэр]</small> наша<br>
+              ihr<b>er</b> <small>[ирэр]</small> их<br>
+              Ihr<b>er</b> <small>[ирэр]</small> Ваша
+            td.
+              mein<b>er</b> <small>[майнэр]</small> мои<br>
+              dein<b>er</b> <small>[дайнэр]</small> твои<br>
+              sein<b>er</b> <small>[зайнер]</small> его<br>
+              ihr<b>er</b> <small>[ирэр]</small> её<br>
+              unser<b>er</b> <small>[унзэрэр]</small> ваши<br>
+              eu<b>rer</b> <small>[ойрэр]</small> наши<br>
+              ihr<b>er</b> <small>[ирэр]</small> их<br>
+              Ihr<b>er</b> <small>[ирэр]</small> Ваши
+        
+    //- Глаголы
+    details
+      summary Глаголы
+      p Zeitwörter <small>[цайтвёртэр]</small> - глаголы
+      
+      //- Неправильные глаголы
+      details
+        summary Неправильные глаголы
+
+        //- sein
+        table
+          caption <b>sein</b> <small>[зайн]</small> - быть
+          thead
+            tr
+              th <b>?</b>
+              th <b>+</b>
+              th <b>-</b>
+          tbody
+            tr
+              td(colspan="3") <b>Будущее и настоящее</b>
+            each se in sein
+              +verb_form(se.pronom, se.verb, se.transcr, se.transl_pronom, se.transl_verb)
+          
+
+          tr
+            td(colspan="3") <b>Прошлое</b>
+          each w in war
+            +verb_form(w.pronom, w.verb, w.transcr, w.transl_pronom, w.transl_verb)
+
+
+        //- haben
+        table
+          caption <b>haben</b> <small>[хабэн]</small> - иметь
+          thead
+            tr
+              th <b>?</b>
+              th <b>+</b>
+              th <b>-</b>
+          tbody
+          tr
+            td(colspan="3") <b>Будущее и настоящее</b>
+          each hab in haben
+            +verb_form(hab.pronom, hab.verb, hab.transcr, hab.transl_pronom, hab.transl_verb)
+
+          tr
+            td(colspan="3") <b>Прошлое</b>
+          each hatt in hatten
+            +verb_form(hatt.pronom, hatt.verb, hatt.transcr, hatt.transl_pronom, hatt.transl_verb)
+
+        //- wissen
+        table
+          caption <b>wissen</b> <small>[висэн]</small> - знать в общих чертах
+          thead
+            tr
+              th <b>?</b>
+              th <b>+</b>
+              th <b>-</b>
+          tbody
+          tr
+            td(colspan="3") <b>Будущее и настоящее</b>
+          each wiss in wissen
+            +verb_form(wiss.pronom, wiss.verb, wiss.transcr, wiss.transl_pronom, wiss.transl_verb)
+
+          tr
+            td(colspan="3") <b>Прошлое</b>
+          each wuss in wusste
+            +verb_form(wuss.pronom, wuss.verb, wuss.transcr, wuss.transl_pronom, wuss.transl_verb)
+
+        //- kennen
+        table
+          caption <b>kennen</b> (kannt) <small>[кенэн]</small> знать конкретно
+          thead
+            tr
+              th <b>?</b>
+              th <b>+</b>
+              th <b>-</b>
+          tbody
+            tr
+              td(colspan="3") <b>Будущее и настоящее</b>
+            each kenn in kennen
+              +verb_form(kenn.pronom, kenn.verb, kenn.transcr, kenn.transl_pronom, kenn.transl_verb)
+
+            tr
+              td(colspan="3") <b>Прошлое</b>
+            each kann in kannte
+              +verb_form(kann.pronom, kann.verb, kann.transcr, kann.transl_pronom, kann.transl_verb)
+
+      //- Правильные глаголы
+      details
+        summary Правильные глаголы
+        p.
+          haben + ge + корень слова + t = прошедшее время:<br>
+          ich <b>habe ge</b> + mach + <b>t</b> = ich habe <b>ge</b>mach<b>t</b> - я сделал
+
+        //- machen
+        table
+          caption mach<b>en</b> <small>[махэн]</small> - делать
+            thead
+              tr
+                th <b>?</b>
+                th <b>+</b>
+                th <b>-</b>
+            tbody
+              tr
+                td(colspan="3") <b>Будущее и настоящее</b>
+              each mach in machen
+                +verb_form(mach.pronom, mach.verb, mach.transcr, mach.transl_pronom, mach.transl_verb)
+
+            tr
+              td(colspan="3") <b>Прошлое</b>
+            each gemach in gemacht
+              +verb_form_past(gemach.pronom, gemach.verb, gemach.verb_past, gemach.transcr, gemach.transl_pronom, gemach.transl_verb)
+        p.
+          machen (haben Gemacht)<br>
+          <em>Повелительный падеж: </em><br>
+          machen - mach - делай<br>
+          machen Sie bitte. <span>- сделайте пожалуйста</span><br>
+          mach es bitte. <span>- сделай это пожалуйста</span>
+
+        //- Verbs
+        table
+          caption <b>Verbs</b>
+          thead
+            tr
+              th #
+              th <b>Глагол</b>
+              th <b>[...]</b>
+              th <b>Перевод</b>
+          tbody
+            each verb in verbs
+              +verbs(verb.word, verb.transcrip, verb.translate)
+          tfoot
+            tr
+              td(colspan="4") окончание -en - в основном начальная форма глагола
+        
+        //- Ausnahmen
+        table
+          caption <b>Ausnahmen</b>
+          thead
+            tr
+              th <b>Глагол</b>
+              th <b>Исключение</b>
+              th <b>[...]</b>
+              th <b>Перевод</b>
+              th <b>Повелительный</b>
+          tbody
+            each aus in ausnahmen
+              +verbs_aus(aus.word, aus.aus, aus.transcrip, aus.translate, aus.exam)
+
+      //- Правильные глаголы с другой формой в прошлом времени
+      details
+        summary Правильные глаголы с другой формой в прошлом времени
+        p.
+          denk<b>en</b> (haben Gedacht) <small>[дэнкэн]</small> думать<br>
+          bring<b>en</b> (haben Gebracht) <small>[брингэн]</small> приносить<br>
+          schreib<b>en</b> (haben Geschrieben) <small>[шрайбэн]</small> писать<br>
+          trink<b>en</b> (haben Getrunken) <small>[тринкэн]</small> пить 
+
+      //- Глаголы движения
+      details
+        summary Глаголы движения
+
+        //- gehen
+        table
+          caption Geh<b>en</b> <small>[геин]</small> - идти <em>(неопределённая форма)</em>
+          thead
+            tr
+              th <b>?</b>
+              th <b>+</b>
+              th <b>-</b>
+          tbody
+            tr
+              td(colspan="3") <b>Будущее и настоящее</b>
+            each geh in gehen
+                +verb_form(geh.pronom, geh.verb, geh.transcr, geh.transl_pronom, geh.transl_verb)
+            tr
+              td(colspan="3") <b>Прошлое</b>
+            each gegang in gegangen
+                +verb_form_past(gegang.pronom, gegang.verb, gegang.verb_past, gegang.transcr, gegang.transl_pronom, gegang.transl_verb)
+
+        //- kommen
+        table
+          caption Komm<b>en</b> <small>[комэн]</small> - приходить <em>(неопределённая форма)</em>
+          thead
+            tr
+              th <b>?</b>
+              th <b>+</b>
+              th <b>-</b>
+          tbody
+            tr
+              td(colspan="3") <b>Будущее и настоящее</b>
+            each komm in kommen
+              +verb_form(komm.pronom, komm.verb, komm.transcr, komm.transl_pronom, komm.transl_verb)
+            tr
+              td(colspan="3") <b>Прошлое</b>
+            each gekomm in gekommen
+              +verb_form_past(gekomm.pronom, gekomm.verb, gekomm.verb_past, gekomm.transcr, gekomm.transl_pronom, gekomm.transl_verb)
+          tfoot
+            tr
+              td(colspan="3").
+                <em>Повелительный падеж:</em><br>
+                kommen - komm - подойди, приходи<br>
+                kommen Sie bitte zu mir. <span>- подойдите пожалуйста ко мне</span><br> 
+                komm zu mir bitte. <span>- подойди ко мне пожалуйста</span><br>
+        p.
+          gebor<b>en</b> (sein geboren) <small>[геборэн]</small> родиться<br>
+          sterb<b>en</b> (sein gestorben; du stirbst, er stirbt) <small>[штэрбэн]</small> умирать<br>
+          leb<b>en</b> - жить, быть живым <br>
+
+          fahr<b>en</b> (sein gefahren) (du fährst; er, sie, es fährt) <small>[фарэн]</small> ехать <br>
+          flieg<b>en</b> (sein geflogen) <small>[флигэн]</small> лететь <br>
+          reis<b>en</b> (sein gereist) <small>[райзэн]</small> путешествовать <br>
+          steh<b>en</b> (sein gestanden) <small>[штэйнн]</small> стоять<br>
+          bleib<b>en</b> (sein geblieben) <small>[блайбэн]</small> оставаться <br>
+
+      //- Глаголы с приставкой, без добавления ge в прошедшем времени
+      details
+        summary Глаголы с приставкой, без добавления ge в прошедшем времени
+        p.
+          Если в глаголе есть приставка, то в прошедшем времени приставка <em>ge-</em> не добавляется<br>
+          <em>ver-</em>,<br>
+          <em>er-</em>,<br>
+          <em>ge-</em>,<br>
+          <em>be-</em><br>
+          vergess<b>en</b> <small>[фэргэсэн]</small> забывать <br>
+          <i>vergiss nicht - не забудь (du, er - vergisst)</i><br>
+          versteh<b>en</b> (haben verstanden) <small>[ферштэйн]</small> понимать <br>
+          verkauf<b>en</b> (haben verkauft) <small>[феркауфэн]</small> продавать <br>
+          erkenn<b>en</b> (haben erkannt) <small>[эркенэн]</small> узнавать<br>
+          erklär<b>en</b> (haben erklärt) <small>[эрклэрэн]</small> объяснять <br>
+          gescheh<b>en</b> <small>[гэшэйн]</small> происходить, случаться <br>
+          gehör<b>en</b> <small>[гэхёрэн]</small> принадлежать<br>
+          beschreib<b>en</b> (haben beschrieben) <small>[бэшрайбэн]</small> описывать <br>
+          bekkom<b>en</b> (haben bekkomen) <small>[бэкомэн]</small> получать <br>
+          besuch<b>en</b> (haben besucht) <small>[бэзухэн]</small> посещать <br>
+          bestell<b>en</b> <small>[бэштэлэн]</small> заказывать<br>
+          bearbeit<b>en</b> - обрабатывать <br>
+          <em>Глаголы из других языков без приставки <b>ge-</b> в прошлом времени:</em> <br>
+          studier<b>en</b> (haben Studiert) <small>[штудирэн]</small> изучать <br>
+          reservier<b>en</b> (haben Reserviert) <small>[резервирэн]</small> резервировать <br>
+          diskutier<b>en</b> (haben Diskutiert) <small>[дискутирэн]</small> обсуждать<br>
+          wiederhol<b>en</b> (haben Wiederholt) <small>[видэрхолэн]</small> повторять <br>
+          gratulier<b>en</b> (haben Gratuliert) <small>[гратулирэн]</small> поздравлять <br>
+          übersetz<b>en</b> (haben Übersetzt) <small>[убэрзэтцэн]</small> переводить, переложить<br>
+
+      //- Возвратные глаголы - действие направлено на себя sich waschen
+      details
+        summary Возвратные глаголы - действие направлено на себя sich waschen
+        p.
+          waschen <small>[вашэн]</small> - мыть<br>
+          sich waschen <small>[зих вашэн]</small> - умываться <br>
+          <br>
+          lieben - любить<br>
+          sich lieben - любить друг друга<br>
+          wir lieben uns <small>[вир либэн унс]</small> - мы любим друг друга <br>
+          verliebt sein <small>[фэрлибт зайн]</small> - быть влюблённым <br>
+          <br>
+          sich setzen <small>[зих зетцэн]</small> - садиться <br>
+          Setzen Sie sich, bitte. <small>[зэтцэн зи зих битэ]</small> - садитесь, пожалуйста <br>
+          <br>
+          zu Ende sein - закончиться 
+
+      //- Глаголы с приставкой, которая отделяется в конец предложения
+      details
+        summary Глаголы с приставкой, которая отделяется в конец предложения
+        p.
+          aufstehen <small>[ауфштэйн]</small> - вставать<br>
+          aufgestanden <small>[ауфгэштандэн]</small> - встал<br>
+          Ich <em>habe</em> <sup>auf</sup><sub>ge</sub>standen - я встал<br>
+          Ich stehe auf - я встаю <br>
+          Ich stehe um halb acht auf - я встаю в пол восьмого <br>
+          Steh auf <small>[штээ ауф]</small> - вставай <br>
+          Stehen Sie bitte auf - встаньте, пожалуйста 
+
+        //- stehen
+        table
+          caption steh<b>en</b> <small>[штэйн]</small> стоять
+          tbody
+            each steh in stehen
+              +verben(steh.pronom, steh.verb, steh.transcr, steh.transl_pronom, steh.transl_verb)
+
+        p.
+          rufen <small>[руфэн]</small> - звать 
+          anrufen <small>[анруфэн]</small> - звонить по телефону 
+          ich rufe dich an - я звоню тебе
+          Ruf mich bitte an - позвони мне, пожалуйста 
+
+      //- Модальные глаголы
+      details
+        summary Модальные глаголы - выражают отношение к действию
+
+        //- wollen
+        table
+          caption woll<b>en</b> <small>[волэн]</small> - хотеть
+          tbody
+            tr
+                td(colspan="5") <b>Будущееи и настоящее</b>
+            each woll in wollen
+              +verben(woll.pronom, woll.verb, woll.transcr, woll.transl_pronom, woll.transl_verb) 
+            tr
+              td(colspan="5") <b>Прошлое</b>
+            each woll in wollten
+              +verben(woll.pronom, woll.verb, woll.transcr, woll.transl_pronom, woll.transl_verb)
+
+        //- sollen
+        table
+          caption soll<b>en</b> <small>[золэн]</small> - следовало бы сделать
+          tbody
+            each soll in sollen
+              +verben(soll.pronom, soll.verb, soll.transcr, soll.transl_pronom, soll.transl_verb)             
+
+        //- mögen
+        table
+          caption mög<b>en</b> <small>[мёгэн]</small> - нравиться
+          tbody
+            each mog in mogen
+              +verben(mog.pronom, mog.verb, mog.transcr, mog.transl_pronom, mog.transl_verb)          
+
+        //- möchten
+        table
+          caption möcht<b>en</b> <small>[мёхтэн]</small> - хотел бы
+          tbody
+            each moch in mochten
+              +verben(moch.pronom, moch.verb, moch.transcr, moch.transl_pronom, moch.transl_verb)
+          tfoot
+            tr
+              td(colspan="5") Ich möchte ein kaffee <small>[их мёхтэ айн кафэ]</small> - я бы хотел кофе
+
+        //- dürfen
+        table
+          caption dürf<b>en</b> <small>[дёрфэн]</small> - иметь право, разрешение
+          tbody
+            each durf in durfen
+              +verben(durf.pronom, durf.verb, durf.transcr, durf.transl_pronom, durf.transl_verb)          
+          tfoot
+            tr
+              td(colspan="5").
+                Darf ich fragen <small>[дарф их фрагэн]</small> - можно я спрошу (могу ли я спросить)<br>
+                man darf <small>[ман дарф]</small> - можно (безлично)<br>
+                Darf man hier singen? <small>[дарф ман хиэ зингэн]</small> - можно ли здесь петь?
+
+        //- können
+        table
+          caption könn<b>en</b> <small>[кёнэн]</small> - мочь
+          tbody
+            each konn in konnen
+              +verben(konn.pronom, konn.verb, konn.transcr, konn.transl_pronom, konn.transl_verb)
+          tfoot
+            tr
+              td(colspan="5") Ich kann zu dir heute kommen <small>[их кан цу дир хойтэ комэн]</small> - я могу к тебе сегодня прийти
+
+        //- müssen
+        table
+          caption müss<b>en</b> <small>[мюсэн]</small> - должен (что-то сделать)
+          tbody
+            each muss in mussen
+              +verben(muss.pronom, muss.verb, muss.transcr, muss.transl_pronom, muss.transl_verb)
+          tfoot
+            tr
+              td(colspan="5").
+                Ich muss gehen <small>[их мус гэйн]</small> - я должен идти<br>
+                man muss <small>[ман мус]</small> - надо
+
+      //- Порядок слов в предложении
+      details
+        summary Порядок слов в предложении:
+        p.
+          <em>Смысловой глагол или второй или последний.</em><br>
+          Ich <em>fahre</em> nach Berlin. - <small>Я еду в Берлин.</small><br>
+          Morgen <em>fahre</em> ich nach Berlin. - <small>Завтра я еду в Берлин.</small><br>
+          Weisst du dass ich morgen nach Berlin <em>fahre</em>? - <small>Ты знаешь, что я завтра еду в Берлин?</small><br>
+
+    //- Артикль
+    details
+      summary Артикль
+
+      //- Артикль
+      table
+        caption <b>Артикль</b>
+        tbody
+          tr
+            td падеж
+            td Maskulin (м.р.)
+            td Neutrum (ср.р.)
+            td Feminin (ж.р.)
+            td Plural (мн.ч.)
+          tr
+            td.
+              <b>Nominativ</b><br>
+              Wer? <small>[вэр]</small> - кто?<br>
+              Was? <small>[вас]</small> - что?
+            td.
+              (k)ein<br>
+              der
+            td.
+              (k)ein<br>
+              das
+            td.
+              (k)eine<br>
+              die
+            td.
+              ---<br>
+              die
+          tr
+            td.
+              <b>Akkusativ</b><br>
+              Wen?  <small>[вэн]</small> - кого?<br>
+              Was?  <small>[вас]</small> - что?<br>
+              Wohin?  <small>[вохин]</small> - куда?
+            td.
+              (k)einen<br>
+              den
+            td.
+              (k)ein<br>
+              das
+            td.
+              (k)eine<br>
+              die
+            td.
+              ---<br>
+              die
+          tr
+            td.
+              <b>Dativ</b><br>
+              Wem?  <small>[вэм]</small> - кому?<br>
+              Wo? <small>[во]</small> - где?
+            td.
+              (k)einem<br>
+              dem
+            td.
+              (k)einem<br>
+              dem
+            td.
+              (k)einer<br>
+              der
+            td.
+              ---<br>
+              den
+          tr
+            td.
+              <b>Genitiv</b><br>
+              Wessen? <small>[вэсэн]</small> - чей?
+            td.
+              (k)eines<br>
+              des
+            td.
+              (k)eines<br>
+              des
+            td.
+              (k)einer<br>
+              der
+            td.
+              ---<br>
+              der
+      br
+      p.
+        <em>Артикль</em> <br>
+        ein <small>[айн]</small> - один (неопределённый).<br>
+        der <small>[дэр]</small> - этот (определенный).<br>
+        <br>
+        <em>Без артикля:</em><br>
+        Trinkst du Tee oder Kaffee? <small>[тринькст ду тэ одэ кафэ]</small> - ты пьёш чай или кофе. когда говорим об абстрактном, не конкретном.<br>
+        Ich bin Deutsch <small>[их бин дойч]</small> - я немец. когда говорим о национальности или статусе<br>
+        Er ist Schauspieler <small>[эр ист шаушпилэ]</small> - он актёр. когда говорим о професии.<br>
+        <br>
+        wer? - ein: кто? - один<br>
+        wen? - einen: кого? - одного. Ich habe einen Freund <small>[их хабэ айнэн фройнд]</small> - у меня есть один друг<br>
+        wem? - einem: кому? - одному<br>
+        <br>
+        wer? - der: кто? - этот<br>
+        wen? - den: кого? - этого. Ich kenne den Mann <small>[их кэнэ дэн ман]</small> - я знаю этого человека<br>
+        wem? - dem: кому? - этому. Ich gebe etwas dem Mann <small>[их гэбэ этвас дэм ман]</small> - я даю что-то этому мужчине<br>
+        <br>
+        ein Freund <small>[айн фройнд]</small> - один друг<br>
+        einen Freund <small>[айнэн фройнд]</small> - одного друга<br>
+        eine Freundin <small>[айнэ фройндин]</small> - одна подруга (одной подруги)
+
+    //- Прилагательные
+    details
+      summary Прилагательные
+
+      //- Прилагательные
+      table
+        tbody
+          tr
+            td падеж
+            td(colspan="2") Maskulin (м.р.)
+            td(colspan="2") Neutrum (ср.р.)
+            td(colspan="2") Feminin (ж.р.)
+            td(colspan="2") Plural (мн.ч.)
+          tr
+            td <b>Nominativ</b> 
+            td.
+              d<b>er</b> <br>
+              dies<b>er</b> <br>
+              jen<b>er</b> <br>
+              jed<b>er</b> <br>
+              solch<b>er</b> <br>
+              welch<b>er</b>
+            td gut<em>e</em> Vater
+            td.
+              d<b>as</b> <br>
+              dies<b>es</b> <br>
+              jen<b>es</b> <br>
+              jed<b>es</b> <br>
+              solch<b>es</b> <br>
+              welch<b>es</b>
+            td gut<em>e</em> Kind
+            td.
+              d<b>ie</b> <br>
+              dies<b>e</b> <br>
+              jen<b>e</b> <br>
+              jed<b>e</b> <br>
+              solch<b>e</b> <br>
+              welch<b>e</b>
+            td gut<em>e</em> Mutter
+            td.
+              d<b>ie</b> <br>
+              dies<b>e</b> <br>
+              jen<b>e</b> <br>
+              jed<b>e</b> <br>
+              solch<b>e</b> <br>
+              welch<b>e</b>
+            td gut<em>en</em> Eltern  + all<b>e</b>  + beid<b>e</b>
+          tr
+            td <b>Akkusativ</b> 
+            td.
+              d<b>en</b> <br>
+              dies<b>en</b> <br>
+              jen<b>en</b> <br>
+              jed<b>en</b> <br>
+              solch<b>en</b> <br>
+              welch<b>en</b>
+            td gut<em>en</em> Vater
+            td.
+              d<b>as</b> <br>
+              dies<b>es</b> <br>
+              jen<b>es</b> <br>
+              jed<b>es</b> <br>
+              solch<b>es</b> <br>
+              welch<b>es</b>
+            td gut<em>e</em> Kind
+            td.
+              d<b>ie</b> <br>
+              dies<b>e</b> <br>
+              jen<b>e</b> <br>
+              jed<b>e</b> <br>
+              solch<b>e</b> <br>
+              welch<b>e</b>
+            td gut<em>e</em> Mutter
+            td.
+              d<b>ie</b> <br>
+              dies<b>e</b> <br>
+              jen<b>e</b> <br>
+              jed<b>e</b> <br>
+              solch<b>e</b> <br>
+              welch<b>e</b>
+            td gut<em>en</em> Eltern  + all<b>e</b>  + beid<b>e</b>
+          tr
+            td <b>Dativ</b>
+            td.
+              d<b>em</b> <br>
+              dies<b>em</b> <br>
+              jen<b>em</b> <br>
+              jed<b>em</b> <br>
+              solch<b>em</b> <br>
+              welch<b>em</b>
+            td gut<em>en</em> Vater
+            td.
+              d<b>em</b> <br>
+              dies<b>em</b> <br>
+              jen<b>em</b> <br>
+              jed<b>em</b> <br>
+              solch<b>em</b> <br>
+              welch<b>em</b>
+            td gut<em>en</em> Kind
+            td.
+              d<b>er</b> <br>
+              dies<b>er</b> <br>
+              jen<b>er</b> <br>
+              jed<b>er</b> <br>
+              solch<b>er</b> <br>
+              welch<b>er</b>
+            td gut<em>en</em> Mutter
+            td.
+              d<b>en</b> <br>
+              dies<b>en</b> <br>
+              jen<b>en</b> <br>
+              jed<b>en</b> <br>
+              solch<b>en</b> <br>
+              welch<b>en</b>
+            td gut<em>en</em> Eltern  + all<b>en</b>  + beid<b>en</b>
+          tr
+            td <b>Genitiv</b> 
+            td.
+              d<b>es</b> <br>
+              dies<b>es</b> <br>
+              jen<b>es</b> <br>
+              jed<b>es</b> <br>
+              solch<b>es</b> <br>
+              welch<b>es</b>
+            td gut<em>en</em> Vater
+            td.
+              d<b>es</b> <br>
+              dies<b>es</b> <br>
+              jen<b>es</b> <br>
+              jed<b>es</b> <br>
+              solch<b>es</b> <br>
+              welch<b>es</b>
+            td gut<em>en</em> Kind
+            td.
+                d<b>er</b> <br>
+                dies<b>er</b> <br>
+                jen<b>er</b> <br>
+                jed<b>er</b> <br>
+                solch<b>er</b> <br>
+                welch<b>er</b>
+            td gut<em>en</em> Mutter
+            td.
+              d<b>er</b> <br>
+              dies<b>er</b> <br>
+              jen<b>er</b> <br>
+              jed<b>er</b> <br>
+              solch<b>er</b> <br>
+              welch<b>er</b>
+            td gut<em>en</em> Eltern  + all<b>en</b>  + beid<b>en</b>
+          tfoot
+            tr
+              td(colspan="9") после sein (ist, bin, ...) прилагательные без окончаний
+      br
+      p.
+        gut - besser - der beste<br>
+        <small>гут - бэсэ - дэр бэстэ</small><br>
+        хороший - лучше - самый лучший<br>
+        <br>
+        ich habe das beste Auto<br>
+        <small>[их хабэ дас бэстэ ауто]</small><br>
+        у меня самая лучшая машина.<br>
+        <br>
+        mein Auto ist das beste<br>
+        <small>[майн ауто ист дас бэстэ]</small><br>
+        моя машина самая лучшая<br>
+        <br>
+        groß - größer<br>
+        <small>[гросс - грёссэ]</small><br>
+        большой - больше<br>
+        <br>
+        warm - wärmer<br>
+        <small>[варм - вэрмэ]</small><br>
+        тёплый - теплее
+
+    //- Союзы
+    details
+      summary Частицы
+      p.
+        <em>Союз</em><br>
+        und <small>[унд]</small> - и <br>
+        oder <small>[одэ]</small> - или <br>
+        aber <small>[абэ]</small> - но <br>
+        sondern <small>[зондерн]</small> - а : Night du, sondern sie. - Не ты, а она.<br>
+        dass <small>[дас]</small> - что : Ich weiss dass du nach Berlin fliegst. - Я знаю, что ты летишь в Берлин.<br>
+        <br>
+        <em>Люди</em><br>
+        alle <small>[алэ]</small> - все<br>
+        jemand <small>[еманд]</small> - кто-то<br>
+        niemand <small>[ниманд]</small> - никто<br>
+        <br>
+        <em>Предметы</em><br>
+        alles <small>[алэс]</small> - всё<br>
+        etwas <small>[этвас]</small> - что-то<br>
+        nichts <small>[нихтс]</small> - ничего<br>
+        Alles oder nichts <small>[алэс одэ нихтс]</small> - всё или ничего<br>
+        
+    //- Предлоги
+    details
+      summary Предлоги
+      p.
+        in <small>[ин]</small> - в : in Berlin - в Берлине (где-то)<br>
+        im <small>[им]</small> - в : im Theater - в театре <br>
+        nach <small>[нах]</small> - в : nach Berlin - в Берлин (куда-то)<br>
+        aus <small>[аус]</small> - из : aus Berlin - из Берлина (откуда-то)<br>
+        ein <small>[айн]</small> - один (неопределённый артикль)<br>
+        über <small>[уюбэр]</small> - о : über meine <small>[уюбэр майнэ]</small> <br>
+        für <small>[фюр]</small> - для : für mich <small>[фюр мих]</small> <br>
+        zu <small>[цу]</small> - к : komm zu mir <small>[ком цу мир]</small>; zu früh <small>[цу фрю]</small> - слишком рано <br>
+        mit <small>[мит]</small> - с : mit dir <small>[мит дир]</small> <br>
+        ohne <small>[онэ]</small> - без : ohne dich <small>[онэ дих]</small> <br>
+        von <small>[фон]</small> - от : von dich <small>[фон дих]</small>das ist die Frau von meinem Freund - это жена моего друга<br>
+        bei mir <small>[бай мир]</small> - у меня <br>
+        bei uns <small>[бай унс]</small> - у нас <br>
+        in + das = ins <br>
+        in + dem = im <br>
+        zu + dem = zum <br>
+        beide <small>[байде]</small> - и то и другое <br>
+        wen? - über, für <br>
+        wem? - mit, zu <br>
+        in den Klub <small>[ин дэн клуб]</small> - в клуб<br>
+        in die Schule <small>[ин ди шулэ]</small> - в школу
+
+    //- Вопросы
+    details
+      summary Вопросы
+      p.
+        Was? <small>[вас]</small> - что? : Was hast du gesagt? - что ты спросил? <br>
+        <br>
+        Wer? <small>[вэр]</small> - кто? : Wer hat gesagt? - кто сказал? <br>
+        Wer? - mein: кто? - мой<br>
+        Wer? - kein <small>[кайн]</small>: кто? - никакой<br>
+        <br>
+        Wen? <small>[вэн]</small> - кого?: Wen liebst du? - кого ты любишь? <br>
+        Wen? - meinen: кого? - моего. Heute habe ich meinen Freund gesehen. <small>[хойтэ хабэ их майнэн фройнд гэзэйн]</small> - сегодня я видел моего друга<br>
+        Wen? - keinen: кого? - никакого. ich habe keinen Bruder<small> [их хабэ кайнэн брудэ]</small> - у меня нет никакого брата<br>
+        <br>
+        Wem? <small>[вэм]</small> - кому? <br>
+        Wem? - meinem: кому? - моемуIch spreche mit meinem Freund. <small>[их шпрэхе мит майнэм фройнд]</small> - я говорю с моим другом <br>
+        Wem? - keinem: кому? - никакому<br>
+        <br>
+        Wo? <small>[во]</small> - где? : Wo wohnst du? - где ты живёшь? <br>
+        Wo finde ich ...? - где мне найти ...?<br>
+        Wo ist ...? - где ...?<br>
+        <br>
+        Wohin? <small>[вохин]</small> - куда? : Wohin gehst du? - Куда ты идёшь? <br>
+        Woher? <small>[вохэр]</small> - откуда? : Woher kommst du? - Откуда ты приходишь? <br>
+        <br>
+        Wann? <small>[ван]</small> - когда? : Wann arbeitest du? - когда ты будешь работать? <br>
+        <br>
+        Warum? <small>[варум]</small> - почему? : Warum arbeitest du nicht? - почему ты не работаешь? <br>
+        Warum? - darum? : почему - поэтому <br>
+        Warum? - weil <small>[варум - вайль]</small> - почему - потому что <br>
+        <br>
+        Wie? <small>[ви]</small> - как? : Wie tanzt sie? - как она танцует?<br>
+        Wie, bitte? <small>[ви битэ]</small> - Что-что? <br>
+        Wie heisst du? <small>[ви хайст ду]</small> - как тебя зовут?<br>
+        Wie heissen Sie? <small>[ви хайсен зи]</small> - как Вас зовут?<br>
+        Wie viel <small>[ви филь]</small> - сколько (как много)? - с неисчисляемыми<br>
+        Wie vielе <small>[ви филэ]</small> - сколько (как много)? - с исчисляемыми<br>
+        Wie komme ich...? - как пройти ...?<br>
+        <br>
+        Welcher? <small>[вэльхэр]</small> - какой?<br>
+        Welche? <small>[вэльхэ]</small> - какая?<br>
+        Welches? <small>[вэльхэс]</small> - какое?<br>
+        Welchen? <small>[вэльхэн]</small> - какого?<br>
+    
+    //- Пространство
+    details
+      summary Пространство
+      p.
+        <b>nach</b>: <br>
+        Süden <small>[зюдэн]</small> - юг <br>
+        Western <small>[вэстэрн]</small> - запад <br>
+        Osten <small>[остэн]</small> - восток <br>
+        Norden <small>[нордэн]</small> - север <br>
+        <br>
+        rechts <small>[рэхтс]</small> - направо <br>
+        links <small>[линькс]</small> - налево <br>
+        geradeaus <small>[гэрадэ]</small> - прямо <br>
+        zurück <small>[цурюк]</small> - назад <br>
+        zurückkommen - возвращаться<br>
+        zurückgehen - идти назад
+
+    //- Числа
+    details
+      summary Числа
+      p.
+        Null <small>[нуль]</small> - нуль<br>
+        Eins <small>[айнs]</small> - один<br>
+        Zwei <small>[цвайн]</small> - два<br>
+        Drei <small>[драй]</small> - три<br>
+        Vier <small>[фиэр]</small> - четыре<br>
+        Fünf <small>[фюнф]</small> - пять<br>
+        Sechs <small>[зэкс]</small> - шесть<br>
+        Sieben <small>[зибэн]</small> - семь<br>
+        Acht <small>[ахт]</small> - восемь<br>
+        Neun <small>[нойн]</small> - девять<br>
+        Zehn <small>[цейн]</small> - десять<br>
+        Elf <small>[эльф]</small> - одиннадцать<br>
+        Zwölf <small>[цвёльф]</small> - двенадцать<br>
+        <small>остальные до 20:</small> <br>
+        Drei <small>[драй]</small> + zehn <small>[цейн]</small><br>
+        = Dreizehn <small>[драйцейн]</small> - тринадцать<br>
+        <br>
+        <b>Десятки:</b> <br>
+        Zwanzig <small>[цванциг]</small> - двадцать<br>
+        Dreißig <small>[драйcиг]</small> - тридцать<br>
+        Vierzig <small>[фирциг]</small> - сорок<br>
+        <small>остальные до ста:</small> <br>
+        Fünf <small>[фюнф]</small> + zig <small>[циг]</small>
+        = fünfzig <small>[фюнфцих]</small> - пятьдесят<br>
+        <br>
+        Hundert <small>[хундэрт]</small> - сто <br>
+        Tausend <small>[таузэнд]</small> - тысяча <br>
+        <br>
+        <b>Составные:</b> <br>
+        Einundzwanzig <small>[айн унд цванцих]</small> - двадцать один<br>
+        Fünfunddreißig <small>[фюнф унд драйсих]</small> - тридцать пять<br>
+        Zwei tausend vierundzwanzig - 2024 <br>
+        <br>
+        Numerale <small>[нумералэ]</small> - числительные <br><br>
+        erste - первый<br>
+        zweite - второй<br>
+        dritte - третий<br>
+        остальные + te<br>
+        к десяткам, сотням и тысячам + ste<br>
+        einunddreißigste - тридцать первый
+    
+    //- Время
+    details
+      summary Время
+      p.
+        Tag <small>[таг]</small> - день<br>
+        gestern <small>[гестэн]</small> - вчера<br>
+        heute <small>[хойтэ]</small> - сегодня<br>
+        Morgen <small>[моргэн]</small> - утро, завтра<br>
+        jetzt <small>[ецт]</small> - сейчас <br>
+        morgens <small>[могенс]</small> - утром<br>
+        nachmittags <small>[нахмитэкс]</small> - после обеда<br>
+        abends <small>[абэндс]</small> - вечером<br>
+        Аbend <small>[абэнд]</small> - вечер<br>
+        nachts <small>[нахтс]</small> - ночью<br>
+        Nacht <small>[нахт]</small> - ночь<br>
+        <br>
+        immer <small>[имэ]</small> - всегда<br>
+        manchmal <small>[маншмаль]</small> - иногда<br>
+        nie <small>[ни]</small> - никогда<br>
+        <br>
+        <em>im</em> <br>
+        Jahr <small>[яр]</small> - год<br>
+        Monat <small>[монат]</small> - месяц:<br>
+        Januar <small>[януар]</small> - январь <br>
+        Februar <small>[фэбруар]</small> - февраль <br>
+        März <small>[мэрц]</small> - март <br>
+        April <small>[априль]</small> - апрель <br>
+        Mai <small>[май]</small> - май <br>
+        Juni <small>[юни]</small> - июнь <br>
+        Juli <small>[юли]</small> - июль <br>
+        August <small>[аугуст]</small> - август <br>
+        September <small>[зэптэмбэ]</small> - сентябрь <br>
+        Oktober <small>[октоба]</small> - октябрь <br>
+        November <small>[новэмба]</small> - ноябрь <br>
+        Dezember <small>[дэцэмба]</small> - декабрь <br>
+        <br>
+        Woche <small>[вохэ]</small> - неделя: <br>
+        Montag <small>[монтаг]</small> - понедельник <br>
+        Dienstag <small>[динстаг]</small> - вторник <br>
+        Mittwoch <small>[митвох]</small> - среда<br>
+        Donnerstag <small>[донэрстаг]</small> - четверг<br>
+        Freitag <small>[фрайтаг]</small> - пятница<br>
+        Samstag/Sonnabend <small>[замстаг/зонабэнд]</small> - суббота<br>
+        Sonntag <small>[зонтаг]</small> - воскресенье<br>
+        <br>
+        <em>im</em> <br>
+        Winter <small>[винтэ]</small> - зима <br>
+        Frühling <small>[фрюлинг]</small> - весна <br>
+        Sommer <small>[зома]</small> - лето <br>
+        Herbst <small>[хербст]</small> - осень <br>
+        <br>
+        nur <small>[нур]</small> - только <br>
+        gewöhnlich <small>[гэвёнлих]</small> - обычно<br>
+        oft <small>[офт]</small> - часто<br>
+        selten <small>[зэльтэн]</small> - редко<br>
+        einmal <small>[айнмаль]</small> - один раз<br>
+        zweimal <small>[цваймаль]</small> - дважды<br>
+        dreimal <small>[драймаль]</small> - трижды<br>
+        einmal pro Monat <small>[айнмаль про монат]</small> - один раз в месяц<br>
+        noch <small>[нох]</small> - ещё<br>
+        schon <small>[шон]</small> - уже<br>
+        jeder <small>[едэр]</small> - каждый<br>
+        jeden Tag <small>[едэн таг]</small> - каждый день <br>
+        wie spät ist es? <small>[ви шпэт ист эc]</small> - сколько времени?<br>
+        es ist zwei Uhr <small>[эс ист цвай ур]</small> - сейчас два часа <br>
+        es ist halb sechs <small>[эс ист хальб зикс]</small> - сейчас половина шестого <br>
+        die Uhr <small>[ди ур]</small> - час на циферблате часов <br>
+        die Stunde <small>[ди штундэ]</small> - час (час времени протяжённостью 60 минут) <br>
+        <br>
+        Zeit <small>[цайт]</small> - время<br>
+        Stunde <small>[штундэ]</small> - час<br>
+        Minute <small>[минутэ]</small> - минута<br>
+        Sekunde <small>[зекундэ]</small> - секунда<br>
+        <br>
+        Datum <small>[датум]</small> - дата<br>
+        <em>am</em> erste<em>n</em> Mai - первого мая<br>
+        Ich bin <em>am</em> dritte<em>n</em> Januar ein tausend neun hundert achtzigste geboren 
+        - <small>я родился в 1980-м</small><br>
+
+    //- Фразы
+    details
+      summary Фразы
+      p.
+        Wie geht es? <small>[Вие гит эс]</small> - Как дела?  <i>(Wie geht's? <small>[Ви гитс]</small>)</i><br>
+        Wie geht's dich? <small>[Ви гитс дих]</small> - Как у тебя дела?<br>
+        Wie geht es Ihnen? <small>[Вие гит эс инэн]</small> - Как у Вас дела?<br>
+        <br>
+        Sehr gut <small>[зэр гуд]</small> - очень хорошо<br>
+        Nicht schlecht <small>[нихт шлехт]</small> - неплохо<br>
+        Schlecht <small>[шлэхт]</small> - плохо<br>
+        <br>
+        Ja <small>[я]</small> - да<br>
+        Nein <small>[найн]</small> - нет<br>
+        Sag mir schnell, ja oder nein? <small>[заг мир шнэль, я одэ найн]</small> - скажи мне быстро да или нет.<br>
+        <br>
+        Ich heisse Valentin <small>[их хайсэ]</small> - меня зовут Валентин.<br>
+        Sehr angenehm! <small>[зэ ангенэйм]</small> - очень приятно.<br>
+        <br>
+        Also <small>[альзо]</small> - итак, вобщем.<br>
+        Na Ja <small>[на я]</small> - ну ...<br>
+        Tschüs <small>[чуз]</small> - пока<br>
+        auch <small>[аух]</small> - тоже, также<br>
+        <br>
+        Ein Vater und eine Mutter sind Eltern <small>[айн фатер унд айнэ мутэр зинд эльтэрн]</small> - Отец и мать это родители.<br>
+        Ein Sohn und eine Tochter sind Kinder <small>[айн зон унд айнэ тохтэ зинд киндэр]</small> - Сын и дочь это дети.<br>
+        <br>
+        Enschuldigung <small>[эншульдиганг]</small> - извините<br>
+        Das ist ... <small>[дас ист]</small> - это есть. <br>
+        Das ist fantastisch <small>[дас ист фантастиш]</small> - это потрясающе.<br>
+        <br>
+        Gesundheit! <small>[гэзундхайт]</small> - Будь здоров! (когда кто-то чихнул)<br>
+        Natürlich <small>[натюрлих]</small> - естественно, конечно<br>
+        eine Rolle spielen <small>[айн ролэ шпилин]</small> - играть роль<br>
+        <br>
+        nur <small>[нуэ]</small> - только : nicht nur - не только<br>
+        man sagt dass... <small>[ман загт дас]</small> - говорят, что ...<br>
+        <br>
+        manshmal man trinkt Koffee ohne zucker <small>[маншмаль ман тринкт кафэ онэ цука]</small> - иногда кофе пьют без сахара<br>
+        man ist was man isst <small>[ман ист вас ман ист]</small> - человек то, что он ест<br>
+        ein mal ist kein mal <small>[айн маль ист кайн маль]</small> - один раз всё равно что ни разу<br>
+        <br>
+        Was schenkst du mir zum Geburtstag? <small>[вас шэнькст ду мир цум гэбурстаг]</small> - что ты мне подаришь на день рождения<br>
+        Was schenkst du deinen Kindern zu Weihnachten? - <small>[вас шэнькст ду дайнэн киндерн цу вайнахтэн]</small> - 
+        Что ты подаришь своим детям на Рождество?<br>
+        <br>
+        Ich bin zu Hause <small>[их бин цу хаузэ]</small> - я дома<br>
+        Ich gehe nach Hause <small>[их гейн нах хаузэ]</small> - я иду домой<br>
+        <br>
+        denken an meine Freunde <small>[дэнкэн эн майнэ фройнде]</small> - думаю о моих друзьях<br>
+        an meine Freunde gedacht <small>[эн майнэ фройндэ гэдахт]</small> - думал о моих друзьях<br>
+        <br>
+        Alles in der Zukunft <small>[алэс ин дэр цукунфт]</small> - всё впереди (всё в будущем)<br>
+        Ich habe es vor <small>[их хабэ эс фор]</small> - мне это предстоит<br>
+        <br>
+        Ich brauche deine Hilfe <small>[их браухэ дайнэ хильфэ]</small> - мне нужна твоя помощь<br>
+        Ich brauche mehr Zeit  <small>[их браухэ мээ цайт]</small> - мне нужно больше времени<br>
+        <br>
+        Wie alt ist Ihr Sohn? <small>[ви альт ист ир зон]</small> - сколько лет вашему сыну.<br>
+        ich esse immer, sogar nachts <small>[их эсэ имэ зогар нахтс]</small> - я ем всегда даже по ночам<br>
+        <br>
+        mit dem Zug/Auto/Bus fahren <small>[мит дэм цуг/ауто/бус фарэн]</small> - ехать на поезде/авто/автобусе<br>
+        in+das = ins kino: ich gehe ins Kino <small>[их гэй инс кино]</small> - я иду в кино<br>
+        in+dem + im: ich bin im Restaurant <small>[их бин им рэсторант]</small> - я в ресторане<br>
+        <br>
+        ich habe lieber <small>[их хабэ либэ]</small> - я предпочитаю<br>
+        das muss eine Überraschung sein <small>[дас мус айнэ убэрашунг зайн]</small> - это должен быть сюрприз<br>
+        Zeit ist Geld <small>[цайт ист гельд]</small>: время - деньги<br>
+        <br>
+        Wie fühlst du dich? <small>[ви фюльст ду дихь]</small> - как ты себя чувствуешь?<br>
+        Wann treffen wir uns? <small>[ван трэфэн вир унс]</small> - когда мы встретимся?<br>
+        Ich warte auf dich <small>[ихь вартэ ауф дих]</small> - я тебя жду<br>
+        <br>
+        z.B. - zum Beispiel <small>[цум байшпиль]</small> - на пример<br>
+        wenn Sie wollen <small>[вэн зи волэн]</small> - если вы хотите, когда вы хотите<br>
+        Ich bin nicht zufrieden <small>[ихь бин нихьт цуфридэн]</small> - я не доволен<br>
+        <br>
+        vielleicht <small>[филайхт]</small> - возможно<br>
+        Mal sehen <small>[маль зэйн]</small> - посмотрим, увидим<br>
+        <br>
+        Was ist geschehen? <small>[вас ист гешэйн]</small> - что произошло<br>
+        Ist alles in Ordnung? <small>[ист алэс ин орднунг]</small> - всё в порядке?<br>
+        <br>
+        mir ist kalt - мне холодно<br>
+        heute ist es kalt - сегодня холодно<br>
+        gestern war es warm - вчера было тепло<br>
+        <br>
+        obwohl <small>[обволь]</small> - хотя, не смотря на<br>
+        es schneit <small>[эс шнайт]</small> - идёт снег<br>
+        es regnet <small>[рэгнэт]</small> - идёт дождь<br>
+        <br>
+        O mein Gott! <small>[о майн гот]</small> - О Боже мой!<br>
+        Gott sei dank! <small>[гот заи данк]</small> - Слава Богу!<br>
+        Um Gottes Willem - по Божьей воле, ради Бога<br>
+        <br>
+        das stimmt <small>[дас штимт]</small> - всё верно<br>
+        alles ist möglich <small>[алэс ист мёглих]</small> - всё возможно<br>
+        <br>
+        Nichts persönliches, nur das Geschäft <small>[нихтс персёнлихэс нур дас гэшэфт]</small> - ничего личного, просто бизнес<br>
+        es gibt ein Wort <small>[эз гибт айн ворт]</small> - есть одно слово<br>
+        gibt es ein Tisch im Zimmer? - есть стол в комнате?<br>
+        <br>
+        Das ist nicht so einfach <small>[дас ист нихт зо айнфах]</small>  не всё так просто<br>
+        Ich war Malerin <small>[их вар малерин]</small> - я была художником<br>
+        <br>
+        die ganze Nacht <small>[ди ганцэ нахт]</small> - всю ночь<br>
+        buchen ein Karte <small>[бухэн айн картэ]</small> - забронировать один билет<br>
+        er hat mir über seinem Bruder erzählt. <small>[эр хат мир уюбэр зайнэн брудэ эрцэльт]</small> - он рассказал мне о своём брате<br>
+        <br>
+        Lasst uns gehen! - пойдём<br>
+        ich komme herein <small>[их комэ хэрайн]</small> - я вхожу<br>
+        komme herein - входи<br>
+        kommen Sie bitte herein - входите, пожалуйста<br>
+        Guten Morgen <small>[гутэн моргэн]</small> доброе утро<br>
+        Guten Tag <small>[гутэн таг]</small> добрый день<br>
+        Guten Abend <small>[гутэн абэнд]</small> добрый вечер<br>
+        Gute Nacht <small>[гутэ нахт]</small> спокойной ночи<br>
+        Auf Wiedersehen <small>[ауф видэрзейн]</small> до свидания<br>
+        Danke schön <small>[данке шён]</small> спасибо большое<br>
+        Bitte schön <small>[битэ шён]</small> пожалуйста большое<br>
+        Hallo <small>[хало]</small> привет<br>
+        Prost! - Будем!<br>
+        zu ...! - за...!<br>
+        zum Wohl <small>[цум воль]</small> - за всё хорошее!<br>
+        mit Vergnügen - с удовольствием<br>
+        mein Mutter ist jünger als main Vater <small>[майн мутэ ист юнгэ альс майн фатэ]</small> моя мать моложе моего отца<br>
+        das ist das interessanteste Buch, das ich gelesen habe <small>[дас ист дас интэрэсантэстэ бух, дас их гэлэзэн хабэ]</small> - 
+        это самая интресная книга, которую я прочёл<br>
+        das ist der Mann den ich kenne <small>[дас ист дэр ман дэн их кэнэ]</small> это человек, которого я знаю<br>
+        <br>
+        Кто?<br>
+        er ist ein guter Mann <small>[эр ист айн гутэ ман]</small> - он хороший человек<br>
+        sie ist eine schöne Frau <small>[зи ист айнэ шёнэ фрау]</small> - она красивая женщина<br>
+        es ist ein gutes Kind <small>[эс ист айн гутэс кинд]</small> - это хороший ребенок<br>
+        <br>
+        Кого?<br>
+        ich kenne einen guten Mann <small>[их кэнэ айнэн гутэн ман]</small> - я знаю одного хорошего человека<br>
+        ich sehe eine schöne Frau <small>[их зээ айнэ шёнэ фрау]</small> - я вижу одну красивую женщину<br>
+        ich kenne ein gutes Kind <small>[их кэнэ айн гутэс кинд]</small> - я знаю одного хорошего ребёнка<br>
+        <br>
+        Кому? - mit<br>
+        Ich helfe einem guten Mann <small>[их хэльфэ айнэм кутэн ман]</small> - я помогаю одному хорошему человеку<br>
+        ich schenke einer schönen Frau <small>[их шэнкэ айнэ шёнэн фрау]</small> - я дарю одной красивой женщине<br>
+        ich helfe einem guten Kind <small>[их хэльфэ айнэм гутэн кинд]</small> - я помогаю одному хорошему ребёнку<br>
+        <br>
+        ich spreche langsam, du sprichst schnell <small>[их шпрэхэ лангзам, ду шприхст шнэль]</small> -
+        я говорю медленно, ты говоришь быстро<br>
+        <br>
+        ich mag interessante Bücher <small>[их маг интересантэ бюхе]</small> - я люблю интересные книги<br>
+        gute Bücher interessieren mich <small>[гутэ бюхе интересирэн мих]</small> - меня интересуют хорошие книги<br>
+        er ist mit interessanten Bücher gekommen <small>[эр ист мит интэрэсантэн бюхе гекомэн]</small> - он пришёл с интересными книгами
+        

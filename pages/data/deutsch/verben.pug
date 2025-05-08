@@ -1,0 +1,1805 @@
+-
+  const sein = [
+    {
+      "pronom": "ich",
+      "verb": "bin",
+      "transcr": "их бин",
+      "transl_pronom": "я",
+      "transl_verb": "есть"
+    },
+    {
+      "pronom": "du",
+      "verb": "bist",
+      "transcr": "ду бист",
+      "transl_pronom": "ты",
+      "transl_verb": "есть"
+    },
+    {
+      "pronom": "er",
+      "verb": "ist",
+      "transcr": "эр ист",
+      "transl_pronom": "он",
+      "transl_verb": "есть"
+    },
+    {
+      "pronom": "sie",
+      "verb": "ist",
+      "transcr": "зи ист",
+      "transl_pronom": "она",
+      "transl_verb": "есть"
+    },
+    {
+      "pronom": "es",
+      "verb": "ist",
+      "transcr": "эс ист",
+      "transl_pronom": "оно",
+      "transl_verb": "есть"
+    },
+    {
+      "pronom": "ihr",
+      "verb": "seid",
+      "transcr": "ир зайд",
+      "transl_pronom": "вы (множ.)",
+      "transl_verb": "есть"
+    },
+    {
+      "pronom": "wir",
+      "verb": "sind",
+      "transcr": "вир махэн",
+      "transl_pronom": "мы",
+      "transl_verb": "зинд"
+    },
+    {
+      "pronom": "sie",
+      "verb": "sind",
+      "transcr": "зи махэн",
+      "transl_pronom": "они",
+      "transl_verb": "зинд"
+    },
+    {
+      "pronom": "Sie",
+      "verb": "sind",
+      "transcr": "зи зинд",
+      "transl_pronom": "Вы (уважит.)",
+      "transl_verb": "есть"
+    },
+  ]
+
+-
+  const war = [
+    {
+      "pronom": "ich",
+      "verb": "war",
+      "transcr": "их вар",
+      "transl_pronom": "я",
+      "transl_verb": "был"
+    },
+    {
+      "pronom": "du",
+      "verb": "warst",
+      "transcr": "ду варст",
+      "transl_pronom": "ты",
+      "transl_verb": "был"
+    },
+    {
+      "pronom": "er",
+      "verb": "war",
+      "transcr": "эр вар",
+      "transl_pronom": "он",
+      "transl_verb": "был"
+    },
+    {
+      "pronom": "sie",
+      "verb": "war",
+      "transcr": "зи вар",
+      "transl_pronom": "она",
+      "transl_verb": "была"
+    },
+    {
+      "pronom": "es",
+      "verb": "war",
+      "transcr": "эс вар",
+      "transl_pronom": "оно",
+      "transl_verb": "было"
+    },
+    {
+      "pronom": "ihr",
+      "verb": "wart",
+      "transcr": "ир варт",
+      "transl_pronom": "вы (множ.)",
+      "transl_verb": "были"
+    },
+    {
+      "pronom": "wir",
+      "verb": "waren",
+      "transcr": "вир махэн",
+      "transl_pronom": "мы",
+      "transl_verb": "были"
+    },
+    {
+      "pronom": "sie",
+      "verb": "waren",
+      "transcr": "зи махэн",
+      "transl_pronom": "они",
+      "transl_verb": "были"
+    },
+    {
+      "pronom": "Sie",
+      "verb": "waren",
+      "transcr": "зи варэн",
+      "transl_pronom": "Вы (уважит.)",
+      "transl_verb": "были"
+    },
+  ]
+
+-
+  const haben = [
+    {
+      "pronom": "ich",
+      "verb": "habe",
+      "transcr": "их хабэ",
+      "transl_pronom": "я",
+      "transl_verb": "имею"
+    },
+    {
+      "pronom": "du",
+      "verb": "hast",
+      "transcr": "ду хаст",
+      "transl_pronom": "ты",
+      "transl_verb": "имеешь"
+    },
+    {
+      "pronom": "er",
+      "verb": "hat",
+      "transcr": "эр хат",
+      "transl_pronom": "он",
+      "transl_verb": "имеет"
+    },
+    {
+      "pronom": "sie",
+      "verb": "hat",
+      "transcr": "зи хат",
+      "transl_pronom": "она",
+      "transl_verb": "имеет"
+    },
+    {
+      "pronom": "es",
+      "verb": "hat",
+      "transcr": "эс хат",
+      "transl_pronom": "оно",
+      "transl_verb": "имеет"
+    },
+    {
+      "pronom": "ihr",
+      "verb": "habt",
+      "transcr": "ир хабт",
+      "transl_pronom": "вы (множ.)",
+      "transl_verb": "имеете"
+    },
+    {
+      "pronom": "wir",
+      "verb": "haben",
+      "transcr": "вир хабэн",
+      "transl_pronom": "мы",
+      "transl_verb": "имеем"
+    },
+    {
+      "pronom": "sie",
+      "verb": "haben",
+      "transcr": "зи хабэн",
+      "transl_pronom": "они",
+      "transl_verb": "имеют"
+    },
+    {
+      "pronom": "Sie",
+      "verb": "haben",
+      "transcr": "зи хабэн",
+      "transl_pronom": "Вы (уважит.)",
+      "transl_verb": "имеете"
+    },
+  ]
+
+-
+  const hatten = [
+    {
+      "pronom": "ich",
+      "verb": "hatte",
+      "transcr": "их хатэ",
+      "transl_pronom": "я",
+      "transl_verb": "имел"
+    },
+    {
+      "pronom": "du",
+      "verb": "hattest",
+      "transcr": "ду хатэст",
+      "transl_pronom": "ты",
+      "transl_verb": "имел"
+    },
+    {
+      "pronom": "er",
+      "verb": "hatte",
+      "transcr": "эр хатэ",
+      "transl_pronom": "он",
+      "transl_verb": "имел"
+    },
+    {
+      "pronom": "sie",
+      "verb": "hatte",
+      "transcr": "зи хатэ",
+      "transl_pronom": "она",
+      "transl_verb": "имела"
+    },
+    {
+      "pronom": "es",
+      "verb": "hatte",
+      "transcr": "эс хатэ",
+      "transl_pronom": "оно",
+      "transl_verb": "имело"
+    },
+    {
+      "pronom": "ihr",
+      "verb": "hattet",
+      "transcr": "ир хатэт",
+      "transl_pronom": "вы (множ.)",
+      "transl_verb": "имели"
+    },
+    {
+      "pronom": "wir",
+      "verb": "hatten",
+      "transcr": "вир хатэн",
+      "transl_pronom": "мы",
+      "transl_verb": "имели"
+    },
+    {
+      "pronom": "sie",
+      "verb": "hatten",
+      "transcr": "зи хатэн",
+      "transl_pronom": "они",
+      "transl_verb": "имели"
+    },
+    {
+      "pronom": "Sie",
+      "verb": "hatten",
+      "transcr": "зи хатэн",
+      "transl_pronom": "Вы (уважит.)",
+      "transl_verb": "имели"
+    },
+  ]
+
+-
+  const wissen = [
+    {
+      "pronom": "ich",
+      "verb": "weiss",
+      "transcr": "их вайс",
+      "transl_pronom": "я",
+      "transl_verb": "знаю"
+    },
+    {
+      "pronom": "du",
+      "verb": "weisst",
+      "transcr": "ду вайст",
+      "transl_pronom": "ты",
+      "transl_verb": "знаешь"
+    },
+    {
+      "pronom": "er",
+      "verb": "weiss",
+      "transcr": "эр вайс",
+      "transl_pronom": "он",
+      "transl_verb": "знает"
+    },
+    {
+      "pronom": "sie",
+      "verb": "weiss",
+      "transcr": "зи вайс",
+      "transl_pronom": "она",
+      "transl_verb": "знает"
+    },
+    {
+      "pronom": "es",
+      "verb": "weiss",
+      "transcr": "эс вайс",
+      "transl_pronom": "оно",
+      "transl_verb": "знает"
+    },
+    {
+      "pronom": "ihr",
+      "verb": "wisst",
+      "transcr": "ир вист",
+      "transl_pronom": "вы (множ.)",
+      "transl_verb": "знаете"
+    },
+    {
+      "pronom": "wir",
+      "verb": "wissen",
+      "transcr": "вир висэн",
+      "transl_pronom": "мы",
+      "transl_verb": "знаем"
+    },
+    {
+      "pronom": "sie",
+      "verb": "wissen",
+      "transcr": "зи висэн",
+      "transl_pronom": "они",
+      "transl_verb": "знают"
+    },
+    {
+      "pronom": "Sie",
+      "verb": "wissen",
+      "transcr": "зи висэн",
+      "transl_pronom": "Вы (уважит.)",
+      "transl_verb": "знаете"
+    },
+  ]
+
+-
+  const wusste = [
+    {
+      "pronom": "ich",
+      "verb": "wusste",
+      "transcr": "их вустэ",
+      "transl_pronom": "я",
+      "transl_verb": "знал"
+    },
+    {
+      "pronom": "du",
+      "verb": "wusstest",
+      "transcr": "ду вустэст",
+      "transl_pronom": "ты",
+      "transl_verb": "знал"
+    },
+    {
+      "pronom": "er",
+      "verb": "wusste",
+      "transcr": "эр вустэ",
+      "transl_pronom": "он",
+      "transl_verb": "знал"
+    },
+    {
+      "pronom": "sie",
+      "verb": "wusste",
+      "transcr": "зи вустэ",
+      "transl_pronom": "она",
+      "transl_verb": "знала"
+    },
+    {
+      "pronom": "es",
+      "verb": "wusste",
+      "transcr": "эс вустэ",
+      "transl_pronom": "оно",
+      "transl_verb": "знало"
+    },
+    {
+      "pronom": "ihr",
+      "verb": "wusstet",
+      "transcr": "ир вустэт",
+      "transl_pronom": "вы (множ.)",
+      "transl_verb": "знали"
+    },
+    {
+      "pronom": "wir",
+      "verb": "wussten",
+      "transcr": "вир вустэн",
+      "transl_pronom": "мы",
+      "transl_verb": "знали"
+    },
+    {
+      "pronom": "sie",
+      "verb": "wussten",
+      "transcr": "зи вустэн",
+      "transl_pronom": "они",
+      "transl_verb": "знали"
+    },
+    {
+      "pronom": "Sie",
+      "verb": "wussten",
+      "transcr": "зи вустэн",
+      "transl_pronom": "Вы (уважит.)",
+      "transl_verb": "знали"
+    },
+  ]
+
+-
+  const kennen = [
+    {
+      "pronom": "ich",
+      "verb": "kenne",
+      "transcr": "их кэнэ",
+      "transl_pronom": "я",
+      "transl_verb": "знаю"
+    },
+    {
+      "pronom": "du",
+      "verb": "kennst",
+      "transcr": "ду кэнст",
+      "transl_pronom": "ты",
+      "transl_verb": "знаешь"
+    },
+    {
+      "pronom": "er",
+      "verb": "kennt",
+      "transcr": "эр кэнт",
+      "transl_pronom": "он",
+      "transl_verb": "знает"
+    },
+    {
+      "pronom": "sie",
+      "verb": "kennt",
+      "transcr": "зи кэнт",
+      "transl_pronom": "она",
+      "transl_verb": "знает"
+    },
+    {
+      "pronom": "es",
+      "verb": "kennt",
+      "transcr": "эс кэнт",
+      "transl_pronom": "оно",
+      "transl_verb": "знает"
+    },
+    {
+      "pronom": "ihr",
+      "verb": "kennt",
+      "transcr": "ир кэнт",
+      "transl_pronom": "вы (множ.)",
+      "transl_verb": "знаете"
+    },
+    {
+      "pronom": "wir",
+      "verb": "kennen",
+      "transcr": "вир кэнэн",
+      "transl_pronom": "мы",
+      "transl_verb": "знаем"
+    },
+    {
+      "pronom": "sie",
+      "verb": "kennen",
+      "transcr": "зи кэнэн",
+      "transl_pronom": "они",
+      "transl_verb": "знают"
+    },
+    {
+      "pronom": "Sie",
+      "verb": "kennen",
+      "transcr": "зи кэнэн",
+      "transl_pronom": "Вы (уважит.)",
+      "transl_verb": "знаете"
+    },
+  ]
+
+-
+  const kannte = [
+    {
+      "pronom": "ich",
+      "verb": "kannte",
+      "transcr": "их кантэ",
+      "transl_pronom": "я",
+      "transl_verb": "знал"
+    },
+    {
+      "pronom": "du",
+      "verb": "kanntest",
+      "transcr": "ду кантэст",
+      "transl_pronom": "ты",
+      "transl_verb": "знал"
+    },
+    {
+      "pronom": "er",
+      "verb": "kannte",
+      "transcr": "эр кантэ",
+      "transl_pronom": "он",
+      "transl_verb": "знал"
+    },
+    {
+      "pronom": "sie",
+      "verb": "kannte",
+      "transcr": "зи кантэ",
+      "transl_pronom": "она",
+      "transl_verb": "знала"
+    },
+    {
+      "pronom": "es",
+      "verb": "kannte",
+      "transcr": "эс кантэ",
+      "transl_pronom": "оно",
+      "transl_verb": "знало"
+    },
+    {
+      "pronom": "ihr",
+      "verb": "kanntet",
+      "transcr": "ир кантэт",
+      "transl_pronom": "вы (множ.)",
+      "transl_verb": "знали"
+    },
+    {
+      "pronom": "wir",
+      "verb": "kannten",
+      "transcr": "вир кантэн",
+      "transl_pronom": "мы",
+      "transl_verb": "знали"
+    },
+    {
+      "pronom": "sie",
+      "verb": "kannten",
+      "transcr": "зи кантэн",
+      "transl_pronom": "они",
+      "transl_verb": "знали"
+    },
+    {
+      "pronom": "Sie",
+      "verb": "kannten",
+      "transcr": "зи кантэн",
+      "transl_pronom": "Вы (уважит.)",
+      "transl_verb": "знали"
+    },
+  ]
+
+-
+  const machen = [
+    {
+      "pronom": "ich",
+      "verb": "mache",
+      "transcr": "их махэ",
+      "transl_pronom": "я",
+      "transl_verb": "делаю"
+    },
+    {
+      "pronom": "du",
+      "verb": "machst",
+      "transcr": "ду махст",
+      "transl_pronom": "ты",
+      "transl_verb": "делаешь"
+    },
+    {
+      "pronom": "er",
+      "verb": "macht",
+      "transcr": "эр махт",
+      "transl_pronom": "он",
+      "transl_verb": "делает"
+    },
+    {
+      "pronom": "sie",
+      "verb": "macht",
+      "transcr": "зи махт",
+      "transl_pronom": "она",
+      "transl_verb": "делает"
+    },
+    {
+      "pronom": "es",
+      "verb": "macht",
+      "transcr": "эс махт",
+      "transl_pronom": "оно",
+      "transl_verb": "делает"
+    },
+    {
+      "pronom": "ihr",
+      "verb": "macht",
+      "transcr": "ир махт",
+      "transl_pronom": "вы (множ.)",
+      "transl_verb": "делаете"
+    },
+    {
+      "pronom": "wir",
+      "verb": "machen",
+      "transcr": "вир махэн",
+      "transl_pronom": "мы",
+      "transl_verb": "делаем"
+    },
+    {
+      "pronom": "sie",
+      "verb": "machen",
+      "transcr": "зи махэн",
+      "transl_pronom": "они",
+      "transl_verb": "делают"
+    },
+    {
+      "pronom": "Sie",
+      "verb": "machen",
+      "transcr": "зи махэн",
+      "transl_pronom": "Вы (уважит.)",
+      "transl_verb": "делаете"
+    },
+  ]
+
+-
+  const gemacht = [
+    {
+      "pronom": "ich",
+      "verb": "habe",
+      "verb_past": "gemacht",
+      "transcr": "их хабэ гэмахт",
+      "transl_pronom": "я",
+      "transl_verb": "делал"
+    },
+    {
+      "pronom": "du",
+      "verb": "hast",
+      "verb_past": "gemacht",
+      "transcr": "ду хаст гэмахт",
+      "transl_pronom": "ты",
+      "transl_verb": "делал"
+    },
+    {
+      "pronom": "er",
+      "verb": "hat",
+      "verb_past": "gemacht",
+      "transcr": "эр хат гэмахт",
+      "transl_pronom": "он",
+      "transl_verb": "делал"
+    },
+    {
+      "pronom": "sie",
+      "verb": "hat",
+      "verb_past": "gemacht",
+      "transcr": "зи хат гэмахт",
+      "transl_pronom": "она",
+      "transl_verb": "делала"
+    },
+    {
+      "pronom": "es",
+      "verb": "hat",
+      "verb_past": "gemacht",
+      "transcr": "эс хат гэмахт",
+      "transl_pronom": "оно",
+      "transl_verb": "делало"
+    },
+    {
+      "pronom": "ihr",
+      "verb": "habt",
+      "verb_past": "gemacht",
+      "transcr": "ир хабт гэмахт",
+      "transl_pronom": "вы (множ.)",
+      "transl_verb": "делали"
+    },
+    {
+      "pronom": "wir",
+      "verb": "haben",
+      "verb_past": "gemacht",
+      "transcr": "вир хабэн гэмахт",
+      "transl_pronom": "мы",
+      "transl_verb": "делали"
+    },
+    {
+      "pronom": "sie",
+      "verb": "haben",
+      "verb_past": "gemacht",
+      "transcr": "зи хабэн гэмахт",
+      "transl_pronom": "они",
+      "transl_verb": "делали"
+    },
+    {
+      "pronom": "Sie",
+      "verb": "haben",
+      "verb_past": "gemacht",
+      "transcr": "зи хабэн гэмахт",
+      "transl_pronom": "Вы (уважит.)",
+      "transl_verb": "делали"
+    },
+  ]
+
+-
+  const verbs = [
+    {
+      "word": "sagen (haben gesagt)",
+      "transcrip": "загэн",
+      "translate": "сказать"
+    },
+    {
+      "word": "fragen (haben gefragt)",
+      "transcrip": "фрагэн",
+      "translate": "спрашивать"
+    },
+    {
+      "word": "lieben (haben geliebt)",
+      "transcrip": "либэн",
+      "translate": "любить"
+    },
+    {
+      "word": "lachen (haben gelacht)",
+      "transcrip": "ляхэн",
+      "translate": "смеяться"
+    },
+    {
+      "word": "wohnen (haben gewohnt)",
+      "transcrip": "вунэн",
+      "translate": "жить, проживать"
+    },
+    {
+      "word": "singen (haben gesingt)",
+      "transcrip": "зингэн",
+      "translate": "петь"
+    },
+    {
+      "word": "tanzen (haben getanzt)",
+      "transcrip": "танцэн",
+      "translate": "танцевать"
+    },
+    {
+      "word": "spielen (haben gespielt)",
+      "transcrip": "шпилэн",
+      "translate": "играть"
+    },
+    {
+      "word": "arbeiten (haben gearbeitet)",
+      "transcrip": "арбайтэн",
+      "translate": "работать"
+    },
+    {
+      "word": "antworten (haben geantwortet)",
+      "transcrip": "антвoртэн",
+      "translate": "отвечать"
+    },
+    {
+      "word": "hören (haben gehört)",
+      "transcrip": "хёрэн",
+      "translate": "слышать"
+    },
+    {
+      "word": "zeigen (haben gezeigt)",
+      "transcrip": "цайгэн",
+      "translate": "показывать"
+    },
+    {
+      "word": "suchen (haben gesucht)",
+      "transcrip": "зухэн",
+      "translate": "искать"
+    },
+    {
+      "word": "heissen (haben geheisst)",
+      "transcrip": "хайсэн",
+      "translate": "называться"
+    },
+    {
+      "word": "danken (haben gedankt)",
+      "transcrip": "данкэн",
+      "translate": "благодарить"
+    },
+    {
+      "word": "kaufen (haben gekauft)",
+      "transcrip": "кауфэн",
+      "translate": "покупать"
+    },
+    {
+      "word": "schenken (haben geschenkt)",
+      "transcrip": "шэнкэн",
+      "translate": "дарить"
+    },
+    {
+      "word": "lernen (haben gelernt)",
+      "transcrip": "лернэн",
+      "translate": "учиться"
+    },
+    {
+      "word": "brauchen (haben gebrauht)",
+      "transcrip": "браухэн",
+      "translate": "нуждаться"
+    },
+    {
+      "word": "kochen (haben gekocht)",
+      "transcrip": "кохэн",
+      "translate": "готовить"
+    },
+    {
+      "word": "fühlen (haben gefühlt)",
+      "transcrip": "фюлэн",
+      "translate": "чувствовать"
+    },
+    {
+      "word": "glauben (haben geglaubt)",
+      "transcrip": "гляубэн",
+      "translate": "верить"
+    },
+    {
+      "word": "spazierengehen",
+      "transcrip": "шпацирэгеин",
+      "translate": "гулять"
+    },
+    {
+      "word": "warten",
+      "transcrip": "вартэн",
+      "translate": "ждать"
+    },
+    {
+      "word": "rechnen",
+      "transcrip": "рэхнэн",
+      "translate": "считать"
+    },
+    {
+      "word": "wählen",
+      "transcrip": "вэлэн",
+      "translate": "выбирать"
+    },
+    {
+      "word": "zahlen",
+      "transcrip": "цалэн",
+      "translate": "платить"
+    },
+    {
+      "word": "stimmen",
+      "transcrip": "штимэн",
+      "translate": "совпадать"
+    },
+    {
+      "word": "kosten",
+      "transcrip": "костэн",
+      "translate": "стоить"
+    },
+    {
+      "word": "hereinkommen",
+      "transcrip": "хэрайнкомэн",
+      "translate": "входить"
+    },
+    {
+      "word": "herauskommen",
+      "transcrip": "хэраускомэн",
+      "translate": "выходить"
+    },
+    {
+      "word": "schmecken",
+      "transcrip": "шмэкэн",
+      "translate": "пробывать, иметь вкус"
+    },
+  ]
+
+-
+  const ausnahmen = [
+    {
+      "word": "geben (haben gegeben)",
+      "aus": "(du gibst; er, sie, es gibt)",
+      "exam": "gib mir - дай мне",
+      "transcrip": "гэбэн",
+      "translate": "давать"
+    },
+    {
+      "word": "nehmen (haben genommen)",
+      "aus": "(du nimmst; er, sie, es nimmt)",
+      "exam": "nimm - бери",
+      "transcrip": "нэмэн",
+      "translate": "брать"
+    },
+    {
+      "word": "essen (haben gegessen)",
+      "aus": "(du isst; er, sie, es isst)",
+      "exam": "iss - ешь",
+      "transcrip": "эсэн",
+      "translate": "кушать"
+    },
+    {
+      "word": "sehen (haben gesehen)",
+      "aus": "(du siehst; er, sie, es sieht)",
+      "exam": "sie - смотри",
+      "transcrip": "зэин",
+      "translate": "видеть"
+    },
+    {
+      "word": "sprechen (haben gesprochen)",
+      "aus": "(du sprichst; er, sie, es spricht)",
+      "exam": "sprich - говори",
+      "transcrip": "шпрэхэн",
+      "translate": "говорить"
+    },
+    {
+      "word": "helfen (haben geholfen)",
+      "aus": "(du hilfst; er, sie, es hilft)",
+      "exam": "-",
+      "transcrip": "хэльфэн",
+      "translate": "помогать"
+    },
+    {
+      "word": "lesen (haben gelesen)",
+      "aus": "(du list; er, sie, es list)",
+      "exam": "-",
+      "transcrip": "лезэн",
+      "translate": "читать"
+    },
+    {
+      "word": "schlafen (haben geschlafen)",
+      "aus": "(du schläfst; er, sie, es schläft)",
+      "exam": "-",
+      "transcrip": "шляфэн",
+      "translate": "спать"
+    },
+    {
+      "word": "fahren (haben gefahren)",
+      "aus": "(du fährst; er, sie, es fährt)",
+      "exam": "ich habe mein auto gefahren - я вёл машину",
+      "transcrip": "фарэн",
+      "translate": "вести машину"
+    },
+    {
+      "word": "Treffen (haben getroffen)",
+      "aus": "(du triffst; er, sie, es trifft)",
+      "exam": "-",
+      "transcrip": "трэфэн",
+      "translate": "встретить"
+    },
+  ]
+
+-
+  const gehen = [
+    {
+      "pronom": "ich",
+      "verb": "gehe",
+      "transcr": "их гeе",
+      "transl_pronom": "я",
+      "transl_verb": "ухожу"
+    },
+    {
+      "pronom": "du",
+      "verb": "gehst",
+      "transcr": "ду геист",
+      "transl_pronom": "ты",
+      "transl_verb": "уходишь"
+    },
+    {
+      "pronom": "er",
+      "verb": "geht",
+      "transcr": "эр геит",
+      "transl_pronom": "он",
+      "transl_verb": "уходит"
+    },
+    {
+      "pronom": "sie",
+      "verb": "geht",
+      "transcr": "зи геит",
+      "transl_pronom": "она",
+      "transl_verb": "уходит"
+    },
+    {
+      "pronom": "es",
+      "verb": "geht",
+      "transcr": "эс геит",
+      "transl_pronom": "оно",
+      "transl_verb": "уходит"
+    },
+    {
+      "pronom": "ihr",
+      "verb": "geht",
+      "transcr": "ир геит",
+      "transl_pronom": "вы (множ.)",
+      "transl_verb": "уходите"
+    },
+    {
+      "pronom": "wir",
+      "verb": "gehen",
+      "transcr": "вир геин",
+      "transl_pronom": "мы",
+      "transl_verb": "уходим"
+    },
+    {
+      "pronom": "sie",
+      "verb": "gehen",
+      "transcr": "зи геин",
+      "transl_pronom": "они",
+      "transl_verb": "уходят"
+    },
+    {
+      "pronom": "Sie",
+      "verb": "gehen",
+      "transcr": "зи геин",
+      "transl_pronom": "Вы (уважит.)",
+      "transl_verb": "уходите"
+    },
+  ]
+
+-
+  const gegangen = [
+    {
+      "pronom": "ich",
+      "verb": "bin",
+      "verb_past": "gegangen",
+      "transcr": "их бин гэгангэн",
+      "transl_pronom": "я",
+      "transl_verb": "ушёл"
+    },
+    {
+      "pronom": "du",
+      "verb": "bist",
+      "verb_past": "gegangen",
+      "transcr": "ду бист гэгангэн",
+      "transl_pronom": "ты",
+      "transl_verb": "ушёл"
+    },
+    {
+      "pronom": "er",
+      "verb": "ist",
+      "verb_past": "gegangen",
+      "transcr": "эр ист гэгангэн",
+      "transl_pronom": "он",
+      "transl_verb": "ушёл"
+    },
+    {
+      "pronom": "sie",
+      "verb": "ist",
+      "verb_past": "gegangen",
+      "transcr": "зи ист гэгангэн",
+      "transl_pronom": "она",
+      "transl_verb": "ушла"
+    },
+    {
+      "pronom": "es",
+      "verb": "ist",
+      "verb_past": "gegangen",
+      "transcr": "эс ист гэгангэн",
+      "transl_pronom": "оно",
+      "transl_verb": "ушло"
+    },
+    {
+      "pronom": "ihr",
+      "verb": "seid",
+      "verb_past": "gegangen",
+      "transcr": "ир зайд гэгангэн",
+      "transl_pronom": "вы (множ.)",
+      "transl_verb": "ушли"
+    },
+    {
+      "pronom": "wir",
+      "verb": "sind",
+      "verb_past": "gegangen",
+      "transcr": "вир зинд гэгангэн",
+      "transl_pronom": "мы",
+      "transl_verb": "ушли"
+    },
+    {
+      "pronom": "sie",
+      "verb": "sind",
+      "verb_past": "gegangen",
+      "transcr": "зи зинд гэгангэн",
+      "transl_pronom": "они",
+      "transl_verb": "ушли"
+    },
+    {
+      "pronom": "Sie",
+      "verb": "sind",
+      "verb_past": "gegangen",
+      "transcr": "зи зинд гэгангэн",
+      "transl_pronom": "Вы (уважит.)",
+      "transl_verb": "ушли"
+    },
+  ]
+
+-
+  const kommen = [
+    {
+      "pronom": "ich",
+      "verb": "komme",
+      "transcr": "их комэ",
+      "transl_pronom": "я",
+      "transl_verb": "прихожу"
+    },
+    {
+      "pronom": "du",
+      "verb": "kommst",
+      "transcr": "ду комст",
+      "transl_pronom": "ты",
+      "transl_verb": "приходишь"
+    },
+    {
+      "pronom": "er",
+      "verb": "kommt",
+      "transcr": "эр комт",
+      "transl_pronom": "он",
+      "transl_verb": "приходит"
+    },
+    {
+      "pronom": "sie",
+      "verb": "kommt",
+      "transcr": "зи комт",
+      "transl_pronom": "она",
+      "transl_verb": "приходит"
+    },
+    {
+      "pronom": "es",
+      "verb": "kommt",
+      "transcr": "эс комт",
+      "transl_pronom": "оно",
+      "transl_verb": "приходит"
+    },
+    {
+      "pronom": "ihr",
+      "verb": "kommt",
+      "transcr": "ир комт",
+      "transl_pronom": "вы (множ.)",
+      "transl_verb": "приходите"
+    },
+    {
+      "pronom": "wir",
+      "verb": "kommen",
+      "transcr": "вир комэн",
+      "transl_pronom": "мы",
+      "transl_verb": "приходим"
+    },
+    {
+      "pronom": "sie",
+      "verb": "kommen",
+      "transcr": "зи комэн",
+      "transl_pronom": "они",
+      "transl_verb": "приходят"
+    },
+    {
+      "pronom": "Sie",
+      "verb": "kommen",
+      "transcr": "зи комэн",
+      "transl_pronom": "Вы (уважит.)",
+      "transl_verb": "приходите"
+    },
+  ]
+
+-
+  const gekommen = [
+    {
+      "pronom": "ich",
+      "verb": "bin",
+      "verb_past": "gekommen",
+      "transcr": "их бин гэкомэн",
+      "transl_pronom": "я",
+      "transl_verb": "приходил"
+    },
+    {
+      "pronom": "du",
+      "verb": "bist",
+      "verb_past": "gekommen",
+      "transcr": "ду бист гэкомэн",
+      "transl_pronom": "ты",
+      "transl_verb": "приходил"
+    },
+    {
+      "pronom": "er",
+      "verb": "ist",
+      "verb_past": "gekommen",
+      "transcr": "эр ист гэкомэн",
+      "transl_pronom": "он",
+      "transl_verb": "приходил"
+    },
+    {
+      "pronom": "sie",
+      "verb": "ist",
+      "verb_past": "gekommen",
+      "transcr": "зи ист гэкомэн",
+      "transl_pronom": "она",
+      "transl_verb": "приходила"
+    },
+    {
+      "pronom": "es",
+      "verb": "ist",
+      "verb_past": "gekommen",
+      "transcr": "эс ист гэкомэн",
+      "transl_pronom": "оно",
+      "transl_verb": "приходило"
+    },
+    {
+      "pronom": "ihr",
+      "verb": "seid",
+      "verb_past": "gekommen",
+      "transcr": "ир зайд гэкомэн",
+      "transl_pronom": "вы (множ.)",
+      "transl_verb": "приходили"
+    },
+    {
+      "pronom": "wir",
+      "verb": "sind",
+      "verb_past": "gekommen",
+      "transcr": "вир зинд гэкомэн",
+      "transl_pronom": "мы",
+      "transl_verb": "приходили"
+    },
+    {
+      "pronom": "sie",
+      "verb": "sind",
+      "verb_past": "gekommen",
+      "transcr": "зи зинд гэкомэн",
+      "transl_pronom": "они",
+      "transl_verb": "приходили"
+    },
+    {
+      "pronom": "Sie",
+      "verb": "sind",
+      "verb_past": "gekommen",
+      "transcr": "зи зинд гэкомэн",
+      "transl_pronom": "Вы (уважит.)",
+      "transl_verb": "приходили"
+    },
+  ]
+
+-
+  const wollen = [
+    {
+      "pronom": "ich",
+      "verb": "will",
+      "transcr": "их виль",
+      "transl_pronom": "я",
+      "transl_verb": "хочу"
+    },
+    {
+      "pronom": "du",
+      "verb": "willst",
+      "transcr": "ду вильст",
+      "transl_pronom": "ты",
+      "transl_verb": "хочешь"
+    },
+    {
+      "pronom": "er",
+      "verb": "will",
+      "transcr": "эр виль",
+      "transl_pronom": "он",
+      "transl_verb": "хочет"
+    },
+    {
+      "pronom": "sie",
+      "verb": "will",
+      "transcr": "зи виль",
+      "transl_pronom": "она",
+      "transl_verb": "хочет"
+    },
+    {
+      "pronom": "es",
+      "verb": "will",
+      "transcr": "эс виль",
+      "transl_pronom": "оно",
+      "transl_verb": "хочет"
+    },
+    {
+      "pronom": "ihr",
+      "verb": "wollt",
+      "transcr": "ир виль",
+      "transl_pronom": "вы (множ.)",
+      "transl_verb": "хотите"
+    },
+    {
+      "pronom": "wir",
+      "verb": "wollen",
+      "transcr": "вир волэн",
+      "transl_pronom": "мы",
+      "transl_verb": "хотим"
+    },
+    {
+      "pronom": "sie",
+      "verb": "wollen",
+      "transcr": "зи волэн",
+      "transl_pronom": "они",
+      "transl_verb": "хотят"
+    },
+    {
+      "pronom": "Sie",
+      "verb": "wollen",
+      "transcr": "зи волэн",
+      "transl_pronom": "Вы (уважит.)",
+      "transl_verb": "хотите"
+    },
+  ]
+
+-
+  const wollten = [
+    {
+      "pronom": "ich",
+      "verb": "wollte",
+      "transcr": "их вольтэ",
+      "transl_pronom": "я",
+      "transl_verb": "хотел"
+    },
+    {
+      "pronom": "du",
+      "verb": "wolltest",
+      "transcr": "ду вольтэст",
+      "transl_pronom": "ты",
+      "transl_verb": "хотел"
+    },
+    {
+      "pronom": "er",
+      "verb": "wollte",
+      "transcr": "эр вольтэ",
+      "transl_pronom": "он",
+      "transl_verb": "хотел"
+    },
+    {
+      "pronom": "sie",
+      "verb": "wollte",
+      "transcr": "зи вольтэ",
+      "transl_pronom": "она",
+      "transl_verb": "хотела"
+    },
+    {
+      "pronom": "es",
+      "verb": "wollte",
+      "transcr": "эс вольтэ",
+      "transl_pronom": "оно",
+      "transl_verb": "хотело"
+    },
+    {
+      "pronom": "ihr",
+      "verb": "wolltet",
+      "transcr": "ир вольтэт",
+      "transl_pronom": "вы (множ.)",
+      "transl_verb": "хотели"
+    },
+    {
+      "pronom": "wir",
+      "verb": "wollten",
+      "transcr": "вир вольтэн",
+      "transl_pronom": "мы",
+      "transl_verb": "хотели"
+    },
+    {
+      "pronom": "sie",
+      "verb": "wollten",
+      "transcr": "зи вольтэн",
+      "transl_pronom": "они",
+      "transl_verb": "хотели"
+    },
+    {
+      "pronom": "Sie",
+      "verb": "wollten",
+      "transcr": "зи вольтэн",
+      "transl_pronom": "Вы (уважит.)",
+      "transl_verb": "хотели"
+    },
+  ]
+
+-
+  const sollen = [
+    {
+      "pronom": "ich",
+      "verb": "soll",
+      "transcr": "их золь",
+      "transl_pronom": "мне",
+      "transl_verb": "следовало бы"
+    },
+    {
+      "pronom": "du",
+      "verb": "sollst",
+      "transcr": "ду зольст",
+      "transl_pronom": "тебе",
+      "transl_verb": "следовало бы"
+    },
+    {
+      "pronom": "er",
+      "verb": "soll",
+      "transcr": "эр золь",
+      "transl_pronom": "ему",
+      "transl_verb": "следовало бы"
+    },
+    {
+      "pronom": "sie",
+      "verb": "soll",
+      "transcr": "зи золь",
+      "transl_pronom": "ей",
+      "transl_verb": "следовало бы"
+    },
+    {
+      "pronom": "es",
+      "verb": "soll",
+      "transcr": "эс золь",
+      "transl_pronom": "ему",
+      "transl_verb": "следовало бы"
+    },
+    {
+      "pronom": "ihr",
+      "verb": "sollt",
+      "transcr": "ир зольт",
+      "transl_pronom": "вам (множ.)",
+      "transl_verb": "следовало бы"
+    },
+    {
+      "pronom": "wir",
+      "verb": "sollen",
+      "transcr": "вир золэн",
+      "transl_pronom": "нам",
+      "transl_verb": "следовало бы"
+    },
+    {
+      "pronom": "sie",
+      "verb": "sollen",
+      "transcr": "зи золэн",
+      "transl_pronom": "им",
+      "transl_verb": "следовало бы"
+    },
+    {
+      "pronom": "Sie",
+      "verb": "sollen",
+      "transcr": "зи золэн",
+      "transl_pronom": "Вам (уважит.)",
+      "transl_verb": "следовало бы"
+    },
+  ]
+
+-
+  const mogen = [
+    {
+      "pronom": "ich",
+      "verb": "mag",
+      "transcr": "их маг",
+      "transl_pronom": "мне",
+      "transl_verb": "нравится"
+    },
+    {
+      "pronom": "du",
+      "verb": "magst",
+      "transcr": "ду магст",
+      "transl_pronom": "тебе",
+      "transl_verb": "нравится"
+    },
+    {
+      "pronom": "er",
+      "verb": "mag",
+      "transcr": "эр маг",
+      "transl_pronom": "ему",
+      "transl_verb": "нравится"
+    },
+    {
+      "pronom": "sie",
+      "verb": "mag",
+      "transcr": "зи маг",
+      "transl_pronom": "ей",
+      "transl_verb": "нравится"
+    },
+    {
+      "pronom": "es",
+      "verb": "mag",
+      "transcr": "эс маг",
+      "transl_pronom": "ему",
+      "transl_verb": "нравится"
+    },
+    {
+      "pronom": "ihr",
+      "verb": "mögt",
+      "transcr": "ир мёгт",
+      "transl_pronom": "вам (множ.)",
+      "transl_verb": "нравится"
+    },
+    {
+      "pronom": "wir",
+      "verb": "mögen",
+      "transcr": "вир мёгэн",
+      "transl_pronom": "нам",
+      "transl_verb": "нравится"
+    },
+    {
+      "pronom": "sie",
+      "verb": "mögen",
+      "transcr": "зи мёгэн",
+      "transl_pronom": "им",
+      "transl_verb": "нравится"
+    },
+    {
+      "pronom": "Sie",
+      "verb": "mögen",
+      "transcr": "зи мёгэн",
+      "transl_pronom": "Вам (уважит.)",
+      "transl_verb": "нравится"
+    },
+  ]
+
+-
+  const mochten = [
+    {
+      "pronom": "ich",
+      "verb": "möchte",
+      "transcr": "их мёхтэ",
+      "transl_pronom": "я",
+      "transl_verb": "бы хотел"
+    },
+    {
+      "pronom": "du",
+      "verb": "möchtest",
+      "transcr": "ду мёхтэст",
+      "transl_pronom": "ты",
+      "transl_verb": "бы хотел"
+    },
+    {
+      "pronom": "er",
+      "verb": "möchtet",
+      "transcr": "эр мёхтэт",
+      "transl_pronom": "он",
+      "transl_verb": "бы хотел"
+    },
+    {
+      "pronom": "sie",
+      "verb": "möchtet",
+      "transcr": "зи мёхтэт",
+      "transl_pronom": "она",
+      "transl_verb": "бы хотела"
+    },
+    {
+      "pronom": "es",
+      "verb": "möchtet",
+      "transcr": "эс мёхтэт",
+      "transl_pronom": "оно",
+      "transl_verb": "бы хотело"
+    },
+    {
+      "pronom": "ihr",
+      "verb": "möchtet",
+      "transcr": "ир мёхтэт",
+      "transl_pronom": "вы (множ.)",
+      "transl_verb": "бы хотели"
+    },
+    {
+      "pronom": "wir",
+      "verb": "möchten",
+      "transcr": "вир мёхтэн",
+      "transl_pronom": "мы",
+      "transl_verb": "бы хотели"
+    },
+    {
+      "pronom": "sie",
+      "verb": "möchten",
+      "transcr": "зи мёхтэн",
+      "transl_pronom": "они",
+      "transl_verb": "бы хотели"
+    },
+    {
+      "pronom": "Sie",
+      "verb": "möchten",
+      "transcr": "зи мёхтэн",
+      "transl_pronom": "Вы (уважит.)",
+      "transl_verb": "бы хотели"
+    },
+  ]
+
+-
+  const durfen = [
+    {
+      "pronom": "ich",
+      "verb": "darf",
+      "transcr": "их дарф",
+      "transl_pronom": "мне",
+      "transl_verb": "можно"
+    },
+    {
+      "pronom": "du",
+      "verb": "darfst",
+      "transcr": "ду дарфст",
+      "transl_pronom": "тебе",
+      "transl_verb": "можно"
+    },
+    {
+      "pronom": "er",
+      "verb": "darf",
+      "transcr": "эр дарф",
+      "transl_pronom": "ему",
+      "transl_verb": "можно"
+    },
+    {
+      "pronom": "sie",
+      "verb": "darf",
+      "transcr": "зи дарф",
+      "transl_pronom": "ей",
+      "transl_verb": "можно"
+    },
+    {
+      "pronom": "es",
+      "verb": "darf",
+      "transcr": "эс дарф",
+      "transl_pronom": "ему",
+      "transl_verb": "можно"
+    },
+    {
+      "pronom": "ihr",
+      "verb": "darft",
+      "transcr": "ир дарфт",
+      "transl_pronom": "вам (множ.)",
+      "transl_verb": "можно"
+    },
+    {
+      "pronom": "wir",
+      "verb": "darfen",
+      "transcr": "вир дарфэн",
+      "transl_pronom": "нам",
+      "transl_verb": "можно"
+    },
+    {
+      "pronom": "sie",
+      "verb": "darfen",
+      "transcr": "зи дарфэн",
+      "transl_pronom": "им",
+      "transl_verb": "можно"
+    },
+    {
+      "pronom": "Sie",
+      "verb": "darfen",
+      "transcr": "зи дарфэн",
+      "transl_pronom": "Вам (уважит.)",
+      "transl_verb": "можно"
+    },
+  ]
+
+-
+  const konnen = [
+    {
+      "pronom": "ich",
+      "verb": "kann",
+      "transcr": "их кан",
+      "transl_pronom": "я",
+      "transl_verb": "могу"
+    },
+    {
+      "pronom": "du",
+      "verb": "kannst",
+      "transcr": "ду канст",
+      "transl_pronom": "ты",
+      "transl_verb": "можешь"
+    },
+    {
+      "pronom": "er",
+      "verb": "kann",
+      "transcr": "эр кан",
+      "transl_pronom": "он",
+      "transl_verb": "может"
+    },
+    {
+      "pronom": "sie",
+      "verb": "kann",
+      "transcr": "зи кан",
+      "transl_pronom": "она",
+      "transl_verb": "может"
+    },
+    {
+      "pronom": "es",
+      "verb": "kann",
+      "transcr": "эс кан",
+      "transl_pronom": "оно",
+      "transl_verb": "может"
+    },
+    {
+      "pronom": "ihr",
+      "verb": "könnt",
+      "transcr": "ир кёнт",
+      "transl_pronom": "вы (множ.)",
+      "transl_verb": "можете"
+    },
+    {
+      "pronom": "wir",
+      "verb": "können",
+      "transcr": "вир кёнэн",
+      "transl_pronom": "мы",
+      "transl_verb": "можем"
+    },
+    {
+      "pronom": "sie",
+      "verb": "können",
+      "transcr": "зи кёнэн",
+      "transl_pronom": "они",
+      "transl_verb": "можем"
+    },
+    {
+      "pronom": "Sie",
+      "verb": "können",
+      "transcr": "зи кёнэн",
+      "transl_pronom": "Вы (уважит.)",
+      "transl_verb": "можем"
+    },
+  ]
+
+-
+  const mussen = [
+    {
+      "pronom": "ich",
+      "verb": "muss",
+      "transcr": "их мус",
+      "transl_pronom": "я",
+      "transl_verb": "должен"
+    },
+    {
+      "pronom": "du",
+      "verb": "musst",
+      "transcr": "ду муст",
+      "transl_pronom": "ты",
+      "transl_verb": "должен"
+    },
+    {
+      "pronom": "er",
+      "verb": "muss",
+      "transcr": "эр мус",
+      "transl_pronom": "он",
+      "transl_verb": "должен"
+    },
+    {
+      "pronom": "sie",
+      "verb": "muss",
+      "transcr": "зи мус",
+      "transl_pronom": "она",
+      "transl_verb": "должна"
+    },
+    {
+      "pronom": "es",
+      "verb": "muss",
+      "transcr": "эс мус",
+      "transl_pronom": "оно",
+      "transl_verb": "должно"
+    },
+    {
+      "pronom": "ihr",
+      "verb": "müsst",
+      "transcr": "ир мюст",
+      "transl_pronom": "вы (множ.)",
+      "transl_verb": "должны"
+    },
+    {
+      "pronom": "wir",
+      "verb": "müssen",
+      "transcr": "вир мюсэн",
+      "transl_pronom": "мы",
+      "transl_verb": "должны"
+    },
+    {
+      "pronom": "sie",
+      "verb": "müssen",
+      "transcr": "зи мюсэн",
+      "transl_pronom": "они",
+      "transl_verb": "должны"
+    },
+    {
+      "pronom": "Sie",
+      "verb": "müssen",
+      "transcr": "зи мюсэн",
+      "transl_pronom": "Вы (уважит.)",
+      "transl_verb": "должны"
+    },
+  ]
+
+-
+  const stehen = [
+    {
+      "pronom": "ich",
+      "verb": "stehe auf",
+      "transcr": "их штээ ауф",
+      "transl_pronom": "я",
+      "transl_verb": "встаю"
+    },
+    {
+      "pronom": "du",
+      "verb": "stehst auf",
+      "transcr": "ду штэст ауф",
+      "transl_pronom": "ты",
+      "transl_verb": "встаёшь"
+    },
+    {
+      "pronom": "er",
+      "verb": "steht auf",
+      "transcr": "эр штэт ауф",
+      "transl_pronom": "он",
+      "transl_verb": "встаёт"
+    },
+    {
+      "pronom": "sie",
+      "verb": "steht auf",
+      "transcr": "зи штэт ауф",
+      "transl_pronom": "она",
+      "transl_verb": "встаёт"
+    },
+    {
+      "pronom": "es",
+      "verb": "steht auf",
+      "transcr": "эс штэт ауф",
+      "transl_pronom": "оно",
+      "transl_verb": "встаёт"
+    },
+    {
+      "pronom": "ihr",
+      "verb": "steht auf",
+      "transcr": "ир штэт ауф",
+      "transl_pronom": "вы (множ.)",
+      "transl_verb": "встаёте"
+    },
+    {
+      "pronom": "wir",
+      "verb": "stehen auf",
+      "transcr": "вир штэЙн ауф",
+      "transl_pronom": "мы",
+      "transl_verb": "встаём"
+    },
+    {
+      "pronom": "sie",
+      "verb": "stehen auf",
+      "transcr": "зи штэЙн ауф",
+      "transl_pronom": "они",
+      "transl_verb": "встают"
+    },
+    {
+      "pronom": "Sie",
+      "verb": "stehen auf",
+      "transcr": "зи штэЙн ауф",
+      "transl_pronom": "Вы (уважит.)",
+      "transl_verb": "встаёте"
+    },
+  ]

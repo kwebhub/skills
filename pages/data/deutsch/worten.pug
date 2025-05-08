@@ -1,0 +1,4303 @@
+-
+  const worten = [
+    {
+      "wort": "Schauspieler",
+      "transcr": "шаушпилэ",
+      "transl": "актёр",
+      "plural": "Schauspieler"
+    },
+    {
+      "wort": "Musiker",
+      "transcr": "музика",
+      "transl": "музыкант",
+      "plural": "Musiker"
+    },
+    {
+      "wort": "der Musik",
+      "transcr": "музик",
+      "transl": "музыка",
+      "plural": "Musik"
+    },
+    {
+      "wort": "Sänger",
+      "transcr": "зэньга",
+      "transl": "певец",
+      "plural": "Sänger"
+    },
+    {
+      "wort": "Komponist",
+      "transcr": "компонист",
+      "transl": "композитор",
+      "plural": "Komponisten"
+    },
+    {
+      "wort": "Schriftsteller",
+      "transcr": "шрифтштэлэ",
+      "transl": "писатель",
+      "plural": "Schriftsteller"
+    },
+    {
+      "wort": "der Theater",
+      "transcr": "тэатэ",
+      "transl": "театр",
+      "plural": "Theater"
+    },
+    {
+      "wort": "der Freund",
+      "transcr": "фроинд",
+      "transl": "друг",
+      "plural": "Freunde"
+    },
+    {
+      "wort": "der Bruder",
+      "transcr": "брудэ",
+      "transl": "брат",
+      "plural": "Brüder"
+    },
+    {
+      "wort": "die Schwester",
+      "transcr": "швэстэ",
+      "transl": "сестра",
+      "plural": "Schwestern"
+    },
+    {
+      "wort": "Eltern",
+      "transcr": "эльтэрн",
+      "transl": "родители",
+      "plural": "-"
+    },
+    {
+      "wort": "Vater",
+      "transcr": "фатэ",
+      "transl": "отец",
+      "plural": "Väter"
+    },
+    {
+      "wort": "Mutter",
+      "transcr": "мутэ",
+      "transl": "мать",
+      "plural": "Mütter"
+    },
+    {
+      "wort": "Sohn",
+      "transcr": "зон",
+      "transl": "сын",
+      "plural": "Söhne"
+    },
+    {
+      "wort": "Tochter",
+      "transcr": "тохтэ",
+      "transl": "дочь",
+      "plural": "Töchter"
+    },
+    {
+      "wort": "Kind",
+      "transcr": "кинд",
+      "transl": "ребёнок",
+      "plural": "Kinder (дети)"
+    },
+    {
+      "wort": "Familie",
+      "transcr": "фамилие",
+      "transl": "семья",
+      "plural": "Familien"
+    },
+    {
+      "wort": "Vaterland",
+      "transcr": "фатэрлэнд",
+      "transl": "родина",
+      "plural": "-"
+    },
+    {
+      "wort": "Muttersprache",
+      "transcr": "мутэшпрахэ",
+      "transl": "родной язык",
+      "plural": "-"
+    },
+    {
+      "wort": "der Hund",
+      "transcr": "хунд",
+      "transl": "собака",
+      "plural": "Hunde"
+    },
+    {
+      "wort": "die Katze",
+      "transcr": "катцэ",
+      "transl": "кошка",
+      "plural": "Katzen"
+    },
+    {
+      "wort": "der Kater",
+      "transcr": "катэр",
+      "transl": "кот",
+      "plural": "Kater"
+    },
+    {
+      "wort": "Mann",
+      "transcr": "ман",
+      "transl": "муж",
+      "plural": "Männer"
+    },
+    {
+      "wort": "Frau",
+      "transcr": "фрау",
+      "transl": "жена",
+      "plural": "Frauen"
+    },
+    {
+      "wort": "der Ausgang",
+      "transcr": "аусганг",
+      "transl": "выход",
+      "plural": "Ausgänge"
+    },
+    {
+      "wort": "der Eingang",
+      "transcr": "айнганг",
+      "transl": "вход",
+      "plural": "Eingänge"
+    },
+    {
+      "wort": "Geburtstag",
+      "transcr": "гебуртстаг",
+      "transl": "День рождения",
+      "plural": "Geburtstage"
+    },
+    {
+      "wort": "Geburt",
+      "transcr": "гебурт",
+      "transl": "рождение",
+      "plural": "-"
+    },
+    {
+      "wort": "Reise",
+      "transcr": "райзэ",
+      "transl": "путешествие",
+      "plural": "Reisen"
+    },
+    {
+      "wort": "das Auto",
+      "transcr": "ауто",
+      "transl": "машина",
+      "plural": "Autos"
+    },
+    {
+      "wort": "das Haus",
+      "transcr": "хаус",
+      "transl": "дом",
+      "plural": "Häuser"
+    },
+    {
+      "wort": "die Wohnung",
+      "transcr": "вонунг",
+      "transl": "квартира",
+      "plural": "Wohnungen"
+    },
+    {
+      "wort": "das Mädchen",
+      "transcr": "мэдхен",
+      "transl": "девушка",
+      "plural": "Mädchens"
+    },
+    {
+      "wort": "Zeit",
+      "transcr": "цайт",
+      "transl": "время",
+      "plural": "Zeiten"
+    },
+    {
+      "wort": "die Beere",
+      "transcr": "бэрэ",
+      "transl": "ягода",
+      "plural": "Beeren"
+    },
+    {
+      "wort": "die Milch",
+      "transcr": "мильх",
+      "transl": "молоко",
+      "plural": "-"
+    },
+    {
+      "wort": "der Geschmack",
+      "transcr": "гэшмак",
+      "transl": "вкус",
+      "plural": "Geschmack"
+    },
+    {
+      "wort": "das Gericht",
+      "transcr": "гэрихт",
+      "transl": "блюдо",
+      "plural": "Gerichte"
+    },
+    {
+      "wort": "das Lieblingsgericht",
+      "transcr": "либлингсгерихт",
+      "transl": "любимое блюдо",
+      "plural": "Lieblingsgerichte"
+    },
+    {
+      "wort": "die Vorstellung",
+      "transcr": "форштэлюнг",
+      "transl": "представление",
+      "plural": "Vorstellungen"
+    },
+    {
+      "wort": "die Farbe",
+      "transcr": "фарбэ",
+      "transl": "цвет",
+      "plural": "Farben"
+    },
+    {
+      "wort": "die Blume",
+      "transcr": "блюмэ",
+      "transl": "цветок",
+      "plural": "Blumen"
+    },
+    {
+      "wort": "die Freiheit",
+      "transcr": "фрайхайт",
+      "transl": "свобода",
+      "plural": "Freiheiten"
+    },
+    {
+      "wort": "die Gesundheit",
+      "transcr": "гэзундхайт",
+      "transl": "здоровье",
+      "plural": "-"
+    },
+    {
+      "wort": "die Krankheit",
+      "transcr": "кранкхайт",
+      "transl": "болезнь",
+      "plural": "Krankheiten"
+    },
+    {
+      "wort": "das Glück",
+      "transcr": "глюк",
+      "transl": "счастье",
+      "plural": "-"
+    },
+    {
+      "wort": "der Erfolg",
+      "transcr": "эрфольг",
+      "transl": "успех",
+      "plural": "Erfolge"
+    },
+    {
+      "wort": "die Liebe",
+      "transcr": "либэ",
+      "transl": "любовь",
+      "plural": "-"
+    },
+    {
+      "wort": "ein Lied",
+      "transcr": "айн лид",
+      "transl": "песня",
+      "plural": "Lieder"
+    },
+    {
+      "wort": "der Fisch",
+      "transcr": "фиш",
+      "transl": "рыба",
+      "plural": "Fische"
+    },
+    {
+      "wort": "der Fleisch",
+      "transcr": "фляйш",
+      "transl": "мясо",
+      "plural": "Fleische"
+    },
+    {
+      "wort": "Italien",
+      "transcr": "италиэн",
+      "transl": "Италия",
+      "plural": "-"
+    },
+    {
+      "wort": "die Bestellung",
+      "transcr": "бэштэлюнг",
+      "transl": "заказ",
+      "plural": "Bestellungen"
+    },
+    {
+      "wort": "die Rechnung",
+      "transcr": "рэхнунг",
+      "transl": "счёт",
+      "plural": "Rechnung"
+    },
+    {
+      "wort": "der Kellner",
+      "transcr": "кэльнэ",
+      "transl": "официант",
+      "plural": "Kellner"
+    },
+    {
+      "wort": "die Wahl",
+      "transcr": "валь",
+      "transl": "выбор",
+      "plural": "Wahlen"
+    },
+    {
+      "wort": "das Trinkgeld",
+      "transcr": "тринкгэльт",
+      "transl": "чаевые",
+      "plural": "Trinkgeld"
+    },
+    {
+      "wort": "die Ordnung",
+      "transcr": "орднунг",
+      "transl": "порядок",
+      "plural": "Ordnungen"
+    },
+    {
+      "wort": "das Vergnügen",
+      "transcr": "фэргнюгэн",
+      "transl": "удовольствие",
+      "plural": "Vergnügen"
+    },
+    {
+      "wort": "das Zimmer",
+      "transcr": "цимэ",
+      "transl": "комната",
+      "plural": "Zimmer"
+    },
+    {
+      "wort": "die Stadt",
+      "transcr": "штадт",
+      "transl": "город",
+      "plural": "Städte"
+    },
+    {
+      "wort": "ein Buch",
+      "transcr": "бух",
+      "transl": "книга",
+      "plural": "Bücher"
+    },
+    {
+      "wort": "ein Mann",
+      "transcr": "ман",
+      "transl": "мужчина",
+      "plural": "Männer"
+    },
+    {
+      "wort": "ein Land",
+      "transcr": "лянд",
+      "transl": "страна",
+      "plural": "Länder"
+    },
+    {
+      "wort": "der Mensch",
+      "transcr": "мэнш",
+      "transl": "человек",
+      "plural": "-"
+    },
+    {
+      "wort": "die Leute",
+      "transcr": "лёйтэ",
+      "transl": "люди",
+      "plural": "-"
+    },
+    {
+      "wort": "der Vogel",
+      "transcr": "фогэль",
+      "transl": "птица",
+      "plural": "Vögel"
+    },
+    {
+      "wort": "der Abschied",
+      "transcr": "абшид",
+      "transl": "расставание",
+      "plural": "-"
+    },
+    {
+      "wort": "das Leben",
+      "transcr": "лебэн",
+      "transl": "жизнь",
+      "plural": "-"
+    },
+    {
+      "wort": "der Tod",
+      "transcr": "тод",
+      "transl": "смерть",
+      "plural": "Tote"
+    },
+    {
+      "wort": "das Gefühl",
+      "transcr": "гэфюль",
+      "transl": "чувство",
+      "plural": "Gefühle"
+    },
+    {
+      "wort": "der Verkehr",
+      "transcr": "феркэер",
+      "transl": "движение",
+      "plural": "Verkehr"
+    },
+    {
+      "wort": "der Stau",
+      "transcr": "штау",
+      "transl": "автомобильная пробка",
+      "plural": "-"
+    },
+    {
+      "wort": "die Bahn",
+      "transcr": "бан",
+      "transl": "трасса",
+      "plural": "-"
+    },
+    {
+      "wort": "die Straße",
+      "transcr": "штрасэ",
+      "transl": "улица",
+      "plural": "Straßen"
+    },
+    {
+      "wort": "die U-bahn",
+      "transcr": "убан",
+      "transl": "метро",
+      "plural": "-"
+    },
+    {
+      "wort": "die Eisenbahn",
+      "transcr": "айзэнбан",
+      "transl": "железная дорога",
+      "plural": "-"
+    },
+    {
+      "wort": "der Bahnhof",
+      "transcr": "банхоф",
+      "transl": "вокзал",
+      "plural": "Bahnhöfe"
+    },
+    {
+      "wort": "der Hof",
+      "transcr": "хоф",
+      "transl": "двор",
+      "plural": "Höfe"
+    },
+    {
+      "wort": "der Übersetzer",
+      "transcr": "убэрзэтцэр",
+      "transl": "переводчик",
+      "plural": "Übersetzer"
+    },
+    {
+      "wort": "die Sprache",
+      "transcr": "шпрахэ",
+      "transl": "язык",
+      "plural": "Sprachen"
+    },
+    {
+      "wort": "das Ausland",
+      "transcr": "ауслянд",
+      "transl": "заграница",
+      "plural": "Sprachen"
+    },
+    {
+      "wort": "die Richtung",
+      "transcr": "рихтунг",
+      "transl": "направление",
+      "plural": "Richtungen"
+    },
+    {
+      "wort": "der Kunst",
+      "transcr": "кунст",
+      "transl": "искусство",
+      "plural": "-"
+    },
+    {
+      "wort": "Dirigent",
+      "transcr": "диригэнт",
+      "transl": "дирижёр",
+      "plural": "Dirigenten"
+    },
+    {
+      "wort": "Regisseur",
+      "transcr": "рэжисё",
+      "transl": "режиссёр",
+      "plural": "Regisseure"
+    },
+    {
+      "wort": "die Geschwister",
+      "transcr": "гэшвистэ",
+      "transl": "братья и сёстры",
+      "plural": ""
+    },
+    {
+      "wort": "gut",
+      "transcr": "гут",
+      "transl": "хороший",
+      "plural": ""
+    },
+    {
+      "wort": "schlecht",
+      "transcr": "шлехт",
+      "transl": "плохой",
+      "plural": ""
+    },
+    {
+      "wort": "groß",
+      "transcr": "гросс",
+      "transl": "большой",
+      "plural": ""
+    },
+    {
+      "wort": "klein",
+      "transcr": "клайн",
+      "transl": "маленький",
+      "plural": ""
+    },
+    {
+      "wort": "warm",
+      "transcr": "варм",
+      "transl": "тёплый",
+      "plural": ""
+    },
+    {
+      "wort": "kalt",
+      "transcr": "кальт",
+      "transl": "холодный",
+      "plural": ""
+    },
+    {
+      "wort": "langweilig",
+      "transcr": "лангвайлиг",
+      "transl": "скучный",
+      "plural": ""
+    },
+    {
+      "wort": "interessant",
+      "transcr": "интэрэсант",
+      "transl": "интересный",
+      "plural": ""
+    },
+    {
+      "wort": "interessanter als",
+      "transcr": "интэрэсантэ альс",
+      "transl": "интереснее чем",
+      "plural": ""
+    },
+    {
+      "wort": "interessanteste",
+      "transcr": "интэрэсантэстэ",
+      "transl": "самый интересный",
+      "plural": ""
+    },
+    {
+      "wort": "langsam",
+      "transcr": "лангзам",
+      "transl": "медлено",
+      "plural": ""
+    },
+    {
+      "wort": "schnell",
+      "transcr": "шнэль",
+      "transl": "быстро, быстрый",
+      "plural": ""
+    },
+    {
+      "wort": "schneller als",
+      "transcr": "шнэлэ альс",
+      "transl": "быстрее чем",
+      "plural": ""
+    },
+    {
+      "wort": "schnellste",
+      "transcr": "шнэльстэ",
+      "transl": "самый быстрый",
+      "plural": ""
+    },
+    {
+      "wort": "alt",
+      "transcr": "альт",
+      "transl": "старый",
+      "plural": ""
+    },
+    {
+      "wort": "jung",
+      "transcr": "юнг",
+      "transl": "молодой",
+      "plural": ""
+    },
+    {
+      "wort": "neu",
+      "transcr": "ной",
+      "transl": "новый",
+      "plural": ""
+    },
+    {
+      "wort": "neue",
+      "transcr": "ное",
+      "transl": "новые",
+      "plural": ""
+    },
+    {
+      "wort": "möglich",
+      "transcr": "мёглих",
+      "transl": "возможно",
+      "plural": ""
+    },
+    {
+      "wort": "unmöglich",
+      "transcr": "унмёглих",
+      "transl": "невозможно",
+      "plural": ""
+    },
+    {
+      "wort": "die Möglichkeit",
+      "transcr": "ди мёглихкайт",
+      "transl": "возможность",
+      "plural": ""
+    },
+    {
+      "wort": "grün",
+      "transcr": "грюн",
+      "transl": "зелёный",
+      "plural": ""
+    },
+    {
+      "wort": "schwarz",
+      "transcr": "шварц",
+      "transl": "черный",
+      "plural": ""
+    },
+    {
+      "wort": "weiß",
+      "transcr": "вайс",
+      "transl": "белый",
+      "plural": ""
+    },
+    {
+      "wort": "rot",
+      "transcr": "рот",
+      "transl": "красный",
+      "plural": ""
+    },
+    {
+      "wort": "blau",
+      "transcr": "бляу",
+      "transl": "синий",
+      "plural": ""
+    },
+    {
+      "wort": "himmelblau",
+      "transcr": "химэльблау",
+      "transl": "голубой",
+      "plural": ""
+    },
+    {
+      "wort": "gelb",
+      "transcr": "гэльб",
+      "transl": "жёлтый",
+      "plural": ""
+    },
+    {
+      "wort": "grau",
+      "transcr": "грау",
+      "transl": "серый",
+      "plural": ""
+    },
+    {
+      "wort": "braun",
+      "transcr": "браун",
+      "transl": "коричневый",
+      "plural": ""
+    },
+    {
+      "wort": "rosa",
+      "transcr": "роза",
+      "transl": "розовый",
+      "plural": ""
+    },
+    {
+      "wort": "lila",
+      "transcr": "лиля",
+      "transl": "фиолетовый",
+      "plural": ""
+    },
+    {
+      "wort": "dunkel",
+      "transcr": "дункэль",
+      "transl": "тёмный",
+      "plural": ""
+    },
+    {
+      "wort": "hell",
+      "transcr": "хэль",
+      "transl": "светлый",
+      "plural": ""
+    },
+    {
+      "wort": "danach",
+      "transcr": "данах",
+      "transl": "после",
+      "plural": ""
+    },
+    {
+      "wort": "klar",
+      "transcr": "клар",
+      "transl": "ясно, понятно",
+      "plural": ""
+    },
+    {
+      "wort": "arm",
+      "transcr": "арм",
+      "transl": "бедный",
+      "plural": ""
+    },
+    {
+      "wort": "reich",
+      "transcr": "райх",
+      "transl": "богатый",
+      "plural": ""
+    },
+    {
+      "wort": "schwierig",
+      "transcr": "швирих",
+      "transl": "трудный",
+      "plural": ""
+    },
+    {
+      "wort": "einfach",
+      "transcr": "айнфах",
+      "transl": "простой",
+      "plural": ""
+    },
+    {
+      "wort": "komisch",
+      "transcr": "комиш",
+      "transl": "смешной",
+      "plural": ""
+    },
+    {
+      "wort": "lieblings",
+      "transcr": "либлингс",
+      "transl": "любимый",
+      "plural": ""
+    },
+    {
+      "wort": "zufrieden",
+      "transcr": "цуфридэн",
+      "transl": "довольный",
+      "plural": ""
+    },
+    {
+      "wort": "einzige",
+      "transcr": "айнциге",
+      "transl": "единственный",
+      "plural": ""
+    },
+    {
+      "wort": "glücklich",
+      "transcr": "глюклих",
+      "transl": "счастливый",
+      "plural": ""
+    },
+    {
+      "wort": "allein",
+      "transcr": "аляйн",
+      "transl": "одинокий",
+      "plural": ""
+    },
+    {
+      "wort": "traurig",
+      "transcr": "трауриг",
+      "transl": "грустный",
+      "plural": ""
+    },
+    {
+      "wort": "lustig",
+      "transcr": "люстиг",
+      "transl": "весёлый",
+      "plural": ""
+    },
+    {
+      "wort": "so",
+      "transcr": "зо",
+      "transl": "так, такой",
+      "plural": ""
+    },
+    {
+      "wort": "dieser",
+      "transcr": "дизэ",
+      "transl": "этот",
+      "plural": ""
+    },
+    {
+      "wort": "schön",
+      "transcr": "шён",
+      "transl": "красивый",
+      "plural": ""
+    },
+    {
+      "wort": "frei",
+      "transcr": "фрай",
+      "transl": "свободный",
+      "plural": ""
+    },
+    {
+      "wort": "gesund",
+      "transcr": "гэзунд",
+      "transl": "здоровый",
+      "plural": ""
+    },
+    {
+      "wort": "krank",
+      "transcr": "кранк",
+      "transl": "больной",
+      "plural": ""
+    },
+    {
+      "wort": "verrückt",
+      "transcr": "ферюкт",
+      "transl": "сумасшедший",
+      "plural": ""
+    },
+    {
+      "wort": "fremd",
+      "transcr": "фрэмд",
+      "transl": "иностранный",
+      "plural": ""
+    },
+    {
+      "wort": "italienisch",
+      "transcr": "италиэниш",
+      "transl": "итальянский",
+      "plural": ""
+    },
+    {
+      "wort": "verschieden",
+      "transcr": "фершидэн",
+      "transl": "разный",
+      "plural": ""
+    },
+    {
+      "wort": "andere",
+      "transcr": "андэрэ",
+      "transl": "другие",
+      "plural": ""
+    },
+    {
+      "wort": "wieder",
+      "transcr": "видэ",
+      "transl": "опять, снова",
+      "plural": ""
+    },
+    {
+      "wort": "zusammen",
+      "transcr": "цузамэн",
+      "transl": "вместе",
+      "plural": ""
+    },
+    {
+      "wort": "viel",
+      "transcr": "филь",
+      "transl": "много",
+      "plural": ""
+    },
+    {
+      "wort": "mehr",
+      "transcr": "мэр",
+      "transl": "больше",
+      "plural": ""
+    },
+    {
+      "wort": "wenig",
+      "transcr": "вэниг",
+      "transl": "мало",
+      "plural": ""
+    },
+    {
+      "wort": "weniger",
+      "transcr": "вэнигэ",
+      "transl": "меньше",
+      "plural": ""
+    },
+    {
+      "wort": "gratis",
+      "transcr": "гратис",
+      "transl": "бесплатно",
+      "plural": ""
+    },
+    {
+      "wort": "umsonst",
+      "transcr": "умзонст",
+      "transl": "даром, впустую",
+      "plural": ""
+    },
+    {
+      "wort": "genug",
+      "transcr": "генуг",
+      "transl": "достаточно",
+      "plural": ""
+    },
+    {
+      "wort": "ein wenig",
+      "transcr": "айн вэних",
+      "transl": "немножко",
+      "plural": ""
+    },
+    {
+      "wort": "früh",
+      "transcr": "фрю",
+      "transl": "рано",
+      "plural": ""
+    },
+    {
+      "wort": "spät",
+      "transcr": "шпэт",
+      "transl": "поздно",
+      "plural": ""
+    },
+    {
+      "wort": "hier",
+      "transcr": "хиэ",
+      "transl": "здесь",
+      "plural": ""
+    },
+    {
+      "wort": "dort",
+      "transcr": "дорт",
+      "transl": "там",
+      "plural": ""
+    },
+    {
+      "wort": "draußen",
+      "transcr": "драусэн",
+      "transl": "снаружи",
+      "plural": ""
+    },
+    {
+      "wort": "gegen",
+      "transcr": "гэгэн",
+      "transl": "против, напротив",
+      "plural": ""
+    },
+    {
+      "wort": "schmeckt gut",
+      "transcr": "шмэкт гут",
+      "transl": "вкусно",
+      "plural": ""
+    },
+    {
+      "wort": "gern",
+      "transcr": "гэрн",
+      "transl": "охотно",
+      "plural": ""
+    },
+    {
+      "wort": "lieber",
+      "transcr": "либэ",
+      "transl": "охотнее",
+      "plural": ""
+    },
+    {
+      "wort": "Naturobjekte",
+      "transcr": "натуробъектэ",
+      "transl": "природные объекты",
+      "plural": ""
+    },
+    {
+      "wort": "das Meer",
+      "transcr": "меер",
+      "transl": "море",
+      "plural": ""
+    },
+    {
+      "wort": "der Ozean",
+      "transcr": "оцеан",
+      "transl": "океан",
+      "plural": ""
+    },
+    {
+      "wort": "die Küste",
+      "transcr": "кюсте",
+      "transl": "побережье",
+      "plural": ""
+    },
+    {
+      "wort": "die Insel",
+      "transcr": "инзель",
+      "transl": "остров",
+      "plural": ""
+    },
+    {
+      "wort": "der See",
+      "transcr": "зее",
+      "transl": "озеро",
+      "plural": ""
+    },
+    {
+      "wort": "der Berg",
+      "transcr": "берг",
+      "transl": "гора",
+      "plural": ""
+    },
+    {
+      "wort": "der Fluß",
+      "transcr": "флус",
+      "transl": "река",
+      "plural": ""
+    },
+    {
+      "wort": "das Feld",
+      "transcr": "фельд",
+      "transl": "поле",
+      "plural": ""
+    },
+    {
+      "wort": "der Wald",
+      "transcr": "вальд",
+      "transl": "лес",
+      "plural": ""
+    },
+    {
+      "wort": "das Rußland",
+      "transcr": "руслант",
+      "transl": "Россия",
+      "plural": ""
+    },
+    {
+      "wort": "das Großbritannien",
+      "transcr": "гросбританиен",
+      "transl": "Великобритания",
+      "plural": ""
+    },
+    {
+      "wort": "USA Vereinigte Staaten von Amerika",
+      "transcr": "ферайнихьтештаатэн фон америка",
+      "transl": "США",
+      "plural": ""
+    },
+    {
+      "wort": "das Frankreich",
+      "transcr": "франкрайхь",
+      "transl": "Франция",
+      "plural": ""
+    },
+    {
+      "wort": "das Deutschland",
+      "transcr": "дойтчлант",
+      "transl": "Германия",
+      "plural": ""
+    },
+    {
+      "wort": "das Europa",
+      "transcr": "ойропа",
+      "transl": "Европа",
+      "plural": ""
+    },
+    {
+      "wort": "das Asien",
+      "transcr": "азиен",
+      "transl": "Азия",
+      "plural": ""
+    },
+    {
+      "wort": "Moskau",
+      "transcr": "москау",
+      "transl": "Москва",
+      "plural": ""
+    },
+    {
+      "wort": "London",
+      "transcr": "лондон",
+      "transl": "Лондон",
+      "plural": ""
+    },
+    {
+      "wort": "New York",
+      "transcr": "нью йорк",
+      "transl": "Нью-Йорк",
+      "plural": ""
+    },
+    {
+      "wort": "Berlin",
+      "transcr": "берлин",
+      "transl": "Берлин",
+      "plural": ""
+    },
+    {
+      "wort": "Paris",
+      "transcr": "парис",
+      "transl": "Париж",
+      "plural": ""
+    },
+    {
+      "wort": "Frankfurt am Main",
+      "transcr": "Франкфурт ам майн",
+      "transl": "Франкфурт-на-Майне",
+      "plural": ""
+    },
+    {
+      "wort": "das Land",
+      "transcr": "лант",
+      "transl": "страна",
+      "plural": ""
+    },
+    {
+      "wort": "die Grenze",
+      "transcr": "грэнцэ",
+      "transl": "граница",
+      "plural": ""
+    },
+    {
+      "wort": "die Hauptstadt",
+      "transcr": "хауптштат",
+      "transl": "столица",
+      "plural": ""
+    },
+    {
+      "wort": "die Stadt",
+      "transcr": "штат",
+      "transl": "город",
+      "plural": ""
+    },
+    {
+      "wort": "das Dorf",
+      "transcr": "дорф",
+      "transl": "деревня",
+      "plural": "Dörfer"
+    },
+    {
+      "wort": "der Platz",
+      "transcr": "плац",
+      "transl": "площадь",
+      "plural": ""
+    },
+    {
+      "wort": "der Weg",
+      "transcr": "вег",
+      "transl": "дорога",
+      "plural": ""
+    },
+    {
+      "wort": "Geld",
+      "transcr": "гельт",
+      "transl": "деньги",
+      "plural": ""
+    },
+    {
+      "wort": "die Währung",
+      "transcr": "вэрунг",
+      "transl": "валюта",
+      "plural": ""
+    },
+    {
+      "wort": "Dollar",
+      "transcr": "долар",
+      "transl": "доллар",
+      "plural": ""
+    },
+    {
+      "wort": "Rubel",
+      "transcr": "рубель",
+      "transl": "рубль",
+      "plural": ""
+    },
+    {
+      "wort": "Euro",
+      "transcr": "ойро",
+      "transl": "евро",
+      "plural": ""
+    },
+    {
+      "wort": "Pfund",
+      "transcr": "пфунт",
+      "transl": "фунт",
+      "plural": ""
+    },
+    {
+      "wort": "die Hafen",
+      "transcr": "хафэн",
+      "transl": "порт",
+      "plural": ""
+    },
+    {
+      "wort": "das Stadion",
+      "transcr": "штадион",
+      "transl": "стадион",
+      "plural": ""
+    },
+    {
+      "wort": "das Lichtspielhaus",
+      "transcr": "лихьтшпильхаус",
+      "transl": "кинотеатр",
+      "plural": ""
+    },
+    {
+      "wort": "die Parkanlage",
+      "transcr": "парканлагэ",
+      "transl": "парк",
+      "plural": ""
+    },
+    {
+      "wort": "die Brücke",
+      "transcr": "брюкэ",
+      "transl": "мост",
+      "plural": ""
+    },
+    {
+      "wort": "der Palast",
+      "transcr": "паласт",
+      "transl": "дворец",
+      "plural": ""
+    },
+    {
+      "wort": "die Burg",
+      "transcr": "бург",
+      "transl": "замок",
+      "plural": ""
+    },
+    {
+      "wort": "die Kirche",
+      "transcr": "кирхе",
+      "transl": "церковь",
+      "plural": ""
+    },
+    {
+      "wort": "das Denkmal",
+      "transcr": "денкмаль",
+      "transl": "памятник",
+      "plural": ""
+    },
+    {
+        "wort": "der Zug",
+        "transcr": "цук",
+        "transl": "поезд"
+    },
+    {
+        "wort": "der Wagen",
+        "transcr": "ваген",
+        "transl": "вагон"
+    },
+    {
+        "wort": "der Bahnsteig",
+        "transcr": "банштайк",
+        "transl": "платформа"
+    },
+    {
+        "wort": "die Eisenbahnlinie",
+        "transcr": "айзенбанлинье",
+        "transl": "путь"
+    },
+    {
+        "wort": "das Zollamt",
+        "transcr": "цольамт",
+        "transl": "таможня"
+    },
+    {
+        "wort": "die Kasse",
+        "transcr": "кассэ",
+        "transl": "касса"
+    },
+    {
+        "wort": "der Gepäckaufbewahrungsraum",
+        "transcr": "гепэкауфбэварунгсраум",
+        "transl": "камера хранения"
+    },
+    {
+        "wort": "das Gepäck",
+        "transcr": "гепэк",
+        "transl": "багаж"
+    },
+    {
+        "wort": "der Koffer",
+        "transcr": "кофэр",
+        "transl": "чемодан"
+    },
+    {
+        "wort": "die Aktentasche",
+        "transcr": "актэнташе",
+        "transl": "портфель"
+    },
+    {
+        "wort": "die Tasche",
+        "transcr": "таше",
+        "transl": "сумка"
+    },
+    {
+        "wort": "der Kasten",
+        "transcr": "каста",
+        "transl": "ящик"
+    },
+    {
+        "wort": "das Paket",
+        "transcr": "пакет",
+        "transl": "пакет"
+    },
+    {
+        "wort": "verlieren",
+        "transcr": "ферлирэн",
+        "transl": "терять"
+    },
+    {
+        "wort": "ausfüllen",
+        "transcr": "аусфюлэн",
+        "transl": "заполнять"
+    },
+    {
+        "wort": "die Erklärung",
+        "transcr": "эрклэрунг",
+        "transl": "заявление"
+    },
+    {
+        "wort": "das Fundbüro",
+        "transcr": "фунтбюро",
+        "transl": "бюро находок"
+    },
+    {
+        "wort": "die Karte",
+        "transcr": "картэ",
+        "transl": "билет"
+    },
+    {
+        "wort": "der Schein",
+        "transcr": "шайн",
+        "transl": "квитанция"
+    },
+    {
+        "wort": "der Schaffher",
+        "transcr": "шафнэр",
+        "transl": "проводник"
+    },
+    {
+        "wort": "die Stewardeß",
+        "transcr": "стевардес",
+        "transl": "стюардесса"
+    },
+    {
+        "wort": "die Bank",
+        "transcr": "банк",
+        "transl": "банк"
+    },
+    {
+        "wort": "die Wechselstube",
+        "transcr": "вексельштубэ",
+        "transl": "обменный пункт"
+    },
+    {
+        "wort": "die Polizei",
+        "transcr": "полицай",
+        "transl": "полиция"
+    },
+    {
+        "wort": "das Krankenhaus",
+        "transcr": "кранкенхаус",
+        "transl": "больница"
+    },
+    {
+        "wort": "die Kirche",
+        "transcr": "кирхе",
+        "transl": "церковь"
+    },
+    {
+        "wort": "das Geschäft",
+        "transcr": "гешэфт",
+        "transl": "магазин"
+    },
+    {
+        "wort": "die Post",
+        "transcr": "дипост",
+        "transl": "почта"
+    },
+    {
+        "wort": "das Telephon",
+        "transcr": "телефон",
+        "transl": "телефон"
+    },
+    {
+        "wort": "das Restaurant",
+        "transcr": "рестаурант",
+        "transl": "ресторан"
+    },
+    {
+        "wort": "das Cafe",
+        "transcr": "кафе",
+        "transl": "кафе"
+    },
+    {
+        "wort": "der Fahrplan",
+        "transcr": "фарплан",
+        "transl": "расписание"
+    },
+    {
+        "wort": "der Abflug/ der Abgang",
+        "transcr": "дер апфлук/ апганг",
+        "transl": "вылет/отправление"
+    },
+    {
+        "wort": "der Anflug/ die Ankunft",
+        "transcr": "анфлук/ анкунфт",
+        "transl": "прилет/прибытие"
+    },
+    {
+        "wort": "der Eingang",
+        "transcr": "дер айнганг",
+        "transl": "вход"
+    },
+    {
+        "wort": "der Austritt",
+        "transcr": "аустрит",
+        "transl": "выход"
+    },
+    {
+        "wort": "der Fahrstuhl",
+        "transcr": "фарштуль",
+        "transl": "лифт"
+    },
+    {
+        "wort": "das  Einsteigen",
+        "transcr": "айнштайгэн",
+        "transl": "посадка"
+    },
+    {
+        "wort": "die Landung",
+        "transcr": "ландунг",
+        "transl": "приземление"
+    },
+    {
+        "wort": "die Eisenbahn",
+        "transcr": "айзенбан",
+        "transl": "железная  дорога"
+    },
+    {
+        "wort": "das  Auto",
+        "transcr": "ауто",
+        "transl": "автомобиль"
+    },
+    {
+        "wort": "das  Flugzeug",
+        "transcr": "флукцойк",
+        "transl": "самолет"
+    },
+    {
+        "wort": "die Metro, U-bahn",
+        "transcr": "ди метро, у-бан",
+        "transl": "метро"
+    },
+    {
+        "wort": "der  Autobus",
+        "transcr": "аутобус",
+        "transl": "автобус"
+    },
+    {
+        "wort": "die  Autodroschke",
+        "transcr": "аутодрошке",
+        "transl": "такси"
+    },
+    {
+        "wort": "das Schiff",
+        "transcr": "шиф",
+        "transl": "судно"
+    },
+    {
+        "wort": "das Fahrrad",
+        "transcr": "фаррат",
+        "transl": "велосипед"
+    },
+    {
+        "wort": "das Motorrad",
+        "transcr": "моторрат",
+        "transl": "мотоцикл"
+    },
+    {
+        "wort": "das Visum",
+        "transcr": "визум",
+        "transl": "виза"
+    },
+    {
+        "wort": "der Paß",
+        "transcr": "пас",
+        "transl": "паспорт"
+    },
+    {
+        "wort": "der Stadtführer",
+        "transcr": "дер штадтфюрэр",
+        "transl": "гид по городу"
+    },
+    {
+        "wort": "der Museumsführer",
+        "transcr": "дер музеумсфюрэр",
+        "transl": "гид по музею"
+    },
+    {
+        "wort": "das Einkaufen",
+        "transcr": "айнкаофэн",
+        "transl": "шоппинг"
+    },
+    {
+        "wort": "der Strand",
+        "transcr": "дерштранд",
+        "transl": "пляж"
+    },
+    {
+        "wort": "der Aquapark",
+        "transcr": "акуапак",
+        "transl": "аквапарк"
+    },
+    {
+        "wort": "die Sehenswürdigkeit",
+        "transcr": "зеенсвюрдихькайт",
+        "transl": "достопримеча­тельность"
+    },
+    {
+        "wort": "das Souvenir",
+        "transcr": "соувенир",
+        "transl": "сувенир"
+    },
+    {
+        "wort": "das Andenken",
+        "transcr": "анденкэн",
+        "transl": "на память (сувенир, подарок)"
+    },
+    {
+        "wort": "Mit dem Auto",
+        "transcr": "мит дем ауто",
+        "transl": "на авто"
+    },
+    {
+        "wort": "mit dem  Flugzeug",
+        "transcr": "мит дем флукцойк",
+        "transl": "на само­лете"
+    },
+    {
+        "wort": "die Haltestelle",
+        "transcr": "хальтештэлле",
+        "transl": "остановка"
+    },
+    {
+        "wort": "der Halteplatz",
+        "transcr": "хальтеплац",
+        "transl": "парковка/стоянка"
+    },
+    {
+        "wort": "die Tankstelle",
+        "transcr": "танкштэлле",
+        "transl": "заправка"
+    },
+    {
+        "wort": "die Autovermietung",
+        "transcr": "аутофермитунг",
+        "transl": "прокат автомобилей"
+    },
+    {
+        "wort": "der Autoservice",
+        "transcr": "аутосервис",
+        "transl": "автосервис"
+    },
+    {
+        "wort": "das Benzin",
+        "transcr": "бенцин",
+        "transl": "бензин"
+    },
+    {
+        "wort": "das Gas",
+        "transcr": "гас",
+        "transl": "газ"
+    },
+    {
+        "wort": "die Verwaltung",
+        "transcr": "фервальтунг",
+        "transl": "администрация"
+    },
+    {
+        "wort": "das  Registrieren",
+        "transcr": "регистрирэн",
+        "transl": "регистрация"
+    },
+    {
+        "wort": "das Gasthaus",
+        "transcr": "гастхаус",
+        "transl": "гостиница"
+    },
+    {
+        "wort": "das Hotel",
+        "transcr": "хотэл",
+        "transl": "мотель"
+    },
+    {
+        "wort": "einkehren",
+        "transcr": "айнкерэн",
+        "transl": "останавливаться (где-то)"
+    },
+    {
+        "wort": "die  Raumpflegerin",
+        "transcr": "раомпфлегерин",
+        "transl": "горничная"
+    },
+    {
+        "wort": "der Träger",
+        "transcr": "трэгер",
+        "transl": "носильщик"
+    },
+    {
+        "wort": "nicht stören",
+        "transcr": "нихьт штёрэн",
+        "transl": "не беспокоить"
+    },
+    {
+        "wort": "unterzeichnen",
+        "transcr": "унтерцайхьнэн",
+        "transl": "знак / расписать­ся"
+    },
+    {
+        "wort": "der Feuerausgang",
+        "transcr": "фойераусганг",
+        "transl": "пожарный выход"
+    },
+    {
+        "wort": "das Festival",
+        "transcr": "фестиваль",
+        "transl": "фестиваль"
+    },
+    {
+        "wort": "der Marsch",
+        "transcr": "марш",
+        "transl": "марш"
+    },
+    {
+        "wort": "das Neujahr",
+        "transcr": "нойяр",
+        "transl": "Новый год"
+    },
+    {
+        "wort": "das Weihnachten",
+        "transcr": "вайнахтэн",
+        "transl": "Рождество"
+    },
+    {
+        "wort": "die Parade",
+        "transcr": "парадэ",
+        "transl": "парад"
+    },
+    {
+        "wort": "der Dreikönigstag",
+        "transcr": "драйкёнихьстак",
+        "transl": "Крещение"
+    },
+    {
+        "wort": "die Allerheiligen",
+        "transcr": "алэрхайлигэн",
+        "transl": "День Всех Святых"
+    },
+    {
+        "wort": "die Sprache",
+        "transcr": "шпрахэ",
+        "transl": "язык"
+    },
+    {
+        "wort": "das Wort",
+        "transcr": "ворт",
+        "transl": "слово"
+    },
+    {
+        "wort": "der Dolmetscher",
+        "transcr": "долмэтчер",
+        "transl": "переводчик"
+    },
+    {
+        "wort": "die Frage",
+        "transcr": "фрагэ",
+        "transl": "вопрос"
+    },
+    {
+        "wort": "der Antwort",
+        "transcr": "антворт",
+        "transl": "ответ"
+    },
+    {
+        "wort": "das Wörterbuch",
+        "transcr": "вёртэрбух",
+        "transl": "словарь"
+    },
+    {
+        "wort": "der Tourist",
+        "transcr": "тоурист",
+        "transl": "турист"
+    },
+    {
+        "wort": "die Anweisung",
+        "transcr": "анвайзунг",
+        "transl": "путевка"
+    },
+    {
+        "wort": "der Urlaub",
+        "transcr": "урлауп",
+        "transl": "отпуск"
+    },
+    {
+        "wort": "die Exkursion",
+        "transcr": "экскурзион",
+        "transl": "экскурсия"
+    },
+    {
+        "wort": "der Sprachführer",
+        "transcr": "шпрахфюрэр",
+        "transl": "разговорник"
+    },
+    {
+        "wort": "das Lehrbuch",
+        "transcr": "лербух",
+        "transl": "учебник"
+    },
+    {
+        "wort": "die englische Sprache",
+        "transcr": "энглише шпрахэ",
+        "transl": "английский язык"
+    },
+    {
+        "wort": "die deutsche Sprache",
+        "transcr": "дойтче шпрахэ",
+        "transl": "немецкий язык"
+    },
+    {
+        "wort": "die französische Sprache",
+        "transcr": "фрацёзише шпрахэ",
+        "transl": "французский язык"
+    },
+    {
+        "wort": "die spanische Sprache",
+        "transcr": "шпанише шпрахэ",
+        "transl": "испанский язык"
+    },
+    {
+        "wort": "die italienische Sprache",
+        "transcr": "итальенише шпрахэ",
+        "transl": "итальянский язык"
+    },
+    {
+        "wort": "die chinesische Sprache",
+        "transcr": "хинейзише шпрахэ",
+        "transl": "китайский язык"
+    },
+    {
+        "wort": "die japanische Sprache",
+        "transcr": "япанише шпра­хэ",
+        "transl": "японский язык"
+    },
+    {
+        "wort": "die russische Sprache",
+        "transcr": "русише шпрахэ",
+        "transl": "русский язык"
+    },
+    {
+        "wort": "der  Bildschirm",
+        "transcr": "бильтшиарм",
+        "transl": "экран"
+    },
+    {
+        "wort": "der Kopierer",
+        "transcr": "копира",
+        "transl": "копир (ксерокс)"
+    },
+    {
+        "wort": "der Taschenrechner",
+        "transcr": "ташенрехьнэр",
+        "transl": "калькулятор"
+    },
+    {
+        "wort": "der Bleistift",
+        "transcr": "бляйштифт",
+        "transl": "карандаш"
+    },
+    {
+        "wort": "der Kugelschreiber",
+        "transcr": "кугельшрайбэр",
+        "transl": "ручка"
+    },
+    {
+        "wort": "das Papier",
+        "transcr": "папир",
+        "transl": "бумага"
+    },
+    {
+        "wort": "das Blatt",
+        "transcr": "блат",
+        "transl": "лист"
+    },
+    {
+        "wort": "das Telegramm",
+        "transcr": "телеграм",
+        "transl": "телеграмма"
+    },
+    {
+        "wort": "der Brief",
+        "transcr": "бриф",
+        "transl": "письмо"
+    },
+    {
+        "wort": "das Telefon",
+        "transcr": "телефон",
+        "transl": "телефон"
+    },
+    {
+        "wort": "einschalten",
+        "transcr": "айншальтен",
+        "transl": "включить в сеть"
+    },
+    {
+        "wort": "der Fernseher",
+        "transcr": "фернзеэр",
+        "transl": "телевизор"
+    },
+    {
+        "wort": "der Kühlschrank",
+        "transcr": "кюльшранк",
+        "transl": "холодильник"
+    },
+    {
+        "wort": "die Waschmaschine",
+        "transcr": "вашма:ши:нэ",
+        "transl": "стиральная машина"
+    },
+    {
+        "wort": "die Wäscherei",
+        "transcr": "вэшерай",
+        "transl": "прачечная"
+    },
+    {
+        "wort": "das Konditionierserät",
+        "transcr": "кондитионирзерэт",
+        "transl": "кондиционер"
+    },
+    {
+        "wort": "der Kochherd",
+        "transcr": "коххерд",
+        "transl": "газовая (электри­ческая) плита"
+    },
+    {
+        "wort": "das Bügeleisen",
+        "transcr": "бюгельайзэн",
+        "transl": "утюг"
+    },
+    {
+        "wort": "der Filmapparat",
+        "transcr": "фильмаппарат",
+        "transl": "кинокамера"
+    },
+    {
+        "wort": "digitale Kamera der Film",
+        "transcr": "дигитале камера дер фильм",
+        "transl": "цифровой фотоап­парат"
+    },
+    {
+        "wort": "das Handy",
+        "transcr": "хэнди",
+        "transl": "мобильный телефон"
+    },
+    {
+        "wort": "der Knopf",
+        "transcr": "кнопф",
+        "transl": "кнопка"
+    },
+    {
+        "wort": "das Buch",
+        "transcr": "бух",
+        "transl": "книга"
+    },
+    {
+        "wort": "die  Zeitschrift",
+        "transcr": "цайтшрифт",
+        "transl": "журнал"
+    },
+    {
+        "wort": "die Zeitung",
+        "transcr": "цайтунг",
+        "transl": "газета"
+    },
+    {
+        "wort": "die Seite",
+        "transcr": "зайтэ",
+        "transl": "страница"
+    },
+    {
+        "wort": "Internet",
+        "transcr": "интернэт",
+        "transl": "интернет"
+    },
+    {
+        "wort": "der Computer",
+        "transcr": "компутэр",
+        "transl": "компьютер"
+    },
+    {
+        "wort": "der Drucker",
+        "transcr": "друка",
+        "transl": "принтер"
+    },
+    {
+        "wort": "das Faxgerat",
+        "transcr": "факсгерэт",
+        "transl": "факс"
+    },
+    {
+        "wort": " die E-mail",
+        "transcr": "имэил",
+        "transl": "электронная почта"
+    },
+    {
+        "wort": "der Einscharter",
+        "transcr": "айншартэр",
+        "transl": "включатель"
+    },
+    {
+        "wort": "leben",
+        "transcr": "лебэн",
+        "transl": "жить"
+    },
+    {
+        "wort": "zu Besuch gehen",
+        "transcr": "цу безух геэн",
+        "transl": "ходить в гости"
+    },
+    {
+        "wort": "der Gast",
+        "transcr": "гаст",
+        "transl": "гость"
+    },
+    {
+        "wort": "der Wirt",
+        "transcr": "вирт",
+        "transl": "хозяин"
+    },
+    {
+        "wort": "der Garten",
+        "transcr": "гартэн",
+        "transl": "сад"
+    },
+    {
+        "wort": "der Hinterhof",
+        "transcr": "хинтерхоф",
+        "transl": "задний дворик"
+    },
+    {
+        "wort": "die Länge",
+        "transcr": "лэнге",
+        "transl": "длина"
+    },
+    {
+        "wort": "die Breite",
+        "transcr": "брайтэ",
+        "transl": "ширина"
+    },
+    {
+        "wort": "die Höhe",
+        "transcr": "хёэ",
+        "transl": "высота"
+    },
+    {
+        "wort": "die Renovierung",
+        "transcr": "реновирунг",
+        "transl": "ремонт"
+    },
+    {
+        "wort": "mieten",
+        "transcr": "митэн",
+        "transl": "снимать (арендо­вать)"
+    },
+    {
+        "wort": "vermieten",
+        "transcr": "фэрмитэн",
+        "transl": "сдавать внаем"
+    },
+    {
+        "wort": "der Umschalter",
+        "transcr": "умшальтэр",
+        "transl": "переключатель"
+    },
+    {
+        "wort": "aufstellen",
+        "transcr": "ауфштелэн",
+        "transl": "установить"
+    },
+    {
+        "wort": "benutzen",
+        "transcr": "бенутцэн",
+        "transl": "пользоваться"
+    },
+    {
+        "wort": "zerbrechen",
+        "transcr": "цербрехэн",
+        "transl": "ломаться"
+    },
+    {
+        "wort": "die Garantie",
+        "transcr": "гаранти",
+        "transl": "гарантия"
+    },
+    {
+        "wort": "die  Anleitung",
+        "transcr": "анлайтунг",
+        "transl": "описание (руко­водство пользо­вателя)"
+    },
+    {
+        "wort": "das Tor",
+        "transcr": "тор",
+        "transl": "ворота"
+    },
+    {
+        "wort": "der Zaun",
+        "transcr": "цаун",
+        "transl": "ограда"
+    },
+    {
+        "wort": "die Tür",
+        "transcr": "тюр",
+        "transl": "дверь"
+    },
+    {
+        "wort": "die Treppe",
+        "transcr": "трепэ",
+        "transl": "лестница"
+    },
+    {
+        "wort": "das Stockwerk",
+        "transcr": "штоквэрк",
+        "transl": "этаж"
+    },
+    {
+        "wort": "die Wohnung",
+        "transcr": "вонунг",
+        "transl": "квартира"
+    },
+    {
+        "wort": "das Dach",
+        "transcr": "дах",
+        "transl": "крыша"
+    },
+    {
+        "wort": "das Zimmer",
+        "transcr": "цимэ",
+        "transl": "комната"
+    },
+    {
+        "wort": "das Schlafzimmer",
+        "transcr": "шлафцимэ",
+        "transl": "спальня"
+    },
+    {
+        "wort": "das Badezimmer",
+        "transcr": "вадэцимэ",
+        "transl": "ванная"
+    },
+    {
+        "wort": "die Toilette",
+        "transcr": "тоилеттэ",
+        "transl": "туалет"
+    },
+    {
+        "wort": "das Vorzimmer",
+        "transcr": "форцимэ",
+        "transl": "прихожая"
+    },
+    {
+        "wort": "das Fenster",
+        "transcr": "фенстэ",
+        "transl": "окно"
+    },
+    {
+        "wort": "der Vorhang",
+        "transcr": "форханг",
+        "transl": "занавески"
+    },
+    {
+        "wort": "die Wand",
+        "transcr": "ванд",
+        "transl": "стена"
+    },
+    {
+        "wort": "die Tapeten",
+        "transcr": "тапейтэн",
+        "transl": "обои"
+    },
+    {
+        "wort": "der Fußboden",
+        "transcr": "фусбодэн",
+        "transl": "пол"
+    },
+    {
+        "wort": "die Farbe",
+        "transcr": "фарбэ",
+        "transl": "краска"
+    },
+    {
+        "wort": "die Türklinke",
+        "transcr": "тюрклинкэ",
+        "transl": "ручка(дверная)"
+    },
+    {
+        "wort": "das elektrische Licht",
+        "transcr": "электришэ лихьт",
+        "transl": "электрический свет"
+    },
+    {
+        "wort": "der Tisch",
+        "transcr": "тишь",
+        "transl": "стол"
+    },
+    {
+        "wort": "der Stuhl",
+        "transcr": "штуль",
+        "transl": "стул"
+    },
+    {
+        "wort": "der Schrank",
+        "transcr": "шранк",
+        "transl": "шкаф"
+    },
+    {
+        "wort": "das Sofa",
+        "transcr": "зофа",
+        "transl": "диван"
+    },
+    {
+        "wort": "die Wanduhr",
+        "transcr": "вантур",
+        "transl": "часы (настенные)"
+    },
+    {
+        "wort": "der Spiegel",
+        "transcr": "шпигэль",
+        "transl": "зеркало"
+    },
+    {
+        "wort": "das Bild",
+        "transcr": "бильт",
+        "transl": "картина"
+    },
+    {
+        "wort": "die Lampe",
+        "transcr": "лампэ",
+        "transl": "лампа"
+    },
+    {
+        "wort": "die Ausschmückung",
+        "transcr": "аусшмюкунг",
+        "transl": "украшение"
+    },
+    {
+        "wort": "die Ausstattung",
+        "transcr": "аусштатунг",
+        "transl": "оформление"
+    },
+    {
+        "wort": "der Teller",
+        "transcr": "телэр",
+        "transl": "тарелка"
+    },
+    {
+        "wort": "das Glas",
+        "transcr": "глас",
+        "transl": "стакан"
+    },
+    {
+        "wort": "die Tasse",
+        "transcr": "тассэ",
+        "transl": "чашка"
+    },
+    {
+        "wort": "das Messer",
+        "transcr": "мэссэ",
+        "transl": "нож"
+    },
+    {
+        "wort": "der Löffel",
+        "transcr": "лёффэль",
+        "transl": "ложка"
+    },
+    {
+        "wort": "die Gabel",
+        "transcr": "габэль",
+        "transl": "вилка"
+    },
+    {
+        "wort": "Stäbchen",
+        "transcr": "штэпхэн",
+        "transl": "палочки (для еды)"
+    },
+    {
+        "wort": "die Serviette",
+        "transcr": "сервьетэ",
+        "transl": "салфетка"
+    },
+    {
+        "wort": "die Flasche",
+        "transcr": "флашэ",
+        "transl": "бутылка"
+    },
+    {
+        "wort": "das Glas",
+        "transcr": "глас",
+        "transl": "банка"
+    },
+    {
+        "wort": "der Korkenzieher",
+        "transcr": "коркэнциэр",
+        "transl": "штопор"
+    },
+    {
+        "wort": "der Handdosenaufschneider",
+        "transcr": "хантдозэнауфшнайдэр",
+        "transl": "консервный нож"
+    },
+    {
+        "wort": "die Kasserolle",
+        "transcr": "кассэролэ",
+        "transl": "кастрюля"
+    },
+    {
+        "wort": "die Pfanne",
+        "transcr": "пфаннэ",
+        "transl": "сковорода"
+    },
+    {
+        "wort": "der Teekessel",
+        "transcr": "теекесэль",
+        "transl": "чайник"
+    },
+    {
+        "wort": "die Teekanne",
+        "transcr": "тееканэ",
+        "transl": "заварочный чайник"
+    },
+    {
+        "wort": "die Kaffeemaschine",
+        "transcr": "кафемашине",
+        "transl": "кофеварка"
+    },
+    {
+        "wort": "zubereiten",
+        "transcr": "цубератэн",
+        "transl": "приготовить"
+    },
+    {
+        "wort": "kochen",
+        "transcr": "кохэн",
+        "transl": "кипятить (варить)"
+    },
+    {
+        "wort": "braten",
+        "transcr": "братэн",
+        "transl": "жарить"
+    },
+    {
+        "wort": "dämpfen",
+        "transcr": "дэмпфэн",
+        "transl": "тушить"
+    },
+    {
+        "wort": "schmoren",
+        "transcr": "шморэн",
+        "transl": "тушить"
+    },
+    {
+        "wort": "auftauen",
+        "transcr": "ауфтауэн",
+        "transl": "разморозить"
+    },
+    {
+        "wort": "gefrieren",
+        "transcr": "гефрирэн",
+        "transl": "заморозить"
+    },
+    {
+        "wort": "aufwärmen",
+        "transcr": "ауфвэрмэн",
+        "transl": "подогреть"
+    },
+    {
+        "wort": "erkalten lassen",
+        "transcr": "эркальтэн лассэн",
+        "transl": "остудить"
+    },
+    {
+        "wort": "das Eis",
+        "transcr": "айс",
+        "transl": "лед"
+    },
+    {
+        "wort": "der Strohhalm",
+        "transcr": "штрохальм",
+        "transl": "соломинка"
+    },
+    {
+        "wort": "der Haus",
+        "transcr": "хаус",
+        "transl": "дом"
+    },
+    {
+        "wort": "die Frau",
+        "transcr": "фрау",
+        "transl": "женщина, жена"
+    },
+    {
+        "wort": "die Ehefrau",
+        "transcr": "ди ээфрау",
+        "transl": "жена"
+    },
+    {
+        "wort": "der Junge",
+        "transcr": "юнге",
+        "transl": "мальчик"
+    },
+    {
+        "wort": "der Knabe",
+        "transcr": "кнабэ",
+        "transl": "мальчик"
+    },
+    {
+        "wort": "das Mädchen",
+        "transcr": "мэтхен",
+        "transl": "девочка"
+    },
+    {
+        "wort": "die Mutter",
+        "transcr": "мутэр",
+        "transl": "мать"
+    },
+    {
+        "wort": "der Vater",
+        "transcr": "фатэр",
+        "transl": "отец"
+    },
+    {
+        "wort": "der Ehemann",
+        "transcr": "ээманн",
+        "transl": "муж"
+    },
+    {
+        "wort": "die Schwester",
+        "transcr": "швестэр",
+        "transl": "сестра"
+    },
+    {
+        "wort": "der Bruder",
+        "transcr": "брудэр",
+        "transl": "брат"
+    },
+    {
+        "wort": "die Tochter",
+        "transcr": "тохтэр",
+        "transl": "дочь"
+    },
+    {
+        "wort": "der Sohn",
+        "transcr": "зонн",
+        "transl": "сын"
+    },
+    {
+        "wort": "der Name",
+        "transcr": "намэ",
+        "transl": "имя"
+    },
+    {
+        "wort": "der Familienname",
+        "transcr": "фамилиеннамэ",
+        "transl": "фамилия"
+    },
+    {
+        "wort": "die Familie",
+        "transcr": "фамилиэ",
+        "transl": "семья"
+    },
+    {
+        "wort": "die Verwandten",
+        "transcr": "фервандтэн",
+        "transl": "родственники"
+    },
+    {
+        "wort": "das Leben",
+        "transcr": "лебэн",
+        "transl": "жизнь"
+    },
+    {
+        "wort": "der Tod",
+        "transcr": "тод",
+        "transl": "смерть"
+    },
+    {
+        "wort": "sterben",
+        "transcr": "штербэн",
+        "transl": "умирать"
+    },
+    {
+        "wort": "die Bevölkerung",
+        "transcr": "бефёлькерунг",
+        "transl": "население"
+    },
+    {
+        "wort": "hoch",
+        "transcr": "хох",
+        "transl": "высокий"
+    },
+    {
+        "wort": "groß von Wuchs",
+        "transcr": "грос фон вукс",
+        "transl": "высокий"
+    },
+    {
+        "wort": "klein von Wuchs",
+        "transcr": "кляйн фон вукс",
+        "transl": "маленького роста"
+    },
+    {
+        "wort": "mager",
+        "transcr": "магэр",
+        "transl": "худой"
+    },
+    {
+        "wort": "dick",
+        "transcr": "дик",
+        "transl": "толстый"
+    },
+    {
+        "wort": "fit",
+        "transcr": "фит",
+        "transl": "в хорошей физи­ ческой форме"
+    },
+    {
+        "wort": "launisch",
+        "transcr": "лауниш",
+        "transl": "капризный"
+    },
+    {
+        "wort": "der/die Blonde",
+        "transcr": "блондэ",
+        "transl": "блондин(ка)"
+    },
+    {
+        "wort": "der Mensch",
+        "transcr": "менш",
+        "transl": "человек"
+    },
+    {
+        "wort": "der Mann",
+        "transcr": "манн",
+        "transl": "мужчина"
+    },
+    {
+        "wort": "der/die Brünette",
+        "transcr": "брюнетэ(а)",
+        "transl": "брюнет(ка)"
+    },
+    {
+        "wort": "Europäier",
+        "transcr": "ойропэа",
+        "transl": "европейской наружности"
+    },
+    {
+        "wort": "froh",
+        "transcr": "фро",
+        "transl": "радостный"
+    },
+    {
+        "wort": "verstimmt sein",
+        "transcr": "ферштимт зайн",
+        "transl": "расстроеный"
+    },
+    {
+        "wort": "erschrocken",
+        "transcr": "эршрокэн",
+        "transl": "испуганный"
+    },
+    {
+        "wort": "traurig",
+        "transcr": "траурихь",
+        "transl": "печальный"
+    },
+    {
+        "wort": "böse",
+        "transcr": "безе",
+        "transl": "злой"
+    },
+    {
+        "wort": "erstaunt sein",
+        "transcr": "эрштаунт зайн",
+        "transl": "удивленный"
+    },
+    {
+        "wort": "glücklich",
+        "transcr": "глюклихь",
+        "transl": "счастливый"
+    },
+    {
+        "wort": "der Kopf",
+        "transcr": "копф",
+        "transl": "голова"
+    },
+    {
+        "wort": "die Stirne",
+        "transcr": "штирнэ",
+        "transl": "лоб"
+    },
+    {
+        "wort": "das Ohr",
+        "transcr": "ор",
+        "transl": "ухо"
+    },
+    {
+        "wort": "das Auge",
+        "transcr": "аугэ",
+        "transl": "глаз"
+    },
+    {
+        "wort": "das Haar",
+        "transcr": "хаар",
+        "transl": "волосы"
+    },
+    {
+        "wort": "die Nase",
+        "transcr": "назэ",
+        "transl": "нос"
+    },
+    {
+        "wort": "der Mund",
+        "transcr": "мунд",
+        "transl": "рот"
+    },
+    {
+        "wort": "die Lahnen",
+        "transcr": "лэнэн",
+        "transl": "зубы"
+    },
+    {
+        "wort": "der Hals",
+        "transcr": "хальс",
+        "transl": "шея"
+    },
+    {
+        "wort": "die Brust",
+        "transcr": "бруст",
+        "transl": "грудь"
+    },
+    {
+        "wort": "der Rücken",
+        "transcr": "рюкэн",
+        "transl": "спина"
+    },
+    {
+        "wort": "der Bauch",
+        "transcr": "баух",
+        "transl": "живот"
+    },
+    {
+        "wort": "der Arm",
+        "transcr": "арм",
+        "transl": "рука"
+    },
+    {
+        "wort": "das Bein",
+        "transcr": "байн",
+        "transl": "нога"
+    },
+    {
+        "wort": "der  Fuß",
+        "transcr": "фус",
+        "transl": "ступня"
+    },
+    {
+        "wort": "der Finger",
+        "transcr": "фингэр",
+        "transl": "палец руки"
+    },
+    {
+        "wort": "die Nägel",
+        "transcr": "нагель",
+        "transl": "ногти"
+    },
+    {
+        "wort": "recht",
+        "transcr": "рехьт",
+        "transl": "правый."
+    },
+    {
+        "wort": "link",
+        "transcr": "линк",
+        "transl": "левый"
+    },
+    {
+        "wort": "das Fleisch",
+        "transcr": "фляйш",
+        "transl": "мясо"
+    },
+    {
+        "wort": "das Rindfleisch",
+        "transcr": "риндфляйш",
+        "transl": "говядина"
+    },
+    {
+        "wort": "das Schweinfleisch",
+        "transcr": "швайнфляйш",
+        "transl": "свинина"
+    },
+    {
+        "wort": "Hammelfleisch",
+        "transcr": "хамэльфляйш",
+        "transl": "баранина"
+    },
+    {
+        "wort": "das Wildbret",
+        "transcr": "вильдбрэт",
+        "transl": "дичь"
+    },
+    {
+        "wort": "der Fisch",
+        "transcr": "фиш",
+        "transl": "рыба"
+    },
+    {
+        "wort": "das Brot",
+        "transcr": "брот",
+        "transl": "хлеб"
+    },
+    {
+        "wort": "die Käse",
+        "transcr": "кэзэ",
+        "transl": "сыр"
+    },
+    {
+        "wort": "die Wurst",
+        "transcr": "вурст",
+        "transl": "колбаса"
+    },
+    {
+        "wort": "die Butter",
+        "transcr": "буттэр",
+        "transl": "масло"
+    },
+    {
+        "wort": "die Milch",
+        "transcr": "мильхь",
+        "transl": "молоко"
+    },
+    {
+        "wort": "die Eier",
+        "transcr": "айэр",
+        "transl": "яйца"
+    },
+    {
+        "wort": "die Konserven",
+        "transcr": "консервэн",
+        "transl": "консервы"
+    },
+    {
+        "wort": "die Meeresfrüchte",
+        "transcr": "меерэсфрюхьтэ",
+        "transl": "морепродукты"
+    },
+    {
+        "wort": "der Honig",
+        "transcr": "хонихь",
+        "transl": "мед"
+    },
+    {
+        "wort": "das Salz",
+        "transcr": "зальц",
+        "transl": "соль"
+    },
+    {
+        "wort": "der Zucker",
+        "transcr": "цукэр",
+        "transl": "сахар"
+    },
+    {
+        "wort": "das Butterbrot",
+        "transcr": "буттэрброт",
+        "transl": "бутерброд"
+    },
+    {
+        "wort": "die Suppe",
+        "transcr": "зуппэ",
+        "transl": "суп"
+    },
+    {
+        "wort": "der Saft",
+        "transcr": "зафт",
+        "transl": "сок"
+    },
+    {
+        "wort": "der  Tee",
+        "transcr": "тее",
+        "transl": "чай"
+    },
+    {
+        "wort": "der Kaffee",
+        "transcr": "кафее",
+        "transl": "кофе"
+    },
+    {
+        "wort": "die Tränen",
+        "transcr": "трэнэн",
+        "transl": "слезы"
+    },
+    {
+        "wort": "das Lächeln",
+        "transcr": "лэхельн",
+        "transl": "улыбка"
+    },
+    {
+        "wort": "Wodka, Branntwein, Schnaps",
+        "transcr": "водка, брантвайн, шнапс",
+        "transl": "водка"
+    },
+    {
+        "wort": "der Wein",
+        "transcr": "вайн",
+        "transl": "вино"
+    },
+    {
+        "wort": "Whisky",
+        "transcr": "виски",
+        "transl": "виски"
+    },
+    {
+        "wort": "das Wasser",
+        "transcr": "вассэр",
+        "transl": "вода"
+    },
+    {
+        "wort": "das Bier",
+        "transcr": "дасбир",
+        "transl": "пиво"
+    },
+    {
+        "wort": "Kartoffelchips",
+        "transcr": "картофэльчипс",
+        "transl": "чипсы"
+    },
+    {
+        "wort": "das Konfekt, die Pralinen, die Bonbons",
+        "transcr": "конфект, пралннэн, бонбонс",
+        "transl": "конфеты"
+    },
+    {
+        "wort": "die Schokolade",
+        "transcr": "шоколадэ",
+        "transl": "шоколад"
+    },
+    {
+        "wort": "das Eis",
+        "transcr": "айс",
+        "transl": "мороженое"
+    },
+    {
+        "wort": "der Kuchen",
+        "transcr": "кухэн",
+        "transl": "пирожное"
+    },
+    {
+        "wort": "der Kaugummi",
+        "transcr": "каугумми",
+        "transl": "жевательная резинка"
+    },
+    {
+        "wort": "die Vorspeise, das klein Gericht",
+        "transcr": "форшпайзэ, кляйне герихьт",
+        "transl": "закуска"
+    },
+    {
+        "wort": "das Frühstück",
+        "transcr": "фрюштук",
+        "transl": "завтрак"
+    },
+    {
+        "wort": "das Mittagessen",
+        "transcr": "миттакэсэн",
+        "transl": "обед"
+    },
+    {
+        "wort": "das Abendessen",
+        "transcr": "абэнтэсэн",
+        "transl": "ужин"
+    },
+    {
+        "wort": "die Speisekarte",
+        "transcr": "шпайзэкартэ",
+        "transl": "меню"
+    },
+    {
+        "wort": "bestellen",
+        "transcr": "бэштелэн",
+        "transl": "заказывать"
+    },
+    {
+        "wort": "der Kellner",
+        "transcr": "кельнэр",
+        "transl": "официант"
+    },
+    {
+        "wort": "hungrig",
+        "transcr": "хунгрихь",
+        "transl": "голодный"
+    },
+    {
+        "wort": "durstig sein",
+        "transcr": "дурстихь зайн",
+        "transl": "пить хочу"
+    },
+    {
+        "wort": "satt",
+        "transcr": "зат",
+        "transl": "наелся"
+    },
+    {
+        "wort": "genug",
+        "transcr": "генук",
+        "transl": "достаточно"
+    },
+    {
+        "wort": "die Rechnung",
+        "transcr": "рехьнунг",
+        "transl": "счет"
+    },
+    {
+        "wort": "Getränke",
+        "transcr": "гетрэньке",
+        "transl": "напитки"
+    },
+    {
+        "wort": "Lebensmittel",
+        "transcr": "лебэнсмиттэль",
+        "transl": "продукты питания"
+    },
+    {
+        "wort": "Körperteile",
+        "transcr": "кёрпэртайле",
+        "transl": "части тела"
+    },
+    {
+        "wort": "Emotion",
+        "transcr": "эмотион",
+        "transl": "эмоции"
+    },
+    {
+        "wort": "die  Wassermelone",
+        "transcr": "васэрмелони",
+        "transl": "арбуз"
+    },
+    {
+        "wort": "die Melone",
+        "transcr": "мелони",
+        "transl": "дыня"
+    },
+    {
+        "wort": "die  Weintrauben",
+        "transcr": "вайнтраубэн",
+        "transl": "виноград"
+    },
+    {
+        "wort": "die Gurke",
+        "transcr": "гуркэ",
+        "transl": "огурец"
+    },
+    {
+        "wort": "die Tomate",
+        "transcr": "томатэ",
+        "transl": "помидор"
+    },
+    {
+        "wort": "die  Kartoffeln",
+        "transcr": "картоффэльн",
+        "transl": "картофель"
+    },
+    {
+        "wort": "die Knollenzwiebel",
+        "transcr": "кнолэнцвибэль",
+        "transl": "репчатый лук"
+    },
+    {
+        "wort": "der Lauch",
+        "transcr": "лаух",
+        "transl": "зеленый лук"
+    },
+    {
+        "wort": "der Knoblauch",
+        "transcr": "кноблаух",
+        "transl": "чеснок"
+    },
+    {
+        "wort": "die Möhre",
+        "transcr": "мерэ",
+        "transl": "морковь"
+    },
+    {
+        "wort": "die rote Rübe",
+        "transcr": "ротэ рюбэ",
+        "transl": "свекла"
+    },
+    {
+        "wort": "das Kleid, die Kleidung",
+        "transcr": "кляйт, кляйдунг",
+        "transl": "платье"
+    },
+    {
+        "wort": "der Mantel",
+        "transcr": "мантэль",
+        "transl": "пальто"
+    },
+    {
+        "wort": "der Anzug",
+        "transcr": "анцук",
+        "transl": "муж. костюм"
+    },
+    {
+        "wort": "das Kostüm",
+        "transcr": "костюм",
+        "transl": "жен. костюм"
+    },
+    {
+        "wort": "das Jackett",
+        "transcr": "якет",
+        "transl": "пиджак"
+    },
+    {
+        "wort": "die Hose",
+        "transcr": "хозэ",
+        "transl": "брюки"
+    },
+    {
+        "wort": "Jeans",
+        "transcr": "джине",
+        "transl": "джинсы"
+    },
+    {
+        "wort": "das Hemd",
+        "transcr": "хемт",
+        "transl": "рубашка"
+    },
+    {
+        "wort": "der Rock",
+        "transcr": "рок",
+        "transl": "юбка"
+    },
+    {
+        "wort": "der Rollkragenpullover",
+        "transcr": "ролкрагенпуловэр",
+        "transl": "свитер"
+    },
+    {
+        "wort": "das T-Shirt Trikot, Trikothemd, Sporthemd",
+        "transcr": "ти ширт, трикот, трикотхемт, шпортхемт",
+        "transl": "футболка"
+    },
+    {
+        "wort": "die Stiefel",
+        "transcr": "штифэль",
+        "transl": "сапоги"
+    },
+    {
+        "wort": "der Apfel",
+        "transcr": "апфэль",
+        "transl": "яблоко"
+    },
+    {
+        "wort": "die Banane",
+        "transcr": "бананэ",
+        "transl": "банан"
+    },
+    {
+        "wort": "die Schuhe",
+        "transcr": "шуэ",
+        "transl": "туфли"
+    },
+    {
+        "wort": "die Sportschuhe, Laufschuhe",
+        "transcr": "шпортшуэ, лауфшуэ",
+        "transl": "кроссовки"
+    },
+    {
+        "wort": "die Hausschuhe; Pantoffeln",
+        "transcr": "хаусшуэ, пантофэльн",
+        "transl": "дом. тапочки"
+    },
+    {
+        "wort": "die Handschuhe",
+        "transcr": "хантшуэ",
+        "transl": "перчатки"
+    },
+    {
+        "wort": "die Brille",
+        "transcr": "бриллэ",
+        "transl": "очки"
+    },
+    {
+        "wort": "die Armbanduhr",
+        "transcr": "армбантур",
+        "transl": "часы (наручные)"
+    },
+    {
+        "wort": "das Tuch",
+        "transcr": "тух",
+        "transl": "платок"
+    },
+    {
+        "wort": "das Taschentuch",
+        "transcr": "ташэнтух",
+        "transl": "носовой платок"
+    },
+    {
+        "wort": "der Ring",
+        "transcr": "ринг",
+        "transl": "кольцо"
+    },
+    {
+        "wort": "der Gurt",
+        "transcr": "гурт",
+        "transl": "ремень"
+    },
+    {
+        "wort": "der Knopf",
+        "transcr": "кнопф",
+        "transl": "пуговица"
+    },
+    {
+        "wort": "neu",
+        "transcr": "ной",
+        "transl": "новый"
+    },
+    {
+        "wort": "alt",
+        "transcr": "альт",
+        "transl": "старый"
+    },
+    {
+        "wort": "lieblings",
+        "transcr": "либлингс",
+        "transl": "любимый"
+    },
+    {
+        "wort": "persönliche  Sachen",
+        "transcr": "перзёнлихэ захен",
+        "transl": "личные вещи"
+    },
+    {
+        "wort": "Gemüse",
+        "transcr": "гемюзэ",
+        "transl": "овощи"
+    },
+    {
+        "wort": "Obst",
+        "transcr": "опст",
+        "transl": "фрукты"
+    },
+    {
+        "wort": "die Krankheit",
+        "transcr": "кранкхайт",
+        "transl": "болезнь"
+    },
+    {
+        "wort": "der Krankenwagen",
+        "transcr": "кранкэнвагэн",
+        "transl": "скорая помощь (автомобиль)"
+    },
+    {
+        "wort": "der Notfalldienst",
+        "transcr": "нотфальдинст",
+        "transl": "скорая помощь (отд. больницы)"
+    },
+    {
+        "wort": "die Apotheke",
+        "transcr": "апотекэ",
+        "transl": "аптека"
+    },
+    {
+        "wort": "das Medikament",
+        "transcr": "медикамэнт",
+        "transl": "лекарство"
+    },
+    {
+        "wort": "die Medizin",
+        "transcr": "медицин",
+        "transl": "лекарство"
+    },
+    {
+        "wort": "das Gift",
+        "transcr": "гифт",
+        "transl": "яд"
+    },
+    {
+        "wort": "sich wohl fühlen",
+        "transcr": "зихь воль фюлэн",
+        "transl": "чувствовать себя хорошо"
+    },
+    {
+        "wort": "schlecht",
+        "transcr": "шлехьт",
+        "transl": "плохо"
+    },
+    {
+        "wort": "das Warenhaus",
+        "transcr": "варэнхауе",
+        "transl": "универмаг"
+    },
+    {
+        "wort": "das Kaufhaus",
+        "transcr": "кауфхаус",
+        "transl": "универмаг"
+    },
+    {
+        "wort": "das Geschäft",
+        "transcr": "гешэфт",
+        "transl": "магазин"
+    },
+    {
+        "wort": "der Markt",
+        "transcr": "маркт",
+        "transl": "рынок"
+    },
+    {
+        "wort": "das Geschenk",
+        "transcr": "гешэньк",
+        "transl": "подарок"
+    },
+    {
+        "wort": "der Verkäufer",
+        "transcr": "феркойфэр",
+        "transl": "продавец"
+    },
+    {
+        "wort": "der Preis",
+        "transcr": "прайс",
+        "transl": "цена"
+    },
+    {
+        "wort": "die Große",
+        "transcr": "грёсэ",
+        "transl": "размер"
+    },
+    {
+        "wort": "wieviel kostet es?",
+        "transcr": "вифиль костэт эс?",
+        "transl": "сколько  стоит?"
+    },
+    {
+        "wort": "teuer",
+        "transcr": "тойэр",
+        "transl": "дорогой"
+    },
+    {
+        "wort": "billig",
+        "transcr": "биллихь",
+        "transl": "дешевый"
+    },
+    {
+        "wort": "prächtig",
+        "transcr": "прэхтихь",
+        "transl": "великолепный"
+    },
+    {
+        "wort": "die Seife",
+        "transcr": "зайфэ",
+        "transl": "мыло"
+    },
+    {
+        "wort": "das  Haarwaschmittel",
+        "transcr": "хаарвашмитэль",
+        "transl": "шампунь"
+    },
+    {
+        "wort": " die Haarwäsche",
+        "transcr": "хаарвэшэ",
+        "transl": "шампунь"
+    },
+    {
+        "wort": "die Zahncreme",
+        "transcr": "цанкремэ",
+        "transl": "зубная паста"
+    },
+    {
+        "wort": "Zahnpaste",
+        "transcr": "цанпастэ",
+        "transl": "зубная паста"
+    },
+    {
+        "wort": "die Zahnbürste",
+        "transcr": "цанбюрстэ",
+        "transl": "зубная щетка"
+    },
+    {
+        "wort": "das Handtuch",
+        "transcr": "ханттух",
+        "transl": "полотенце"
+    },
+    {
+        "wort": "Duschgel",
+        "transcr": "душгель",
+        "transl": "гель для душа"
+    },
+    {
+        "wort": "der Bademantel",
+        "transcr": "бадэмантэль",
+        "transl": "банный халат"
+    },
+    {
+        "wort": "der Kamm",
+        "transcr": "деркам",
+        "transl": "гребешок"
+    },
+    {
+        "wort": "die Haarbürste",
+        "transcr": "хаарбюретэ",
+        "transl": "щетка для волос"
+    },
+    {
+        "wort": "das Kölnischwasser",
+        "transcr": "кёльнишвасэр",
+        "transl": "одеколон"
+    },
+    {
+        "wort": "der  Schnee",
+        "transcr": "шнее",
+        "transl": "снег"
+    },
+    {
+        "wort": "der Wind",
+        "transcr": "винт",
+        "transl": "ветер"
+    },
+    {
+        "wort": "der Himmel",
+        "transcr": "химмэль",
+        "transl": "небо"
+    },
+    {
+        "wort": "die Jahreszeit",
+        "transcr": "яресцайт",
+        "transl": "сезон"
+    },
+    {
+        "wort": "naß",
+        "transcr": "нас",
+        "transl": "мокрый"
+    },
+    {
+        "wort": "kalt",
+        "transcr": "кальт",
+        "transl": "холодный"
+    },
+    {
+        "wort": "die Feuchtigkeit",
+        "transcr": "фойхтихкайт",
+        "transl": "влажность"
+    },
+    {
+        "wort": "klar",
+        "transcr": "клар",
+        "transl": "ясно"
+    },
+    {
+        "wort": "wolkenlos",
+        "transcr": "волькенлос",
+        "transl": "ясно"
+    },
+    {
+        "wort": "trübe",
+        "transcr": "трюбэ",
+        "transl": "пасмурно"
+    },
+    {
+        "wort": "das Klima",
+        "transcr": "клима",
+        "transl": "климат"
+    },
+    {
+        "wort": "ärztliche Hilfe",
+        "transcr": "эрцлихе хильфэ",
+        "transl": "медицинская помощь"
+    },
+    {
+        "wort": "Toilettensachen",
+        "transcr": "тоилетэнзахэн",
+        "transl": "туалетны принадлежности"
+    },
+    {
+        "wort": "Kosmetiksachen",
+        "transcr": "косметикзахэн",
+        "transl": "косметика"
+    },
+    {
+        "wort": "Einkäufe",
+        "transcr": "айнкойфе",
+        "transl": "покупки"
+    },
+    {
+        "wort": "die  Rasiercreme",
+        "transcr": "разиркреме",
+        "transl": "крем для бритья"
+    },
+    {
+        "wort": "der Zahnfaden",
+        "transcr": "цанфадэн",
+        "transl": "зубная нить"
+    },
+    {
+        "wort": "der Hund",
+        "transcr": "хунт",
+        "transl": "собака"
+    },
+    {
+        "wort": "die Katze",
+        "transcr": "катцэ",
+        "transl": "кошка"
+    },
+    {
+        "wort": "der Vogel",
+        "transcr": "фёгель",
+        "transl": "птица"
+    },
+    {
+        "wort": "die Ente",
+        "transcr": "диентэ",
+        "transl": "утка"
+    },
+    {
+        "wort": "das Huhn",
+        "transcr": "дасхун",
+        "transl": "курица"
+    },
+    {
+        "wort": "das  Schwein",
+        "transcr": "швайн",
+        "transl": "свинья"
+    },
+    {
+        "wort": "der  Bär",
+        "transcr": "бэр",
+        "transl": "медведь"
+    },
+    {
+        "wort": "das Kaninchen",
+        "transcr": "тсанинхен",
+        "transl": "кролик"
+    },
+    {
+        "wort": "der Fuchs",
+        "transcr": "фукс",
+        "transl": "лиса"
+    },
+    {
+        "wort": "der Wolf",
+        "transcr": "вольф",
+        "transl": "волк"
+    },
+    {
+        "wort": "die Schlange",
+        "transcr": "шлангэ",
+        "transl": "змея"
+    },
+    {
+        "wort": "der Flügel",
+        "transcr": "флюгель",
+        "transl": "крыло"
+    },
+    {
+        "wort": "die Pfote, die Tatze",
+        "transcr": "пфотэ, татцэ",
+        "transl": "лапа"
+    },
+    {
+        "wort": "der Schweif",
+        "transcr": "швайф",
+        "transl": "хвост"
+    },
+    {
+        "wort": "das Fell",
+        "transcr": "фель",
+        "transl": "шерсть"
+    },
+    {
+        "wort": "der Fußball, das Fußballspiel",
+        "transcr": "фусбаль, фусбалыппиль",
+        "transl": "футбол"
+    },
+    {
+        "wort": "das Eishockey",
+        "transcr": "айсхоки",
+        "transl": "хоккей на льду"
+    },
+    {
+        "wort": "der Basketball",
+        "transcr": "баскетбаль",
+        "transl": "баскетбол"
+    },
+    {
+        "wort": "der Volleyball",
+        "transcr": "волейбаль",
+        "transl": "волейбол"
+    },
+    {
+        "wort": "das Ringen",
+        "transcr": "рингэн",
+        "transl": "борьба"
+    },
+    {
+        "wort": "das Tennisspiel",
+        "transcr": "тенисшпиль",
+        "transl": "теннис"
+    },
+    {
+        "wort": "der Ball",
+        "transcr": "баль",
+        "transl": "мяч"
+    },
+    {
+        "wort": "der Schläger",
+        "transcr": "шлэгэр",
+        "transl": "ракетка"
+    },
+    {
+        "wort": "die Skier",
+        "transcr": "скир",
+        "transl": "лыжи"
+    },
+    {
+        "wort": "die Schlittschuhe",
+        "transcr": "шлиттшуэ",
+        "transl": "коньки"
+    },
+    {
+        "wort": "das Damespiel",
+        "transcr": "дамэншпиль",
+        "transl": "шашки"
+    },
+    {
+        "wort": "das Schachspiel",
+        "transcr": "шахшпиль",
+        "transl": "шахматы"
+    },
+    {
+        "wort": "die Karten",
+        "transcr": "картэн",
+        "transl": "карты"
+    },
+    {
+        "wort": "der Wettkampf",
+        "transcr": "веткампф",
+        "transl": "соревнование"
+    },
+    {
+        "wort": "das Spiel",
+        "transcr": "шпиль",
+        "transl": "игра"
+    },
+    {
+        "wort": "die Meisterschaft",
+        "transcr": "майстэршафт",
+        "transl": "чемпионат"
+    },
+    {
+        "wort": "der Baum",
+        "transcr": "баум",
+        "transl": "дерево"
+    },
+    {
+        "wort": "das Gras",
+        "transcr": "грае",
+        "transl": "трава"
+    },
+    {
+        "wort": "die Blume",
+        "transcr": "блумэ",
+        "transl": "цветок"
+    },
+    {
+        "wort": "der Pilz",
+        "transcr": "пильц",
+        "transl": "гриб"
+    },
+    {
+        "wort": "die Temperatur",
+        "transcr": "температур",
+        "transl": "температура"
+    },
+    {
+        "wort": "der Regen",
+        "transcr": "регэн",
+        "transl": "дождь"
+    },
+    {
+        "wort": "Tiere",
+        "transcr": "тирэ",
+        "transl": "животные"
+    },
+    {
+        "wort": "Sport",
+        "transcr": "шпорт",
+        "transl": "спорт"
+    },
+    {
+        "wort": "Pflanze",
+        "transcr": "пфланцэ",
+        "transl": "растения"
+    },
+    {
+        "wort": "Wetter",
+        "transcr": "веттэр",
+        "transl": "погода"
+    },
+    {
+        "wort": "der Ingenieur",
+        "transcr": "инженер",
+        "transl": "инженер"
+    },
+    {
+        "wort": "der Arzt",
+        "transcr": "дерарцт",
+        "transl": "врач"
+    },
+    {
+        "wort": "der Jurist",
+        "transcr": "юрист",
+        "transl": "юрист"
+    },
+    {
+        "wort": "der Fahrer",
+        "transcr": "фарэр",
+        "transl": "водитель"
+    },
+    {
+        "wort": "der Polizist",
+        "transcr": "полицист",
+        "transl": "полицейский"
+    },
+    {
+        "wort": "die Hausfrau",
+        "transcr": "хаусфрау",
+        "transl": "домохозяйка"
+    },
+    {
+        "wort": "der Bankier",
+        "transcr": "банкир",
+        "transl": "банкир"
+    },
+    {
+        "wort": "die Schule",
+        "transcr": "шулэ",
+        "transl": "школа"
+    },
+    {
+        "wort": "die Universität",
+        "transcr": "университэт",
+        "transl": "институт / универ­ситет"
+    },
+    {
+        "wort": "der Student",
+        "transcr": "штудэнт",
+        "transl": "студент"
+    },
+    {
+        "wort": "der Schüler",
+        "transcr": "шюлэр",
+        "transl": "ученик"
+    },
+    {
+        "wort": "der Lektor",
+        "transcr": "лектор",
+        "transl": "преподаватель"
+    },
+    {
+        "wort": "der Lehrer",
+        "transcr": "лерэр",
+        "transl": "учитель"
+    },
+    {
+        "wort": "lernen",
+        "transcr": "лернен",
+        "transl": "выучить"
+    },
+    {
+        "wort": "studieren",
+        "transcr": "штудирэн",
+        "transl": "изучать"
+    },
+    {
+        "wort": "sich spezialisieren",
+        "transcr": "зихь шпацирэнгеэн",
+        "transl": "специализиро­ваться"
+    },
+    {
+        "wort": "schwänzen",
+        "transcr": "швэнцэн",
+        "transl": "пропускать"
+    },
+    {
+        "wort": "versäumen",
+        "transcr": "ферзоймэн",
+        "transl": "прогуливать"
+    },
+    {
+        "wort": "das Gewicht",
+        "transcr": "гевихьт",
+        "transl": "вес"
+    },
+    {
+        "wort": "die Entfernung",
+        "transcr": "энтфэрнунг",
+        "transl": "расстояние"
+    },
+    {
+        "wort": "der Umfang",
+        "transcr": "умфанг",
+        "transl": "объем"
+    },
+    {
+        "wort": "das Milligramm",
+        "transcr": "милиграм",
+        "transl": "миллиграмм"
+    },
+    {
+        "wort": "das Gramm",
+        "transcr": "грам",
+        "transl": "грамм"
+    },
+    {
+        "wort": "das Kilogramm",
+        "transcr": "килограм",
+        "transl": "килограмм"
+    },
+    {
+        "wort": "die Tonne",
+        "transcr": "дитонэ",
+        "transl": "тонна"
+    },
+    {
+        "wort": "der Millimeter",
+        "transcr": "милиметэр",
+        "transl": "миллиметр"
+    },
+    {
+        "wort": "der Zentimeter",
+        "transcr": "центиметэр",
+        "transl": "сантиметр"
+    },
+    {
+        "wort": "der Meter",
+        "transcr": "метэр",
+        "transl": "метр"
+    },
+    {
+        "wort": "der Kilometer",
+        "transcr": "километэр",
+        "transl": "километр"
+    },
+    {
+        "wort": "der Milliliter",
+        "transcr": "милилитэр",
+        "transl": "миллилитр"
+    },
+    {
+        "wort": "der Liter",
+        "transcr": "литэр",
+        "transl": "литр"
+    },
+    {
+        "wort": "Maßeinheit",
+        "transcr": "масэнхайт",
+        "transl": "единицы измерения"
+    },
+    {
+        "wort": "Kalender",
+        "transcr": "календэр",
+        "transl": "календарь"
+    },
+    {
+        "wort": "Bildung",
+        "transcr": "бильдунг",
+        "transl": "образование"
+    },
+    {
+        "wort": "Berufe",
+        "transcr": "беруфэ",
+        "transl": "профессии"
+    },
+    {
+        "wort": "das Holz",
+        "transcr": "хольц",
+        "transl": "древесина"
+    },
+    {
+        "wort": "das Glas",
+        "transcr": "глас",
+        "transl": "стекло"
+    },
+    {
+        "wort": "der Ziegel",
+        "transcr": "цигэль",
+        "transl": "кирпич"
+    },
+    {
+        "wort": "der Beton",
+        "transcr": "бетон",
+        "transl": "бетон"
+    },
+    {
+        "wort": "der Stein",
+        "transcr": "штайн",
+        "transl": "камень"
+    },
+    {
+        "wort": "der Plast",
+        "transcr": "пласт",
+        "transl": "пластик"
+    },
+    {
+        "wort": "der Gummi",
+        "transcr": "гумми",
+        "transl": "резина"
+    },
+    {
+        "wort": "das Leder",
+        "transcr": "ледэр",
+        "transl": "кожа"
+    },
+    {
+        "wort": "der Stoff",
+        "transcr": "штоф",
+        "transl": "ткань"
+    },
+    {
+        "wort": "die Farbe",
+        "transcr": "фарбэ",
+        "transl": "краска"
+    },
+    {
+        "wort": "der Boden",
+        "transcr": "бодэн",
+        "transl": "земля"
+    },
+    {
+        "wort": "das Wasser",
+        "transcr": "васэр",
+        "transl": "вода"
+    },
+    {
+        "wort": "künstlich",
+        "transcr": "кюнстлихь",
+        "transl": "искусственный"
+    },
+    {
+        "wort": "echt",
+        "transcr": "ехьт",
+        "transl": "настоящий"
+    },
+    {
+        "wort": "bedeckt sein",
+        "transcr": "бедект зайн",
+        "transl": "быть покрытым"
+    },
+    {
+        "wort": "gemacht aus....",
+        "transcr": "гемахт  аус",
+        "transl": "сделанный из"
+    },
+    {
+        "wort": "der Zoll",
+        "transcr": "цоль",
+        "transl": "дюйм = 2,54 см"
+    },
+    {
+        "wort": "der Fuß",
+        "transcr": "фус",
+        "transl": "фут = 30,48 см"
+    },
+    {
+        "wort": "das Yard",
+        "transcr": "йаат",
+        "transl": "ярд = 0,91  м"
+    },
+    {
+        "wort": "die Meile",
+        "transcr": "майле",
+        "transl": "миля=  1609 м"
+    },
+    {
+        "wort": "die Unze",
+        "transcr": "унцэ",
+        "transl": "унция = 28,3 г"
+    },
+    {
+        "wort": "das Pfund",
+        "transcr": "пфунт",
+        "transl": "фунт = 0,45 кг"
+    },
+    {
+        "wort": "das Viertel",
+        "transcr": "фиатэль",
+        "transl": "кварта = 0,95  л"
+    },
+    {
+        "wort": "Gallon",
+        "transcr": "галон",
+        "transl": "галлон = 3,8 л"
+    },
+    {
+        "wort": "orange",
+        "transcr": "оранже",
+        "transl": "оранжевый"
+    },
+    {
+        "wort": "gelb",
+        "transcr": "гельп",
+        "transl": "желтый"
+    },
+    {
+        "wort": "grün",
+        "transcr": "грюн",
+        "transl": "зеленый"
+    },
+    {
+        "wort": "violett",
+        "transcr": "виолетт",
+        "transl": "фиолетовый"
+    },
+    {
+        "wort": "weiß",
+        "transcr": "вайе",
+        "transl": "белый"
+    },
+    {
+        "wort": "schwarz",
+        "transcr": "шварц",
+        "transl": "черный"
+    },
+    {
+        "wort": "braun",
+        "transcr": "браун",
+        "transl": "коричневый"
+    },
+    {
+        "wort": "gestreift",
+        "transcr": "гештрайфт",
+        "transl": "полосатый"
+    },
+    {
+        "wort": "gepunktet",
+        "transcr": "гепунктэт",
+        "transl": "в горошек"
+    },
+    {
+        "wort": "kariert",
+        "transcr": "карьирт",
+        "transl": "клетчатый"
+    },
+    {
+        "wort": "das Metall",
+        "transcr": "метал",
+        "transl": "металл"
+    },
+    {
+        "wort": "das Gold",
+        "transcr": "гольт",
+        "transl": "золото"
+    },
+    {
+        "wort": "das Silber",
+        "transcr": "зильбэр",
+        "transl": "серебро"
+    },
+    {
+        "wort": "das Kupfer",
+        "transcr": "купфер",
+        "transl": "медь"
+    },
+    {
+        "wort": "das Aluminium",
+        "transcr": "алуминиум",
+        "transl": "алюминий"
+    },
+    {
+        "wort": "das Erdöl",
+        "transcr": "ердоль",
+        "transl": "нефть"
+    },
+    {
+        "wort": "die Kohle",
+        "transcr": "колэ",
+        "transl": "уголь"
+    },
+    {
+        "wort": "gewinnen",
+        "transcr": "гевинэн",
+        "transl": "добывать"
+    },
+    {
+        "wort": "fördern",
+        "transcr": "фёрдерн",
+        "transl": "добывать"
+    },
+    {
+        "wort": "die Ziffer",
+        "transcr": "цифэр",
+        "transl": "цифра"
+    },
+    {
+        "wort": "die Nummer",
+        "transcr": "нумэр",
+        "transl": "номер"
+    },
+    {
+        "wort": "plus",
+        "transcr": "плюс",
+        "transl": "плюс"
+    },
+    {
+        "wort": "minus",
+        "transcr": "минус",
+        "transl": "минус"
+    },
+    {
+        "wort": "der größere",
+        "transcr": "гресерэ",
+        "transl": "больший"
+    },
+    {
+        "wort": "der kleinere",
+        "transcr": "кляйнерэ",
+        "transl": "меньший"
+    },
+    {
+        "wort": "noch mehr",
+        "transcr": "нох мэр",
+        "transl": "более (еще)"
+    },
+    {
+        "wort": "weniger",
+        "transcr": "венигэр",
+        "transl": "менее"
+    },
+    {
+        "wort": "Bodenschätze",
+        "transcr": "бодэншэтцэ",
+        "transl": "полезные ископаемые"
+    },
+    {
+        "wort": "mit Muster",
+        "transcr": "мит мустэр",
+        "transl": "с рисунком"
+    },
+    {
+        "wort": "farbenfroh",
+        "transcr": "фарбэнфро",
+        "transl": "яркий"
+    },
+    {
+        "wort": "hell",
+        "transcr": "хель",
+        "transl": "светлый"
+    },
+    {
+        "wort": "dunkel",
+        "transcr": "дункель",
+        "transl": "темный"
+    },
+    {
+        "wort": "groß",
+        "transcr": "грос",
+        "transl": "большой"
+    },
+    {
+        "wort": "klein",
+        "transcr": "кляйн",
+        "transl": "маленький"
+    },
+    {
+        "wort": "teuer",
+        "transcr": "тойэр",
+        "transl": "дорогой"
+    },
+    {
+        "wort": "billig",
+        "transcr": "биллихь",
+        "transl": "дешевый"
+    },
+    {
+        "wort": "nah",
+        "transcr": "на",
+        "transl": "близкий"
+    },
+    {
+        "wort": "weit",
+        "transcr": "вайт",
+        "transl": "далекий"
+    },
+    {
+        "wort": "gut",
+        "transcr": "гут",
+        "transl": "хороший"
+    },
+    {
+        "wort": "schlecht",
+        "transcr": "шлехьт",
+        "transl": "плохой"
+    },
+    {
+        "wort": "hoch",
+        "transcr": "хох",
+        "transl": "высокий"
+    },
+    {
+        "wort": "niedrig",
+        "transcr": "нидрихь",
+        "transl": "низкий"
+    },
+    {
+        "wort": "schnell",
+        "transcr": "шнель",
+        "transl": "быстрый"
+    },
+    {
+        "wort": "langsam",
+        "transcr": "лангзам",
+        "transl": "медленный"
+    },
+    {
+        "wort": "sauber",
+        "transcr": "заубэр",
+        "transl": "чистый"
+    },
+    {
+        "wort": "dieser",
+        "transcr": "дизэр",
+        "transl": "этот"
+    },
+    {
+        "wort": "jener",
+        "transcr": "ейнэр",
+        "transl": "тот"
+    },
+    {
+        "wort": "schmutzig",
+        "transcr": "шмутцихь",
+        "transl": "грязный"
+    },
+    {
+        "wort": "ausländisch",
+        "transcr": "ауслэндиш",
+        "transl": "иностранный"
+    },
+    {
+        "wort": "eigen",
+        "transcr": "айгэн",
+        "transl": "собственный"
+    },
+    {
+        "wort": "jung",
+        "transcr": "юнг",
+        "transl": "молодой"
+    },
+    {
+        "wort": "alt",
+        "transcr": "альт",
+        "transl": "старый"
+    },
+    {
+        "wort": "einfach",
+        "transcr": "айнфах",
+        "transl": "простой"
+    },
+    {
+        "wort": "kompliziert",
+        "transcr": "комплицирт",
+        "transl": "сложный"
+    },
+    {
+        "wort": "englisch",
+        "transcr": "энглиш",
+        "transl": "английский"
+    },
+    {
+        "wort": "amerikanisch",
+        "transcr": "американиш",
+        "transl": "американский"
+    },
+    {
+        "wort": "rassisch",
+        "transcr": "русиш",
+        "transl": "русский"
+    },
+    {
+        "wort": "deutsch",
+        "transcr": "дойтч",
+        "transl": "немецкий"
+    },
+    {
+        "wort": "französisch",
+        "transcr": "францёзиш",
+        "transl": "французский"
+    },
+    {
+        "wort": "rechts",
+        "transcr": "рехьтс",
+        "transl": "справа"
+    },
+    {
+        "wort": "links",
+        "transcr": "линкс",
+        "transl": "слева"
+    },
+    {
+        "wort": "oben",
+        "transcr": "обэн",
+        "transl": "вверху"
+    },
+    {
+        "wort": "unten",
+        "transcr": "унтэн",
+        "transl": "внизу"
+    },
+    {
+        "wort": "neben",
+        "transcr": "небэн",
+        "transl": "около"
+    },
+    {
+        "wort": "etwa",
+        "transcr": "этва",
+        "transl": "примерно"
+    },
+    {
+        "wort": "in der Nähe",
+        "transcr": "ин дер нээ",
+        "transl": "рядом"
+    },
+    {
+        "wort": "weit",
+        "transcr": "вайт",
+        "transl": "далеко"
+    },
+    {
+        "wort": "kommen",
+        "transcr": "комэн",
+        "transl": "идти,  ехать"
+    },
+    {
+        "wort": "leben",
+        "transcr": "лебэн",
+        "transl": "жить"
+    },
+    {
+        "wort": "lesen",
+        "transcr": "лезэн",
+        "transl": "читать"
+    },
+    {
+        "wort": "schreiben",
+        "transcr": "шрайбэн",
+        "transl": "писать"
+    },
+    {
+        "wort": "fliegen",
+        "transcr": "флигэн",
+        "transl": "летать"
+    },
+    {
+        "wort": "sehen",
+        "transcr": "зеэн",
+        "transl": "видеть"
+    },
+    {
+        "wort": "kaufen",
+        "transcr": "кауфэн",
+        "transl": "покупать"
+    },
+    {
+        "wort": "einschalten",
+        "transcr": "айншальтэн",
+        "transl": "включить"
+    },
+    {
+        "wort": "ausschalten",
+        "transcr": "аусшальтэн",
+        "transl": "выключить"
+    },
+    {
+        "wort": "sein",
+        "transcr": "зайн",
+        "transl": "быть (являться, находиться)"
+    },
+    {
+        "wort": "die Welt",
+        "transcr": "вельт",
+        "transl": "Мир"
+    },
+    {
+        "wort": "die Sonne",
+        "transcr": "зонэ",
+        "transl": "Солнце"
+    },
+    {
+        "wort": "der Gott",
+        "transcr": "гот",
+        "transl": "Бог"
+    },
+    {
+        "wort": "die Information",
+        "transcr": "информатион",
+        "transl": "информация"
+    },
+    {
+        "wort": "das Programm",
+        "transcr": "програм",
+        "transl": "программа"
+    },
+    {
+        "wort": "die Kunst",
+        "transcr": "кунст",
+        "transl": "искусство"
+    },
+    {
+        "wort": "die Industrie",
+        "transcr": "индустри",
+        "transl": "промышленность"
+    },
+    {
+        "wort": "die   Landwirtschaft",
+        "transcr": "лантвиртшафт",
+        "transl": "сельское хозяйство"
+    },
+    {
+        "wort": "der Handel",
+        "transcr": "хандель",
+        "transl": "торговля"
+    },
+    {
+        "wort": "der  Kundendienst",
+        "transcr": "кундэндинст",
+        "transl": "сервис"
+    },
+    {
+        "wort": "die Kontrolle",
+        "transcr": "контролэ",
+        "transl": "контроль"
+    },
+    {
+        "wort": "es",
+        "transcr": "эс",
+        "transl": "это"
+    },
+    {
+        "wort": "das",
+        "transcr": "дас",
+        "transl": "то"
+    },
+    {
+        "wort": "die Lüge",
+        "transcr": "люгэ",
+        "transl": "ложь"
+    },
+    {
+        "wort": "die Wahrheit",
+        "transcr": "вархайт",
+        "transl": "правда"
+    },
+    {
+        "wort": "das Gedächtnis",
+        "transcr": "гэдэхьнис",
+        "transl": "память"
+    },
+    {
+        "wort": "das Hobby",
+        "transcr": "хоби",
+        "transl": "хобби"
+    }
+  ]

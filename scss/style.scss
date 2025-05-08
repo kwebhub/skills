@@ -1,0 +1,166 @@
+@use './fonts' as *;
+@use './reset' as *;
+@use './vars' as *;
+@use './global' as *;
+
+header {
+  margin: 4rem 0;
+}
+
+.logo {
+  font-weight: $fontWeightLogo;
+  font-size: $fontSizeLogo;
+  color: $colorLogo;
+}
+
+img {
+  width: 100%;
+}
+
+a {
+  display: block;
+  font-size: $fontSizeMenu;
+}
+
+details {
+  margin: 1rem 0;
+}
+
+summary {
+  cursor: pointer;
+  display: flex;
+}
+
+.menu {
+  &__item {
+  font-size: $fontSizeLogo;
+
+    & a {
+      margin: 1.25rem;
+    }
+  }
+
+  &__inner {
+    font-size: $fontSizeMenu;
+    line-height: 2;
+
+    & a {
+      color: $colorAccent3;
+    }
+    & pre, p, span, li {
+      color: $colorText;
+    }
+
+    & em{
+      color: $colorBase;
+    }
+
+    & code {
+      color: $colorAccent3;
+      font-size: $fontSizeBase;
+    }
+
+    & dfn {
+      color: $colorAccent1;
+    }
+
+    & b {
+      color: $colorAccent2;
+    }
+
+    & small{
+      font-size: $fontSizeSub;
+      color: $colorAccent3;
+    }
+  }
+
+  &__submenu {
+    color: $colorMenu;
+    &_lv1 {
+      color: $colorSubMenu;
+    }
+  }
+}
+
+table {
+  width: 80vw;
+  margin-bottom: 1.25rem;
+}
+thead {
+  background-color: $colorBgTable;
+}
+
+tbody {
+  text-align: center;
+  font-size: $fontSizeBase;
+}
+
+tr:nth-child(even) {
+  background-color: $colorBgTable;
+}
+
+th, td {
+  border: 1px solid $colorBgTable;
+  border-collapse: collapse;
+}
+
+@media (max-width: 32rem) {
+  .logo {
+    font-weight: $fontWeightLogo;
+    font-size: $fontSizeMenu;
+    margin-top: 1rem;
+    text-align: center;
+
+    & a {
+      color: $colorLogo;
+    }
+  }
+  
+  .menu {
+    &__item {
+    font-size: $fontSizeMenu;
+    margin-bottom: 1.5rem;
+
+      & a {
+        font-size: $fontSizeBase;
+        color: $colorBase;
+      }
+    }
+
+    &__sublist a {
+      font-size: $fontSizeSub;
+      font-style: italic;
+      color: $colorBase;
+    }
+  }
+}
+
+@media (max-width: 25rem) {
+  .logo {
+    font-weight: $fontWeightLogo;
+    font-size: $fontSizeBase;
+    margin-top: 0.75rem;
+    text-align: center;
+
+    & a {
+      color: $colorLogo;
+    }
+  }
+  
+  .menu {
+    &__item {
+    font-size: $fontSizeBase;
+    margin-bottom: 1.5rem;
+      & a {
+        font-size: $fontSizeBase;
+        color: $colorBase;
+      }
+    }
+
+    &__sublist a {
+      font-size: $fontSizeSub;
+      font-style: italic;
+      color: $colorBase;
+    }
+  }
+}
