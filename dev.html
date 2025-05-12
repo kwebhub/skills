@@ -4537,36 +4537,17 @@ CSS компонентов находится по адресу node_modules/@wo
 - Модель (Model) - отвечает за работу с данными и бизнес-логикой приложения.<br>
 - Представление (View) - отвечает за отображение данных пользователю.<br>
 - Контроллер (Controller) - связывает модель и представление, обрабатывает запросы и управляет логикой приложения.<br>
-</p><details><summary>Install</summary><pre><code>laravel new example-app
+</p><details><summary>Create app</summary><pre><code>laravel new example-app
 cd example-app
-php artisan sail:install
-./vendor/bin/sail up
-./vendor/bin/sail artisan migrate
-alias sail='sh $([ -f sail ] && echo sail || echo vendor/bin/sail)' - добавить псевдоним в ~/.zshrc или ~/.bashrc
+php artisan sail:install</code></pre><p>добавить псевдоним в ~/.zshrc</p><pre><code>alias sail='zsh $([ -f sail ] && echo sail || echo vendor/bin/sail)'
+alias sailar='zsh $([ -f sail ] && echo sail artisan || echo vendor/bin/sail artisan)'
 sail artisan list
 sail up -d
-http://localhost
-sail stop - остановить контейнеры
-sail down - удалить контейнеры
-sail down -v - удалить контейнеры и тома
-sail down --rmi all - удалить контейнеры, тома и образы
-sail down --volumes - удалить только тома
-sail down --remove-orphans - удалить контейнеры, которые не определены в docker-compose.yml
-sail build - пересобрать контейнеры
-sail build --no-cache - пересобрать контейнеры без кеша
-sail build --pull - пересобрать контейнеры с обновлением образов
-sail build --pull --no-cache - пересобрать контейнеры с обновлением образов без кеша
-sail artisan queue:work --queue=default --tries=3 --timeout=90 --sleep=3 --delay=0 --max-jobs=1000 --max-time=3600
-sail php --version
-sail php script.php
-sail composer require laravel/sanctum
-sail npm run dev
-sail yarn
-sail artisan serve --host=
-</code><p>Обновить образы:</p><pre><code>docker compose down -v
+sailar migrate
+http://localhost</code></pre><p>остановить контейнеры</p><code>sail stop </code><p>удалить контейнеры</p><code>sail down</code><p>удалить контейнеры и тома</p><code>sail down -v</code><p>удалить контейнеры, тома и образы</p><code>sail down --rmi all</code><p>удалить только тома</p><code>sail down --volumes</code><p>удалить контейнеры, которые не определены в docker-compose.yml</p><code>sail down --remove-orphans</code><p>пересобрать контейнеры</p><code>sail build</code><p>пересобрать контейнеры без кеша</p><code>sail build --no-cache</code><p>пересобрать контейнеры с обновлением образов без кеша</p><code>sail build --pull --no-cache</code><p>запуск очереди</p><code>sail artisan queue:work --queue=default --tries=3 --timeout=90 --sleep=3 --delay=0 --max-jobs=1000 --max-time=3600</code><p>версия php</p><code>sail php --version</code><p>выполнить скрипт php</p><code>sail php script.php</code><p>установить пакет</p><code>sail composer require laravel/sanctum</code><p>запустить скрипт npm</p><code>sail npm run dev</code><p>запустить yarn</p><code>sail yarn</code><p>запустить сервер на указанном хосте</p><code>sail artisan serve --host=yourhost</code><p>Обновить образы:</p><pre><code>docker compose down -v
 sail build --no-cache
 sail up -d
-</code></pre></pre></details><details><summary>Folder structure</summary><p>- app - основная папка приложения, код приложения<br>
+</code></pre></details><details><summary>Folder structure</summary><p>- app - основная папка приложения, код приложения<br>
 - bootstrap - начальная загрузка приложения и кеширование<br>
 - config - конфигурация приложения<br>
 - database - миграции, фабрики, наполнители (seeders), sqlite<br>
