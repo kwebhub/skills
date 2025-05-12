@@ -7203,6 +7203,748 @@ block menu
           p фильтровать по пользователю
           code php artisan pail --user=1
 
+        //- Packages
+        details
+          summary Packages
+          p.
+            - Cashier (Stripe) - платежная система Stripe<br>
+            - Cashier (Paddle) - платежная система Paddle<br>
+            - Dusk - автоматизация и тестирование браузеров<br>
+            - Envoy - выполнение задач на удаленных серверах<br>
+            - Fortify - backend реализация authentication<br>
+            - Folio - роутер, основанный на страницах для упрощения маршрутизации<br>
+            - Homestead - локальная среда разработки на Vagrant<br>
+            - Horizon - панель управления и конфигурацию для Redis системы очередей<br>
+            - Mix - компиляция и минимизация файлов CSS и JavaScript<br>
+            - Octane - увеличивает производительность приложения<br>
+            - Passport - обеспечивает полную реализацию OAuth2 сервера для приложения<br>
+            - Pennant - комплект флагов без крафт. Флаги позволяют постепенно внедрять новые функции приложений, А/Б тестировать новые интерфейсы, дополнять стратегию развития на основе ствола<br>
+            - Pint - стиль кода, устанавливается по умолчанию<br>
+            - Precognition - предвидеть результат будущего HTTP-запроса, выполнит всю промежуточную обработку маршрута и разрешит зависимости контроллера, включая валидацию запросов формы без выполнения метода контроллера.<br>
+            - Prompts - добавление красивых и удобных форм к приложениям командной строки с функциями браузера<br>
+            - Pulse - сведения о производительности и использовании приложения<br>
+            - Reverb - масштабируемый в реальном времени WebSocket коммуникаций<br>
+            - Sail - взаимодействие со средой разработки Docker<br>
+            - Sanctum - система аутентификации для SPA (приложения с одной страницей), мобильные приложения и простые токены-API<br>
+            - Scout - полнотекстовоый поиск<br>
+            - Socialite аутентификация через соц.сети<br>
+            - Telescope предоставляет информацию о поступающих запросах, исключениях, записях записей, баз данных, задаваемых заданий, почтовых сообщений, уведомлениях, операциях кэша, запланированных задачах, переменных дампов и т.д.<br>
+            - Valet среда разработки для мак
+
+        //- Testing
+        details
+          summary Testing
+          p.
+            - pest: это обёртка для phpunit.<br>
+            - файл tests/Pest.php - конфигурация тестов<br>
+            - создаю тест
+          code php artisan make:test
+          p запускаю тест
+          code php artisan test
+          p - создание теста в tests/Feature
+          code php artisan make:test UserTest
+          p - создание теста в tests/Unit
+          code php artisan make:test UserTest --unit
+          p - создание юнит-теста с использованием Pest, если файл уже существует, без вывода сообщений в консоль, без интерактивного ввода и без ANSI-вывода
+          code php artisan make:test UserTest --pest --unit --force --quiet --no-interaction --no-ansi
+          p. 
+            - php artisan test - запуск тестов<br>
+            - ./vendor/bin/phpunit - запуск тестов<br>
+            - ./vendor/bin/pest - запуск тестов<br>
+            <br>
+            - ./vendor/bin/phpunit tests/Feature/UserTest.php::testBasic<br>
+            - ./vendor/bin/phpunit tests/Unit/UserTest.php::testBasic<br>
+            <br>
+            - настроить переменные окружения testing можно в phpunit.xml<br>
+            - после внесения изменений выполнить очистку кэша<br>
+          code php artisan config:clear
+          p.
+            - при тесторовании вместо .env можно использовать .env.testing<br>
+            - сгенерировать новый тестовый файл .env.testing<br>
+          code cp .env.example .env.testing
+          p в UserTest
+          pre
+            code.
+              test('basic', function () {
+                  expect(true)->toBeTrue();
+              });
+          p передать аргументы
+          code php artisan test --testsuite=Feature --stop-on-failure
+          p запуск тестов в командной строке
+          pre
+            code.
+              ./vendor/bin/phpunit
+              либо
+              ./vendor/bin/pest
+              либо
+              php artisan test
+          p параллельный запуск тестов
+          pre
+            code.
+              composer require brianium/paratest --dev
+              php artisan test --parallel
+              // настроить количество процессов - не более количества ядер ЦП на компьюторе
+              php artisan test --parallel --processes=4
+              // пересоздать тестовые базы данных
+              php artisan test --parallel --recreate-databases
+          p.
+            хуки параллельного тестирования:<br>
+            подготовка определенные ресурсы, используемые тестами<br>
+            $token - токен процесса<br>
+            $testCase - текущий тестовый класс<br>
+          pre
+            code.
+              namespace App\Providers;
+              use Illuminate\Support\Facades\Artisan;
+              use Illuminate\Support\Facades\ParallelTesting;
+              use Illuminate\Support\ServiceProvider;
+              use PHPUnit\Framework\TestCase;
+              class AppServiceProvider extends ServiceProvider
+              {
+                public function boot(): void
+                {
+                  ParallelTesting::setUpProcess(function (int $token) {});
+                  ParallelTesting::setUpTestCase(function (int $token, TestCase $testCase) {});
+                  // Выполнится при создании тестовой базы данных...
+                  ParallelTesting::setUpTestDatabase(function (string $database, int $token) {
+                    Artisan::call('db:seed');
+                  });
+                  ParallelTesting::tearDownTestCase(function (int $token, TestCase $testCase) {});
+                  ParallelTesting::tearDownProcess(function (int $token) {});
+                }
+              }
+          p доступ к текущему “токену” параллельного процесса из любого места приложения
+          code $token = ParallelTesting::token();
+          p отчет о покрытии тестами (требуется Xdebug или PCOV.)
+          code php artisan test --coverage
+          p задать минимальный порог покрытия тестами
+          code php artisan test --coverage --min=80.3
+          p получить список десяти самых медленных тестов
+          code php artisan test --profile
+          p.
+            - сделать запрос к приложению - вызвать в тесте методы get, post, put, patch, или delete<br>
+            - один тест - один запрос<br>
+          pre
+            code.
+              test('the application returns a successful response', function () {
+                $response = $this->get('/');
+                $response->assertStatus(200);
+              });
+          p настройки заголовков запроса
+          pre
+            code.
+              test('interacting with headers', function () {
+                $response = $this->withHeaders([
+                  'X-Header' => 'Value',
+                ])->post('/user', ['name' => 'Sally']);
+                $response->assertStatus(201);
+              });
+          p установить значения файлов Cookies
+          pre
+            code.
+              test('interacting with cookies', function () {
+                $response = $this->withCookie('color', 'blue')->get('/');
+                $response = $this->withCookies([
+                  'color' => 'blue',
+                  'name' => 'Taylor',
+                ])->get('/');
+              });
+          p установить данные сессии
+          pre
+            code.
+              test('interacting with the session', function () {
+                $response = $this->withSession(['banned' => false])->get('/');
+              });
+          p actingAs – аутентифицировать указанного пользователя как текущего
+          pre
+            code.
+              use App\Models\User;
+              test('an action that requires authentication', function () {
+                $user = User::factory()->create();
+                $response = $this->actingAs($user)
+                          ->withSession(['banned' => false])
+                          ->get('/');
+              });
+          p с использованием гэйта
+          code $this->actingAs($user, 'web')
+          p проверка и отладка содержимого ответа
+          pre
+            code.
+              test('basic test', function () {
+                $response = $this->get('/');
+                $response->dumpHeaders();
+                $response->dumpSession();
+                $response->dump();
+              });
+              либо
+              test('basic test', function () {
+                $response = $this->get('/');
+                $response->ddHeaders();
+                $response->ddSession();
+                $response->dd();
+              });
+          p тесты исключений
+          pre
+            code.
+              use App\Exceptions\InvalidOrderException;
+              use Illuminate\Support\Facades\Exceptions;
+              test('exception is thrown', function () {
+                Exceptions::fake();
+                $response = $this->get('/order/1');
+                Было ли выброшено исключение InvalidOrderException
+                Exceptions::assertReported(InvalidOrderException::class);
+                Было ли выброшено исключение InvalidOrderException с заданным сообщением
+                Exceptions::assertReported(function (InvalidOrderException $e) {
+                  return $e->getMessage() === 'The order was invalid.';
+                });
+              });
+          p указанное исключение и никаких исключений не было создано во время запроса
+          pre
+            code.
+              Exceptions::assertNotReported(InvalidOrderException::class);
+              Exceptions::assertNothingReported();
+          p отключить обработку исключений для данного запроса
+          code $response = $this->withoutExceptionHandling()->get('/');
+          p проверить, что приложение не использует устаревшие функции
+          code $response = $this->withoutDeprecationHandling()->get('/');
+          p проверить, что код внутри замыкания генерирует исключение указанного типа
+          pre
+            code.
+              $this->assertThrows(
+                fn () => (new ProcessOrder)->execute(),
+                OrderInvalid::class
+              );
+          p проверить, что код внутри замыкания генерирует исключение указанного типа, а исключение равно заданому значению
+          pre
+            code.
+              $this->assertThrows(
+                fn () => (new ProcessOrder)->execute(),
+                fn (OrderInvalid $e) => $e->orderId() === 123;
+              );
+          p.
+            тесты JSON API<br>
+            методы для тестирования API-интерфейсов JSON и их ответов: json, getJson, postJson, putJson, patchJson, deleteJson, и optionsJson<br>
+            сделать запрос POST к /api/user<br>
+          pre
+            code.
+              test('making an api request', function () {
+                $response = $this->postJson('/api/user', ['name' => 'Sally']);
+                $response
+                  ->assertStatus(201)
+                  // метод assertJson используется для подтверждения наличия фрагмента JSON в ответе JSON
+                  ->assertJson([
+                    'created' => true,
+                  ]);
+              });
+          p получить доступ к данным ответа JSON как к массиву
+          code expect($response['created'])->toBeTrue();
+          p проверить, что массив в точности соответствует JSON
+          pre
+            code.
+              test('asserting an exact json match', function () {
+                $response = $this->postJson('/user', ['name' => 'Sally']);
+                $response
+                  ->assertStatus(201)
+                  ->assertExactJson([
+                    'created' => true,
+                  ]);
+              });
+          p убедиться, что ответ JSON содержит данные по указанному пути
+          pre
+            code.
+              test('asserting a json path value', function () {
+                $response = $this->postJson('/user', ['name' => 'Sally']);
+                $response
+                  ->assertStatus(201)
+                  ->assertJsonPath('team.owner.name', 'Darian');
+              });
+          p динамическое определение, должно ли утверждение выполниться
+          code $response->assertJsonPath('team.owner.name', fn (string $name) => strlen($name) >= 3);
+          p последовательное тестирование ответов JSON
+          pre
+            code.
+              use Illuminate\Testing\Fluent\AssertableJson;
+              test('fluent json', function () {
+                $response = $this->getJson('/users/1');
+                $response
+                  ->assertJson(fn (AssertableJson $json) =>
+                    $json->where('id', 1)
+                      // where - для присутствующего атрибута 
+                      ->where('name', 'Victoria Faith')
+                      ->where('email', fn (string $email) => str($email)->is('victoria@gmail.com'))
+                      ->whereNot('status', 'pending')
+                      // missing - для отсутствующего атрибута JSON
+                      ->missing('password')
+                      // etc - в объекте JSON могут присутствовать другие атрибуты
+                      ->etc()
+                    );
+              });
+          p проверить, что атрибут присутствует или отсутствует (has и missing)
+          pre
+            code.
+              $response->assertJson(fn (AssertableJson $json) =>
+                $json->has('data')
+                  ->missing('message')
+              );
+          p наличие или отсутствие нескольких атрибутов (hasAll и missingAll)
+          pre
+            code.
+              $response->assertJson(fn (AssertableJson $json) =>
+                $json->hasAll(['status', 'data'])
+                  ->missingAll(['message', 'code'])
+              );
+          p присутствует ли хотя бы один из заданного списка
+          pre
+            code.
+              $response->assertJson(fn (AssertableJson $json) =>
+                $json->has('status')
+                  ->hasAny('data', 'message', 'code')
+              );
+          p проверить маршрут, который возращает всех пользователей
+          pre
+            code.
+              Route::get('/users', function () {
+                return User::all();
+              });
+          p тест по первому пользователю
+          pre
+            code.
+              $response
+                ->assertJson(fn (AssertableJson $json) =>
+                  $json->has(3)
+                    ->first(fn (AssertableJson $json) =>
+                      $json->where('id', 1)
+                        ->where('name', 'Victoria Faith')
+                        ->where('email', fn (string $email) => str($email)->is('victoria@gmail.com'))
+                        ->missing('password')
+                        ->etc()
+                    )
+                );
+          p проверить маршрут, который возвращает коллекцию JSON с именованными ключами
+          pre
+            code.
+              Route::get('/users', function () {
+                return [
+                  'meta' => [...],
+                  'users' => User::all(),
+                ];
+              })
+              тест
+              $response
+                ->assertJson(fn (AssertableJson $json) =>
+                  $json->has('meta')
+                    ->has('users', 3)
+                    ->has('users.0', fn (AssertableJson $json) =>
+                      $json->where('id', 1)
+                        ->where('name', 'Victoria Faith')
+                        ->where('email', fn (string $email) => str($email)->is('victoria@gmail.com'))
+                        ->missing('password')
+                        ->etc()
+                    )
+                );
+              либо
+              $response
+                ->assertJson(fn (AssertableJson $json) =>
+                  $json->has('meta')
+                    ->has('users', 3, fn (AssertableJson $json) =>
+                      $json->where('id', 1)
+                        ->where('name', 'Victoria Faith')
+                        ->where('email', fn (string $email) => str($email)->is('victoria@gmail.com'))
+                        ->missing('password')
+                        ->etc()
+                    )
+                );
+          p проверить тип
+          pre
+            code.
+              $response->assertJson(fn (AssertableJson $json) =>
+                $json->whereType('id', 'integer')
+                  ->whereAllType([
+                    'users.0.name' => 'string',
+                    'meta' => 'array'
+                  ])
+              );
+          p проверить наличие одного из типов, допустимые типы: string, integer, double, boolean, array, и null
+          pre
+            code.
+              $response->assertJson(fn (AssertableJson $json) =>
+                $json->whereType('name', 'string|null')
+                  ->whereType('id', ['string', 'integer'])
+              );
+          p.
+            тесты загрузки файлов<br>
+            протестировать форму загрузки аватара<br>
+            метод fake есть у класса UploadedFile и у фасада Storage<br>
+          pre
+            code.
+              use Illuminate\Http\UploadedFile;
+              use Illuminate\Support\Facades\Storage;
+              test('avatars can be uploaded', function () {
+                Storage::fake('avatars');
+                $file = UploadedFile::fake()->image('avatar.jpg');
+                $response = $this->post('/avatar', [
+                  'avatar' => $file,
+                ]);
+                Storage::disk('avatars')->assertExists($file->hashName());
+              });
+          p подтвердить, что переданный файл не существует
+          pre
+            code.
+              Storage::fake('avatars');
+              Storage::disk('avatars')->assertMissing('missing.jpg');
+          p указать ширину, высоту и размер изображения (в килобайтах)
+          code UploadedFile::fake()->image('avatar.jpg', $width, $height)->size(100);
+          p создать pdf
+          code UploadedFile::fake()->create('document.pdf', $sizeInKilobytes);
+          p явно определить MIME-тип файла
+          pre
+            code.
+              UploadedFile::fake()->create(
+                'document.pdf', $sizeInKilobytes, 'application/pdf'
+              );
+          p тесты шаблонов: assertSee, assertSeeInOrder, assertSeeText, assertSeeTextInOrder, assertDontSee и assertDontSeeText
+          pre
+            code.
+              test('a welcome view can be rendered', function () {
+                $view = $this->view('welcome', ['name' => 'Taylor']);
+                $view->assertSee('Taylor');
+              });
+          p получить необработанное отрисованное содержимое шаблона
+          code $contents = (string) $this->view('welcome');
+          p добавить в глобальную коллекцию ошибок сообщения об ошибках
+          pre
+            code.
+              $view = $this->withViewErrors([
+                'name' => ['Please provide a valid name.']
+              ])->view('form');
+              $view->assertSee('Please provide a valid name.');
+          p метод blade возвращает экземпляр Illuminate\Testing\TestView
+          pre
+            code.
+              $view = $this->blade(
+                '&lt;x-component :name="$name" /&gt;',
+                ['name' => 'Taylor']
+              );
+              $view->assertSee('Taylor');
+          p метод component возвращает экземпляр Illuminate\Testing\TestComponent
+          pre
+            code.
+              $view = $this->component(Profile::class, ['name' => 'Taylor']);
+              $view->assertSee('Taylor');
+          a(href="http://laravel.su/docs/12.x/http-tests#utverzdeniia-otvetov") доступные утверждения ответов
+          p.
+            тесты аутентификации<br>
+            пользователь аутентифицирован<br>
+          code $this->assertAuthenticated($guard = null);
+          p пользователь не аутентифицирован
+          code $this->assertGuest($guard = null);
+          p конкретный пользователь аутентифицирован
+          code $this->assertAuthenticatedAs($user, $guard = null);
+          p.
+            тесты валидации<br>
+            ответ содержит ошибки валидации для указанных ключей<br>
+          pre
+            code.
+              $response->assertInvalid(['name', 'email']);
+              // либо
+              $response->assertInvalid([
+                'name' => 'The name field is required.',
+                'email' => 'valid email address',
+              ]);
+          p.
+            тесты консоли<br>
+            метод artisan для вызова Artisan-команды из теста,<br>
+            метод assertExitCode, проверить, что команда завершилась с указанным кодом (код 0 - успех, остальное - нет)<br>
+          pre
+            code.
+              test('console command', function () {
+                $this->artisan('inspire')->assertExitCode(0);
+              });
+          p команда не завершилась с заданным кодом
+          pre
+            code.
+              $this->artisan('inspire')->assertNotExitCode(1);
+              // либо
+              $this->artisan('inspire')->assertSuccessful();
+              $this->artisan('inspire')->assertFailed();
+          p.
+            тесты ввода/вывода<br>
+            метод expectsQuestion - имитировать ввод пользователя в консольных командах<br>
+            метод assertExitCode - ожидаемый код завершения команды<br>
+            метод expectsOutput - ожидаемый при выполнении команды текст<br>
+          p консольная команда
+          pre
+            code.
+              Artisan::command('question', function () {
+                $name = $this->ask('What is your name?');
+                $language = $this->choice('Which language do you prefer?', [
+                  'PHP',
+                  'Ruby',
+                  'Python',
+                ]);
+                $this->line('Your name is '.$name.' and you prefer '.$language.'.');
+              });
+          p проверить команду
+          pre
+            code.
+              test('console command', function () {
+                $this->artisan('question')
+                  ->expectsQuestion('What is your name?', 'Taylor Otwell')
+                  ->expectsQuestion('Which language do you prefer?', 'PHP')
+                  ->expectsOutput('Your name is Taylor Otwell and you prefer PHP.')
+                  ->doesntExpectOutput('Your name is Taylor Otwell and you prefer Ruby.')
+                  ->assertExitCode(0);
+              });
+          p expectsSearch, чтобы имитировать ввод пользователя, результаты поиска и выбор
+          pre
+            code.
+              test('console command', function () {
+                $this->artisan('example')
+                  ->expectsSearch('What is your name?', search: 'Tay', answers: [
+                    'Taylor Otwell',
+                    'Taylor Swift',
+                    'Darian Taylor'
+                  ], answer: 'Taylor Otwell')
+                  ->assertExitCode(0);
+              });
+          p проверить, что команда не генерирует никакого вывода
+          pre
+            code.
+              test('console command', function () {
+                $this->artisan('example')
+                  ->doesntExpectOutput()
+                  ->assertExitCode(0);
+              });
+          p проверить часть вывода
+          pre
+            code.
+              test('console command', function () {
+                $this->artisan('example')
+                  ->expectsOutputToContain('Taylor')
+                  ->assertExitCode(0);
+              });
+          p команды ожидает ответа «да» или «нет»
+          pre
+            code.
+              $this->artisan('module:import')
+                ->expectsConfirmation('Do you really wish to run this command?', 'no')
+                ->assertExitCode(1);
+          p проверить таблицу
+          pre
+            code.
+              $this->artisan('users:all')
+                ->expectsTable([
+                  'ID',
+                  'Email',
+                ], [
+                  [1, 'taylor@example.com'],
+                  [2, 'abigail@example.com'],
+                ]);
+          p включить генерацию консольных событий при выполнении тестов
+          pre
+            code.
+              use Illuminate\Foundation\Testing\WithConsoleEvents;
+              uses(WithConsoleEvents::class);
+          p.
+            тесты БД<br>
+            сброс базы данных после каждого теста<br>
+          pre
+            code.
+              use Illuminate\Foundation\Testing\RefreshDatabase;
+              uses(RefreshDatabase::class);
+              test('basic example', function () {
+                $response = $this->get('/');
+              });
+          p.
+            полностью сбросить БД
+            - использовать трейты Illuminate\Foundation\Testing\DatabaseMigrations или Illuminate\Foundation\Testing\DatabaseTruncation<br>
+            - использовать фабрику в тестах<br>
+          pre
+            code.
+              use App\Models\User;
+              test('models can be instantiated', function () {
+                  $user = User::factory()->create();
+              });
+          p использовать наполнитель в тестах
+          pre
+            code.
+              use Database\Seeders\OrderStatusSeeder;
+              use Database\Seeders\TransactionStatusSeeder;
+              use Illuminate\Foundation\Testing\RefreshDatabase;
+              uses(RefreshDatabase::class);
+              test('orders can be created', function () {
+                // Run the DatabaseSeeder...
+                $this->seed();
+                // Run a specific seeder...
+                $this->seed(OrderStatusSeeder::class);
+                Run an array of specific seeders...
+                  $this->seed([
+                    OrderStatusSeeder::class,
+                    TransactionStatusSeeder::class,
+                ]);
+              });
+          p автоматически заполнять базу данных перед каждым тестом
+          pre
+            code.
+              namespace Tests;
+              use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
+              abstract class TestCase extends BaseTestCase
+              {
+                - Указывает, следует ли запускать наполнитель по умолчанию перед каждым тестом.
+                - @var bool
+                protected $seed = true;
+              }
+              либо
+              use Database\Seeders\OrderStatusSeeder;
+              protected $seeder = OrderStatusSeeder::class;
+          p таблица в базе данных содержит указанное количество записей
+          code $this->assertDatabaseCount('users', 5);
+          p таблица в базе данных не содержит записей
+          code $this->assertDatabaseEmpty('users');
+          p таблица в базе данных содержит записи, соответствующие переданным ключ/значение
+          pre
+            code.
+              $this->assertDatabaseHas('users', [
+                'email' => 'sally@example.com',
+              ]);
+          p таблица в базе данных не содержит записей, соответствующих переданным ключ/значение
+          pre
+            code.
+              $this->assertDatabaseMissing('users', [
+                'email' => 'sally@example.com',
+              ]);
+          p модель была «программно удалена»
+          code $this->assertSoftDeleted($user);
+          p модель не была «программно удалена»
+          code $this->assertNotSoftDeleted($user);
+          p данная модель существует в базе данныхuse App\Models\User;
+          pre
+            code.
+              $user = User::factory()->create();
+              $this->assertModelExists($user);
+          p данной модели не существует в базе данных
+          pre
+            code.
+              use App\Models\User;
+              $user = User::factory()->create();
+              $user->delete();
+              $this->assertModelMissing($user);
+          p ожидаемое числа запросов к базе данных во время выполнения теста
+          code $this->expectsDatabaseQueryCount(5);
+          p.
+            имитация:<br>
+            использовать подставной экземпляр объекта вместо создания самого объекта<br>
+          pre
+            code.
+              use App\Service;
+              use Mockery;
+              use Mockery\MockInterface;
+              test('something can be mocked', function () {
+                $this->instance(
+                  Service::class,
+                  Mockery::mock(Service::class, function (MockInterface $mock) {
+                    $mock->shouldReceive('process')->once();
+                  })
+                );
+              });
+              // либо
+              use App\Service;
+              use Mockery\MockInterface;
+              $mock = $this->mock(Service::class, function (MockInterface $mock) {
+                $mock->shouldReceive('process')->once();
+              });
+          p имитировать несколько методов объекта
+          pre
+            code.
+              use App\Service;
+              use Mockery\MockInterface;
+              $mock = $this->partialMock(Service::class, function (MockInterface $mock) {
+                $mock->shouldReceive('process')->once();
+              });
+          p шпионы записывают любое взаимодействие между шпионом и тестируемым кодом
+          pre
+            code.
+              use App\Service;
+              $spy = $this->spy(Service::class);
+              $spy->shouldHaveReceived('process');
+          p для контроллера
+          pre
+            code.
+              namespace App\Http\Controllers;
+              use Illuminate\Support\Facades\Cache;
+              class UserController extends Controller
+              {
+                - Получить список всех пользователей приложения
+                public function index(): array
+                {
+                  $value = Cache::get('key');
+                  return [];
+                }
+              }
+          p имитировать вызов фасада Cache
+          pre
+            code.
+              use Illuminate\Support\Facades\Cache;
+              test('get index', function () {
+                Cache::shouldReceive('get')
+                      ->once()
+                      ->with('key')
+                      ->andReturn('value');
+                $response = $this->get('/users');
+              });
+          p шпионить за фасадом
+          pre
+            code.
+              use Illuminate\Support\Facades\Cache;
+              test('values are be stored in cache', function () {
+                Cache::spy();
+                $response = $this->get('/');
+                $response->assertStatus(200);
+                Cache::shouldHaveReceived('put')->once()->with('name', 'Taylor', 10);
+              });
+          p управлять текущим временем
+          pre
+            code.
+              test('time can be manipulated', function () {
+                // Travel into the future...
+                $this->travel(5)->milliseconds();
+                $this->travel(5)->seconds();
+                $this->travel(5)->minutes();
+                $this->travel(5)->hours();
+                $this->travel(5)->days();
+                $this->travel(5)->weeks();
+                $this->travel(5)->years();
+                // Travel into the past...
+                $this->travel(-5)->hours();
+                // Travel to an explicit time...
+                $this->travelTo(now()->subHours(6));
+                // Return back to the present time...
+                $this->travelBack();
+              });
+              либо
+              $this->travel(5)->days(function () {
+                // Test something five days into the future...
+              });
+              $this->travelTo(now()->subDays(10), function () {
+                // Test something during a given moment...
+              });
+              либо
+              use Illuminate\Support\Carbon;
+              // Freeze time and resume normal time after executing closure...
+              $this->freezeTime(function (Carbon $time) { });
+              // Freeze time at the current second and resume normal time after executing closure...
+              $this->freezeSecond(function (Carbon $time) { })
+          p блокировка неактивных сообщений на форуме
+          pre
+            code.
+              use App\Models\Thread;
+              test('forum threads lock after one week of inactivity', function () {
+                $thread = Thread::factory()->create();
+                $this->travel(1)->week();
+                expect($thread->isLockedByInactivity())->toBeTrue();
+              });
+          p тесты браузера
+
       //- Application
       details
         summary Application
@@ -7866,6 +8608,17 @@ block menu
           code php artisan make:controller UserController - создать контроллер
           p создать контроллер одиночного действия
           code php artisan make:controller ProvisionServer --invokable
+          p with(['employer', 'tags']) чтобы избежать проблему n+1
+          pre
+            code.
+              public function __invoke()
+              {
+                $jobs = Job::query()
+                  ->with(['employer', 'tags'])
+                  ->where('title', 'LIKE', '%'.request('q').'%')
+                  ->get();
+                return view('results', ['jobs' => $jobs]);
+              }
           p указать middleware в контроллере
           pre
             code.
@@ -7891,8 +8644,42 @@ block menu
                       },
                   ];
               }
+          //- Methods
+          table
+            caption Methods
+            thead
+              tr
+                th Controller Method 
+                th Action
+            tbody
+              tr
+                td index
+                td view all
+              tr
+                td show
+                td view one
+              tr
+                td create
+                td show form for create
+              tr
+                td store
+                td create
+              tr
+                td edit
+                td show form for edit
+              tr
+                td update
+                td update
+              tr
+                td destroy
+                td delete
           p создать ресурсный контроллер
-          code php artisan make:controller PhotoController --resource
+          pre
+            code.
+              php artisan make:controller PhotoController --resource
+              либо
+              php artisan make:controller PhotoController -r
+
           p создать ресурсный контроллер с привязкой к моделе и валидацией
           code php artisan make:controller PhotoController --model=Photo --resource --requests
           p ресурсный api-контроллер - ресурсный контроллер без create и edit
@@ -8382,6 +9169,17 @@ block menu
                             ->action('Verify Email Address', $url);
                     });
                 }
+          
+          //- Fortify
+          //- backend реализация authentication
+          details 
+            summary Fortify
+            p установить Fortify<br>
+            code ./sail composer require laravel/fortify<br>
+            p создать папки и роуты Fortify<br>
+            code ./sail artisan fortify:install<br>
+            p обновить БД<br>
+            code ./sail artisan migrate<br>
 
         //- Session
         //- хранение данных между запросами
@@ -8577,7 +9375,7 @@ block menu
           details
             summary Gates
             p.
-              шлюз - это функция проверки прав пользователя на действия без модели или ресурса, например просмотр панели управления администратора.<br>
+              шлюз - это функция проверки прав пользователя на действия без использования модели или ресурса, например просмотр панели управления администратора.<br>
             pre
               code.
                 App\Providers\AppServiceProvider.php
@@ -8601,6 +9399,83 @@ block menu
                 {
                     Gate::define('update-post', [PostPolicy::class, 'update']);
                 }
+            p.
+              Gate - объявляется в App\Providers\AppServiceProvider методом boot(),<br>
+              исспользуется для простых ограничений ролей.<br>
+              Аргументом всегда принимает пользоватля, к которому применяет ограничения.<br>
+              Дополнительные аргументы по необходимости.
+            pre
+              code.
+                use App\Models\Post;
+                use App\Models\User;
+                use Illuminate\Support\Facades\Gate;
+
+                public function boot(): void
+                {
+                  Gate::define('update-post', function (User $user, Post $post) {
+                    return $user->id === $post->user_id;
+                  });
+                }
+            p.
+              Gate::define - объявляю Gate,<br>
+              'update-post' - название возможности предоставляемой пользователю<br>
+              function (User $user, Post $post) - вернёт true/false,<br>
+              true - этому пользователю можно пользоваться этой возможностью<br>
+              false - этому пользователю нельзя пользоваться этой возможностью<br>
+              <br>
+              Можно вынести логику в отдельный класс (политику)
+            pre
+              code.
+                use App\Policies\PostPolicy;
+                use Illuminate\Support\Facades\Gate;
+                
+                public function boot(): void
+                {
+                  Gate::define('update-post', [PostPolicy::class, 'update']);
+                }
+            p.
+              После этого в любом контроллере можем проверять роль конкрено указав пользователя
+            pre
+              code.
+                if (Gate::forUser($user)->allows('update-post', $post)) {}
+                if (Gate::forUser($user)->denies('update-post', $post)) {}
+            p.
+              allows - разрешено ли<br>
+              denies - запрещено ли<br>
+              <br>
+              Проверять роль текущего пользователя с кастомным условием
+            pre
+              code.
+                if (! Gate::allows('update-post', $post)) {
+                  abort(403);
+                }
+                if (Gate::denies('update-post', $post)) {
+                  abort(403);
+                }
+            p.
+              Проверять роль текущего пользователя встроенным методом
+            pre
+              code Gate::authorize('update-post', $post);
+            p.
+              Проверить несколько возможностей
+            pre
+              code.
+                if (Gate::any(['update-post', 'delete-post'], $post)) {
+                  // The user can update or delete the post...
+                }
+
+                if (Gate::none(['update-post', 'delete-post'], $post)) {
+                  // The user can't update or delete the post...
+                }
+            p.
+              В контроллере гейт может обратиться к политике.<br>
+              Первый параметр это название политики,<br>
+              второй - либо объект модели, если есть, либо класс модели
+            pre
+              code.
+                Gate::authorize('update', $post);
+                <span>or</span>
+                Gate::authorize('update', App\Models\Post::class);
             p Авторизация действий через шлюзы
             pre
               code.
@@ -8800,6 +9675,55 @@ block menu
               code.
                 - создать политику с привязкой к модели
                 php artisan make:policy PostPolicy --model=Post
+            p.
+              Политика всегда относится к какой-то модели.<br>
+              Создать политику можно при создании модели либо отдельно.<br>
+              По конвенции название политики содержит название модели.
+            code php artisan make:policy PostPolicy
+            p Создать политику с методами для модели Post
+            code php artisan make:policy PostPolicy --model=Post
+            p.
+              Назвать политику можно не по конвенции,<br>
+              но тогда её нужно зарегистрировать в<br>
+              App\Providers\AppServiceProvider методом boot()
+            pre
+              code.
+                use App\Models\ModelName;
+                use App\Policies\PolicyName;
+                use Illuminate\Support\Facades\Gate;
+                
+                public function boot(): void
+                {
+                    Gate::policy(ModelName::class, PolicyName::class);
+                }
+            table
+              caption Methods
+              thead
+                tr
+                  th Policy Method 
+                  th Action
+              tbody
+                tr
+                  td viewAny
+                  td view all
+                tr
+                  td view
+                  td view one
+                tr
+                  td create
+                  td create & store
+                tr
+                  td update
+                  td edit
+                tr
+                  td delete
+                  td mark as delete
+                tr
+                  td restore
+                  td unmark as delete
+                tr
+                  td forceDelete
+                  td permanently delete
             p.
               - Laravel проверит наличие политик в app/Models/Policies, а затем в app/Policies.
               - Имя политики должно совпадать с названием модели и иметь суффикс Policy.
@@ -11870,6 +12794,708 @@ block menu
                   {
                       parent::setUp();
 
+        //- Livewire
+        details 
+          summary Livewire
+          //- Routes
+          details
+            summary Routes
+            p просмотреть список роутов
+            code php artisan route:list --except-vendor
+            
+            //- Route::view
+            p просто выдать страницу без дополнительных действий
+            code Route::view('/', 'home');
+
+            //- Name for route
+            pre
+              code.
+                code Route::view('/', 'welcome')->name('home');
+                
+                <span>welcome.blade.php</span>
+                &lt;nav&gt;
+                  &lt;a href="{{ route('home') }}"&gt;Home&lt;/a&gt;
+                &lt;/nav&gt;
+            
+            //- Execute test
+            pre
+              code.
+                Route::get('test', function () {
+                  $job = Job::first();
+                  TranslateJob::dispatch($job);
+                  return 'Done';
+                });
+            
+            //- Model binding
+            p.
+              wildcard {job} and parametr of function $job<br>
+              type of parametr function (Job $job)<br>
+              ларавель понимает, что нужен объект модели Job c данными из таблицы<br>
+              этот объект он отбирает из БД по значению {job}<br>
+              по умолчанию {job} - это id, но можно задать своё значение {job:name}
+            pre
+              code.
+                Route::get('/jobs/{job}', function (Job $job) {
+                  return view('jobs.show', ['job' => $job]);
+                });
+            
+            //- Controller classes
+            p вызываю метод index из класса контроллера JobController при переходе на /jobs
+            code Route::get('/jobs', [JobController::class, 'index']);
+            p В livewire можно укзавыть роут на класс компонента
+            pre
+              code.
+                Route::get('/posts', ShowPosts::class);
+                Route::get('/posts/create', CreatePost::class);
+            p.
+              для этого необходимо создать шаблон для всех компонентов<br>
+              (components.layouts.app.blade.php)
+            code ./sail artisan livewire:layout
+
+            //- Route groups
+            p объединяю роуты c одним и тем же контроллером
+            pre
+              code.
+                Route::controller(JobController::class)->group( function()
+                {
+                  Route::get('/jobs', 'index');
+                  Route::get('/jobs/create', 'create');
+                  Route::get('/jobs/{job}', 'show');
+                  Route::get('/jobs/{job}/edit', 'edit');
+                  Route::post('/jobs', 'store');
+                  Route::patch('/jobs/{job}', 'update');
+                  Route::delete('/jobs/{job}', 'destroy');
+                });
+
+            //- Route Resources
+            p.
+              сформирует для методов класса контроллера роуты:
+              jobs.index <span>- показать всё списком</span>
+              jobs.show <span>- показать один</span>
+              jobs.create <span>- создать</span>
+              jobs.edit <span>- редактировать</span>
+              jobs.store <span>- сохранить</span>
+              jobs.update <span>- обновить</span>
+              jobs.destroy <span>- уничтожить</span>
+              названия методов контроллера - это дефолтные названия ларавел.
+            pre
+              code.
+                Route::resource('uri', controller);
+                Route::resource('jobs', JobController::class);
+            p можно форимровать роуты выборочно
+            pre
+              code.
+                Route::resource('jobs', JobController::class, [
+                  'only' => ['index', 'show']
+                ]);
+                Route::resource('jobs', JobController::class, [
+                  'except' => ['edit']
+                ]);
+
+          //- View
+          details
+            summary View
+            p.
+              vite компелирует, кеширует и отслеживает изменения в папке resources<br>
+              resources/views/components/layout.blade.php создаю компонент layout<br>
+              вставляю компонент на страницу
+            code &lt;x-layout&gt;&lt;/x-layout&gt;
+            p подключил лого
+            code &lt;img src="{{ Vite::asset('resources/images/logo.svg') }}" alt=""&gt;
+            p подключить стили и скрипты
+            code @vite(['resources/css/app.css', 'resources/js/app.js'])
+            p в SPA-приложении css поключаем в js-файле, поэтому подключаем только js
+            code @vite('resources/js/app.js')
+            p resources/js/app.js запихиваю картинки глобально, чтобы их учесть при npm run build
+            pre
+              code.
+                import.meta.glob([
+                  '../images/**',
+                  '../fonts/**',
+                ]);
+            p.
+              в файле .env указать место хранения загружаемых файлов<br>
+              варианты значений в файле config/filesystems.php
+            code FILESYSTEM_DISK=public
+            p.
+              при загрузке изображения оно будет сохранено в storage/app/public<br>
+              чтобы оно отображалось сделать ссылку:
+            code php artisan storage:link
+            p Встроенные шаблоны для писем
+            code ./sail artisan vendor:publish --tag=laravel-mail
+
+            //- Localization
+            details
+              summary Localization
+              p Создать папку для переводов
+              code php artisan lang:publish
+              p Скопировать папку en, переименовать в ru и вставить переводы в файлах
+
+            //- Component
+            details
+              summary Component
+
+              //- Component styles
+              details
+                summary Component styles
+                p.
+                  разбить макет на компоненты<br>
+                  в компоненте задать класс по умолчанию c общими настройками компонента
+                pre
+                  code.
+                    @php
+                      $classes = 'className1 className2';
+                    @endphp
+
+                    &lt;div {{ $attributes(['class' => $classes]) }}&gt;
+                      {{ $slot }}
+                    &lt;/div&gt;
+
+              //- Component properties
+              details
+                summary Component properties
+                p задаю свойства компонента, которые можно указывать в вёрстке и менять вид компонента
+                pre
+                  code.
+                    @props(['size' => 'base'])
+
+                    @php
+                      $classes = "className1 className2";
+                      if ($size === 'base') {
+                        $classes .= " className3";
+                      }
+                      if ($size === 'small') {
+                        $classes .= " className4";
+                      }
+                    @endphp
+
+                    &lt;a href="#" class="{{ $classes }}"&gt;{{ $slot }}&lt;/a&gt;
+
+              //- Create component Livewire
+              details
+                summary Create component Livewire
+                p Компонент имеет доступ к публичным свойствам и методам своего класса
+                pre
+                  code.
+                    php artisan make:livewire ComponentName
+                    <span>or</span>
+                    php artisan make:livewire component-name
+                    
+                p Создать компонент в папке
+                pre
+                  code.
+                    php artisan make:livewire FolderName\\ComponentName
+                    <span>or</span>
+                    php artisan make:livewire folder-name.component-name
+
+                p Создать компонент с тестом
+                code code ./sail artisan make:livewire create-post --pest
+
+                p Создать шаблон для компонентов livewire
+                code ./sail artisan livewire:layout
+
+                p Выбирать разные шаблоны на весь класс
+                pre
+                  code.
+                    #[Layout('layouts.app')] 
+                    class CreatePost extends Component
+                    {
+                        // ...
+                    }
+                p Выбирать разные шаблоны на методе
+                pre
+                  code.
+                    #[Layout('layouts.app')] 
+                    public function render()
+                    {
+                      return view('livewire.create-post');
+                    }
+                p Выбирать разные шаблоны динамически
+                pre
+                  code.
+                    public function render()
+                    {
+                      return view('livewire.create-post')
+                        ->layout('layouts.app'); 
+                    }
+                p Через @yield('content') указываю файл шаблона
+                pre
+                  code.
+                    &lt;body&gt;
+                      @yield('content')
+                    &lt;/body&gt;
+                p.
+                  Метод render() можно не указывать<br>
+                  Livewire будет автоматически выводить view с названием как у класса
+                
+                p В класс User.php добавить подстановку title в шаблон
+                code.
+                  use Livewire\Attributes\Title;
+                  #[Title('title')]
+                p Подстановка title динамически
+                pre
+                  code.
+                    public function render()
+                    {
+                      return view('livewire.create-post')
+                        ->title('Create Post'); 
+                    }
+
+                p задаю свойства livewire компонента в классе
+                code public $title = 'Post title...';
+
+                p задаю свойства livewire компонента в виде
+                code <h1>Title: "{{ $title }}"</h1>
+
+                p Дополнительные свойства при рендере в классе
+                code.
+                  return view('livewire.create-post')->with([
+                    'author' => Auth::user()->name,
+                  ]);
+
+                p Дополнительные свойства при рендере в виде
+                code Author: {{ $author }}
+
+                p При выводе в любом цикле всегда указывать ключ
+                pre
+                  code.
+                    @foreach ($posts as $post)
+                      &lt;livewire:post-item :$post :key="$post->id"&gt;
+                      @livewire(PostItem::class, ['post' => $post], key($post->id))
+                    @endforeach
+
+                p Привязка ввода к свойству класса
+                code &lt;input type="text" id="title" wire:model="title"&gt;
+
+                p Привязка ввода к методу класса
+                pre
+                  code.
+                    &lt;form wire:submit="save"&gt;
+                      &lt;button type="submit"&gt;Save&lt;/button&gt;
+                    &lt;/form&gt;
+
+                p Получить значения и очистить поля ввода
+                pre
+                  code.
+                    class ManageTodos extends Component
+                    {
+                      public $todos = [];
+                      public $todo = '';
+                      public function addTodo()
+                      {
+                        $this->todos[] = $this->todo;
+                        $this->reset('todo'); 
+                      }
+                    }
+                p Получить значения и очистить поля ввода
+                pre
+                  code.
+                    class ManageTodos extends Component
+                    {
+                      public $todos = [];
+                  
+                      public $todo = '';
+                  
+                      public function addTodo()
+                      {
+                        $this->todos[] = $this->pull('todo');
+                      }
+                    }
+                    // The same as $this->all() and $this->reset();
+                    $this->pull();
+          
+                    // The same as $this->only(...) and $this->reset(...);
+                    $this->pull(['title', 'content']);
+                
+                p Только авторизированный пользователь может изменить данные
+                pre
+                  code.
+                    public function update()
+                    {
+                      $post = Post::findOrFail($this->id);
+                      $this->authorize('update', $post); 
+                      $post->update(...);
+                    }
+                p Изменение свойства возможно только внутри класса
+                pre
+                  code.
+                    class UpdatePost extends Component
+                    {
+                      #[Locked] 
+                      public $id;
+                    }
+                p Свойства Eloquent моделей по умолчанию изменять возможно только внутри класса
+                pre
+                  code.
+                    class UpdatePost extends Component
+                    {
+                      public Post $post; 
+                      public $title;
+                      public $content;
+                      
+                      public function update()
+                      {
+                        $this->post->update([
+                          'title' => $this->title,
+                          'content' => $this->content,
+                        ]);
+                        session()->flash('message', 'Post updated successfully!');
+                      }
+                    }
+
+                p.
+                  Свойство #[Computed] кеширует запрошенные данные,<br>
+                  чтобы отправлять каждый раз новый запрос.<br>
+                  Обращаться к свойству через объект $this->todos
+                pre
+                  code.
+                    use Livewire\Attributes\Computed;
+
+                    #[Computed]
+                    public function todos()
+                    {
+                      return Auth::user()
+                        ->todos()
+                        ->select(['title', 'content'])
+                        ->get();
+                    }
+                
+                    public function markAllComplete() 
+                    {
+                      $this->todos->each->complete();
+                    }
+
+                p Вывод компонента в Blade view
+                code &lt;livewire:create-post /&gt;
+
+                p Вывод компонента в Blade view со значением
+                code &lt;livewire:create-post title="Initial Title" /&gt;
+
+                p Вывод компонента в Blade view с динамическим значением переменной
+                code &lt;livewire:create-post :title="$initialTitle" /&gt;
+
+                p Инициализация переменной в классе при подключении компонента
+                pre
+                  code.
+                    class CreatePost extends Component
+                    {
+                      public $title;
+                      public function mount($title = null)
+                      {
+                        $this->title = $title;
+                      }
+                    }
+
+                p livewire инициализирует переменную автоматически
+                pre
+                  code.
+                    class CreatePost extends Component
+                    {
+                      public $title;
+                    }
+
+                p Инлайн компонент - это один файл где разметка внутри метода render()
+                code ./sail artisan make:livewire CreatePost --inline
+
+                p В routes/web.php добавить
+                pre
+                  code.
+                    use App\Livewire\User\User;
+                    Route::get('user', User::class);
+                p В классе UserCreate.php добавить переход на страницу uri без перезагрузки страницы с сервера
+                code $this->redirect('/user', navigate: true);
+                p.
+                  Свойства и методы формы вынесены в отдельный класс UserForm<br>
+                  В компоненте User объект класса UserForm определён как form<br>
+                  Обращения к свойствам класса UserForm через form<br>
+                p Подключить assets в layout/app.blade.php
+                pre
+                  code.
+                    @assets
+                      &lt;script src="https://cdn.jsdelivr.net/npm/pikaday/pikaday.js" defer&gt;&lt;/script&gt;
+                      &lt;link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/pikaday/css/pikaday.css"&gt;
+                    @endassets
+
+                    @vite(['resources/css/app.css', 'resources/js/app.js'])
+                
+                // Actions
+                p $refresh - проверяет БД и отображает на странице
+                code &lt;button type="button" wire:click="$refresh"&gt;...&lt;/button&gt;
+                p $commit - отслеживает изменения компонета на сервере
+                code &lt;button type="button" wire:click="$commit"&gt;...&lt;/button&gt;
+                // Event listeners
+                p.
+                  wire:click<br>
+                  wire:submit<br>
+                  wire:keydown<br>
+                  wire:keyup<br>
+                  wire:mouseenter<br>
+                  wire:* - любой текст после wire: может быть названием события<br>
+                  Livewire поддерживает любые событыя браузера, например wire:transitionend<br>
+                a(href="https://livewire.laravel.com/docs/actions") слушатели событий<br>
+                br
+                p.
+                  wire:loading - загрузчик<br>
+                  wire:click="delete({{ $post->id }})" - передать в класс параметр<br>
+                  wire:click="$parent.removePost({{ $post->id }})" - обращаюсь к методу родительского компонента<br>
+                  wire:click="$set('query', '')" - заменил значение свойства query на пустую строку<br>
+                  wire:click="$toggle('sortAsc')" - при каждом нажатии меняет true/false
+                pre
+                  code.
+                    &lt;button wire:click="$toggle('sortAsc')"&gt;
+                      Sort {{ $sortAsc ? 'Descending' : 'Ascending' }}
+                    &lt;/button&gt;
+                p.
+                  wire:click="$dispatch('post-deleted')" - срабатывает событие<br>
+                  $event - даёт доступ к событиям JS, например при нажатии enter<br>
+                  передать значение ввода в search() - метод класса компонента
+                code &lt;input type="text" wire:keydown.enter="search($event.target.value)"&gt;
+                p.
+                  При выполнении метода с #[Renderless] метод render() этого же класса не выполняется,<br>
+                  либо skipRender() внутри метода<br>
+                pre
+                  code.
+                    #[Renderless] 
+                    public function incrementViewCount()
+                    {
+                      $this->post->incrementViewCount();
+                    }
+
+                    public function incrementViewCount()
+                    {
+                      $this->post->incrementViewCount();
+                      $this->skipRender(); 
+                    }
+                p.
+                  wire:dirty.class="border-yellow" - позволяет менять класс<br>
+                  если значение поля отличается от значения этого поля в БД
+                code &lt;input type="text" wire:model.blur="title" wire:dirty.class="border-yellow"&gt;
+                p.
+                  Пока поле ввода title будет в фокусе, будет Unsaved...<br>
+                  когда фокус уйдёт, значение будет записано в БД и Unsaved... исчезнет
+                pre
+                  code.
+                    &lt;input type="text" wire:model.blur="title"&gt;
+                    &lt;div wire:dirty wire:target="title"&gt;Unsaved...&lt;/div&gt;
+                p Можно выносить части Livewire компонентов в Blade компоненты
+                pre
+                  code.
+                    &lt;form wire:submit="save"&gt;
+                      &lt;x-input-text name="title" wire:model="title" /&gt;
+                      &lt;x-input-text name="content" wire:model="content" /&gt;
+                      &lt;button type="submit"&gt;Save&lt;/button&gt;
+                    &lt;/form&gt;
+                p Blade компонент
+                pre
+                  code.
+                    @props(['name'])
+                    &lt;input type="text" name="{{ $name }}" {{ $attributes }}&gt;
+                    &lt;div&gt;
+                        @error($name) &lt;span class="error"&gt;{{ $message }}&lt;/span&gt; @enderror
+                    &lt;/div&gt;
+
+                //- Events
+                p породить событие post-created
+                code $this->dispatch('post-created', title: $post->title);
+                p по событию выполнить метод
+                pre
+                  code.
+                    #[On('post-created')] 
+                    public function updatePostList($title) { }
+                p породить событие post-created с динамическим аттрибутом
+                pre
+                  code.
+                    $this->dispatch("post-updated.{$post->id}");
+
+                    #[On('post-updated.{post.id}')]
+                p.
+                  презагрузить родительский компонент,<br>
+                  если в дочернем компоненте будет событие saved
+                code &lt;livewire:edit-post @saved="$refresh"&gt;
+                p.
+                  вызвать метод close() родительского компонента<br>
+                  если в дочернем компоненте будет saved конткретного postId
+                code &lt;livewire:edit-post @saved="close($event.detail.postId)"&gt;
+
+            //- Validation
+            details
+              summary Validation
+              p.
+                В основном такая же как в ларавел, но метод validate() применяется на объекте компонента<br>
+                Метод validate() возвращает массив отвалидированных данных либо массив ошибок
+              pre
+                code.
+                  public function save()
+                  {
+                    $validated = $this->validate([ 
+                      'title' => 'required|min:3',
+                      'content' => 'required|min:3',
+                    ]);
+                    Post::create($validated);
+                    return redirect()->to('/posts');
+                  }
+              p.
+                В форме ввода не фронте отобразить ошибку валидации с помощью<br>
+                директивы @error(), по ключу title выводиться значение $message
+              pre
+                code.
+                  &lt;input type="text" wire:model="title"&gt;
+                  &lt;div&gt;@error('title') {{ $message }} @enderror&lt;/div&gt;
+              p Задать правила валидации можно разными способами
+              pre
+                code.
+                  <span>методом validate()</span>
+                  $validated = $this->validate([
+                    <span>массивом</span>
+                    'name' => ['required', 'min:2', 'max:30'],
+                    <span>строкой через разделитель</span>
+                    'email' => 'required|email|max:30',
+                    'password' => 'required|min:6',
+                  ]);
+
+                  <span>параметром #[Validate()]</span>
+                  <span>отслеживает изменение значений</span>
+                  <span>использует стандартные валидаторы ларавел</span>
+                  <span>свой текст сообщения</span>
+                  #[Validate('required', message: 'Имя обязательно')]
+                  <span>своё имя поля в сообщении</span>
+                  #[Validate('min:2', as: 'Name')]
+                  #[Validate('max:30')]
+                  public string $name;
+
+                  <span>написать свои правила валидации</span>
+                  protected function rules(): array
+                  {
+                    return [
+                      'name' => ['required', 'min:2', 'max:30'],
+                      'email' => 'required|email|max:30',
+                      'password' => 'required|min:6',
+                    ];
+                  }
+
+                  <span>написать свои тексты сообщений об ошибке</span>
+                  protected function messages(): array
+                  {
+                    return [
+                      <span>название поля.валидатор => текст ошибки</span>
+                      'name.required' => 'Имя обязательно!',
+                      'name.min' => 'Имя должно быть длиннее!',
+                      'email.required' => 'Введите почту!',
+                      'password.required' => 'Пароль обязателен!',
+                    ];
+                  }
+              p.
+                Если правила валидации заданы параметром #[Validate()]<br>
+                или методом rules(),<br>
+                то метод validate() вызываем без параметров
+              code $validated = $this->validate();
+              p Создаю пользователя в БД
+              code User::create($validated);
+              p.
+                wire:model.blur="name" - real-time validation<br>
+                срабатывает по событию либо <dfn>.live</dfn> либо <dfn>.blur</dfn><br>
+                работает при использовании параметра валидирования #[Validate()]<br>
+                wire:model.live="name" - отправляет на сервер введенный знак сразу<br>
+                wire:model.live.debounce="name" - отправляет на сервер введенное значение через 200мс после последнего нажатия<br>
+                wire:model.live.debounce.5ms="name" - отправляет на сервер введенное значение через 5мс после нажатия<br>
+
+            //- Form
+            details
+              summary Form
+              p.
+                B компоненте создаю форму и меняю действие по умолчанию на вызов метода save из класса<br>
+                Форма вызывает метод обработки при надатии на enter или на кнопку Save<br>
+                B полях ввода данных привязываю данные к свойствам компонента<br>
+                Свойство компонента wire:model привязывает к полю ввода свойство класса wire:model="name"<br>
+              pre
+                code.
+                  &lt;form wire:submit.prevent="save"&gt;
+                    &lt;input type="text" wire:model="name"&gt;
+                    &lt;input type="email" wire:model="email"&gt;
+                    &lt;button type="submit"&gt;Save&lt;/button&gt;
+                  &lt;/form&gt;
+              p.
+                B методе сохранения данных вызываю метод валидации данных<br>
+                Если данные валидны, то сохраняю данные в БД<br>
+                Если данные не валидны, то вывожу ошибку
+              pre
+                code.
+                  public function save()
+                  {
+                    $validated = $this->validate([
+                      'name' => 'required|min:3',
+                      'email' => 'required|email',
+                    ]);
+                    User::create($validated);
+                  }
+              p.
+                Вывести ошибку валидации можно c помощью директивы @error()<br>
+                По ключу name выводится значение $message
+              pre
+                code.
+                  &lt;input type="text" wire:model="name"&gt;
+                  &lt;div&gt;@error('name') {{ $message }} @enderror&lt;/div&gt;
+              p.
+                Вывести ошибку валидации можно c помощью директивы @error()<br>
+                По ключу name выводится значение $message
+              pre
+                code.
+                  &lt;input type="text" wire:model="name"&gt;
+                  &lt;div&gt;@error('name') {{ $message }} @enderror&lt;/div&gt;
+              p.
+                Вывести ошибку валидации можно c помощью директивы @error()<br>
+                По ключу name выводится значение $message
+              pre
+                code.
+                  &lt;input type="text" wire:model="name"&gt;
+              p Получить все данные формы
+              code $this->all();
+              p Получить данные выборочных полей
+              code $this->only(['name', 'email'])
+              p.
+                Метод pull() - это метод only() + reset()<br>
+                Заберёт из формы данные полей name и email<br>
+                и очистит поля формы name и email
+              code $this->pull(['name', 'email'])
+              p заберёт из формы все данные и очистит форму
+              code $this->pull();
+              p.
+                Создать класс формы
+                Создаст app/Livewire/Forms/FormName.php
+              code php artisan livewire:form FormName
+              p.
+                При создании компонентов CreatePost, UpdatePost и т.д.
+                в классах компонентов будут вызываться методы и свойства класса FormName.php.
+                T.e. все свойства и методы формы в одном классе и исспользуются разными компонентами.
+                Для доступа к свойствам и методам калсса формы в классе компонента создаётся её объект form
+                и обращение к свойствам и методам через объект.
+                B классе компонента:
+              pre
+                code.
+                  public UserForm $form;
+                  public function save()
+                  {
+                      $this->form->saveUser();
+                  }
+              p B шаблоне компонента:
+              code wire:model="form.name"
+
+            //- Events
+            details
+              summary Events
+              p.
+                События позволяю прослушивать события в другом компоненте.
+                Сгенерировать событие: метод dispatch()
+              code.
+                $this->dispatch('eventname');
+                <span>or</span>
+                $this->dispatch('eventname', title: $post->title);
+              p В другом (других) компоненте добавить слушателя события
+              code.
+                use Livewire\Attributes\On;
+                #[On('eventname')]
+                public function updatePost($title) {}
+
       //- Data
       details
         summary Data
@@ -13172,6 +14798,47 @@ block menu
                 // Создать сводную модель...
                 php artisan make:model Member --pivot
                 php artisan make:model Member -p
+            p помощь по созданию модели
+            code php artisan help make:model
+            p создаю модель в полном комплекте (Model, Migration, Factory, Seeder, Request, Controller, Policy)
+            code php artisan make:model Employer -a
+            p создать модель без миграции
+            code php artisan make:model Employer -cfs --policy
+            p.
+              то что не будет использовано можно будет удалить.<br>
+              в моделях app/Models/ указать связи
+            pre
+              code.
+                class Employer extends Model
+                {
+                  use HasFactory;
+                  public function user(): BelongsTo
+                  {
+                    return $this->belongsTo(User::class);
+                  }
+                  public function jobs(): HasMany
+                  {
+                    return $this->hasMany(Job::class);
+                  }
+                }
+            p в файле Providers/AppServiceProvider.php, чтобы не указывать fillable
+            pre
+              code.
+                public function boot(): void
+                {
+                  Model::unguard();
+                }
+            p Показать содажимое БД
+            pre
+              code.
+                ./sail artisan db:show
+                ./sail artisan db:table users
+            p Показать содажимое таблицы БД
+            pre
+              code.
+                php artisan tinker
+                User::all();
+            p при типе связи $this->belongsToMany() создать pivot table
             p обзор всех атрибутов и отношений модели
             code php artisan model:show Flight
             p.
@@ -15520,7 +17187,7 @@ block menu
                   }
 
           //- Migrations
-          //- создают и изменят таблицы базы данных
+          //- создают и изменяют таблицы базы данных
           details
             summary Migrations
             p.
@@ -15868,6 +17535,49 @@ block menu
             p SQLite по умолчанию отключает внешние ключи
             a(href="http://laravel.su/docs/12.x/migrations#sobytiia") каждая операция миграции отправляет событие
 
+            //- Rename table
+            details
+              summary Rename table
+              p.
+                в файле config/queue.php меняю название таблиц по умолчанию<br>
+                к названию таблицы добавляю слово queue
+              pre
+                code.
+                  'database' => [
+                    'driver' => 'database',
+                    'connection' => env('DB_QUEUE_CONNECTION'),
+                    'table' => env('DB_QUEUE_TABLE', 'queued_jobs'),
+                    'queue' => env('DB_QUEUE', 'default'),
+                    'retry_after' => (int) env('DB_QUEUE_RETRY_AFTER', 90),
+                    'after_commit' => false,
+                  ],
+
+                  'batching' => [
+                    'database' => env('DB_CONNECTION', 'sqlite'),
+                    'table' => 'queued_job_batches',
+                  ],
+                  'failed' => [
+                      'driver' => env('QUEUE_FAILED_DRIVER', 'database-uuids'),
+                      'database' => env('DB_CONNECTION', 'sqlite'),
+                      'table' => 'queued_failed_jobs',
+                  ], 
+              p.
+                в папке database/migrations/<br>
+                к названию файла по умолчанию добавляю слово queue
+              code 0001_01_01_000002_create_queued_jobs_table.php
+              p в нутри файлa к названиям таблиц добавляю слово queue
+              pre
+                code.
+                  Schema::create('queued_jobs', function (Blueprint $table) {
+                    ...
+                  Schema::create('queued_job_batches', function (Blueprint $table) {
+                    ...
+                  Schema::create('queued_failed_jobs', function (Blueprint $table) {
+              p удаляю старые файлы и создаю новые c учётом изменений
+              code php artisan migrate:fresh
+              p чтобы внести изменения в базу данных:
+              code php artisan migrate
+
           //- Seeders
           //- классы наполнителей БД значениями
           details
@@ -15931,6 +17641,20 @@ block menu
                             UserSeeder::class,
                         ]);
                     }
+                }
+            p Sequence меняет значения полей для каждой итерации цикла создания данных
+            pre
+              code.
+                public function run(): void
+                {
+                  $tags = Tag::factory(3)->create();
+                  Job::factory(20)->hasAttached($tags)->create(new Sequence([
+                    'featured' => false,
+                    'schedule' => 'Full Time',
+                  ], [
+                    'featured' => true,
+                    'schedule' => 'Part Time',
+                  ]));
                 }
             p наполнить БД
             pre
@@ -17957,1793 +19681,10 @@ block menu
             - драйвер MongoDB по умолчанию использует расширение mongodb<br>
             - расширение mongodb поддерживает MongoDB 2.6 и выше<br>
 
-
-
-
-
-
-
-
-      //- Testing
+      //- How to
       details
-        summary Testing
-        p.
-          - pest: это обёртка для phpunit.<br>
-          - файл tests/Pest.php - конфигурация тестов<br>
-          - создаю тест
-        code php artisan make:test
-        p запускаю тест
-        code php artisan test
-        p - создание теста в tests/Feature
-        code php artisan make:test UserTest
-        p - создание теста в tests/Unit
-        code php artisan make:test UserTest --unit
-        p - создание юнит-теста с использованием Pest, если файл уже существует, без вывода сообщений в консоль, без интерактивного ввода и без ANSI-вывода
-        code php artisan make:test UserTest --pest --unit --force --quiet --no-interaction --no-ansi
-        p. 
-          - php artisan test - запуск тестов<br>
-          - ./vendor/bin/phpunit - запуск тестов<br>
-          - ./vendor/bin/pest - запуск тестов<br>
-          <br>
-          - ./vendor/bin/phpunit tests/Feature/UserTest.php::testBasic<br>
-          - ./vendor/bin/phpunit tests/Unit/UserTest.php::testBasic<br>
-          <br>
-          - настроить переменные окружения testing можно в phpunit.xml<br>
-          - после внесения изменений выполнить очистку кэша<br>
-        code php artisan config:clear
-        p.
-          - при тесторовании вместо .env можно использовать .env.testing<br>
-          - сгенерировать новый тестовый файл .env.testing<br>
-        code cp .env.example .env.testing
-        p в UserTest
-        pre
-          code.
-            test('basic', function () {
-                expect(true)->toBeTrue();
-            });
-        p передать аргументы
-        code php artisan test --testsuite=Feature --stop-on-failure
-        p запуск тестов в командной строке
-        pre
-          code.
-            ./vendor/bin/phpunit
-            либо
-            ./vendor/bin/pest
-            либо
-            php artisan test
-        p параллельный запуск тестов
-        pre
-          code.
-            composer require brianium/paratest --dev
-            php artisan test --parallel
-            // настроить количество процессов - не более количества ядер ЦП на компьюторе
-            php artisan test --parallel --processes=4
-            // пересоздать тестовые базы данных
-            php artisan test --parallel --recreate-databases
-        p.
-          хуки параллельного тестирования:<br>
-          подготовка определенные ресурсы, используемые тестами<br>
-          $token - токен процесса<br>
-          $testCase - текущий тестовый класс<br>
-        pre
-          code.
-            namespace App\Providers;
-            use Illuminate\Support\Facades\Artisan;
-            use Illuminate\Support\Facades\ParallelTesting;
-            use Illuminate\Support\ServiceProvider;
-            use PHPUnit\Framework\TestCase;
-            class AppServiceProvider extends ServiceProvider
-            {
-              public function boot(): void
-              {
-                ParallelTesting::setUpProcess(function (int $token) {});
-                ParallelTesting::setUpTestCase(function (int $token, TestCase $testCase) {});
-                // Выполнится при создании тестовой базы данных...
-                ParallelTesting::setUpTestDatabase(function (string $database, int $token) {
-                  Artisan::call('db:seed');
-                });
-                ParallelTesting::tearDownTestCase(function (int $token, TestCase $testCase) {});
-                ParallelTesting::tearDownProcess(function (int $token) {});
-              }
-            }
-        p доступ к текущему “токену” параллельного процесса из любого места приложения
-        code $token = ParallelTesting::token();
-        p отчет о покрытии тестами (требуется Xdebug или PCOV.)
-        code php artisan test --coverage
-        p задать минимальный порог покрытия тестами
-        code php artisan test --coverage --min=80.3
-        p получить список десяти самых медленных тестов
-        code php artisan test --profile
-        p.
-          - сделать запрос к приложению - вызвать в тесте методы get, post, put, patch, или delete<br>
-          - один тест - один запрос<br>
-        pre
-          code.
-            test('the application returns a successful response', function () {
-              $response = $this->get('/');
-              $response->assertStatus(200);
-            });
-        p настройки заголовков запроса
-        pre
-          code.
-            test('interacting with headers', function () {
-              $response = $this->withHeaders([
-                'X-Header' => 'Value',
-              ])->post('/user', ['name' => 'Sally']);
-              $response->assertStatus(201);
-            });
-        p установить значения файлов Cookies
-        pre
-          code.
-            test('interacting with cookies', function () {
-              $response = $this->withCookie('color', 'blue')->get('/');
-              $response = $this->withCookies([
-                'color' => 'blue',
-                'name' => 'Taylor',
-              ])->get('/');
-            });
-        p установить данные сессии
-        pre
-          code.
-            test('interacting with the session', function () {
-              $response = $this->withSession(['banned' => false])->get('/');
-            });
-        p actingAs – аутентифицировать указанного пользователя как текущего
-        pre
-          code.
-            use App\Models\User;
-            test('an action that requires authentication', function () {
-              $user = User::factory()->create();
-              $response = $this->actingAs($user)
-                        ->withSession(['banned' => false])
-                        ->get('/');
-            });
-        p с использованием гэйта
-        code $this->actingAs($user, 'web')
-        p проверка и отладка содержимого ответа
-        pre
-          code.
-            test('basic test', function () {
-              $response = $this->get('/');
-              $response->dumpHeaders();
-              $response->dumpSession();
-              $response->dump();
-            });
-            либо
-            test('basic test', function () {
-              $response = $this->get('/');
-              $response->ddHeaders();
-              $response->ddSession();
-              $response->dd();
-            });
-        p тесты исключений
-        pre
-          code.
-            use App\Exceptions\InvalidOrderException;
-            use Illuminate\Support\Facades\Exceptions;
-            test('exception is thrown', function () {
-              Exceptions::fake();
-              $response = $this->get('/order/1');
-              Было ли выброшено исключение InvalidOrderException
-              Exceptions::assertReported(InvalidOrderException::class);
-              Было ли выброшено исключение InvalidOrderException с заданным сообщением
-              Exceptions::assertReported(function (InvalidOrderException $e) {
-                return $e->getMessage() === 'The order was invalid.';
-              });
-            });
-        p указанное исключение и никаких исключений не было создано во время запроса
-        pre
-          code.
-            Exceptions::assertNotReported(InvalidOrderException::class);
-            Exceptions::assertNothingReported();
-        p отключить обработку исключений для данного запроса
-        code $response = $this->withoutExceptionHandling()->get('/');
-        p проверить, что приложение не использует устаревшие функции
-        code $response = $this->withoutDeprecationHandling()->get('/');
-        p проверить, что код внутри замыкания генерирует исключение указанного типа
-        pre
-          code.
-            $this->assertThrows(
-              fn () => (new ProcessOrder)->execute(),
-              OrderInvalid::class
-            );
-        p проверить, что код внутри замыкания генерирует исключение указанного типа, а исключение равно заданому значению
-        pre
-          code.
-            $this->assertThrows(
-              fn () => (new ProcessOrder)->execute(),
-              fn (OrderInvalid $e) => $e->orderId() === 123;
-            );
-        p.
-          тесты JSON API<br>
-          методы для тестирования API-интерфейсов JSON и их ответов: json, getJson, postJson, putJson, patchJson, deleteJson, и optionsJson<br>
-          сделать запрос POST к /api/user<br>
-        pre
-          code.
-            test('making an api request', function () {
-              $response = $this->postJson('/api/user', ['name' => 'Sally']);
-              $response
-                ->assertStatus(201)
-                // метод assertJson используется для подтверждения наличия фрагмента JSON в ответе JSON
-                ->assertJson([
-                  'created' => true,
-                ]);
-            });
-        p получить доступ к данным ответа JSON как к массиву
-        code expect($response['created'])->toBeTrue();
-        p проверить, что массив в точности соответствует JSON
-        pre
-          code.
-            test('asserting an exact json match', function () {
-              $response = $this->postJson('/user', ['name' => 'Sally']);
-              $response
-                ->assertStatus(201)
-                ->assertExactJson([
-                  'created' => true,
-                ]);
-            });
-        p убедиться, что ответ JSON содержит данные по указанному пути
-        pre
-          code.
-            test('asserting a json path value', function () {
-              $response = $this->postJson('/user', ['name' => 'Sally']);
-              $response
-                ->assertStatus(201)
-                ->assertJsonPath('team.owner.name', 'Darian');
-            });
-        p динамическое определение, должно ли утверждение выполниться
-        code $response->assertJsonPath('team.owner.name', fn (string $name) => strlen($name) >= 3);
-        p последовательное тестирование ответов JSON
-        pre
-          code.
-            use Illuminate\Testing\Fluent\AssertableJson;
-            test('fluent json', function () {
-              $response = $this->getJson('/users/1');
-              $response
-                ->assertJson(fn (AssertableJson $json) =>
-                  $json->where('id', 1)
-                    // where - для присутствующего атрибута 
-                    ->where('name', 'Victoria Faith')
-                    ->where('email', fn (string $email) => str($email)->is('victoria@gmail.com'))
-                    ->whereNot('status', 'pending')
-                    // missing - для отсутствующего атрибута JSON
-                    ->missing('password')
-                    // etc - в объекте JSON могут присутствовать другие атрибуты
-                    ->etc()
-                  );
-            });
-        p проверить, что атрибут присутствует или отсутствует (has и missing)
-        pre
-          code.
-            $response->assertJson(fn (AssertableJson $json) =>
-              $json->has('data')
-                ->missing('message')
-            );
-        p наличие или отсутствие нескольких атрибутов (hasAll и missingAll)
-        pre
-          code.
-            $response->assertJson(fn (AssertableJson $json) =>
-              $json->hasAll(['status', 'data'])
-                ->missingAll(['message', 'code'])
-            );
-        p присутствует ли хотя бы один из заданного списка
-        pre
-          code.
-            $response->assertJson(fn (AssertableJson $json) =>
-              $json->has('status')
-                ->hasAny('data', 'message', 'code')
-            );
-        p проверить маршрут, который возращает всех пользователей
-        pre
-          code.
-            Route::get('/users', function () {
-              return User::all();
-            });
-        p тест по первому пользователю
-        pre
-          code.
-            $response
-              ->assertJson(fn (AssertableJson $json) =>
-                $json->has(3)
-                  ->first(fn (AssertableJson $json) =>
-                    $json->where('id', 1)
-                      ->where('name', 'Victoria Faith')
-                      ->where('email', fn (string $email) => str($email)->is('victoria@gmail.com'))
-                      ->missing('password')
-                      ->etc()
-                  )
-              );
-        p проверить маршрут, который возвращает коллекцию JSON с именованными ключами
-        pre
-          code.
-            Route::get('/users', function () {
-              return [
-                'meta' => [...],
-                'users' => User::all(),
-              ];
-            })
-            тест
-            $response
-              ->assertJson(fn (AssertableJson $json) =>
-                $json->has('meta')
-                  ->has('users', 3)
-                  ->has('users.0', fn (AssertableJson $json) =>
-                    $json->where('id', 1)
-                      ->where('name', 'Victoria Faith')
-                      ->where('email', fn (string $email) => str($email)->is('victoria@gmail.com'))
-                      ->missing('password')
-                      ->etc()
-                  )
-              );
-            либо
-            $response
-              ->assertJson(fn (AssertableJson $json) =>
-                $json->has('meta')
-                  ->has('users', 3, fn (AssertableJson $json) =>
-                    $json->where('id', 1)
-                      ->where('name', 'Victoria Faith')
-                      ->where('email', fn (string $email) => str($email)->is('victoria@gmail.com'))
-                      ->missing('password')
-                      ->etc()
-                  )
-              );
-        p проверить тип
-        pre
-          code.
-            $response->assertJson(fn (AssertableJson $json) =>
-              $json->whereType('id', 'integer')
-                ->whereAllType([
-                  'users.0.name' => 'string',
-                  'meta' => 'array'
-                ])
-            );
-        p проверить наличие одного из типов, допустимые типы: string, integer, double, boolean, array, и null
-        pre
-          code.
-            $response->assertJson(fn (AssertableJson $json) =>
-              $json->whereType('name', 'string|null')
-                ->whereType('id', ['string', 'integer'])
-            );
-        p.
-          тесты загрузки файлов<br>
-          протестировать форму загрузки аватара<br>
-          метод fake есть у класса UploadedFile и у фасада Storage<br>
-        pre
-          code.
-            use Illuminate\Http\UploadedFile;
-            use Illuminate\Support\Facades\Storage;
-            test('avatars can be uploaded', function () {
-              Storage::fake('avatars');
-              $file = UploadedFile::fake()->image('avatar.jpg');
-              $response = $this->post('/avatar', [
-                'avatar' => $file,
-              ]);
-              Storage::disk('avatars')->assertExists($file->hashName());
-            });
-        p подтвердить, что переданный файл не существует
-        pre
-          code.
-            Storage::fake('avatars');
-            Storage::disk('avatars')->assertMissing('missing.jpg');
-        p указать ширину, высоту и размер изображения (в килобайтах)
-        code UploadedFile::fake()->image('avatar.jpg', $width, $height)->size(100);
-        p создать pdf
-        code UploadedFile::fake()->create('document.pdf', $sizeInKilobytes);
-        p явно определить MIME-тип файла
-        pre
-          code.
-            UploadedFile::fake()->create(
-              'document.pdf', $sizeInKilobytes, 'application/pdf'
-            );
-        p тесты шаблонов: assertSee, assertSeeInOrder, assertSeeText, assertSeeTextInOrder, assertDontSee и assertDontSeeText
-        pre
-          code.
-            test('a welcome view can be rendered', function () {
-              $view = $this->view('welcome', ['name' => 'Taylor']);
-              $view->assertSee('Taylor');
-            });
-        p получить необработанное отрисованное содержимое шаблона
-        code $contents = (string) $this->view('welcome');
-        p добавить в глобальную коллекцию ошибок сообщения об ошибках
-        pre
-          code.
-            $view = $this->withViewErrors([
-              'name' => ['Please provide a valid name.']
-            ])->view('form');
-            $view->assertSee('Please provide a valid name.');
-        p метод blade возвращает экземпляр Illuminate\Testing\TestView
-        pre
-          code.
-            $view = $this->blade(
-              '&lt;x-component :name="$name" /&gt;',
-              ['name' => 'Taylor']
-            );
-            $view->assertSee('Taylor');
-        p метод component возвращает экземпляр Illuminate\Testing\TestComponent
-        pre
-          code.
-            $view = $this->component(Profile::class, ['name' => 'Taylor']);
-            $view->assertSee('Taylor');
-        a(href="http://laravel.su/docs/12.x/http-tests#utverzdeniia-otvetov") доступные утверждения ответов
-        p.
-          тесты аутентификации<br>
-          пользователь аутентифицирован<br>
-        code $this->assertAuthenticated($guard = null);
-        p пользователь не аутентифицирован
-        code $this->assertGuest($guard = null);
-        p конкретный пользователь аутентифицирован
-        code $this->assertAuthenticatedAs($user, $guard = null);
-        p.
-          тесты валидации<br>
-          ответ содержит ошибки валидации для указанных ключей<br>
-        pre
-          code.
-            $response->assertInvalid(['name', 'email']);
-            // либо
-            $response->assertInvalid([
-              'name' => 'The name field is required.',
-              'email' => 'valid email address',
-            ]);
-        p.
-          тесты консоли<br>
-          метод artisan для вызова Artisan-команды из теста,<br>
-          метод assertExitCode, проверить, что команда завершилась с указанным кодом (код 0 - успех, остальное - нет)<br>
-        pre
-          code.
-            test('console command', function () {
-              $this->artisan('inspire')->assertExitCode(0);
-            });
-        p команда не завершилась с заданным кодом
-        pre
-          code.
-            $this->artisan('inspire')->assertNotExitCode(1);
-            // либо
-            $this->artisan('inspire')->assertSuccessful();
-            $this->artisan('inspire')->assertFailed();
-        p.
-          тесты ввода/вывода<br>
-          метод expectsQuestion - имитировать ввод пользователя в консольных командах<br>
-          метод assertExitCode - ожидаемый код завершения команды<br>
-          метод expectsOutput - ожидаемый при выполнении команды текст<br>
-        p консольная команда
-        pre
-          code.
-            Artisan::command('question', function () {
-              $name = $this->ask('What is your name?');
-              $language = $this->choice('Which language do you prefer?', [
-                'PHP',
-                'Ruby',
-                'Python',
-              ]);
-              $this->line('Your name is '.$name.' and you prefer '.$language.'.');
-            });
-        p проверить команду
-        pre
-          code.
-            test('console command', function () {
-              $this->artisan('question')
-                ->expectsQuestion('What is your name?', 'Taylor Otwell')
-                ->expectsQuestion('Which language do you prefer?', 'PHP')
-                ->expectsOutput('Your name is Taylor Otwell and you prefer PHP.')
-                ->doesntExpectOutput('Your name is Taylor Otwell and you prefer Ruby.')
-                ->assertExitCode(0);
-            });
-        p expectsSearch, чтобы имитировать ввод пользователя, результаты поиска и выбор
-        pre
-          code.
-            test('console command', function () {
-              $this->artisan('example')
-                ->expectsSearch('What is your name?', search: 'Tay', answers: [
-                  'Taylor Otwell',
-                  'Taylor Swift',
-                  'Darian Taylor'
-                ], answer: 'Taylor Otwell')
-                ->assertExitCode(0);
-            });
-        p проверить, что команда не генерирует никакого вывода
-        pre
-          code.
-            test('console command', function () {
-              $this->artisan('example')
-                ->doesntExpectOutput()
-                ->assertExitCode(0);
-            });
-        p проверить часть вывода
-        pre
-          code.
-            test('console command', function () {
-              $this->artisan('example')
-                ->expectsOutputToContain('Taylor')
-                ->assertExitCode(0);
-            });
-        p команды ожидает ответа «да» или «нет»
-        pre
-          code.
-            $this->artisan('module:import')
-              ->expectsConfirmation('Do you really wish to run this command?', 'no')
-              ->assertExitCode(1);
-        p проверить таблицу
-        pre
-          code.
-            $this->artisan('users:all')
-              ->expectsTable([
-                'ID',
-                'Email',
-              ], [
-                [1, 'taylor@example.com'],
-                [2, 'abigail@example.com'],
-              ]);
-        p включить генерацию консольных событий при выполнении тестов
-        pre
-          code.
-            use Illuminate\Foundation\Testing\WithConsoleEvents;
-            uses(WithConsoleEvents::class);
-        p.
-          тесты БД<br>
-          сброс базы данных после каждого теста<br>
-        pre
-          code.
-            use Illuminate\Foundation\Testing\RefreshDatabase;
-            uses(RefreshDatabase::class);
-            test('basic example', function () {
-              $response = $this->get('/');
-            });
-        p.
-          полностью сбросить БД
-          - использовать трейты Illuminate\Foundation\Testing\DatabaseMigrations или Illuminate\Foundation\Testing\DatabaseTruncation<br>
-          - использовать фабрику в тестах<br>
-        pre
-          code.
-            use App\Models\User;
-            test('models can be instantiated', function () {
-                $user = User::factory()->create();
-            });
-        p использовать наполнитель в тестах
-        pre
-          code.
-            use Database\Seeders\OrderStatusSeeder;
-            use Database\Seeders\TransactionStatusSeeder;
-            use Illuminate\Foundation\Testing\RefreshDatabase;
-            uses(RefreshDatabase::class);
-            test('orders can be created', function () {
-              // Run the DatabaseSeeder...
-              $this->seed();
-              // Run a specific seeder...
-              $this->seed(OrderStatusSeeder::class);
-              Run an array of specific seeders...
-                $this->seed([
-                  OrderStatusSeeder::class,
-                  TransactionStatusSeeder::class,
-              ]);
-            });
-        p автоматически заполнять базу данных перед каждым тестом
-        pre
-          code.
-            namespace Tests;
-            use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
-            abstract class TestCase extends BaseTestCase
-            {
-              - Указывает, следует ли запускать наполнитель по умолчанию перед каждым тестом.
-              - @var bool
-              protected $seed = true;
-            }
-            либо
-            use Database\Seeders\OrderStatusSeeder;
-            protected $seeder = OrderStatusSeeder::class;
-        p таблица в базе данных содержит указанное количество записей
-        code $this->assertDatabaseCount('users', 5);
-        p таблица в базе данных не содержит записей
-        code $this->assertDatabaseEmpty('users');
-        p таблица в базе данных содержит записи, соответствующие переданным ключ/значение
-        pre
-          code.
-            $this->assertDatabaseHas('users', [
-              'email' => 'sally@example.com',
-            ]);
-        p таблица в базе данных не содержит записей, соответствующих переданным ключ/значение
-        pre
-          code.
-            $this->assertDatabaseMissing('users', [
-              'email' => 'sally@example.com',
-            ]);
-        p модель была «программно удалена»
-        code $this->assertSoftDeleted($user);
-        p модель не была «программно удалена»
-        code $this->assertNotSoftDeleted($user);
-        p данная модель существует в базе данныхuse App\Models\User;
-        pre
-          code.
-            $user = User::factory()->create();
-            $this->assertModelExists($user);
-        p данной модели не существует в базе данных
-        pre
-          code.
-            use App\Models\User;
-            $user = User::factory()->create();
-            $user->delete();
-            $this->assertModelMissing($user);
-        p ожидаемое числа запросов к базе данных во время выполнения теста
-        code $this->expectsDatabaseQueryCount(5);
-        p.
-          имитация:<br>
-          использовать подставной экземпляр объекта вместо создания самого объекта<br>
-        pre
-          code.
-            use App\Service;
-            use Mockery;
-            use Mockery\MockInterface;
-            test('something can be mocked', function () {
-              $this->instance(
-                Service::class,
-                Mockery::mock(Service::class, function (MockInterface $mock) {
-                  $mock->shouldReceive('process')->once();
-                })
-              );
-            });
-            // либо
-            use App\Service;
-            use Mockery\MockInterface;
-            $mock = $this->mock(Service::class, function (MockInterface $mock) {
-              $mock->shouldReceive('process')->once();
-            });
-        p имитировать несколько методов объекта
-        pre
-          code.
-            use App\Service;
-            use Mockery\MockInterface;
-            $mock = $this->partialMock(Service::class, function (MockInterface $mock) {
-              $mock->shouldReceive('process')->once();
-            });
-        p шпионы записывают любое взаимодействие между шпионом и тестируемым кодом
-        pre
-          code.
-            use App\Service;
-            $spy = $this->spy(Service::class);
-            $spy->shouldHaveReceived('process');
-        p для контроллера
-        pre
-          code.
-            namespace App\Http\Controllers;
-            use Illuminate\Support\Facades\Cache;
-            class UserController extends Controller
-            {
-              - Получить список всех пользователей приложения
-              public function index(): array
-              {
-                $value = Cache::get('key');
-                return [];
-              }
-            }
-        p имитировать вызов фасада Cache
-        pre
-          code.
-            use Illuminate\Support\Facades\Cache;
-            test('get index', function () {
-              Cache::shouldReceive('get')
-                    ->once()
-                    ->with('key')
-                    ->andReturn('value');
-              $response = $this->get('/users');
-            });
-        p шпионить за фасадом
-        pre
-          code.
-            use Illuminate\Support\Facades\Cache;
-            test('values are be stored in cache', function () {
-              Cache::spy();
-              $response = $this->get('/');
-              $response->assertStatus(200);
-              Cache::shouldHaveReceived('put')->once()->with('name', 'Taylor', 10);
-            });
-        p управлять текущим временем
-        pre
-          code.
-            test('time can be manipulated', function () {
-              // Travel into the future...
-              $this->travel(5)->milliseconds();
-              $this->travel(5)->seconds();
-              $this->travel(5)->minutes();
-              $this->travel(5)->hours();
-              $this->travel(5)->days();
-              $this->travel(5)->weeks();
-              $this->travel(5)->years();
-              // Travel into the past...
-              $this->travel(-5)->hours();
-              // Travel to an explicit time...
-              $this->travelTo(now()->subHours(6));
-              // Return back to the present time...
-              $this->travelBack();
-            });
-            либо
-            $this->travel(5)->days(function () {
-              // Test something five days into the future...
-            });
-            $this->travelTo(now()->subDays(10), function () {
-              // Test something during a given moment...
-            });
-            либо
-            use Illuminate\Support\Carbon;
-            // Freeze time and resume normal time after executing closure...
-            $this->freezeTime(function (Carbon $time) { });
-            // Freeze time at the current second and resume normal time after executing closure...
-            $this->freezeSecond(function (Carbon $time) { })
-        p блокировка неактивных сообщений на форуме
-        pre
-          code.
-            use App\Models\Thread;
-            test('forum threads lock after one week of inactivity', function () {
-              $thread = Thread::factory()->create();
-              $this->travel(1)->week();
-              expect($thread->isLockedByInactivity())->toBeTrue();
-            });
-        p тесты браузера
-
-      //- Packages
-      details
-        summary Packages
-        p.
-          - Cashier (Stripe) - платежная система Stripe<br>
-          - Cashier (Paddle) - платежная система Paddle<br>
-          - Dusk - автоматизация и тестирование браузеров<br>
-          - Envoy - выполнение задач на удаленных серверах<br>
-          - Fortify - backend реализация authentication<br>
-          - Folio - роутер, основанный на страницах для упрощения маршрутизации<br>
-          - Homestead - локальная среда разработки на Vagrant<br>
-          - Horizon - панель управления и конфигурацию для Redis системы очередей<br>
-          - Mix - компиляция и минимизация файлов CSS и JavaScript<br>
-          - Octane - увеличивает производительность приложения<br>
-          - Passport - обеспечивает полную реализацию OAuth2 сервера для приложения<br>
-          - Pennant - комплект флагов без крафт. Флаги позволяют постепенно внедрять новые функции приложений, А/Б тестировать новые интерфейсы, дополнять стратегию развития на основе ствола<br>
-          - Pint - стиль кода, устанавливается по умолчанию<br>
-          - Precognition - предвидеть результат будущего HTTP-запроса, выполнит всю промежуточную обработку маршрута и разрешит зависимости контроллера, включая валидацию запросов формы без выполнения метода контроллера.<br>
-          - Prompts - добавление красивых и удобных форм к приложениям командной строки с функциями браузера<br>
-          - Pulse - сведения о производительности и использовании приложения<br>
-          - Reverb - масштабируемый в реальном времени WebSocket коммуникаций<br>
-          - Sail - взаимодействие со средой разработки Docker<br>
-          - Sanctum - система аутентификации для SPA (приложения с одной страницей), мобильные приложения и простые токены-API<br>
-          - Scout - полнотекстовоый поиск<br>
-          - Socialite аутентификация через соц.сети<br>
-          - Telescope предоставляет информацию о поступающих запросах, исключениях, записях записей, баз данных, задаваемых заданий, почтовых сообщений, уведомлениях, операциях кэша, запланированных задачах, переменных дампов и т.д.<br>
-          - Valet среда разработки для мак
-
-      //- Model
-      details
-        summary Model
-
-        //- Models
-        details
-          summary Models
-          p помощь по созданию модели
-          code php artisan help make:model
-          p создаю модель в полном комплекте (Model, Migration, Factory, Seeder, Request, Controller, Policy)
-          code php artisan make:model Employer -a
-          p создать модель без миграции
-          code php artisan make:model Employer -cfs --policy
-          p.
-            то что не будет использовано можно будет удалить.<br>
-            в моделях app/Models/ указать связи
-          pre
-            code.
-              class Employer extends Model
-              {
-                use HasFactory;
-                public function user(): BelongsTo
-                {
-                  return $this->belongsTo(User::class);
-                }
-                public function jobs(): HasMany
-                {
-                  return $this->hasMany(Job::class);
-                }
-              }
-          p в файле Providers/AppServiceProvider.php
-          pre
-            code.
-              public function boot(): void
-              {
-                Model::unguard();
-              }
-          p Показать содажимое БД
-          pre
-            code.
-              ./sail artisan db:show
-              ./sail artisan db:table users
-          p Показать содажимое таблицы БД
-          pre
-            code.
-              php artisan tinker
-              User::all();
-          p при типе связи $this->belongsToMany() создать pivot table
-
-        //- Create table
-        details
-          summary Create table
-          p создать таблицу базы данных
-          code php artisan make:migration create_employers_table
-          p.
-            создаст файл database/migrations/ 2024_05_06_132745_create_employers_table<br>
-            в файле описываю поля таблицы<br>
-            и запихиваю таблицу в базу данных
-          code php artisan migrate
-
-        //- Rename table
-        details
-          summary Rename table
-          p.
-            в файле config/queue.php меняю название таблиц по умолчанию<br>
-            к названию таблицы добавляю слово queue
-          pre
-            code.
-              'database' => [
-                'driver' => 'database',
-                'connection' => env('DB_QUEUE_CONNECTION'),
-                'table' => env('DB_QUEUE_TABLE', 'queued_jobs'),
-                'queue' => env('DB_QUEUE', 'default'),
-                'retry_after' => (int) env('DB_QUEUE_RETRY_AFTER', 90),
-                'after_commit' => false,
-              ],
-
-              'batching' => [
-                'database' => env('DB_CONNECTION', 'sqlite'),
-                'table' => 'queued_job_batches',
-              ],
-              'failed' => [
-                  'driver' => env('QUEUE_FAILED_DRIVER', 'database-uuids'),
-                  'database' => env('DB_CONNECTION', 'sqlite'),
-                  'table' => 'queued_failed_jobs',
-              ], 
-          p.
-            в папке database/migrations/<br>
-            к названию файла по умолчанию добавляю слово queue
-          code 0001_01_01_000002_create_queued_jobs_table.php
-          p в нутри файлa к названиям таблиц добавляю слово queue
-          pre
-            code.
-              Schema::create('queued_jobs', function (Blueprint $table) {
-                ...
-              Schema::create('queued_job_batches', function (Blueprint $table) {
-                ...
-              Schema::create('queued_failed_jobs', function (Blueprint $table) {
-          p удаляю старые файлы и создаю новые c учётом изменений
-          code php artisan migrate:fresh
-          p чтобы внести изменения в базу данных:
-          code php artisan migrate
-
-        //- Factories
-        details
-          summary Factories
-          p в database/factories заполнить фабрики для создания тестового контента<br>
-
-        //- Seeders
-        details
-          summary Seeders
-          p.
-            в файлах database/seeders/ создать контент
-            Sequence меняет значения полей для каждой итерации цикла создания данных
-          pre
-            code.
-              public function run(): void
-              {
-                $tags = Tag::factory(3)->create();
-                Job::factory(20)->hasAttached($tags)->create(new Sequence([
-                  'featured' => false,
-                  'schedule' => 'Full Time',
-                ], [
-                  'featured' => true,
-                  'schedule' => 'Part Time',
-                ]));
-              }
-          p заполнить базу данных данными
-          code php artisan db:seed
-          p удалить таблицы, создать новые и заполнить данными
-          code php artisan migrate:fresh --seed
-
-        //- Controllers
-        details
-          summary Controllers
-
-          //- Methods
-          table
-            caption Methods
-            thead
-              tr
-                th Controller Method 
-                th Action
-            tbody
-              tr
-                td index
-                td view all
-              tr
-                td show
-                td view one
-              tr
-                td create
-                td show form for create
-              tr
-                td store
-                td create
-              tr
-                td edit
-                td show form for edit
-              tr
-                td update
-                td update
-              tr
-                td destroy
-                td delete
+        summary How to
         
-          //- Create controller
-          details
-            summary Create controller
-            p создать контроллер c типовыми методами
-            code php artisan make:controller SessionController -r
-            p.
-              public function __invoke(){} метод применяется в контроллерах c одним действием<br>
-              запрос на получение данных из базы данных:
-            pre
-              code.
-                public function __invoke()
-                {
-                  $jobs = Job::query()
-                    ->with(['employer', 'tags'])
-                    ->where('title', 'LIKE', '%'.request('q').'%')
-                    ->get();
-                  return view('results', ['jobs' => $jobs]);
-                }
-            p.
-              with(['employer', 'tags']) нужен для того, чтобы не создать n+1 проблему<br>
-              когда каждая строка таблицы данных будет будет вызываться отдельным запросом
-
-      //- Authorization
-      details
-        summary Authorization
-        
-        //- Gates
-        details
-          summary Gates
-          p.
-            Gate - объявляется в App\Providers\AppServiceProvider методом boot(),<br>
-            исспользуется для простых ограничений ролей.<br>
-            Аргументом всегда принимает пользоватля, к которому применяет ограничения.<br>
-            Дополнительные аргументы по необходимости.
-          pre
-            code.
-              use App\Models\Post;
-              use App\Models\User;
-              use Illuminate\Support\Facades\Gate;
-
-              public function boot(): void
-              {
-                Gate::define('update-post', function (User $user, Post $post) {
-                  return $user->id === $post->user_id;
-                });
-              }
-          p.
-            Gate::define - объявляю Gate,<br>
-            'update-post' - название возможности предоставляемой пользователю<br>
-            function (User $user, Post $post) - вернёт true/false,<br>
-            true - этому пользователю можно пользоваться этой возможностью<br>
-            false - этому пользователю нельзя пользоваться этой возможностью<br>
-            <br>
-            Можно вынести логику в отдельный класс (политику)
-          pre
-            code.
-              use App\Policies\PostPolicy;
-              use Illuminate\Support\Facades\Gate;
-              
-              public function boot(): void
-              {
-                Gate::define('update-post', [PostPolicy::class, 'update']);
-              }
-          p.
-            После этого в любом контроллере можем проверять роль конкрено указав пользователя
-          pre
-            code.
-              if (Gate::forUser($user)->allows('update-post', $post)) {}
-              
-              if (Gate::forUser($user)->denies('update-post', $post)) {}
-          p.
-            allows - разрешено ли<br>
-            denies - запрещено ли<br>
-            <br>
-            Проверять роль текущего пользователя с кастомным условием
-          pre
-            code.
-              if (! Gate::allows('update-post', $post)) {
-                abort(403);
-              }
-              if (Gate::denies('update-post', $post)) {
-                abort(403);
-              }
-          p.
-            Проверять роль текущего пользователя встроенным методом
-          pre
-            code Gate::authorize('update-post', $post);
-          p.
-            Проверить несколько возможностей
-          pre
-            code.
-              if (Gate::any(['update-post', 'delete-post'], $post)) {
-                // The user can update or delete the post...
-              }
-
-              if (Gate::none(['update-post', 'delete-post'], $post)) {
-                // The user can't update or delete the post...
-              }
-
-        //- Policies
-        details
-          summary Policies
-          p.
-            Политика всегда относится к какой-то модели.<br>
-            Создать политику можно при создании модели либо отдельно.<br>
-            По конвенции название политики содержит название модели.
-          code php artisan make:policy PostPolicy
-          p Создать политику с методами для модели Post
-          code php artisan make:policy PostPolicy --model=Post
-          p.
-            Назвать политику можно не по конвенции,<br>
-            но тогда её нужно зарегистрировать в<br>
-            App\Providers\AppServiceProvider методом boot()
-          pre
-            code.
-              use App\Models\ModelName;
-              use App\Policies\PolicyName;
-              use Illuminate\Support\Facades\Gate;
-              
-              public function boot(): void
-              {
-                  Gate::policy(ModelName::class, PolicyName::class);
-              }
-          table
-            caption Methods
-            thead
-              tr
-                th Policy Method 
-                th Action
-            tbody
-              tr
-                td viewAny
-                td view all
-              tr
-                td view
-                td view one
-              tr
-                td create
-                td create & store
-              tr
-                td update
-                td edit
-              tr
-                td delete
-                td mark as delete
-              tr
-                td restore
-                td unmark as delete
-              tr
-                td forceDelete
-                td permanently delete
-          p.
-            В контроллере гейт может обратиться к политике.<br>
-            Первый параметр это название политики,<br>
-            второй - либо объект модели, если есть, либо класс модели
-          pre
-            code.
-              Gate::authorize('update', $post);
-              <span>or</span>
-              Gate::authorize('update', App\Models\Post::class);
-        
-        //- Fortify
-        details
-          summary Fortify
-          p установить Fortify
-          code ./sail composer require laravel/fortify
-          p создать папки и роуты Fortify
-          code ./sail artisan fortify:install
-          p обновить БД
-          code ./sail artisan migrate
-
-      //- Routes
-      details
-        summary Routes
-        p просмотреть список роутов
-        code php artisan route:list --except-vendor
-        
-        //- Route::view
-        p просто выдать страницу без дополнительных действий
-        code Route::view('/', 'home');
-
-        //- Name for route
-        pre
-          code.
-            code Route::view('/', 'welcome')->name('home');
-            
-            <span>welcome.blade.php</span>
-            &lt;nav&gt;
-              &lt;a href="{{ route('home') }}"&gt;Home&lt;/a&gt;
-            &lt;/nav&gt;
-        
-        //- Execute test
-        pre
-          code.
-            Route::get('test', function () {
-              $job = Job::first();
-
-              TranslateJob::dispatch($job);
-
-              return 'Done';
-            });
-        
-        //- Model binding
-        p.
-          wildcard {job} and parametr of function $job<br>
-          type of parametr function (Job $job)<br>
-          ларавель понимает, что нужен объект модели Job c данными из таблицы<br>
-          этот объект он отбирает из БД по значению {job}<br>
-          по умолчанию {job} - это id, но можно задать своё значение {job:name}
-        pre
-          code.
-            Route::get('/jobs/{job}', function (Job $job) {
-              return view('jobs.show', ['job' => $job]);
-            });
-        
-        //- Controller classes
-        p вызываю метод index из класса контроллера JobController при переходе на /jobs
-        code Route::get('/jobs', [JobController::class, 'index']);
-        p В livewire можно укзавыть роут на класс компонента
-        pre
-          code.
-            Route::get('/posts', ShowPosts::class);
-            Route::get('/posts/create', CreatePost::class);
-        p.
-          для этого необходимо создать шаблон для всех компонентов<br>
-          (components.layouts.app.blade.php)
-        code ./sail artisan livewire:layout
-
-        //- Route groups
-        p объединяю роуты c одним и тем же контроллером
-        pre
-          code.
-            Route::controller(JobController::class)->group( function()
-            {
-              Route::get('/jobs', 'index');
-              Route::get('/jobs/create', 'create');
-              Route::get('/jobs/{job}', 'show');
-              Route::get('/jobs/{job}/edit', 'edit');
-              Route::post('/jobs', 'store');
-              Route::patch('/jobs/{job}', 'update');
-              Route::delete('/jobs/{job}', 'destroy');
-            });
-
-        //- Route Resources
-        p.
-          сформирует для методов класса контроллера роуты:
-          jobs.index <span>- показать всё списком</span>
-          jobs.show <span>- показать один</span>
-          jobs.create <span>- создать</span>
-          jobs.edit <span>- редактировать</span>
-          jobs.store <span>- сохранить</span>
-          jobs.update <span>- обновить</span>
-          jobs.destroy <span>- уничтожить</span>
-          названия методов контроллера - это дефолтные названия ларавел.
-        pre
-          code.
-            Route::resource('uri', controller);
-            Route::resource('jobs', JobController::class);
-        p можно форимровать роуты выборочно
-        pre
-          code.
-            Route::resource('jobs', JobController::class, [
-              'only' => ['index', 'show']
-            ]);
-            Route::resource('jobs', JobController::class, [
-              'except' => ['edit']
-            ]);
-
-      //- View
-      details
-        summary View
-        p.
-          vite компелирует, кеширует и отслеживает изменения в папке resources<br>
-          resources/views/components/layout.blade.php создаю компонент layout<br>
-          вставляю компонент на страницу
-        code &lt;x-layout&gt;&lt;/x-layout&gt;
-        p подключил лого
-        code &lt;img src="{{ Vite::asset('resources/images/logo.svg') }}" alt=""&gt;
-        p подключить стили и скрипты
-        code @vite(['resources/css/app.css', 'resources/js/app.js'])
-        p в SPA-приложении css поключаем в js-файле, поэтому подключаем только js
-        code @vite('resources/js/app.js')
-        p resources/js/app.js запихиваю картинки глобально, чтобы их учесть при npm run build
-        pre
-          code.
-            import.meta.glob([
-              '../images/**',
-              '../fonts/**',
-            ]);
-        p.
-          в файле .env указать место хранения загружаемых файлов<br>
-          варианты значений в файле config/filesystems.php
-        code FILESYSTEM_DISK=public
-        p.
-          при загрузке изображения оно будет сохранено в storage/app/public<br>
-          чтобы оно отображалось сделать ссылку:
-        code php artisan storage:link
-        p Встроенные шаблоны для писем
-        code ./sail artisan vendor:publish --tag=laravel-mail
-
-        //- Localization
-        details
-          summary Localization
-          p Создать папку для переводов
-          code php artisan lang:publish
-          p Скопировать папку en, переименовать в ru и вставить переводы в файлах
-
-        //- Component
-        details
-          summary Component
-
-          //- Component styles
-          details
-            summary Component styles
-            p.
-              разбить макет на компоненты<br>
-              в компоненте задать класс по умолчанию c общими настройками компонента
-            pre
-              code.
-                @php
-                  $classes = 'className1 className2';
-                @endphp
-
-                &lt;div {{ $attributes(['class' => $classes]) }}&gt;
-                  {{ $slot }}
-                &lt;/div&gt;
-
-          //- Component properties
-          details
-            summary Component properties
-            p задаю свойства компонента, которые можно указывать в вёрстке и менять вид компонента
-            pre
-              code.
-                @props(['size' => 'base'])
-
-                @php
-                  $classes = "className1 className2";
-                  if ($size === 'base') {
-                    $classes .= " className3";
-                  }
-                  if ($size === 'small') {
-                    $classes .= " className4";
-                  }
-                @endphp
-
-                &lt;a href="#" class="{{ $classes }}"&gt;{{ $slot }}&lt;/a&gt;
-
-          //- Create component Livewire
-          details
-            summary Create component Livewire
-            p Компонент имеет доступ к публичным свойствам и методам своего класса
-            pre
-              code.
-                php artisan make:livewire ComponentName
-                <span>or</span>
-                php artisan make:livewire component-name
-                
-            p Создать компонент в папке
-            pre
-              code.
-                php artisan make:livewire FolderName\\ComponentName
-                <span>or</span>
-                php artisan make:livewire folder-name.component-name
-
-            p Создать компонент с тестом
-            code code ./sail artisan make:livewire create-post --pest
-
-            p Создать шаблон для компонентов livewire
-            code ./sail artisan livewire:layout
-
-            p Выбирать разные шаблоны на весь класс
-            pre
-              code.
-                #[Layout('layouts.app')] 
-                class CreatePost extends Component
-                {
-                    // ...
-                }
-            p Выбирать разные шаблоны на методе
-            pre
-              code.
-                #[Layout('layouts.app')] 
-                public function render()
-                {
-                  return view('livewire.create-post');
-                }
-            p Выбирать разные шаблоны динамически
-            pre
-              code.
-                public function render()
-                {
-                  return view('livewire.create-post')
-                    ->layout('layouts.app'); 
-                }
-            p Через @yield('content') указываю файл шаблона
-            pre
-              code.
-                &lt;body&gt;
-                  @yield('content')
-                &lt;/body&gt;
-            p.
-              Метод render() можно не указывать<br>
-              Livewire будет автоматически выводить view с названием как у класса
-            
-            p В класс User.php добавить подстановку title в шаблон
-            code.
-              use Livewire\Attributes\Title;
-              #[Title('title')]
-            p Подстановка title динамически
-            pre
-              code.
-                public function render()
-                {
-                  return view('livewire.create-post')
-                    ->title('Create Post'); 
-                }
-
-            p задаю свойства livewire компонента в классе
-            code public $title = 'Post title...';
-
-            p задаю свойства livewire компонента в виде
-            code <h1>Title: "{{ $title }}"</h1>
-
-            p Дополнительные свойства при рендере в классе
-            code.
-              return view('livewire.create-post')->with([
-                'author' => Auth::user()->name,
-              ]);
-
-            p Дополнительные свойства при рендере в виде
-            code Author: {{ $author }}
-
-            p При выводе в любом цикле всегда указывать ключ
-            pre
-              code.
-                @foreach ($posts as $post)
-                  &lt;livewire:post-item :$post :key="$post->id"&gt;
-                  @livewire(PostItem::class, ['post' => $post], key($post->id))
-                @endforeach
-
-            p Привязка ввода к свойству класса
-            code &lt;input type="text" id="title" wire:model="title"&gt;
-
-            p Привязка ввода к методу класса
-            pre
-              code.
-                &lt;form wire:submit="save"&gt;
-                  &lt;button type="submit"&gt;Save&lt;/button&gt;
-                &lt;/form&gt;
-
-            p Получить значения и очистить поля ввода
-            pre
-              code.
-                class ManageTodos extends Component
-                {
-                  public $todos = [];
-                  public $todo = '';
-                  public function addTodo()
-                  {
-                    $this->todos[] = $this->todo;
-                    $this->reset('todo'); 
-                  }
-                }
-            p Получить значения и очистить поля ввода
-            pre
-              code.
-                class ManageTodos extends Component
-                {
-                  public $todos = [];
-              
-                  public $todo = '';
-              
-                  public function addTodo()
-                  {
-                    $this->todos[] = $this->pull('todo');
-                  }
-                }
-                // The same as $this->all() and $this->reset();
-                $this->pull();
-      
-                // The same as $this->only(...) and $this->reset(...);
-                $this->pull(['title', 'content']);
-            
-            p Только авторизированный пользователь может изменить данные
-            pre
-              code.
-                public function update()
-                {
-                  $post = Post::findOrFail($this->id);
-                  $this->authorize('update', $post); 
-                  $post->update(...);
-                }
-            p Изменение свойства возможно только внутри класса
-            pre
-              code.
-                class UpdatePost extends Component
-                {
-                  #[Locked] 
-                  public $id;
-                }
-            p Свойства Eloquent моделей по умолчанию изменять возможно только внутри класса
-            pre
-              code.
-                class UpdatePost extends Component
-                {
-                  public Post $post; 
-                  public $title;
-                  public $content;
-                  
-                  public function update()
-                  {
-                    $this->post->update([
-                      'title' => $this->title,
-                      'content' => $this->content,
-                    ]);
-                    session()->flash('message', 'Post updated successfully!');
-                  }
-                }
-
-            p.
-              Свойство #[Computed] кеширует запрошенные данные,<br>
-              чтобы отправлять каждый раз новый запрос.<br>
-              Обращаться к свойству через объект $this->todos
-            pre
-              code.
-                use Livewire\Attributes\Computed;
-
-                #[Computed]
-                public function todos()
-                {
-                  return Auth::user()
-                    ->todos()
-                    ->select(['title', 'content'])
-                    ->get();
-                }
-            
-                public function markAllComplete() 
-                {
-                  $this->todos->each->complete();
-                }
-
-            p Вывод компонента в Blade view
-            code &lt;livewire:create-post /&gt;
-
-            p Вывод компонента в Blade view со значением
-            code &lt;livewire:create-post title="Initial Title" /&gt;
-
-            p Вывод компонента в Blade view с динамическим значением переменной
-            code &lt;livewire:create-post :title="$initialTitle" /&gt;
-
-            p Инициализация переменной в классе при подключении компонента
-            pre
-              code.
-                class CreatePost extends Component
-                {
-                  public $title;
-                  public function mount($title = null)
-                  {
-                    $this->title = $title;
-                  }
-                }
-
-            p livewire инициализирует переменную автоматически
-            pre
-              code.
-                class CreatePost extends Component
-                {
-                  public $title;
-                }
-
-            p Инлайн компонент - это один файл где разметка внутри метода render()
-            code ./sail artisan make:livewire CreatePost --inline
-
-            p В routes/web.php добавить
-            pre
-              code.
-                use App\Livewire\User\User;
-                Route::get('user', User::class);
-            p В классе UserCreate.php добавить переход на страницу uri без перезагрузки страницы с сервера
-            code $this->redirect('/user', navigate: true);
-            p.
-              Свойства и методы формы вынесены в отдельный класс UserForm<br>
-              В компоненте User объект класса UserForm определён как form<br>
-              Обращения к свойствам класса UserForm через form<br>
-            p Подключить assets в layout/app.blade.php
-            pre
-              code.
-                @assets
-                  &lt;script src="https://cdn.jsdelivr.net/npm/pikaday/pikaday.js" defer&gt;&lt;/script&gt;
-                  &lt;link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/pikaday/css/pikaday.css"&gt;
-                @endassets
-
-                @vite(['resources/css/app.css', 'resources/js/app.js'])
-            
-            // Actions
-            p $refresh - проверяет БД и отображает на странице
-            code &lt;button type="button" wire:click="$refresh"&gt;...&lt;/button&gt;
-            p $commit - отслеживает изменения компонета на сервере
-            code &lt;button type="button" wire:click="$commit"&gt;...&lt;/button&gt;
-            // Event listeners
-            p.
-              wire:click<br>
-              wire:submit<br>
-              wire:keydown<br>
-              wire:keyup<br>
-              wire:mouseenter<br>
-              wire:* - любой текст после wire: может быть названием события<br>
-              Livewire поддерживает любые событыя браузера, например wire:transitionend<br>
-            a(href="https://livewire.laravel.com/docs/actions") слушатели событий<br>
-            br
-            p.
-              wire:loading - загрузчик<br>
-              wire:click="delete({{ $post->id }})" - передать в класс параметр<br>
-              wire:click="$parent.removePost({{ $post->id }})" - обращаюсь к методу родительского компонента<br>
-              wire:click="$set('query', '')" - заменил значение свойства query на пустую строку<br>
-              wire:click="$toggle('sortAsc')" - при каждом нажатии меняет true/false
-            pre
-              code.
-                &lt;button wire:click="$toggle('sortAsc')"&gt;
-                  Sort {{ $sortAsc ? 'Descending' : 'Ascending' }}
-                &lt;/button&gt;
-            p.
-              wire:click="$dispatch('post-deleted')" - срабатывает событие<br>
-              $event - даёт доступ к событиям JS, например при нажатии enter<br>
-              передать значение ввода в search() - метод класса компонента
-            code &lt;input type="text" wire:keydown.enter="search($event.target.value)"&gt;
-            p.
-              При выполнении метода с #[Renderless] метод render() этого же класса не выполняется,<br>
-              либо skipRender() внутри метода<br>
-            pre
-              code.
-                #[Renderless] 
-                public function incrementViewCount()
-                {
-                  $this->post->incrementViewCount();
-                }
-
-                public function incrementViewCount()
-                {
-                  $this->post->incrementViewCount();
-                  $this->skipRender(); 
-                }
-            p.
-              wire:dirty.class="border-yellow" - позволяет менять класс<br>
-              если значение поля отличается от значения этого поля в БД
-            code &lt;input type="text" wire:model.blur="title" wire:dirty.class="border-yellow"&gt;
-            p.
-              Пока поле ввода title будет в фокусе, будет Unsaved...<br>
-              когда фокус уйдёт, значение будет записано в БД и Unsaved... исчезнет
-            pre
-              code.
-                &lt;input type="text" wire:model.blur="title"&gt;
-                &lt;div wire:dirty wire:target="title"&gt;Unsaved...&lt;/div&gt;
-            p Можно выносить части Livewire компонентов в Blade компоненты
-            pre
-              code.
-                &lt;form wire:submit="save"&gt;
-                  &lt;x-input-text name="title" wire:model="title" /&gt;
-                  &lt;x-input-text name="content" wire:model="content" /&gt;
-                  &lt;button type="submit"&gt;Save&lt;/button&gt;
-                &lt;/form&gt;
-            p Blade компонент
-            pre
-              code.
-                @props(['name'])
-                &lt;input type="text" name="{{ $name }}" {{ $attributes }}&gt;
-                &lt;div&gt;
-                    @error($name) &lt;span class="error"&gt;{{ $message }}&lt;/span&gt; @enderror
-                &lt;/div&gt;
-
-            //- Events
-            p породить событие post-created
-            code $this->dispatch('post-created', title: $post->title);
-            p по событию выполнить метод
-            pre
-              code.
-                #[On('post-created')] 
-                public function updatePostList($title) { }
-            p породить событие post-created с динамическим аттрибутом
-            pre
-              code.
-                $this->dispatch("post-updated.{$post->id}");
-
-                #[On('post-updated.{post.id}')]
-            p.
-              презагрузить родительский компонент,<br>
-              если в дочернем компоненте будет событие saved
-            code &lt;livewire:edit-post @saved="$refresh"&gt;
-            p.
-              вызвать метод close() родительского компонента<br>
-              если в дочернем компоненте будет saved конткретного postId
-            code &lt;livewire:edit-post @saved="close($event.detail.postId)"&gt;
-
-        //- Validation
-        details
-          summary Validation
-          p.
-            В основном такая же как в ларавел, но метод validate() применяется на объекте компонента<br>
-            Метод validate() возвращает массив отвалидированных данных либо массив ошибок
-          pre
-            code.
-              public function save()
-              {
-                $validated = $this->validate([ 
-                  'title' => 'required|min:3',
-                  'content' => 'required|min:3',
-                ]);
-                Post::create($validated);
-                return redirect()->to('/posts');
-              }
-          p.
-            В форме ввода не фронте отобразить ошибку валидации с помощью<br>
-            директивы @error(), по ключу title выводиться значение $message
-          pre
-            code.
-              &lt;input type="text" wire:model="title"&gt;
-              &lt;div&gt;@error('title') {{ $message }} @enderror&lt;/div&gt;
-          p Задать правила валидации можно разными способами
-          pre
-            code.
-              <span>методом validate()</span>
-              $validated = $this->validate([
-                <span>массивом</span>
-                'name' => ['required', 'min:2', 'max:30'],
-                <span>строкой через разделитель</span>
-                'email' => 'required|email|max:30',
-                'password' => 'required|min:6',
-              ]);
-
-              <span>параметром #[Validate()]</span>
-              <span>отслеживает изменение значений</span>
-              <span>использует стандартные валидаторы ларавел</span>
-              <span>свой текст сообщения</span>
-              #[Validate('required', message: 'Имя обязательно')]
-              <span>своё имя поля в сообщении</span>
-              #[Validate('min:2', as: 'Name')]
-              #[Validate('max:30')]
-              public string $name;
-
-              <span>написать свои правила валидации</span>
-              protected function rules(): array
-              {
-                return [
-                  'name' => ['required', 'min:2', 'max:30'],
-                  'email' => 'required|email|max:30',
-                  'password' => 'required|min:6',
-                ];
-              }
-
-              <span>написать свои тексты сообщений об ошибке</span>
-              protected function messages(): array
-              {
-                return [
-                  <span>название поля.валидатор => текст ошибки</span>
-                  'name.required' => 'Имя обязательно!',
-                  'name.min' => 'Имя должно быть длиннее!',
-                  'email.required' => 'Введите почту!',
-                  'password.required' => 'Пароль обязателен!',
-                ];
-              }
-          p.
-            Если правила валидации заданы параметром #[Validate()]<br>
-            или методом rules(),<br>
-            то метод validate() вызываем без параметров
-          code $validated = $this->validate();
-          p Создаю пользователя в БД
-          code User::create($validated);
-          p.
-            wire:model.blur="name" - real-time validation<br>
-            срабатывает по событию либо <dfn>.live</dfn> либо <dfn>.blur</dfn><br>
-            работает при использовании параметра валидирования #[Validate()]<br>
-            wire:model.live="name" - отправляет на сервер введенный знак сразу<br>
-            wire:model.live.debounce="name" - отправляет на сервер введенное значение через 200мс после последнего нажатия<br>
-            wire:model.live.debounce.5ms="name" - отправляет на сервер введенное значение через 5мс после нажатия<br>
-
-        //- Form
-        details
-          summary Form
-          p.
-            B компоненте создаю форму и меняю действие по умолчанию на вызов метода save из класса<br>
-            Форма вызывает метод обработки при надатии на enter или на кнопку Save<br>
-            B полях ввода данных привязываю данные к свойствам компонента<br>
-            Свойство компонента wire:model привязывает к полю ввода свойство класса wire:model="name"<br>
-          pre
-            code.
-              &lt;form wire:submit.prevent="save"&gt;
-                &lt;input type="text" wire:model="name"&gt;
-                &lt;input type="email" wire:model="email"&gt;
-                &lt;button type="submit"&gt;Save&lt;/button&gt;
-              &lt;/form&gt;
-          p.
-            B методе сохранения данных вызываю метод валидации данных<br>
-            Если данные валидны, то сохраняю данные в БД<br>
-            Если данные не валидны, то вывожу ошибку
-          pre
-            code.
-              public function save()
-              {
-                $validated = $this->validate([
-                  'name' => 'required|min:3',
-                  'email' => 'required|email',
-                ]);
-                User::create($validated);
-              }
-          p.
-            Вывести ошибку валидации можно c помощью директивы @error()<br>
-            По ключу name выводится значение $message
-          pre
-            code.
-              &lt;input type="text" wire:model="name"&gt;
-              &lt;div&gt;@error('name') {{ $message }} @enderror&lt;/div&gt;
-          p.
-            Вывести ошибку валидации можно c помощью директивы @error()<br>
-            По ключу name выводится значение $message
-          pre
-            code.
-              &lt;input type="text" wire:model="name"&gt;
-              &lt;div&gt;@error('name') {{ $message }} @enderror&lt;/div&gt;
-          p.
-            Вывести ошибку валидации можно c помощью директивы @error()<br>
-            По ключу name выводится значение $message
-          pre
-            code.
-              &lt;input type="text" wire:model="name"&gt;
-          p Получить все данные формы
-          code $this->all();
-          p Получить данные выборочных полей
-          code $this->only(['name', 'email'])
-          p.
-            Метод pull() - это метод only() + reset()<br>
-            Заберёт из формы данные полей name и email<br>
-            и очистит поля формы name и email
-          code $this->pull(['name', 'email'])
-          p заберёт из формы все данные и очистит форму
-          code $this->pull();
-          p.
-            Создать класс формы
-            Создаст app/Livewire/Forms/FormName.php
-          code php artisan livewire:form FormName
-          p.
-            При создании компонентов CreatePost, UpdatePost и т.д.
-            в классах компонентов будут вызываться методы и свойства класса FormName.php.
-            T.e. все свойства и методы формы в одном классе и исспользуются разными компонентами.
-            Для доступа к свойствам и методам калсса формы в классе компонента создаётся её объект form
-            и обращение к свойствам и методам через объект.
-            B классе компонента:
-          pre
-            code.
-              public UserForm $form;
-              public function save()
-              {
-                  $this->form->saveUser();
-              }
-          p B шаблоне компонента:
-          code wire:model="form.name"
-
-        //- Events
-        details
-          summary Events
-          p.
-            События позволяю прослушивать события в другом компоненте.
-            Сгенерировать событие: метод dispatch()
-          code.
-            $this->dispatch('eventname');
-            <span>or</span>
-            $this->dispatch('eventname', title: $post->title);
-          p В другом (других) компоненте добавить слушателя события
-          code.
-            use Livewire\Attributes\On;
-            #[On('eventname')]
-            public function updatePost($title) {}
-
       //- Api
       details 
         summary Api
@@ -19835,59 +19776,100 @@ block menu
       //- CRUD
       details
         summary CRUD
+        p Create model
+        code php artisan make:model Post -mfcr
         p.
-          1. Create model `php artisan make:model Post -mfcr`<br>
-          2. Add columns in migration<br>
-          3. Define fillable columns and relation in Post model and relation in User model<br>
-          4. Fill database/factories/PostFactory.php and database/seeders/DatabaseSeeder.php<br>
-          5. Fill database fake data `php artisan migrate:fresh --seed`<br>
-          6. In resources/js/types/index.d.ts create interface Post<br>
-          7. Create link for images `php artisan storage:link`<br>
-            <br>
-          8. Add navItem in resources/js/components/app-sidebar.tsx to posts.index<br>
-          9. Copy resources/js/pages/dashboard.tsx to resources/js/pages/posts/index.tsx<br>
-          10. In resources/js/pages/posts/index.tsx import table from shadcn and create inertia link for post creating<br>
-          11. Copy resources/js/pages/auth/login.tsx to resources/js/pages/posts/create.tsx<br>
-          12. In resources/js/types/index.d.ts create type PostForm<br>
-          13. Import and past textarea from shadcn into resources/js/pages/posts/create.tsx<br>
-          14. Copy resources/js/pages/posts/create.tsx to resources/js/pages/posts/edit.tsx<br>
-            <br>
-          15. Create resource for posts `php artisan make:resource PostResource`<br>
-          16. Add to boot function AppServiceProvider `JsonResource::withoutWrapping();`<br>
-          17. Register route for posts/ in routes/web.php<br>
-          18. Fill methods in PostController<br>
-          19. Command `php artisan optimize` and `php artisan optimize:clear`<br>
-            <br>
-          20. Add flash messages to app/Http/Middleware/HandleInertia/Requests<br>
-          21. In resources/js/types/index.d.ts create interface Flash<br>
-          22. Import sonner toaster from shadcn component into resources/js/layouts/app-layout.tsx<br>
-          23. Display toaster into resources/js/pages/posts/index.tsx<br>
-            <br>
-          24. Access by SSH to VPS by password<br>
-          25. Authenticated like user for installed Laravel on VPS `su - user`<br>
-          26. To see domain folder with installed project `cd htdocs`<br>
-          27. Come into Laravel files `cd domainfolder`<br>
-          28. In domainfolder generate ssh key for VPS `ssh-keygen -t ed25519 -C "my@email.com"` leave passphrase empty<br>
-          29. Read VPS ssh public key `cat ~/.ssh/id_ed25519.pub` copy the key<br>
-          30. In github repository open settings>Deploy keys>Add deploy key, paste VPS ssh public key (Allow write server)<br>
-          31. Move installed Laravel files into tmp folder `mv domainfolder/ tmp`<br>
-          32. Clone Laravel files from private repository github by ssh into domainfolder `git clone githubUrl domainfolder`<br>
-            <br>
-          33. In domainfolder copy .env file `cp .env.exemple .env`<br>
-          34. In domainfolder `composer install`<br>
-          35. Create sqlite database `php artisan migrate`<br>
-          36. Create mysql database on VPS server panel and change database setting into .env for mysql<br>
-          37. Apply data into mysql database `php artisan migrate`<br>
-          38. Generate app key `php artisan key:generate --ansi`<br>
-          39. Install as root nodejs on VPS [Nodejs](https://nodejs.org/en/download)<br>
-          40. In htdocs/domainfolder run as user `npm install` `npm run build`<br>
-          41. Fill database fake data `php artisan migrate:fresh --seed`<br>
-          42. Test app in browser<br>
-            <br>
-          43. For automaticaly ssr on VPS install as root [supervisor](https://laravel.com/docs/12.x/queues#supervisor-configuration)<br>
-          44. See youtube tutorial at 5:20:00 [YouTube tutorial](https://youtu.be/lqKbDEBa2B0).<br>
-          45. In conf file change command to `artisan inertia:start-ssr`<br>
-          46. In .env file `APP-NAME=Appname` `APP_ENV=prod` `APP_DEBUG=false` `APP_URL=Appurl` change mail settings<br>
-          47. Create localy .github/workflows/deploy.yml with action for github<br>
-          48. Github repository>settings>Secrets and variables>Actions<br>
-          49. Create new secret - see youtube tutorial 5:41:30<br>
+          Add columns in migration<br>
+          Define fillable columns and relation in Post model and relation in User model<br>
+          Fill database/factories/PostFactory.php and database/seeders/DatabaseSeeder.php<br>
+          Fill database fake data<br>
+        code php artisan migrate:fresh --seed
+        p.
+          In resources/js/types/index.d.ts create interface Post<br>
+          Create link for images
+        code php artisan storage:link
+        p.
+          Add navItem in resources/js/components/app-sidebar.tsx to posts.index<br>
+          Copy resources/js/pages/dashboard.tsx to resources/js/pages/posts/index.tsx<br>
+          In resources/js/pages/posts/index.tsx import table from shadcn and create inertia link for post creating<br>
+          Copy resources/js/pages/auth/login.tsx to resources/js/pages/posts/create.tsx<br>
+          In resources/js/types/index.d.ts create type PostForm<br>
+          Import and past textarea from shadcn into resources/js/pages/posts/create.tsx<br>
+          Copy resources/js/pages/posts/create.tsx to resources/js/pages/posts/edit.tsx<br>
+          Create resource for posts<br>
+        code php artisan make:resource PostResource
+        p Add to boot function AppServiceProvider
+        code JsonResource::withoutWrapping();
+        p.
+          Register route for posts/ in routes/web.php<br>
+          Fill methods in PostController<br>
+          Clear and optimazing data<br>
+        pre
+          code.
+            php artisan optimize
+            php artisan optimize:clear
+        p.
+          Add flash messages to app/Http/Middleware/HandleInertia/Requests<br>
+          In resources/js/types/index.d.ts create interface Flash<br>
+          Import sonner toaster from shadcn component into resources/js/layouts/app-layout.tsx<br>
+          Display toaster into resources/js/pages/posts/index.tsx<br>
+
+        //- Access by SSH to VPS
+        p.
+          Access by SSH to VPS by password<br>
+          Authenticated like user for installed Laravel on VPS<br>
+        code su - user
+        p To see domain folder with installed project
+        code cd htdocs 
+        p Come into Laravel files
+        code cd domainfolder
+        p In domainfolder generate ssh key for VPS
+        code ssh-keygen -t ed25519 -C "my@email.com"   // leave passphrase empty
+        p Read VPS ssh public key
+        code cat ~/.ssh/id_ed25519.pub   // copy the key
+        p.
+          In github repository open settings>Deploy keys>Add deploy key, paste VPS ssh public key (Allow write server)<br>
+          Move installed Laravel files into tmp folder<br>
+        code  mv domainfolder/ tmp
+        p Clone Laravel files from private repository github by ssh into domainfolder<br>
+        code git clone githubUrl domainfolder
+        p In domainfolder copy .env file
+        code cp .env.exemple .env
+        p In domainfolder
+        code composer install
+        p Create sqlite database
+        code php artisan migrate
+        p.
+          Create mysql database on VPS server panel and change database setting into .env for mysql<br>
+          Apply data into mysql database
+        code php artisan migrate
+        p Generate app key
+        code php artisan key:generate --ansi
+        p Install as root nodejs on VPS
+        a(href="https://nodejs.org/en/download") Nodejs
+        p In htdocs/domainfolder run as user
+        pre
+          code.
+            npm install
+            npm run build
+        p Fill database fake data
+        code php artisan migrate:fresh --seed
+        p Test app in browser
+        
+        //- Resources
+        a(href="http://laravel.com/docs/12.x/queues#supervisor-configuration") automaticaly ssr on VPS install as root
+        a(href="https://youtu.be/lqKbDEBa2B0") youtube tutorial at 5:20:00
+        p In conf file change command to 
+        code artisan inertia:start-ssr
+        p In .env file
+        pre
+          code.
+            APP-NAME=Appname
+            APP_ENV=prod
+            APP_DEBUG=false
+            APP_URL=Appurl
+        p change mail settings
+        p.
+          Create localy .github/workflows/deploy.yml with action for github<br>
+          Github repository>settings>Secrets and variables>Actions
+          Create new secret - see youtube tutorial 5:41:30
