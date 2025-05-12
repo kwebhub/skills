@@ -19684,97 +19684,97 @@ block menu
       //- How to
       details
         summary How to
-        
-      //- Api
-      details 
-        summary Api
-        p Установить пакет Sanctum, создать роут, миграцию personal_access_tokens_table и токен аутентификацию для api
-        code ./sail artisan install:api
-        p Создать модель с миграцией
-        code ./sail artisan make:model Category -m
-        p Обновить таблицы
-        code ./sail artisan migrate
-        p.
-          создать контроллер в отдельной структуре папок (v1 - версия)
-          --model=Category - привязка к модели
-          --api - методы апи контроллера
-          --requests - вынос валидации в отдельные классы
-        code ./sail artisan make:controller Api/V1/CategoryController --model=Category --api --requests
-        p сгруппировать роуты по версиям и создать рессурсный роут
-        code.
-          use App\Http\Controllers\Api\V1\CategoryController;
-          Route::prefix('v1')->group(function()
-          {
-              Route::apiResource('categories', CategoryController::class);
-          });
-        p просмотреть список роутов
-        code ./sail artisan route:list --except-vendor
-        p В файле bootstrap/app.php можно добавить свой обработчик ошибок
-        code.
-          use Illuminate\Foundation\Configuration\Exceptions;
-          ->withExceptions(function (Exceptions $exceptions) {
-            $exceptions->render(function (NotFoundHttpException $e, Request $request) {
-              if ($request->is('api/*')) {
-                return response()->json([
-                  'message' => 'Record not found.'
-                ], 404);
-              }
+          
+        //- Api
+        details 
+          summary Api
+          p Установить пакет Sanctum, создать роут, миграцию personal_access_tokens_table и токен аутентификацию для api
+          code ./sail artisan install:api
+          p Создать модель с миграцией
+          code ./sail artisan make:model Category -m
+          p Обновить таблицы
+          code ./sail artisan migrate
+          p.
+            создать контроллер в отдельной структуре папок (v1 - версия)
+            --model=Category - привязка к модели
+            --api - методы апи контроллера
+            --requests - вынос валидации в отдельные классы
+          code ./sail artisan make:controller Api/V1/CategoryController --model=Category --api --requests
+          p сгруппировать роуты по версиям и создать рессурсный роут
+          code.
+            use App\Http\Controllers\Api\V1\CategoryController;
+            Route::prefix('v1')->group(function()
+            {
+                Route::apiResource('categories', CategoryController::class);
             });
-          })
-        p Чтобы задать формат api ответа создать Resources
-        code ./sail artisan make:resource Api/V1/CategoryResource
-        p в контроллере возврат данных таблицы через рессурс-коллекцию для массива данных
-        code return CategoryResource::collection(Category::all());
-        p для возврата одной записи из таблицы данных
-        code new CategoryResource(Category::findOrFail($id));
-        p либо
-        code.
-          public function show(Category $category)
-          {
-            return new CategoryResource($category);
-          }
-        p в Api/V1/PostResource задаю условие: поле "content" показывать если роут posts.show
-        code "content"=> $this->when(Route::currentRouteName() == 'posts.show', $this->content),
-        p в Api/V1/PostResource по связи метода category из модели получаю свойство категории
-        code "categoryName" => $this->category->title,
-        p в Models/Post задаю связь с таблицей category методом category
-        code.
-          public function category()
-          {
-            return $this->belongsTo(Category::class);
-          }
-        p в Models/Post задаю список полей, которые не участвуют в работе методов
-        code.
-          protected $hidden = [
-            "created_at",
-          ];
-        p.
-          в PostController по связи метода category из модели Models/Post получаю всё одним запросом
-          и вывожу частями по 5 постов
-        code return PostResource::collection(Post::with('category')->paginate(5));
-        p для ограничения количества запросов в App\Providers\AppServiceProvider добавить в метод boot()
-        code.
-          use Illuminate\Cache\RateLimiting\Limit;
-          use Illuminate\Http\Request;
-          use Illuminate\Support\Facades\RateLimiter;
-          RateLimiter::for('api', function (Request $request) {
-            return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
-          });
-        p ключить ограничение middleware(['throttle:api', 'auth:sanctum']) в роуты
-        code Route::prefix('v1')->middleware(['throttle:api'])->group(function()
-        p для доступа к данным апи через токен добавить в модель User
-        code.
-          use Laravel\Sanctum\HasApiTokens;
-          use HasApiTokens
-        p установить срок жизни токена в минутах в config/sanctum.php          
-        code 'expiration' = 10,
-        p просроченные токены удалять командой sanctum:prune-expired
-        code.
-          use Illuminate\Support\Facades\Schedule;
-          Schedule::command('sanctum:prune-expired --hours=24')->daily();
+          p просмотреть список роутов
+          code ./sail artisan route:list --except-vendor
+          p В файле bootstrap/app.php можно добавить свой обработчик ошибок
+          code.
+            use Illuminate\Foundation\Configuration\Exceptions;
+            ->withExceptions(function (Exceptions $exceptions) {
+              $exceptions->render(function (NotFoundHttpException $e, Request $request) {
+                if ($request->is('api/*')) {
+                  return response()->json([
+                    'message' => 'Record not found.'
+                  ], 404);
+                }
+              });
+            })
+          p Чтобы задать формат api ответа создать Resources
+          code ./sail artisan make:resource Api/V1/CategoryResource
+          p в контроллере возврат данных таблицы через рессурс-коллекцию для массива данных
+          code return CategoryResource::collection(Category::all());
+          p для возврата одной записи из таблицы данных
+          code new CategoryResource(Category::findOrFail($id));
+          p либо
+          code.
+            public function show(Category $category)
+            {
+              return new CategoryResource($category);
+            }
+          p в Api/V1/PostResource задаю условие: поле "content" показывать если роут posts.show
+          code "content"=> $this->when(Route::currentRouteName() == 'posts.show', $this->content),
+          p в Api/V1/PostResource по связи метода category из модели получаю свойство категории
+          code "categoryName" => $this->category->title,
+          p в Models/Post задаю связь с таблицей category методом category
+          code.
+            public function category()
+            {
+              return $this->belongsTo(Category::class);
+            }
+          p в Models/Post задаю список полей, которые не участвуют в работе методов
+          code.
+            protected $hidden = [
+              "created_at",
+            ];
+          p.
+            в PostController по связи метода category из модели Models/Post получаю всё одним запросом
+            и вывожу частями по 5 постов
+          code return PostResource::collection(Post::with('category')->paginate(5));
+          p для ограничения количества запросов в App\Providers\AppServiceProvider добавить в метод boot()
+          code.
+            use Illuminate\Cache\RateLimiting\Limit;
+            use Illuminate\Http\Request;
+            use Illuminate\Support\Facades\RateLimiter;
+            RateLimiter::for('api', function (Request $request) {
+              return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
+            });
+          p ключить ограничение middleware(['throttle:api', 'auth:sanctum']) в роуты
+          code Route::prefix('v1')->middleware(['throttle:api'])->group(function()
+          p для доступа к данным апи через токен добавить в модель User
+          code.
+            use Laravel\Sanctum\HasApiTokens;
+            use HasApiTokens
+          p установить срок жизни токена в минутах в config/sanctum.php          
+          code 'expiration' = 10,
+          p просроченные токены удалять командой sanctum:prune-expired
+          code.
+            use Illuminate\Support\Facades\Schedule;
+            Schedule::command('sanctum:prune-expired --hours=24')->daily();
 
-      //- CRUD
-      details
+        //- CRUD
+        details
         summary CRUD
         p Create model
         code php artisan make:model Post -mfcr
