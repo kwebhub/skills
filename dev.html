@@ -5236,27 +5236,27 @@ test('forum threads lock after one week of inactivity', function () {
 - Resources - классы ресурсов API<br>
 - Services - классы сервисов, которые реализуют бизнес-логику приложения<br>
 - Traits - классы трейтов, которые могут быть использованы в других классах<br>
-</p></details><details><summary>Routes</summary><p>- api.php - маршруты API<br>
+</p></details><details><summary>Routes</summary><p>маршрут это URI и поведение при запросе этого URI
+- api.php - маршруты API<br>
 - channels.php - маршруты широковещательной передачи<br>
 - console.php - маршруты консоли<br>
-- web.php - маршруты веб-приложения<br></p><p>маршрут это URI и поведение при запросе этого URI</p><pre><code>use Illuminate\Support\Facades\Route;
+- web.php - маршруты веб-приложения<br></p><pre><code>use Illuminate\Support\Facades\Route;
 Route::get('/greeting', function () {
-    return 'Hello World';
+  return 'Hello World';
 });</code></pre><p>маршруты для НТТР-методов</p><pre><code>Route::get($uri, $callback);
 Route::post($uri, $callback);
 Route::put($uri, $callback);
 Route::patch($uri, $callback);
 Route::delete($uri, $callback);
-Route::options($uri, $callback);</code></pre><p>подмена метода формы</p><pre><code><form action="/example" method="POST">
-    @method('PUT')
-    @csrf
-</form>
-
+Route::options($uri, $callback);</code></pre><p>подмена метода формы</p><pre><code>&lt;form action="/example" method="POST"&gt;
+  @method('PUT')
+  @csrf
+&lt;/form&gt;
 либо
-<form action="/example" method="POST">
-    <input type="hidden" name="_method" value="PUT">
-    <input type="hidden" name="_token" value="{{ csrf_token() }}">
-</form></code></pre><p>несколько методов на одном маршруте, указывать после маршрутов с методом (Route::get)</p><code>Route::match(['get', 'post'], '/', function () {});</code><p>все методы на одном маршруте, указывать после маршрутов с методом (Route::get)</p><code>Route::any('/', function () {});</code><p>перенаправить маршрут, третий параметр (301) необязательный</p><code>Route::redirect('/here', '/there', 301);</code><p>маршрут представления возвращает только НТМL-шаблон</p><code>Route::view('/welcome', 'welcome', ['name' => 'Taylor']);</code><p>список маршрутов</p><pre><code>php artisan route:list -v
+&lt;form action="/example" method="POST"&gt;
+    &lt;input type="hidden" name="_method" value="PUT"&gt;
+    &lt;input type="hidden" name="_token" value="{{ csrf_token() }}"&gt;
+&lt;/form&gt;</code></pre><p>несколько методов на одном маршруте, указывать после маршрутов с методом (Route::get)</p><code>Route::match(['get', 'post'], '/', function () {});</code><p>все методы на одном маршруте, указывать после маршрутов с методом (Route::get)</p><code>Route::any('/', function () {});</code><p>перенаправить маршрут, третий параметр (301) необязательный</p><code>Route::redirect('/here', '/there', 301);</code><p>маршрут представления возвращает только НТМL-шаблон</p><code>Route::view('/welcome', 'welcome', ['name' => 'Taylor']);</code><p>список маршрутов</p><pre><code>php artisan route:list -v
 php artisan route:list -vv
 php artisan route:list --path=api
 php artisan route:list --except-vendor

@@ -7995,16 +7995,16 @@ block menu
         details
           summary Routes
           p.
+            маршрут это URI и поведение при запросе этого URI
             - api.php - маршруты API<br>
             - channels.php - маршруты широковещательной передачи<br>
             - console.php - маршруты консоли<br>
             - web.php - маршруты веб-приложения<br>
-          p маршрут это URI и поведение при запросе этого URI
           pre
             code.
               use Illuminate\Support\Facades\Route;
               Route::get('/greeting', function () {
-                  return 'Hello World';
+                return 'Hello World';
               });
           p маршруты для НТТР-методов
           pre
@@ -8018,16 +8018,15 @@ block menu
           p подмена метода формы
           pre
             code.
-              <form action="/example" method="POST">
-                  @method('PUT')
-                  @csrf
-              </form>
-
+              &lt;form action="/example" method="POST"&gt;
+                @method('PUT')
+                @csrf
+              &lt;/form&gt;
               либо
-              <form action="/example" method="POST">
-                  <input type="hidden" name="_method" value="PUT">
-                  <input type="hidden" name="_token" value="{{ csrf_token() }}">
-              </form>
+              &lt;form action="/example" method="POST"&gt;
+                  &lt;input type="hidden" name="_method" value="PUT"&gt;
+                  &lt;input type="hidden" name="_token" value="{{ csrf_token() }}"&gt;
+              &lt;/form&gt;
           p несколько методов на одном маршруте, указывать после маршрутов с методом (Route::get)
           code Route::match(['get', 'post'], '/', function () {});
           p все методы на одном маршруте, указывать после маршрутов с методом (Route::get)
