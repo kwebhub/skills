@@ -5254,22 +5254,16 @@ Route::options($uri, $callback);</code></pre><p>подмена метода фо
 &lt;/form&gt;
 либо
 &lt;form action="/example" method="POST"&gt;
-    &lt;input type="hidden" name="_method" value="PUT"&gt;
-    &lt;input type="hidden" name="_token" value="{{ csrf_token() }}"&gt;
+  &lt;input type="hidden" name="_method" value="PUT"&gt;
+  &lt;input type="hidden" name="_token" value="{{ csrf_token() }}"&gt;
 &lt;/form&gt;</code></pre><p>несколько методов на одном маршруте, указывать после маршрутов с методом (Route::get)</p><code>Route::match(['get', 'post'], '/', function () {});</code><p>все методы на одном маршруте, указывать после маршрутов с методом (Route::get)</p><code>Route::any('/', function () {});</code><p>перенаправить маршрут, третий параметр (301) необязательный</p><code>Route::redirect('/here', '/there', 301);</code><p>маршрут представления возвращает только НТМL-шаблон</p><code>Route::view('/welcome', 'welcome', ['name' => 'Taylor']);</code><p>список маршрутов</p><pre><code>php artisan route:list -v
 php artisan route:list -vv
 php artisan route:list --path=api
 php artisan route:list --except-vendor
-php artisan route:list --only-vendor</code></pre><p>настройка маршрутизации в bootstrap/app.php
+php artisan route:list --only-vendor</code></pre><p>настройка маршрутизации в bootstrap/app.php<br>
 параметры и зависимости маршрута</p><pre><code>use Illuminate\Http\Request;
 Route::get('/posts/{post}/comments/{comment}', function (Request $request, string $postId, string $commentId) {});</code></pre><p>изменить ключ</p><pre><code>use App\Models\Post;
-Route::get('/posts/{post:slug}', function (Post $post) {
-    return $post;
-});</code></pre><p>у необязательного параметра должно быть значение по умолчанию</p><pre><code>Route::get('/user/{name?}', function (?string $name = 'John') {
-    return $name;
-});</code></pre><p>формат маршрута в регулярном выражении</p><pre><code>Route::get('/user/{id}/{name}', function (string $id, string $name) {
-    // ...
-})->where(['id' => '[0-9]+', 'name' => '[a-z]+']);</code></pre><p>методы типовых шаблонов регулярных выражений</p><pre><code>whereNumber('id')
+Route::get('/posts/{post:slug}', function (Post $post) {return $post;});</code></pre><p>у необязательного параметра должно быть значение по умолчанию</p><pre><code>Route::get('/user/{name?}', function (?string $name = 'John') {return $name;});</code></pre><p>формат маршрута в регулярном выражении</p><code>Route::get('/user/{id}/{name}', function (string $id, string $name) { })->where(['id' => '[0-9]+', 'name' => '[a-z]+']);</code><p>методы типовых шаблонов регулярных выражений</p><pre><code>whereNumber('id')
 whereAlpha('name')
 whereAlphaNumeric('name')
 whereUuid('id')
@@ -5277,242 +5271,129 @@ whereUlid('id')
 whereIn('category', ['movie', 'song', 'painting'])
 whereIn('category', CategoryEnum::cases())</code></pre><p>глобальный шаблон в App\Providers\AppServiceProvider</p><pre><code>use Illuminate\Support\Facades\Route;
 public function boot(): void
-{
-    Route::pattern('id', '[0-9]+');
-}</code></pre><p>маршрут к методу контроллера</p><pre><code>use App\Http\Controllers\UserController;
+{Route::pattern('id', '[0-9]+');}</code></pre><p>маршрут к методу контроллера</p><pre><code>use App\Http\Controllers\UserController;
 Route::get('/user/{id}', [UserController::class, 'show']);</code></pre><p>маршрут для контроллера одиночного действия</p><pre><code>use App\Http\Controllers\ProvisionServer;
 Route::post('/server', ProvisionServer::class);</code></pre><p>маршрут с middleware</p><code>Route::get('/profile', [UserController::class, 'show'])->middleware('auth');</code><p>с параметром для middleware</p><code>Route::put('/post/{id}', function (string $id) {})->middleware(EnsureUserHasRole::class.':editor,publisher');</code><p>маршрут ресурсного контроллера</p><code>Route::resource('photos', PhotoController::class);</code><p>редирект при отсутствии модели</p><pre><code>Route::resource('photos', PhotoController::class)
-    ->missing(function (Request $request) {
-        return Redirect::route('photos.index');
-    });</code></pre><p>разрешить использовать программно удалённые модели</p><code>Route::resource('photos', PhotoController::class)->withTrashed();</code><p>выбор методов в ресурсном контроллере</p><pre><code>Route::resource('photos', PhotoController::class)->only([
-    'index', 'show'
-]);
-
-Route::resource('photos', PhotoController::class)->except([
-    'create', 'store', 'update', 'destroy'
-]);</code></pre><p>при созданиии API-приложения без сохранения состояния создаём API-маршруты<br>
-команда установит пакет Sanctum и создаст routes/api.php<br></p><code>php artisan install:api</code><p>ресурсные api-маршруты - маршруты без create и edit</p><code>Route::apiResource('photos', PhotoController::class);</code><p>маршрут к вложенному ресурсу</p><pre><code>Route::resource('photos.comments', PhotoCommentController::class);
-
-создаст
-/photos/{photo}/comments/{comment}</code></pre><p>при использовании уникальных идентификаторов, таких как автоинкрементные первичные ключи, для идентификации моделей в URI, использовать упрощенное вложение</p><pre><code>Route::resource('photos.comments', CommentController::class)->shallow();
-
-создаст
-/photos/{photo}/comments</code></pre><p>именование маршрутов</p><code>Route::get('/user/profile', [UserProfileController::class, 'show'])->name('profile');</code><p>именование ресурсных маршрутов</p><pre><code>Route::resource('photos', PhotoController::class)->names([
-    'create' => 'photos.build'
-]);</code></pre><p>именование параметров ресурсных маршрутов</p><pre><code>Route::resource('users', AdminUserController::class)->parameters([
-    'users' => 'admin_user'
-]);
-
-создаст
-/users/{admin_user}</code></pre><p>создание URL-адреса и перенаправление по именованному маршруту</p><pre><code>$url = route('profile');
+  ->missing(function (Request $request) {
+    return Redirect::route('photos.index');
+  });</code></pre><p>разрешить использовать программно удалённые модели</p><code>Route::resource('photos', PhotoController::class)->withTrashed();</code><p>выбор методов в ресурсном контроллере</p><pre><code>Route::resource('photos', PhotoController::class)->only(['index', 'show']);
+Route::resource('photos', PhotoController::class)->except(['create', 'store', 'update', 'destroy']);</code></pre><p>при созданиии API-приложения без сохранения состояния создаём API-маршруты<br>
+команда установит пакет Sanctum и создаст routes/api.php<br></p><code>php artisan install:api</code><p>ресурсные api-маршруты - маршруты без create и edit</p><code>Route::apiResource('photos', PhotoController::class);</code><p>маршрут к вложенному ресурсу</p><code>Route::resource('photos.comments', PhotoCommentController::class);    будет: /photos/{photo}/comments/{comment}</code><p>при использовании уникальных идентификаторов, таких как автоинкрементные первичные ключи, для идентификации моделей в URI, использовать упрощенное вложение</p><code>Route::resource('photos.comments', CommentController::class)->shallow();    будет: /photos/{photo}/comments</code><p>именование маршрутов</p><code>Route::get('/user/profile', [UserProfileController::class, 'show'])->name('profile');</code><p>именование ресурсных маршрутов</p><code>Route::resource('photos', PhotoController::class)->names(['create' => 'photos.build']);</code><p>именование параметров ресурсных маршрутов</p><code>Route::resource('users', AdminUserController::class)->parameters(['users' => 'admin_user']);    будет: /users/{admin_user}</code><p>создание URL-адреса и перенаправление по именованному маршруту</p><pre><code>$url = route('profile');
 return redirect()->route('profile');
-return to_route('profile');</code></pre><p>именованный маршрут с параметроми</p><pre><code>Route::get('/user/{id}/profile', function (string $id) { })->name('profile');
-$url = route('profile', ['id' => 1, 'photos' => 'yes']);</code></pre><p>проверка на был ли запрос на маршрут</p><cod>if ($request->route()->named('profile')) {}</cod><p>Ограничение ресурсных маршрутов - определяет дочерний вложенный ресурс и его поле, через которое он должен быть подключен</p><pre><code>Route::resource('photos.comments', PhotoCommentController::class)->scoped([
-    'comment' => 'slug',
-]);
-
-создаст
-/photos/{photo}/comments/{comment:slug}</code></pre><p>ресурсный маршрут должен быть последним</p><pre><code>Route::get('/photos/popular', [PhotoController::class, 'popular']);
-Route::resource('photos', PhotoController::class);</code></pre><p>группировка маршрутов</p><pre><code>Route::middleware(['first', 'second'])->group(function () {
-    Route::get('/', function () {}); // Использует middleware `first` и `second`
-});
-
+return to_route('profile');</code></pre><p>именованный маршрут с параметрами</p><pre><code>Route::get('/user/{id}/profile', function (string $id) { })->name('profile');
+$url = route('profile', ['id' => 1, 'photos' => 'yes']);</code></pre><p>проверка на был ли запрос на маршрут</p><code>if ($request->route()->named('profile')) {}</code><p>Ограничение ресурсных маршрутов - определяет дочерний вложенный ресурс и его поле, через которое он должен быть подключен</p><code>Route::resource('photos.comments', PhotoCommentController::class)->scoped(['comment' => 'slug']);    будет: /photos/{photo}/comments/{comment:slug}</code><p>ресурсный маршрут должен быть последним</p><pre><code>Route::get('/photos/popular', [PhotoController::class, 'popular']);
+Route::resource('photos', PhotoController::class);</code></pre><p>группировка маршрутов</p><pre><code>// Использует middleware `first` и `second`
+Route::middleware(['first', 'second'])->group(function () {Route::get('/', function () {});});
+// Группировка по контроллеру
 Route::controller(OrderController::class)->group(function () {
-    Route::get('/orders/{id}', 'show');
-    Route::post('/orders', 'store');
+  Route::get('/orders/{id}', 'show');
+  Route::post('/orders', 'store');
 });
-
-Route::prefix('admin')->group(function () {
-    Route::get('/users', function () {}); // /admin/users
-});
-
-Route::name('admin')->group(function () {
-    Route::get('/users', function () {})->name('users'); // admin.users
-});</code></pre><p>маршруты поддоменов указывать перед маршрутами корневого домена</p><pre><code>Route::domain('{account}.example.com')->group(function () {
-    Route::get('/user/{id}', function (string $account, string $id) {});
-});</code></pre><p>посредник can для авторизации пользователя обновлять пост<br>
+// /admin/users
+Route::prefix('admin')->group(function () {Route::get('/users', function () {});});
+// admin.users
+Route::name('admin')->group(function () {Route::get('/users', function () {})->name('users');});</code></pre><p>маршруты поддоменов указывать перед маршрутами корневого домена</p><pre><code>Route::domain('{account}.example.com')->group(function () {Route::get('/user/{id}', function (string $account, string $id) {});});</code></pre><p>посредник can для авторизации пользователя обновлять пост<br>
 Первый параметр – имя действия, второй – параметр маршрута, передаваемый методу политики<br></p><pre><code>use App\Models\Post;
-
-Route::put('/post/{post}', function (Post $post) {
-    // Текущий пользователь может обновить пост...
-})->middleware('can:update,post');
-
+// Текущий пользователь может обновить пост
+Route::put('/post/{post}', function (Post $post) { })->middleware('can:update,post');
 либо
 use App\Models\Post;
-
-Route::put('/post/{post}', function (Post $post) {
-    // Текущий пользователь может обновить сообщение...
-})->can('update', 'post');
-
+// Текущий пользователь может обновить сообщение
+Route::put('/post/{post}', function (Post $post) { })->can('update', 'post');
 либо
-Route::post('/post', function () {
-    // Текущий пользователь может создавать посты...
-})->middleware('can:create,App\Models\Post');
-
+// Текущий пользователь может создавать посты
+Route::post('/post', function () { })->middleware('can:create,App\Models\Post');
 либо
 use App\Models\Post;
-
-Route::post('/post', function () {
-    // Текущий пользователь может создавать сообщения...
-})->can('create', Post::class);</code></pre><p>привязка модели к маршруту<br></p><pre><code>use App\Models\User;
-
-Route::get('/users/{user}', function (User $user) {
-    return $user->email;
-});
-
+// Текущий пользователь может создавать сообщения
+Route::post('/post', function () { })->can('create', Post::class);</code></pre><p>модель или контроллер в маршруте</p><pre><code>// привязка модели к маршруту
+use App\Models\User;
+Route::get('/users/{user}', function (User $user) {return $user->email;});
 либо с контроллером
-Route::get('/users/{user}', [UserController::class, 'show']);
-
 use App\Http\Controllers\UserController;
+Route::get('/users/{user}', [UserController::class, 'show']);
+// контроллер
 use App\Models\User;
-
-public function show(User $user)
-{
-    return view('user.profile', ['user' => $user]);
-}</code></pre><p>привязка дочерней модели к родительской</p><pre><code>use App\Models\Post;
+public function show(User $user) {return view('user.profile', ['user' => $user]);}</code></pre><p>привязка дочерней модели к родительской</p><pre><code>use App\Models\Post;
 use App\Models\User;
-
-Route::get('/users/{user}/posts/{post}', function (User $user, Post $post) {
-    return $post;
-})->scopeBindings();
-
+Route::get('/users/{user}/posts/{post}', function (User $user, Post $post) {return $post;})->scopeBindings();
 с группировкой
 Route::scopeBindings()->group(function () {
-    Route::get('/users/{user}/posts/{post}', function (User $user, Post $post) {
-        return $post;
-    });
+  Route::get('/users/{user}/posts/{post}', function (User $user, Post $post) {return $post;});
 });
-
 не использовать области действия привязок
-Route::get('/users/{user}/posts/{post:slug}', function (User $user, Post $post) {
-    return $post;
-})->withoutScopedBindings();</code></pre><p>связывание модели и URI в App\Providers\AppServiceProvider</p><pre><code>use App\Models\User;
+Route::get('/users/{user}/posts/{post:slug}', function (User $user, Post $post) {return $post;})->withoutScopedBindings();</code></pre><p>связывание модели и URI в App\Providers\AppServiceProvider</p><pre><code>use App\Models\User;
 use Illuminate\Support\Facades\Route;
-
 public function boot(): void
-{
-    Route::model('user', User::class);
-}
-
+{Route::model('user', User::class);}
 указать маршрут
 Route::get('/users/{user}', function (User $user) {});</code></pre><p>поменять логику связывания модели и URI в App\Providers\AppServiceProvider</p><pre><code>use App\Models\User;
 use Illuminate\Support\Facades\Route;
-
 public function boot(): void
-{
-    Route::bind('user', function (string $value) {
-        return User::where('name', $value)->firstOrFail();
-    });
-}</code></pre><p>ограничение частоты запросов</p><pre><code>use Illuminate\Cache\RateLimiting\Limit;
+{Route::bind('user', function (string $value) {return User::where('name', $value)->firstOrFail();});}</code></pre><p>ограничение частоты запросов</p><pre><code>use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
-
 protected function boot(): void
-{
-    RateLimiter::for('api', function (Request $request) {
-        return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
-    });
-}
-
+{RateLimiter::for('api', function (Request $request) {return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());});}
 своё сообщение
 RateLimiter::for('global', function (Request $request) {
-    return Limit::perMinute(1000)->response(function (Request $request, array $headers) {
-        return response('Custom response...', 429, $headers);
-    });
+  return Limit::perMinute(1000)->response(function (Request $request, array $headers) {
+    return response('Custom response...', 429, $headers);
+  });
 });
-
 ограничение по статусу пользователя
 RateLimiter::for('uploads', function (Request $request) {
-    return $request->user()->vipCustomer()
-                ? Limit::none()
-                : Limit::perMinute(100);
+  return $request->user()->vipCustomer() ? Limit::none() : Limit::perMinute(100);
 });
-
 отдельно по ip и id
 RateLimiter::for('uploads', function (Request $request) {
-    return $request->user()
-                ? Limit::perMinute(100)->by($request->user()->id)
-                : Limit::perMinute(10)->by($request->ip());
+  return $request->user() ? Limit::perMinute(100)->by($request->user()->id) : Limit::perMinute(10)->by($request->ip());
 });
-
 по маршрутам
 Route::middleware(['throttle:uploads'])->group(function () {
-    Route::post('/audio', function () {});
-
-    Route::post('/video', function () {});
+  Route::post('/audio', function () {});
+  Route::post('/video', function () {});
 });</code></pre><p>вызывать маршруты только по названиям из Enums</p><pre><code>namespace App\Enums;
-
 enum Category: string
 {
-    case Fruits = 'fruits';
-    case People = 'people';
+  case Fruits = 'fruits';
+  case People = 'people';
 }
-
 use App\Enums\Category;
 use Illuminate\Support\Facades\Route;
-
-Route::get('/categories/{category}', function (Category $category) {
-    return $category->value;
-});</code></pre><p>резевный маршрут, если запрос не соответствует ни одному маршруту</p><code>Route::fallback(function () {});</code><p>кешировать маршруты</p><code>php artisan route:cache</code><p>очистить кеш маршрутов</p><code>php artisan route:clear</code><p>перенаправление</p><pre><code>Route::get('/dashboard', function () {
-    return redirect('/home/dashboard');
-});
-
-перенаправить обратно
-Route::post('/user/profile', function () {
-    return back()->withInput();
-})->middleware('web');
-
-на именованный маршрут
+Route::get('/categories/{category}', function (Category $category) {return $category->value;});</code></pre><p>резевный маршрут, если запрос не соответствует ни одному маршруту</p><code>Route::fallback(function () {});</code><p>кешировать маршруты</p><code>php artisan route:cache</code><p>очистить кеш маршрутов</p><code>php artisan route:clear</code><p>перенаправление</p><pre><code>Route::get('/dashboard', function () {return redirect('/home/dashboard');});
+// перенаправить обратно
+Route::post('/user/profile', function () {return back()->withInput();})->middleware('web');
+// на именованный маршрут
 return redirect()->route('profile', ['id' => 1]);
-
-на именованный маршрут с указанием модели
+// на именованный маршрут с указанием модели
 return redirect()->route('profile', [$user]);
-
-на именованный маршрут с указанием столбца как ключа
+// на именованный маршрут с указанием столбца как ключа
 return redirect()->route('/profile/{id:slug}', [$user]);
-
-задать ключ маршрута в модели
+// задать ключ маршрута в модели
 public function getRouteKey(): mixed
-{
-    return $this->slug;
-}
-
-на метод контроллера
+{return $this->slug;}
+// на метод контроллера
 use App\Http\Controllers\UserController;
-
 return redirect()->action([UserController::class, 'profile'], ['id' => 1]);
-
-на внешний домен
+// на внешний домен
 return redirect()->away('https://www.google.com');
-
-с записью в сессию своих данных
-Route::post('/user/profile', function () {
-    return redirect('/dashboard')->with('status', 'Profile updated!');
-});
-
+// с записью в сессию своих данных
+Route::post('/user/profile', function () {return redirect('/dashboard')->with('status', 'Profile updated!');});
 @if (session('status'))
     &lt;div class="alert alert-success"&gt;
         {{ session('status') }}
     &lt;/div&gt;
 @endif
-
-с записью в сессию данных ввода
+// с записью в сессию данных ввода
 return back()->withInput();
-
-с HTML
-return response()
-            ->view('hello', $data, 200)
-            ->header('Content-Type', $type);
-
-с JSON
-return response()
-            ->json(['name' => 'Abigail', 'state' => 'CA'])
-            ->withCallback($request->input('callback'));
-
-заставить браузер пользователя загрузить файл
+// с HTML
+return response()->view('hello', $data, 200)->header('Content-Type', $type);
+// с JSON
+return response()->json(['name' => 'Abigail', 'state' => 'CA'])->withCallback($request->input('callback'));
+// заставить браузер пользователя загрузить файл
 return response()->download($pathToFile, $name, $headers);
-
-отображение файла в браузере без загрузки
+// отображение файла в браузере без загрузки
 return response()->file($pathToFile, $headers);
 </code></pre></details><details><summary>Middleware</summary><p>посредники - это классы для проверки и фильтрации HTTP-запросов, HTTP-ответов, HTTP-заголовков, HTTP-тел, HTTP-методов<br>
 создать посредник<br></p><pre><code>php artisan make:middleware MyMiddleware
