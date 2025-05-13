@@ -8208,56 +8208,39 @@ block menu
         //- проверка и фильтрация HTTP-запросов и HTTP-ответов
         details
           summary Middleware
-          p.
-            посредники - это классы для проверки и фильтрации HTTP-запросов, HTTP-ответов, HTTP-заголовков, HTTP-тел, HTTP-методов<br>
-            создать посредник<br>
+          p middleware - класс для проверки и фильтрации HTTP-запросов, HTTP-ответов, HTTP-заголовков, HTTP-тел, HTTP-методов
           pre
             code.
+              // создать
               php artisan make:middleware MyMiddleware
-
-              либо указать путь к классу
+              либо указать путь
               php artisan make:middleware App\Http\Middleware\MyMiddleware
-
-              либо указать путь к классу и пространство имен
+              либо указать путь и пространство имен
               php artisan make:middleware App\Http\Middleware\MyMiddleware --namespace=App\Http\Middleware
-          p.
-            получает запрос, сравнивает значение токена из запроса и <br>
-            либо перенаправляет на домашнюю страницу,<br>
-            либо пропускает запрос дальше в приложение<br>
+          p получает запрос, сравнивает значение токена из запроса и либо перенаправляет на домашнюю страницу, либо пропускает запрос дальше в приложение
           pre
             code.
               namespace App\Http\Middleware;
-
               use Closure;
               use Illuminate\Http\Request;
               use Symfony\Component\HttpFoundation\Response;
-
-              выполняется до обработки запроса приложением
               class MyMiddleware
               {
                 - @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
                 public function handle(Request $request, Closure $next): Response
                 {
-                  if ($request->input('token') !== 'my-secret-token') {
-                    return redirect('/home');
-                  }
+                  if ($request->input('token') !== 'my-secret-token') {return redirect('/home');} // выполняется до обработки запроса приложением
                   return $next($request);
                 }
               }
-
-              выполняется после обработки запроса приложением
-              class MyMiddleware
-              {
-                - @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+              либо
                 public function handle(Request $request, Closure $next): Response
                 {
                   return $next($request);
-                    // Выполнить действие
+                  // выполняется после обработки запроса приложением
                   return $response;
                 }
-              }
-
-              с параметром
+              // с параметром
               class EnsureUserHasRole
               {
                 - @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
@@ -8267,13 +8250,10 @@ block menu
                   return $next($request);
                 }
               }
-          p.
-            глобальный стек посредников в файле bootstrap/app.php<br>
-            посредники web и api применяются к routes/web.php и routes/api.php<br>
-            управлять посредниками в bootstrap/app.php<br>
+          p в bootstrap/app.php
           pre
             code.
-              группировка
+              // группировка
               ->withMiddleware(function (Middleware $middleware) {
                 $middleware->appendToGroup('group-name', [
                   First::class,
@@ -8284,152 +8264,76 @@ block menu
                   Second::class,
                 ]);
               })
-
-              добавить к группе
+              // добавить к группе
               ->withMiddleware(function (Middleware $middleware) {
-                  $middleware->web(append: [
-                      EnsureUserIsSubscribed::class,
-                  ]);
-
-                  $middleware->api(prepend: [
-                      EnsureTokenIsValid::class,
-                  ]);
+                $middleware->web(append: [EnsureUserIsSubscribed::class]);  // применяется к routes/web.php
+                $middleware->api(prepend: [EnsureTokenIsValid::class]);  // применяется к routes/api.php
               })
-
-              заменить посредника в группе
-              $middleware->web(replace: [
-                  StartSession::class => StartCustomSession::class,
-              ]);
-
-              удалить посредника в группе
-              $middleware->web(remove: [
-                  StartSession::class,
-              ]);
-
-              псевдоним посредника
+              // заменить middleware в группе
+              $middleware->web(replace: [StartSession::class => StartCustomSession::class]);
+              // удалить middleware из группы
+              $middleware->web(remove: [StartSession::class]);
+              // псевдоним для middleware
               ->withMiddleware(function (Middleware $middleware) {
-                  $middleware->alias([
-                      'subscribed' => EnsureUserIsSubscribed::class
-                  ]);
+                $middleware->alias(['subscribed' => EnsureUserIsSubscribed::class]);
               })
-
-              Route::get('/profile', function () {})->middleware('subscribed');
-          p защита маршрута
+              Route::get('/profile', function () { })->middleware('subscribed'); // применить псевдоним middleware
+              // перенаправить пользователя если он гость
+              ->withMiddleware(function (Middleware $middleware) {
+                $middleware->redirectGuestsTo('/login');
+                либо
+                $middleware->redirectGuestsTo(fn (Request $request) => route('login'));
+              })
+              // перенаправить пользователя если он аутентифицирован
+              ->withMiddleware(function (Middleware $middleware) {
+                $middleware->redirectUsersTo('/panel');
+                либо
+                $middleware->redirectUsersTo(fn (Request $request) => route('panel'));
+              })
+          p в маршруте
           pre
             code.
-              Route::get('/flights', function () {
-                  // Только аутентифицированные пользователи могут получить доступ к этому маршруту...
-              })->middleware('auth');
-          p доступ только после подтверждения email
-          code Route::get('/profile', function () {...})->middleware(['auth', 'verified']);
-          p задать перенаправление пользователя в файле bootstrap/app.php
-          pre
-            code.
-              middleware auth обнаружил неаутентифицированного пользователя
-              use Illuminate\Http\Request;
-
-              ->withMiddleware(function (Middleware $middleware) {
-                  $middleware->redirectGuestsTo('/login');
-
-                  Используя замыкания
-                  $middleware->redirectGuestsTo(fn (Request $request) => route('login'));
-              })
-
-              middleware guest обнаружил аутентифицированного пользователя
-              use Illuminate\Http\Request;
-
-              ->withMiddleware(function (Middleware $middleware) {
-                  $middleware->redirectUsersTo('/panel');
-
-                  Используя замыкание
-                  $middleware->redirectUsersTo(fn (Request $request) => route('panel'));
-              })
-          p указать какой guard из config/auth.php будет использоваться для аутентификации пользователя
-          pre
-            code.
-              Route::get('/flights', function () {
-                  // Только аутентифицированные пользователи могут получить доступ к этому маршруту...
-              })->middleware('auth:admin');
+              Route::get('/flights', function () { })->middleware('auth');    // доступ только для аутентифицированных
+              Route::get('/profile', function () { })->middleware(['auth', 'verified']);   // доступ только с подтверждённым email
+              Route::get('/flights', function () { })->middleware('auth:admin');    // доступ только для аутентифицированных по guard 'admin' из config/auth.php
           p метод share может возвращать общие данные для всех страниц Inertia
           pre
             code.
               namespace App\Http\Middleware;
-
               use App\Models\Post;
               use Illuminate\Http\Request;
               use Inertia\Middleware;
-
               class HandleInertiaRequests extends Middleware
               {
-                  // ...
-
-                  /**
-                  * Определяем реквизиты, которые используются по умолчанию.
-                  *
-                  * @return array<string, mixed>
-                  */
-                  public function share(Request $request)
-                  {
-                      return [
-                          ...parent::share($request),
-                          'auth' => [
-                              'user' => $request->user(),
-                              'permissions' => [
-                                  'post' => [
-                                      'create' => $request->user()->can('create', Post::class),
-                                  ],
-                              ],
-                          ],
-                      ];
-                  }
+                public function share(Request $request)
+                {
+                  return [
+                    ...parent::share($request),
+                    'auth' => [
+                      'user' => $request->user(),
+                      'permissions' => [
+                        'post' => ['create' => $request->user()->can('create', Post::class)],
+                      ],
+                    ],
+                  ];
+                }
               }
 
         //- Controllers
         //- обработать HTTP-запрос и вернуть HTTP-ответ, view, JSON, файл, редирект
         details
           summary Controllers
-          p.
-            контроллеры - это классы, которые обрабатывают HTTP-запросы и возвращают HTTP-ответы, представления, JSON, файлы, редиректы<br>
-            app/Http/Controllers - каталог контроллеров<br>
-          code php artisan make:controller UserController - создать контроллер
-          p создать контроллер одиночного действия
-          code php artisan make:controller ProvisionServer --invokable
-          p with(['employer', 'tags']) чтобы избежать проблему n+1
+          p контроллеры - классы, которые обрабатывают HTTP-запросы и возвращают HTTP-ответы, view, JSON, файлы и редиректы
           pre
             code.
-              public function __invoke()
-              {
-                $jobs = Job::query()
-                  ->with(['employer', 'tags'])
-                  ->where('title', 'LIKE', '%'.request('q').'%')
-                  ->get();
-                return view('results', ['jobs' => $jobs]);
-              }
-          p указать middleware в контроллере
-          pre
-            code.
-              class UserController extends Controller implements HasMiddleware
-              {
-                  public static function middleware(): array
-                  {
-                      return [
-                          'auth',
-                          new Middleware('log', only: ['index']),
-                          new Middleware('subscribed', except: ['store']),
-                      ];
-                  }
-              }
-          p реализовать middleware в контроллере
-          pre
-            code.
-              public static function middleware(): array
-              {
-                  return [
-                      function (Request $request, Closure $next) {
-                          return $next($request);
-                      },
-                  ];
-              }
+              php artisan make:controller UserController    // создать контроллер
+              php artisan make:controller ProvisionServer --invokable    // создать контроллер одного действия
+              // создать ресурсный контроллер
+              php artisan make:controller PhotoController --resource
+              либо
+              php artisan make:controller PhotoController -r
+              php artisan make:controller PhotoController --model=Photo --resource --requests   // с привязкой к моделе и валидацией
+              php artisan make:controller PhotoController --api    // api-контроллер контроллер без create и edit
           //- Methods
           table
             caption Methods
@@ -8459,72 +8363,65 @@ block menu
               tr
                 td destroy
                 td delete
-          p создать ресурсный контроллер
+          p контроллере
           pre
             code.
-              php artisan make:controller PhotoController --resource
-              либо
-              php artisan make:controller PhotoController -r
-
-          p создать ресурсный контроллер с привязкой к моделе и валидацией
-          code php artisan make:controller PhotoController --model=Photo --resource --requests
-          p ресурсный api-контроллер - ресурсный контроллер без create и edit
-          code php artisan make:controller PhotoController --api
-          p зависимости в контроллер внедряем либо через конструктор,
-          pre
-            code.
-              namespace App\Http\Controllers;
-
+              // избежать проблему n+1: with([ ])
+              public function __invoke()
+              {
+                $jobs = Job::query()->with(['employer', 'tags'])->where('title', 'LIKE', '%'.request('q').'%')->get();
+                return view('results', ['jobs' => $jobs]);
+              }
+              // указать middleware в контроллере
+              class UserController extends Controller implements HasMiddleware
+              {
+                public static function middleware(): array
+                {
+                  return [
+                    'auth',
+                    new Middleware('log', only: ['index']),
+                    new Middleware('subscribed', except: ['store']),
+                  ];
+                }
+              }
+              // реализовать middleware в контроллере
+              public static function middleware(): array
+              {
+                return [
+                  function (Request $request, Closure $next) {
+                    return $next($request);
+                  },
+                ];
+              }
+              // внедрить зависимости через конструктор
               use App\Repositories\UserRepository;
-
               class UserController extends Controller
               {
-                  /**
-                  * Создать новый экземпляр контроллера.
-                  */
-                  public function __construct(
-                      protected UserRepository $users,
-                  ) {}
+                public function __construct(protected UserRepository $users) { }
               }
-              
-              либо через параметры функции
-              namespace App\Http\Controllers;
-
+              // внедрить зависимости через параметры функции
               use Illuminate\Http\RedirectResponse;
               use Illuminate\Http\Request;
-
               class UserController extends Controller
               {
-                  /**
-                  * Сохранить нового пользователя.
-                  */
-                  public function store(Request $request): RedirectResponse
-                  {
-                      $name = $request->name;
-                      return redirect('/users');
-                  }
+                public function store(Request $request): RedirectResponse
+                {
+                  $name = $request->name;
+                  return redirect('/users');
+                }
               }
-          p получить параметр из маршрута
-          pre
-            code.
-              маршрут
+              // получить параметр из маршрута
+              - маршрут
               use App\Http\Controllers\UserController;
               Route::put('/user/{id}', [UserController::class, 'update']);
-
-              контроллер
-              namespace App\Http\Controllers;
-              use Illuminate\Http\RedirectResponse;
-              use Illuminate\Http\Request;
+              - контроллер
               class UserController extends Controller
               {
-                  /**
-                  * Обновить конкретного пользователя.
-                  */
-                  public function update(Request $request, string $id): RedirectResponse
-                  {
-                      // Обновление пользователя...
-                      return redirect('/users');
-                  }
+                public function update(Request $request, string $id): RedirectResponse
+                {
+                  // действия с пользователем
+                  return redirect('/users');
+                }
               }
 
         //- Authentication
@@ -8532,362 +8429,201 @@ block menu
         details
           summary Authentication
           p.
-            - Аутентификация - процесс проверки подлинности пользователя, чтобы убедиться, что он тот, за кого себя выдает<br>
-            - конфигурация в config/auth.php<br>
+            - аутентификация - процесс проверки подлинности пользователя, чтобы убедиться, что он тот, за кого себя выдает<br>
+            - конфигурация в config/auth.php, в массиве guards "охранники" для аутентификации пользователя<br>
             - информацию об аутентифицированном пользователе хранится в сессии пользователя<br>
             - файл cookie, отправленный браузеру, содержит идентификатор сессии, чтобы последующие запросы к приложению могли связать пользователя с правильной сессией<br>
+            - встроенные службы аутентификации Laravel для запросов из веб-браузеров и доступны через фасады Auth и Session<br>
+            - встроенные службы аутентификации ориентированы на web-аутентификацию на основе файлов cookie<br>
+            - Fortify - серверная служба аутентификации<br>
             - при каждом запросе к API удаленная служба отправляет API-токен, приложение проверяет входящий токен по таблице допустимых API-токенов и «аутентифицирует» запрос как выполняемый пользователем, связанным с этим API-токеном<br>
-            - библиотеки Passport и Sanctum ориентированы на аутентификацию токена API, встроенные службы аутентификации ориентированы на web-аутентификацию на основе файлов cookie<br>
+            - библиотеки Passport и Sanctum ориентированы на аутентификацию токена API
             - Passport – надежный и сложный пакет для аутентификации API, когда нужен весь функционал OAuth2<br>
             - Sanctum –  простое и полное решение для аутентификации API, аутентификации SPA и мобильной аутентификации, включая поддержку «scopes» или «abilities»<br>
-            - Fortify - серверная служба аутентификации<br>
-            - встроенные службы аутентификации Laravel для запросов из веб-браузеров и доступны через фасады Auth и Session<br>
+            - Laravel автоматически хеширует пароли пользователей при аутентификации<br>
+            - настроить сложность хеширования в config/hashing.php или в BCRYPT_ROUNDS из .env<br>
           pre
             code.
-                use Illuminate\Support\Facades\Auth;
-
-                // Получить текущего аутентифицированного пользователя ...
-                $user = Auth::user();
-
-                // Получить текущего аутентифицированного пользователя по идентификатору ...
-                $id = Auth::id();
-
-                // Получить текущего аутентифицированного пользователя из запроса
-                namespace App\Http\Controllers;
-
-                use Illuminate\Http\RedirectResponse;
-                use Illuminate\Http\Request;
-
-                class FlightController extends Controller
-                {
-                    /**
-                    * Обновить информацию о рейсе.
-                    */
-                    public function update(Request $request): RedirectResponse
-                    {
-                        $user = $request->user();
-
-                        // ...
-
-                        return redirect('/flights');
-                    }
-                }
-          p статус аутентификации пользователя
-          pre
-            code.
-              use Illuminate\Support\Facades\Auth;
-
-              if (Auth::check()) {
-                  // Пользователь вошел в систему...
-              }
+              php artisan config:publish hashing    // опубликовать config/hashing.php
+              'rehash_on_login' => false    // отключить автоматическое хеширование
           p.
-            - в массиве guards файла config/auth.php указываются "охранники" для аутентификации пользователя<br>
-            - собственная аутентификации пользователей<br>
+            встроенная аутентификация: use Illuminate\Support\Facades\Auth;<br>
+            "запомнить меня" - аутентифирован до выхода из системы вручную, столбец remember_token в таблице users<br>
           pre
             code.
-              namespace App\Http\Controllers;
-
-              use Illuminate\Http\Request;
-              use Illuminate\Http\RedirectResponse;
-              use Illuminate\Support\Facades\Auth;
-
-              class LoginController extends Controller
-              {
-                  /**
-                  * Обработка попыток аутентификации.
-                  */
-                  public function authenticate(Request $request): RedirectResponse
-                  {
-                      $credentials = $request->validate([
-                          'email' => ['required', 'email'],
-                          'password' => ['required'],
-                      ]);
-
-                      if (Auth::attempt($credentials)) {
-                          $request->session()->regenerate();
-
-                          return redirect()->intended('dashboard');
-                      }
-
-                      return back()->withErrors([
-                          'email' => 'Предоставленные учетные данные не соответствуют нашим записям.',
-                      ])->onlyInput('email');
-                  }
-              }
-
-              // Дополнительные условия аутентификации
-              if (Auth::attempt(['email' => $email, 'password' => $password, 'active' => 1])) {
-                  // Аутентификация прошла успешно...
-              }
-
-              либо
-              use Illuminate\Database\Eloquent\Builder;
-
-              if (Auth::attempt([
-                  'email' => $email,
-                  'password' => $password,
-                  fn (Builder $query) => $query->has('activeSubscription'),
-              ])) {
-                  // Аутентификация прошла успешно...
-              }
-
-              либо
-              if (Auth::attemptWhen([
-                  'email' => $email,
-                  'password' => $password,
-              ], function (User $user) {
-                  return $user->isNotBanned();
-              })) {
-                  // Аутентификация прошла успешно...
-              }
-
-              // С указанием guard из config/auth.php
-              if (Auth::guard('admin')->attempt($credentials)) {}
-          p "запомнить меня" - поддерживать аутентификацию пользователя пока он не выйдет из системы вручную, в таблице users должен быть столбец remember_token
+              $user = Auth::user();   // получить текущего аутентифицированного пользователя
+              $id = Auth::id();   // получить текущего аутентифицированного пользователя по идентификатору
+              $user = $request->user();   // получить текущего аутентифицированного пользователя из запроса
+              if (Auth::check()) { }    // проверить что пользователь аутентифицировался
+              if (Auth::guard('admin')->attempt($credentials)) { }   // С указанием guard из config/auth.php
+              if (Auth::attempt(['email' => $email, 'password' => $password], $remember)) { }   // параметр "запомнить меня"
+              if (Auth::viaRemember()) { }   // есть ли "запомнить меня"
+              if (Auth::once($credentials)) { }    // аутентификации пользователя только для одного запроса без сессии и cookie
+              Auth::login($user);   // передать пользователя на аутентификацию
+              Auth::login($user, $remember = true);   // передать пользователя на аутентификацию с "запомнить меня"
+              Auth::guard('admin')->login($user);   // передать пользователя на аутентификацию с указанием guard
+              Auth::loginUsingId(1);    // аутентификация по id
+              Auth::loginUsingId(1, remember: true);    // аутентификация по id с "запомнить меня"
+          p Basic HTTP - аутентификация без cookie и страницы входа
           pre
             code.
-              use Illuminate\Support\Facades\Auth;
-
-              if (Auth::attempt(['email' => $email, 'password' => $password], $remember)) {
-                  // Запоминаем пользователя...
-              }
-          p проверить было ли "запомнить меня"
-          pre
-            code.
-              use Illuminate\Support\Facades\Auth;
-
-              if (Auth::viaRemember()) {}
-          p сразу после того, как пользователь регистрируется, можно пеередать экземпляр пользователя для аутентификации
-          pre
-            code.
-              use Illuminate\Support\Facades\Auth;
-
-              Auth::login($user);
-
-              с "запомнить меня"
-              Auth::login($user, $remember = true);
-
-              с указанием guard
-              Auth::guard('admin')->login($user);
-          p аутентификация по id
-          pre
-            code.
-              Auth::loginUsingId(1);
-
-              с "запомнить меня"
-              Auth::loginUsingId(1, remember: true);
-          p аутентификации пользователя только для одного запроса без сессии и cookie
-          code if (Auth::once($credentials)) {}
-          p встроенный способ аутентификации без страницы входа HTTP Basic
-          pre
-            code.
-              Route::get('/profile', function () {
-                  // Только аутентифицированные пользователи могут получить доступ к этому маршруту...
-              })->middleware('auth.basic');
-          p для HTTP Basic и PHP FastCGI в .htaccess добавить
-          pre
-            code.
+              Route::get('/profile', function () { })->middleware('auth.basic');
+              - добавить в .htaccess для HTTP Basic и PHP FastCGI
               RewriteCond %{HTTP:Authorization} ^(.+)$
               RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
-          p Basic HTTP-аутентификация без cookie
-          pre
-            code.
+              - использовать в middleware
               namespace App\Http\Middleware;
-
               use Closure;
               use Illuminate\Http\Request;
               use Illuminate\Support\Facades\Auth;
               use Symfony\Component\HttpFoundation\Response;
-
               class AuthenticateOnceWithBasicAuth
               {
-                  /**
-                  * Обработка входящего запроса.
-                  *
-                  * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
-                  */
-                  public function handle(Request $request, Closure $next): Response
-                  {
-                      return Auth::onceBasic() ?: $next($request);
-                  }
-
+                public function handle(Request $request, Closure $next): Response
+                {return Auth::onceBasic() ?: $next($request);}
               }
-
               далее
-              Route::get('/api/user', function () {
-                  // Только аутентифицированные пользователи могут получить доступ к этому маршруту...
-              })->middleware(AuthenticateOnceWithBasicAuth::class);
-          p.
-            - выход пользователя<br>
-            - удалить информацию аутентификации из сессии пользователя, аннулировать сессию пользователя и повторно сгенерировать его токен CSRF<br>
+              Route::get('/api/user', function () { })->middleware(AuthenticateOnceWithBasicAuth::class);
+          p выход пользователя из приложения
           pre
             code.
-              use Illuminate\Http\Request;
-              use Illuminate\Http\RedirectResponse;
-              use Illuminate\Support\Facades\Auth;
-
-              /**
-              * Выход пользователя из приложения.
-              */
               public function logout(Request $request): RedirectResponse
               {
-                  Auth::logout();
-
-                  $request->session()->invalidate();
-
-                  $request->session()->regenerateToken();
-
-                  return redirect('/');
+                Auth::logout();   // удалить информацию аутентификации из сессии пользователя
+                $request->session()->invalidate();    // аннулировать сессию пользователя
+                $request->session()->regenerateToken();   // повторно сгенерировать токен CSRF пользователя
+                return redirect('/');
               }
           p аннулировать сессии на других устройствах, без аннулирования сессии на текущем устройстве
           pre
             code.
-              в маршруте
+              // в маршруте
               Route::middleware(['auth', 'auth.session'])->group(function () {
-                  Route::get('/', function () {
-                      // ...
-                  });
+                  Route::get('/', function () { });
               });
-
-              в контроллере
-              use Illuminate\Support\Facades\Auth;
-
+              // в контроллере
               Auth::logoutOtherDevices($currentPassword);
           p настроить время, через которое нужно повторно ввести пароль: password_timeout в config/auth.php
           pre
             code.
-              форма подтверждения пароля
+              // форма подтверждения пароля
               Route::get('/confirm-password', function () {
                   return view('auth.confirm-password');
               })->middleware('auth')->name('password.confirm');
-
-              далее
+              - далее
               use Illuminate\Http\Request;
               use Illuminate\Support\Facades\Hash;
               use Illuminate\Support\Facades\Redirect;
-
               Route::post('/confirm-password', function (Request $request) {
-                  if (! Hash::check($request->password, $request->user()->password)) {
-                      return back()->withErrors([
-                          'password' => ['Предоставленный пароль не соответствует нашим записям.']
-                      ]);
-                  }
-
-                  $request->session()->passwordConfirmed();
-
-                  return redirect()->intended();
+                if (! Hash::check($request->password, $request->user()->password)) {
+                  return back()->withErrors([
+                    'password' => ['Предоставленный пароль не соответствует нашим записям.']
+                  ]);
+                }
+                $request->session()->passwordConfirmed();
+                return redirect()->intended();
               })->middleware(['auth', 'throttle:6,1']);
-
-              далее
-              Route::get('/settings', function () {
-                  // ...
-              })->middleware(['password.confirm']);
-
-              Route::post('/settings', function () {
-                  // ...
-              })->middleware(['password.confirm']);
+              - далее
+              Route::get('/settings', function () { })->middleware(['password.confirm']);
+              Route::post('/settings', function () { })->middleware(['password.confirm']);
           p добавить свой guard
           pre
             code.
-              // в App\Providers\AppServiceProvider
+              namespace App\Providers;
               use App\Models\User;
               use Illuminate\Http\Request;
               use Illuminate\Support\Facades\Auth;
-
-              /**
-              * Загрузка любых служб приложения.
-              */
-              public function boot(): void
+              class AppServiceProvider extends ServiceProvider
               {
+                public function boot(): void
+                {
                   Auth::viaRequest('custom-token', function (Request $request) {
-                      return User::where('token', (string) $request->token)->first();
+                    return User::where('token', (string) $request->token)->first();
                   });
+                }
               }
-
               // в config/auth.php
               'guards' => [
-                  'api' => [
-                      'driver' => 'jwt',
-                      'provider' => 'users',
-                  ],
+                'api' => [
+                  'driver' => 'jwt',
+                  'provider' => 'users',
+                ],
               ],
-
               либо
-              // в App\Providers\AppServiceProvider
-              use App\Models\User;
-              use Illuminate\Http\Request;
-              use Illuminate\Support\Facades\Auth;
-
-              /**
-              * Загрузка любых служб приложения.
-              */
-              public function boot(): void
-              {
-                  Auth::viaRequest('custom-token', function (Request $request) {
-                      return User::where('token', (string) $request->token)->first();
-                  });
-              }
-
-              // в config/auth.php
               'guards' => [
-                  'api' => [
-                      'driver' => 'custom-token',
-                  ],
+                'api' => [
+                  'driver' => 'custom-token',
+                ],
               ],
-
               // в маршруте
-              Route::middleware('auth:api')->group(function () {});
-          p собственный провайдер аутентификации пользователей для нереляционной базы данных
+              Route::middleware('auth:api')->group(function () { });
+          p свой провайдер аутентификации пользователей для нереляционной базы данных
           pre
             code.
-              в App\Providers\AppServiceProvider
               namespace App\Providers;
-
               use App\Extensions\MongoUserProvider;
               use Illuminate\Contracts\Foundation\Application;
               use Illuminate\Support\Facades\Auth;
               use Illuminate\Support\ServiceProvider;
-
               class AppServiceProvider extends ServiceProvider
               {
-                  // ...
-
-                  /**
-                  * Загрузка любых служб приложения.
-                  */
-                  public function boot(): void
-                  {
-                      Auth::provider('mongo', function (Application $app, array $config) {
-                          // Возвращаем экземпляр Illuminate\Contracts\Auth\UserProvider...
-
-                          return new MongoUserProvider($app->make('mongo.connection'));
-                      });
-                  }
+                public function boot(): void
+                {
+                  Auth::provider('mongo', function (Application $app, array $config) {
+                    return new MongoUserProvider($app->make('mongo.connection'));
+                  });
+                }
               }
-
-              в config/auth.php
+              // в config/auth.php
               'providers' => [
-                  'users' => [
-                      'driver' => 'mongo',
-                  ],
+                'users' => [
+                  'driver' => 'mongo',
+                ],
               ],
-
               'guards' => [
-                  'web' => [
-                      'driver' => 'session',
-                      'provider' => 'users',
-                  ],
-              ],
-          p.
-            - Laravel автоматически перехеширует пароли пользователей при аутентификации<br>
-            - настроить сложность хеширования в config/hashing.php или в BCRYPT_ROUNDS из .env<br>
+                'web' => [
+                  'driver' => 'session',
+                  'provider' => 'users',
+                ],
+              ]
+          p собственная аутентификации пользователей<br>
           pre
             code.
-              опубликовать config/hashing.php
-              php artisan config:publish hashing
-
-              отключить автоматическое хеширование
-              'rehash_on_login' => false,
+              namespace App\Http\Controllers;
+              use Illuminate\Http\Request;
+              use Illuminate\Http\RedirectResponse;
+              use Illuminate\Support\Facades\Auth;
+              class LoginController extends Controller
+              {
+                public function authenticate(Request $request): RedirectResponse
+                {
+                  $credentials = $request->validate([
+                    'email' => ['required', 'email'],
+                    'password' => ['required'],
+                  ]);
+                  if (Auth::attempt($credentials)) {
+                    $request->session()->regenerate();
+                    return redirect()->intended('dashboard');
+                  }
+                  return back()->withErrors([
+                    'email' => 'Предоставленные учетные данные не соответствуют нашим записям.',
+                  ])->onlyInput('email');
+                }
+              }
+              // Дополнительные условия аутентификации
+              if (Auth::attempt(['email' => $email, 'password' => $password, 'active' => 1])) { }
+              либо
+              use Illuminate\Database\Eloquent\Builder;
+              if (Auth::attempt([
+                'email' => $email,
+                'password' => $password,
+                fn (Builder $query) => $query->has('activeSubscription'),
+              ])) { }
+              либо
+              if (Auth::attemptWhen([
+                'email' => $email,
+                'password' => $password,
+              ], function (User $user) {return $user->isNotBanned();})) { }
 
           //- Email verification
           //- отправка электронного письма со ссылкой для подтверждения
@@ -8988,21 +8724,20 @@ block menu
               php artisan migrate
           p.
             настройка хранения сессии в config/session.php<br>
-            file – сессии хранятся в storage/framework/sessions.<br>
-            cookie – сессии хранятся в безопасных, зашифрованных файлах Cookies.<br>
-            database – сессии хранятся в реляционной базе данных.<br>
-            memcached / redis – сессии хранятся в одном из этих быстрых хранилищ на основе кеша.<br>
-            dynamodb – сессии хранятся в AWS DynamoDB.<br>
-            array – сессии хранятся в массиве PHP и не будет сохранены.<br>
-            по умолчанию database, данные сессии в таблице sessions в 0001_01_01_000000_create_users_table.php<br>
+            - file – сессии хранятся в storage/framework/sessions.<br>
+            - cookie – сессии хранятся в безопасных, зашифрованных файлах Cookies.<br>
+            - database – сессии хранятся в реляционной базе данных.<br>
+            - memcached / redis – сессии хранятся в одном из этих быстрых хранилищ на основе кеша.<br>
+            - dynamodb – сессии хранятся в AWS DynamoDB.<br>
+            - array – сессии хранятся в массиве PHP и не будет сохранены.<br>
+            - по умолчанию database, данные сессии в таблице sessions в 0001_01_01_000000_create_users_table.php<br>
             получить данные из сессии<br>
           pre
             code.
-              через экземпляр Request
+              - через экземпляр Request
               namespace App\Http\Controllers;
               use Illuminate\Http\Request;
               use Illuminate\View\View;
-
               class UserController extends Controller
               {
                 public function show(Request $request, string $id): View
@@ -9012,91 +8747,46 @@ block menu
                   return view('user.profile', ['user' => $user]);
                 }
               }
-
-              через глобальный помощник session
+              - через глобальный помощник session
               Route::get('/home', function () {
-                // Получить часть данных из сессии...
-                $value = session('key');
-                // Получить часть данных из сессии с указанием значения по умолчанию...
-                $value = session('key', 'default');
-                // Сохранить часть данных в сессию...
-                session(['key' => 'value']);
+                $value = session('key');    // получить часть данных из сессии
+                $value = session('key', 'default');   // получить часть данных из сессии с указанием значения по умолчанию
+                session(['key' => 'value']);    // сохранить часть данных в сессию
               });
-
-              получить все данные сессии
-              $data = $request->session()->all();
-
-              получить часть данных сессии
-              $data = $request->session()->only(['username', 'email']);
-              $data = $request->session()->except(['username', 'email']);
-
-              получает и удаляет элемент из сессии
-              $value = $request->session()->pull('key', 'default');
-
-              наличие элемента в сессии не равного null
-              if ($request->session()->has('users')) {}
-
-              наличие элемента в сессии в т.ч. null
-              if ($request->session()->exists('users')) {}
-
-              элемент в сессии либо null, либо отсутствует
-              if ($request->session()->missing('users')) {}
-          p сохранить данные в сессию
+              $data = $request->session()->all();   // получить все данные сессии
+              $data = $request->session()->only(['username', 'email']);   // получить только указанные данные сессии
+              $data = $request->session()->except(['username', 'email']);   // получить данные сессии без указанных
+              $value = $request->session()->pull('key', 'default');   // получает и удаляет элемент из сессии
+              if ($request->session()->has('users')) { }   // наличие элемента в сессии не равного null
+              if ($request->session()->exists('users')) { }    // наличие элемента в сессии в т.ч. null
+              if ($request->session()->missing('users')) { }    // элемент в сессии либо null, либо отсутствует
+          p данные в сессии
           pre
             code.
-              через экземпляр запроса...
-              $request->session()->put('key', 'value');
-
-              через глобальный помощник «session»...
-              session(['key' => 'value']);
-
-              вставка нового значения в значение сессии, которое является массивом
-              $request->session()->push('user.teams', 'developers');
-
-              увеличение и уменьшение целочисленных значений в сессии
+              $request->session()->put('key', 'value');   // сохранить через экземпляр запроса
+              session(['key' => 'value']);    // сохранить через глобальный помощник «session»
+              $request->session()->push('user.teams', 'developers');    // вставка нового значения
+              // увеличение и уменьшение целочисленных значений в сессии
               $request->session()->increment('count');
               $request->session()->increment('count', $incrementBy = 2);
               $request->session()->decrement('count');
               $request->session()->decrement('count', $decrementBy = 2);
-
-              сохранить элементы в сессии только для текущего запроса
-              $request->session()->now('status', 'Задача выполнена успешно!');
-
-              сохранить элементы в сессии только для следующего запроса
-              после следующего запроса данные будут удалены
-              $request->session()->flash('status', 'Задача выполнена успешно!');
-
-              для нескольких запросов одновременно, потом удаление
-              $request->session()->reflash();
-
-              сохранить отдельные данные для следующего запроса
-              $request->session()->keep(['username', 'email']);
-          p удалить все данные из сессии
-          pre
-            code.
-              удалить единственный ключ...
-              $request->session()->forget('name');
-
-              удалить несколько ключей...
-              $request->session()->forget(['name', 'status']);
-
-              $request->session()->flush();
-          p идентификатор сессии
-          pre
-            code.
-              повторно сгенерировать
-              $request->session()->regenerate();
-
-              повторно сгенерировать идентификатор сессии и удалить все данные из нее
-              $request->session()->invalidate();
+              $request->session()->now('status', 'Задача выполнена успешно!');    // сохранить только для текущего запроса
+              $request->session()->flash('status', 'Задача выполнена успешно!');    // сохранить только для следующего запроса
+              $request->session()->reflash();   // для нескольких запросов одновременно, потом удаление
+              $request->session()->keep(['username', 'email']);   // сохранить отдельные данные для следующего запроса
+              $request->session()->forget('name');    // удалить единственный ключ
+              $request->session()->forget(['name', 'status']);    // удалить несколько ключей
+              $request->session()->flush();   // удалить все данные из сессии
+              $request->session()->regenerate();    // повторно сгенерировать идентификатор сессии
+              $request->session()->invalidate();    // удалить идентификатор сессии все её данные
           p блокировка сессии
           pre
             code.
-              Route::post('/profile', function () {})->block($lockSeconds = 10, $waitSeconds = 10);
-              Route::post('/order', function () {})->block($lockSeconds = 10, $waitSeconds = 10);
-
-              по умолчанию блокировка 10 сек и ожидание получения блокировки 10 сек
-              Route::post('/profile', function () {})->block();
+              // по умолчанию блокировка 10 сек и ожидание получения блокировки 10 сек
+              Route::post('/profile', function () { })->block();
+              Route::post('/profile', function () { })->block($lockSeconds = 10, $waitSeconds = 10);
+              Route::post('/order', function () { })->block($lockSeconds = 10, $waitSeconds = 10);
 
         //- CSRF
         //- токен CSRF для защиты от атак CSRF, хранится в сессии
@@ -9107,43 +8797,36 @@ block menu
             - Laravel использует токены CSRF для защиты от атак CSRF<br>
             - токены CSRF хранятся в сессии пользователя и проверяются при каждом запросе<br>
             - токены CSRF могут быть использованы только для POST, PUT, PATCH и DELETE запросов<br>
-          p.
-            токен CSRF хранится в сессии пользователя и изменяется каждый раз при повторном создании сессии<br>
-            токен CSRF хранится в сессии пользователя и проверяется при каждом запросе<br>
-            получить доступ к токену CSRF в контроллере или маршруте<br>
           pre
             code.
-              use Illuminate\Http\Request;
-
               Route::get('/token', function (Request $request) {
-                  $token = $request->session()->token();
-
-              либо
-                  $token = csrf_token();
+                $token = $request->session()->token();    // доступ к токену CSRF
+                либо
+                $token = csrf_token();
               });
           p в каждой форме с методом «POST», «PUT», «PATCH» или «DELETE» должен быть токен
           pre
             code.
               &lt;form method="POST" action="/profile"&gt;
-                  @csrf
-
-              либо
-                  &lt;input type="hidden" name="_token" value="{{ csrf_token() }}" /&gt;
+                @csrf
+                либо
+                &lt;input type="hidden" name="_token" value="{{ csrf_token() }}" /&gt;
               &lt;/form&gt;
           p исключить маршруты из проверки токена в файле bootstrap/app.php
           pre
             code.
               ->withMiddleware(function (Middleware $middleware) {
-                  $middleware->validateCsrfTokens(except: [
-                      'stripe/*',
-                      'http://example.com/foo/bar',
-                      'http://example.com/foo/*',
-                  ]);
+                $middleware->validateCsrfTokens(except: [
+                  'stripe/*',
+                  'http://example.com/foo/bar',
+                  'http://example.com/foo/*',
+                ]);
               })
-          p добавить токен в HTML-заголовок X-CSRF-TOKEN
-          code &lt;meta name="csrf-token" content="{{ csrf_token() }}"&gt;
-          p добавить токен в заголовок X-XSRF-TOKEN
-          code &lt;meta name="x-xsrf-token" content="{{ csrf_token() }}"&gt;
+          p добавить токен
+          pre
+            code.
+              &lt;meta name="csrf-token" content="{{ csrf_token() }}"&gt;    // в HTML-заголовок X-CSRF-TOKEN
+              &lt;meta name="x-xsrf-token" content="{{ csrf_token() }}"&gt;    // в заголовок X-XSRF-TOKEN
           p По умолчанию файл resources/js/bootstrap.js включает HTTP-библиотеку Axios, которая автоматически отправляет заголовок X-XSRF-TOKEN.
 
         //- Autherization
