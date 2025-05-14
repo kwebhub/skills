@@ -4552,7 +4552,7 @@ sail up -d
 - config - конфигурация приложения<br>
 - database - миграции, фабрики, наполнители (seeders), sqlite<br>
 - public - публичная папка приложения, точка входа всех запросов: index.php, оптимизированные ресурсы и автозагрузка<br>
-- resources - рнеотимизированные и нескомпилированные ресурсы: шаблоны, images, js, css<br>
+- resources - неотимизированные и нескомпилированные ресурсы: шаблоны, images, js, css<br>
 - routes - маршруты приложения на указанный метод<br>
 - storage - временные файлы приложения: логи, скомпилированные шаблоны, файлы сессий и кеша<br>
 - tests - тесты приложения<br>
@@ -5477,17 +5477,41 @@ class HandleInertiaRequests extends Middleware
 {
   public function share(Request $request)
   {
-    return [
-      ...parent::share($request),
-      'auth' => [
-        'user' => $request->user(),
-        'permissions' => [
-          'post' => ['create' => $request->user()->can('create', Post::class)],
-        ],
-      ],
-    ];
+    return [...parent::share($request), 'auth' => [
+      'user' => $request->user(),
+      'permissions' => ['post' => ['create' => $request->user()->can('create', Post::class)]],
+    ]];
   }
-}
+}</code></pre><p>форматирование значений поля ввода input настраивается Illuminate\Foundation\Http\Middleware\TrimStrings и Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull в bootstrap/app.php</p><p>доверенные прокси указать в bootstrap/app.php</p><pre><code>->withMiddleware(function (Middleware $middleware) {
+  $middleware->trustProxies(at: [
+    '192.168.1.1',
+    '10.0.0.0/8',
+  ]);
+})
+заголовки доверенных прокси
+->withMiddleware(function (Middleware $middleware) {
+  $middleware->trustProxies(headers: Request::HEADER_X_FORWARDED_FOR |
+    Request::HEADER_X_FORWARDED_HOST |
+    Request::HEADER_X_FORWARDED_PORT |
+    Request::HEADER_X_FORWARDED_PROTO |
+    Request::HEADER_X_FORWARDED_AWS_ELB
+  );
+})
+доверять всем прокси
+->withMiddleware(function (Middleware $middleware) {
+  $middleware->trustProxies(at: '*');
+})</code></pre><p>доверенный host</p><pre><code>имя хоста, на которого реагировать указать в bootstrap/app.php
+->withMiddleware(function (Middleware $middleware) {
+  $middleware->trustHosts(at: ['laravel.test']);
+})
+не доверять поддоменам хоста
+->withMiddleware(function (Middleware $middleware) {
+  $middleware->trustHosts(at: ['laravel.test'], subdomains: false);
+})
+указать доверенные хосты в файле конфигурации
+->withMiddleware(function (Middleware $middleware) {
+  $middleware->trustHosts(at: fn () => config('app.trusted_hosts'));
+})
 </code></pre></details><details><summary>Controllers</summary><p>контроллеры - классы, которые обрабатывают HTTP-запросы и возвращают HTTP-ответы, view, JSON, файлы и редиректы</p><pre><code>php artisan make:controller UserController    // создать контроллер
 php artisan make:controller ProvisionServer --invokable    // создать контроллер одного действия
 // создать ресурсный контроллер
@@ -5825,1114 +5849,758 @@ Route::post('/order', function () { })->block($lockSeconds = 10, $waitSeconds = 
     'http://example.com/foo/*',
   ]);
 })</code></pre><p>добавить токен</p><pre><code>&lt;meta name="csrf-token" content="{{ csrf_token() }}"&gt;    // в HTML-заголовок X-CSRF-TOKEN
-&lt;meta name="x-xsrf-token" content="{{ csrf_token() }}"&gt;    // в заголовок X-XSRF-TOKEN</code></pre><p>По умолчанию файл resources/js/bootstrap.js включает HTTP-библиотеку Axios, которая автоматически отправляет заголовок X-XSRF-TOKEN.</p></details><details><summary>Autherization</summary><p>авторизация - это процесс проверки прав доступа пользователя, основаная на политике и шлюзах, может быть выполнена с помощью:<br>
+&lt;meta name="x-xsrf-token" content="{{ csrf_token() }}"&gt;    // в заголовок X-XSRF-TOKEN</code></pre><p>По умолчанию файл resources/js/bootstrap.js включает HTTP-библиотеку Axios, которая автоматически отправляет заголовок X-XSRF-TOKEN.</p></details><details><summary>Autherization</summary><p>авторизация - проверка прав доступа пользователя, основаная на политиках и шлюзах, может быть выполнена с помощью:<br>
 - middleware, контроллеров, моделей и шаблонов<br>
 - фасадов, классов и функций<br>
-- политик и шлюзов, могут быть определёны в любом месте приложения и использоваться вместе<br>
-</p><details><summary>Gates</summary><p>шлюз - это функция проверки прав пользователя на действия без использования модели или ресурса, например просмотр панели управления администратора.<br></p><pre><code>App\Providers\AppServiceProvider.php
+- политик и шлюзов, которые могут быть определёны в любом месте приложения и использоваться вместе<br>
+</p><details><summary>Gates</summary><p>Gate (шлюз) - это функция проверки прав пользователя без использования модели или ресурса, например просмотр панели управления администратора.<br>
+- объявляется в App\Providers\AppServiceProvider методом boot()<br>
+- исспользуется для простых ограничений ролей<br>
+- аргументом всегда принимает пользователя, к которому применяет ограничения<br>
+- методы шлюза для авторизации полномочий: allows, denies, check, any, none, authorize, can, cannot<br>
+- директивы авторизации Blade: @can, @cannot, @canany<br>
+- дополнительные аргументы по необходимости.<br></p><pre><code>namespace App\Providers;
 use App\Models\Post;
 use App\Models\User;
 use Illuminate\Support\Facades\Gate;
-
+class AppServiceProvider extends ServiceProvider
 - может ли пользователь обновить модель
-public function boot(): void
-{
-    Gate::define('update-post', function (User $user, Post $post) {
-        return $user->id === $post->user_id;
-    });
-}
-
-либо
-use App\Policies\PostPolicy;
-use Illuminate\Support\Facades\Gate;
-
-public function boot(): void
-{
-    Gate::define('update-post', [PostPolicy::class, 'update']);
-}</code></pre><p>Gate - объявляется в App\Providers\AppServiceProvider методом boot(),<br>
-исспользуется для простых ограничений ролей.<br>
-Аргументом всегда принимает пользоватля, к которому применяет ограничения.<br>
-Дополнительные аргументы по необходимости.</p><pre><code>use App\Models\Post;
-use App\Models\User;
-use Illuminate\Support\Facades\Gate;
-
 public function boot(): void
 {
   Gate::define('update-post', function (User $user, Post $post) {
     return $user->id === $post->user_id;
   });
+}
+либо вынести логику в отдельный класс (политику) и объявить в App\Providers\AppServiceProvider
+use App\Policies\PostPolicy;
+use Illuminate\Support\Facades\Gate;
+public function boot(): void
+{
+  Gate::define('update-post', [PostPolicy::class, 'update']);
 }</code></pre><p>Gate::define - объявляю Gate,<br>
 'update-post' - название возможности предоставляемой пользователю<br>
 function (User $user, Post $post) - вернёт true/false,<br>
 true - этому пользователю можно пользоваться этой возможностью<br>
 false - этому пользователю нельзя пользоваться этой возможностью<br>
-<br>
-Можно вынести логику в отдельный класс (политику)</p><pre><code>use App\Policies\PostPolicy;
-use Illuminate\Support\Facades\Gate;
-
-public function boot(): void
-{
-  Gate::define('update-post', [PostPolicy::class, 'update']);
-}</code></pre><p>После этого в любом контроллере можем проверять роль конкрено указав пользователя</p><pre><code>if (Gate::forUser($user)->allows('update-post', $post)) {}
-if (Gate::forUser($user)->denies('update-post', $post)) {}</code></pre><p>allows - разрешено ли<br>
-denies - запрещено ли<br>
-<br>
-Проверять роль текущего пользователя с кастомным условием</p><pre><code>if (! Gate::allows('update-post', $post)) {
-  abort(403);
-}
-if (Gate::denies('update-post', $post)) {
-  abort(403);
-}</code></pre><p>Проверять роль текущего пользователя встроенным методом</p><pre><code>Gate::authorize('update-post', $post);</code></pre><p>Проверить несколько возможностей</p><pre><code>if (Gate::any(['update-post', 'delete-post'], $post)) {
-  // The user can update or delete the post...
-}
-
-if (Gate::none(['update-post', 'delete-post'], $post)) {
-  // The user can't update or delete the post...
-}</code></pre><p>В контроллере гейт может обратиться к политике.<br>
-Первый параметр это название политики,<br>
-второй - либо объект модели, если есть, либо класс модели</p><pre><code>Gate::authorize('update', $post);
-<span>or</span>
-Gate::authorize('update', App\Models\Post::class);</code></pre><p>Авторизация действий через шлюзы</p><pre><code>namespace App\Http\Controllers;
+После этого в любом контроллере можем проверять роль конкрено указав пользователя</p><pre><code>if (Gate::forUser($user)->allows('update-post', $post)) { }   // если может редактировать пост
+if (Gate::forUser($user)->denies('update-post', $post)) { }   // если не может редактировать пост
+if (Gate::allows('update-post', $post)) { }               // если разрешено
+if (Gate::denies('update-post', $post)) {abort(403);}     // если запрещено
+if (Gate::any(['update-post', 'delete-post'], $post)) { }   // если может редактировать и удалять
+if (Gate::none(['update-post', 'delete-post'], $post)) { }    // если не может редактировать и удалять
+if (Gate::check('create-post', [$category, $pinned])) { }   // дополнительный контекст для check
+Gate::authorize('update-post', $post);   // проверить роль текущего пользователя встроенным методом
+Gate::authorize('update', App\Models\Post::class);   // 'update' - действие, $post - объект модели, либо класс модели
+Gate::allowIf(fn (User $user) => $user->isAdministrator());   // встроенная роверка авторизации
+Gate::denyIf(fn (User $user) => $user->banned());   // встроенная роверка авторизации</code></pre><p>авторизация действий через шлюзы</p><pre><code>namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\Post;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
-
 class PostController extends Controller
 {
-    /**
-    * Обновить переданный пост.
-    */
-    public function update(Request $request, Post $post): RedirectResponse
-    {
-        if (! Gate::allows('update-post', $post)) {
-            abort(403);
-        }
-        // Обновление поста...
-        return redirect('/posts');
-    }
-}</code></pre><p>авторизован ли пользователь для выполнения действия (не аутентифицированный в настоящий момент)</p><pre><code>if (Gate::forUser($user)->allows('update-post', $post)) {
-    // Пользователь может обновить пост...
+  public function update(Request $request, Post $post): RedirectResponse
+  {
+    if (! Gate::allows('update-post', $post)) {abort(403);}
+    return redirect('/posts');
+  }
 }
-
-if (Gate::forUser($user)->denies('update-post', $post)) {
-    // Пользователь не может обновить пост...
-}</code></pre><p>определить авторизацию нескольких действий одновременно</p><pre><code>if (Gate::any(['update-post', 'delete-post'], $post)) {
-    // Пользователь может обновить или удалить пост...
-}
-
-if (Gate::none(['update-post', 'delete-post'], $post)) {
-    // Пользователь не может обновить или удалить пост...
-}</code></pre><p>метод authorize принимает действие и модель. Если действие не авторизовано, то выбросит исключение</p><pre><code>namespace App\Http\Controllers;
-use App\Http\Controllers\Controller;
-use App\Models\Post;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Gate;
-
-class PostController extends Controller
+либо
+public function update(Request $request, Post $post): RedirectResponse
 {
-    /**
-    * Обновить переданный пост.
-    *
-    * @throws \Illuminate\Auth\Access\AuthorizationException
-    */
-    public function update(Request $request, Post $post): RedirectResponse
-    {
-        Gate::authorize('update', $post);
-
-        // Текущий пользователь может обновить пост в блоге...
-
-        return redirect('/posts');
-    }
-}</code></pre><p>Имя класса определяет какую политику использовать при авторизации</p><pre><code>use App\Models\Post;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Gate;
-
-/**
-* Создайте новый пост в блоге.
-*
-* @throws \Illuminate\Auth\Access\AuthorizationException
-*/
+  Gate::authorize('update', $post);   // если пользователь не авторизован для 'update', то выбросит исключение
+  return redirect('/posts');
+}
+либо
 public function create(Request $request): RedirectResponse
 {
-    Gate::authorize('create', Post::class);
-    // Текущий пользователь может создавать посты в блоге...
-    return redirect('/posts');
-}</code></pre><p>- Методы шлюза для авторизации полномочий: allows, denies, check, any, none, authorize, can, cannot
-- Директивы авторизации Blade: @can, @cannot, @canany
-- Дополнительный контекст при принятии решений об авторизации</p><pre><code>use App\Models\Category;
-use App\Models\User;
-use Illuminate\Support\Facades\Gate;
-
+  Gate::authorize('create', Post::class);   // класс определяет какую политику использовать при авторизации
+  return redirect('/posts');
+}
+// дополнительный контекст при принятии решений об авторизации
 Gate::define('create-post', function (User $user, Category $category, bool $pinned) {
-    if (! $user->canPublishToGroup($category->group)) {
-        return false;
-    } elseif ($pinned && ! $user->canPinPosts()) {
-        return false;
-    }
-
-    return true;
+  if (! $user->canPublishToGroup($category->group)) {return false;}
+  elseif ($pinned && ! $user->canPinPosts()) {return false;}
+  return true;
+});</code></pre><p>ответ шлюза</p><pre><code>use App\Models\User;
+use Illuminate\Auth\Access\Response;
+use Illuminate\Support\Facades\Gate;
+Gate::define('edit-settings', function (User $user) {
+  return $user->isAdmin ? Response::allow() : Response::deny('Вы должны быть администратором.');
 });
-
-- [$category, $pinned] - дополнительный контекст для check
-if (Gate::check('create-post', [$category, $pinned])) {
-    // Пользователь может создать пост...
-}</code></pre><p>ответ шлюза</p><pre><code>use App\Models\User;
-use Illuminate\Auth\Access\Response;
-use Illuminate\Support\Facades\Gate;
-
+- полный возвращенный шлюзом ответ
+$response = Gate::inspect('edit-settings');
+if ($response->allowed()) { }
+else {echo $response->message();}
+- код статуса HTTP-ответа вручную
 Gate::define('edit-settings', function (User $user) {
-    return $user->isAdmin
-                ? Response::allow()
-                : Response::deny('Вы должны быть администратором.');
-});</code></pre><p>получить полный возвращенный шлюзом ответ</p><pre><code>$response = Gate::inspect('edit-settings');
-
-if ($response->allowed()) {
-    // Действие разрешено...
-} else {
-    echo $response->message();
-}</code></pre><p>настроить код статуса HTTP-ответа вручную</p><pre><code>use App\Models\User;
-use Illuminate\Auth\Access\Response;
-use Illuminate\Support\Facades\Gate;
-
+  return $user->isAdmin ? Response::allow() : Response::denyWithStatus(404);
+});
+- ответ 404
 Gate::define('edit-settings', function (User $user) {
-    return $user->isAdmin
-                ? Response::allow()
-                : Response::denyWithStatus(404);
-});</code></pre><p>ответ 404</p><pre><code>use App\Models\User;
-use Illuminate\Auth\Access\Response;
-use Illuminate\Support\Facades\Gate;
-
-Gate::define('edit-settings', function (User $user) {
-    return $user->isAdmin
-                ? Response::allow()
-                : Response::denyAsNotFound();
-});</code></pre><p>before выполняется перед всеми другими проверками авторизации</p><pre><code>use App\Models\User;
-use Illuminate\Support\Facades\Gate;
-
+  return $user->isAdmin ? Response::allow() : Response::denyAsNotFound();
+});
+- before выполняется перед всеми другими проверками авторизации
 Gate::before(function (User $user, string $ability) {
-    if ($user->isAdministrator()) {
-        return true;
-    }
-});</code></pre><p>after выполненяется после всех других проверок авторизации</p><pre><code>use App\Models\User;
-
+  if ($user->isAdministrator()) {return true;}
+});
+- after выполненяется после всех других проверок авторизации
 Gate::after(function (User $user, string $ability, bool|null $result, mixed $arguments) {
-    if ($user->isAdministrator()) {
-        return true;
-    }
-});</code></pre><p>встроенные провероки авторизации</p><pre><code>use App\Models\User;
-use Illuminate\Support\Facades\Gate;
-
-Gate::allowIf(fn (User $user) => $user->isAdministrator());
-
-Gate::denyIf(fn (User $user) => $user->banned());
-</code></pre></details><details><summary>Policies</summary><p>политики - это классы с логикой авторизации пользователя на действия с конкретной моделью или ресурсом.</p><pre><code>- создать политику с привязкой к модели
-php artisan make:policy PostPolicy --model=Post</code></pre><p>Политика всегда относится к какой-то модели.<br>
-Создать политику можно при создании модели либо отдельно.<br>
-По конвенции название политики содержит название модели.</p><code>php artisan make:policy PostPolicy</code><p>Создать политику с методами для модели Post</p><code>php artisan make:policy PostPolicy --model=Post</code><p>Назвать политику можно не по конвенции,<br>
-но тогда её нужно зарегистрировать в<br>
-App\Providers\AppServiceProvider методом boot()</p><pre><code>use App\Models\ModelName;
+  if ($user->isAdministrator()) {return true;}
+});
+</code></pre></details><details><summary>Policies</summary><p>политики - это классы с логикой авторизации пользователя на действия с конкретной моделью или ресурсом.<br>
+по конвенции название политики содержит название модели.<br></p><code>php artisan make:policy PostPolicy --model=Post   // создать политику с привязкой к модели: создаст методы для модели Post</code><table><caption>Methods</caption><thead><tr><th>Policy Method </th><th>Action</th></tr></thead><tbody><tr><td>viewAny</td><td>view all</td></tr><tr><td>view</td><td>view one</td></tr><tr><td>create</td><td>create & store</td></tr><tr><td>update</td><td>edit</td></tr><tr><td>delete</td><td>mark as delete</td></tr><tr><td>restore</td><td>unmark as delete</td></tr><tr><td>forceDelete</td><td>permanently delete</td></tr></tbody></table><p>Laravel проверит наличие политик в app/Models/Policies, а затем в app/Policies. Назвать политику не по конвенции:</p><pre><code>namespace App\Providers;
+use App\Models\ModelName;
 use App\Policies\PolicyName;
 use Illuminate\Support\Facades\Gate;
-
-public function boot(): void
-{
-    Gate::policy(ModelName::class, PolicyName::class);
-}</code></pre><table><caption>Methods</caption><thead><tr><th>Policy Method </th><th>Action</th></tr></thead><tbody><tr><td>viewAny</td><td>view all</td></tr><tr><td>view</td><td>view one</td></tr><tr><td>create</td><td>create & store</td></tr><tr><td>update</td><td>edit</td></tr><tr><td>delete</td><td>mark as delete</td></tr><tr><td>restore</td><td>unmark as delete</td></tr><tr><td>forceDelete</td><td>permanently delete</td></tr></tbody></table><p>- Laravel проверит наличие политик в app/Models/Policies, а затем в app/Policies.
-- Имя политики должно совпадать с названием модели и иметь суффикс Policy.
-- Регистрация политик вручную в в App\Providers\AppServiceProvider</p><pre><code>- своё имя
-use Illuminate\Support\Facades\Gate;
-
-Gate::guessPolicyNamesUsing(function (string $modelClass) {
-    // Возвращаем имя класса политики для данной модели...
-});
-
-- регистрация
-use App\Models\Order;
-use App\Policies\OrderPolicy;
-use Illuminate\Support\Facades\Gate;
-
-public function boot(): void
-{
+class AppServiceProvider extends ServiceProvider {
+  public function boot(): void
+  {
     Gate::policy(Order::class, OrderPolicy::class);
-}</code></pre><p>проверить совпадает ли id пользователя с user_id поста</p><pre><code>namespace App\Policies;
+  }
+}
+- использовать
+Gate::guessPolicyNamesUsing(function (string $modelClass) { });</code></pre><p>политика</p><pre><code>namespace App\Policies;
 use App\Models\Post;
 use App\Models\User;
-
 class PostPolicy
 {
-    /**
-    * Определить, может ли пользователь обновить пост.
-    */
-    public function update(User $user, Post $post): bool
-    {
-        return $user->id === $post->user_id;
-    }
-}</code></pre><p>вернуть более подробный ответ</p><pre><code>use App\Models\Post;
-use App\Models\User;
-use Illuminate\Auth\Access\Response;
-
-/**
-* Определить, может ли пользователь обновить пост.
-*/
-public function update(User $user, Post $post): Response
-{
-    return $user->id === $post->user_id
-                ? Response::allow()
-                : Response::deny('You do not own this post.');
-}</code></pre><p>настроить HTTP-ответ</p><pre><code>use App\Models\Post;
-use App\Models\User;
-use Illuminate\Auth\Access\Response;
-
-/**
-* Определяет, может ли данный пользователь обновить указанный пост.
-*/
-public function update(User $user, Post $post): Response
-{
-    return $user->id === $post->user_id
-                ? Response::allow()
-                : Response::denyWithStatus(404);
-}</code></pre><p>ответ 404</p><pre><code>use App\Models\Post;
-use App\Models\User;
-use Illuminate\Auth\Access\Response;
-
-/**
-* Определяет, может ли данный пользователь обновить указанный пост.
-*/
-public function update(User $user, Post $post): Response
-{
-    return $user->id === $post->user_id
-                ? Response::allow()
-                : Response::denyAsNotFound();
-}</code></pre><p>имеет ли пользователь право создавать посты</p><pre><code>public function create(User $user): bool
-{
-    return $user->role == 'writer';
-}</code></pre><p>- разрешить прохождение проверок авторизации для не аутентифицированных пользователей:<br>
-- значение $user может быть как объявленного типа User, так и быть равным null<br></p><pre><code>namespace App\Policies;
-use App\Models\Post;
-use App\Models\User;
-
-class PostPolicy
-{
-    /**
-    * Определить, может ли пользователь обновить пост.
-    */
-    public function update(?User $user, Post $post): bool
-    {
-        return $user?->id === $post->user_id;
-    }
-}</code></pre><p>before будет выполнен перед любыми другими методами в политике</p><pre><code>use App\Models\User;
-
-/**
-* Выполнить предварительную авторизацию.
-*/
+  public function update(User $user, Post $post): bool
+  {
+    return $user->id === $post->user_id;
+  }
+}
+return $user->id === $post->user_id ? Response::allow() : Response::deny('You do not own this post.');    // подробный ответ
+return $user->id === $post->user_id ? Response::allow() : Response::denyWithStatus(404);    // настроить HTTP-ответ
+return $user->id === $post->user_id ? Response::allow() : Response::denyAsNotFound();   // встроенный ответ 404
+return $user->role == 'writer';   // имеет ли пользователь право создавать посты
+return $user?->id === $post->user_id;   // $user типа User либо null: авторизация для не аутентифицированных пользователей
+return $user->id === $post->user_id && $user->canUpdateCategory($category);   // проверка id и роли пользователя
+Gate::authorize('update', [$post, $request->category]);   // передать методу дополнительный контекст в массиве
+// before будет выполнен перед любыми другими методами в политике
 public function before(User $user, string $ability): bool|null
 {
-    if ($user->isAdministrator()) {
-        return true;
-    }
-
-    return null;
-}</code></pre><p>- модель App\Models\User включает два метода авторизации: can и cannot<br>
+  if ($user->isAdministrator()) {return true;}    // выполнить предварительную авторизацию
+  return null;
+}</code></pre><p>контроллер<br>
+- модель App\Models\User включает два метода авторизации: can и cannot<br>
 - если для модели зарегистрирована политика, то can вызовет политику,<br>
 - если нет политики, то can вызовет шлюз<br></p><pre><code>namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\Post;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-
 class PostController extends Controller
 {
-    public function update(Request $request, Post $post): RedirectResponse
-    {
-        if ($request->user()->cannot('update', $post)) {
-            abort(403);
-        }
-        // Обновление поста...
-        return redirect('/posts');
-    }
-}</code></pre><p>Имя класса определяет какую политику использовать при авторизации</p><pre><code>namespace App\Http\Controllers;
-use App\Http\Controllers\Controller;
-use App\Models\Post;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
-
-class PostController extends Controller
-{
-    public function store(Request $request): RedirectResponse
-    {
-        if ($request->user()->cannot('create', Post::class)) {
-            abort(403);
-        }
-        // Сохранение поста...
-        return redirect('/posts');
-    }
-}</code></pre><p>в политике можно передать методу дополнительный контекст в массиве</p><pre><code>- в App\Policies\PostPolicy
-/**
-* Определить, может ли пользователь обновить пост.
-*/
-public function update(User $user, Post $post, int $category): bool
-{
-    return $user->id === $post->user_id &&
-          $user->canUpdateCategory($category);
-}
-
-- с контекстом
-/**
-* Обновить пост.
-*
-* @throws \Illuminate\Auth\Access\AuthorizationException
-*/
-public function update(Request $request, Post $post): RedirectResponse
-{
-    Gate::authorize('update', [$post, $request->category]);
-    // Текущий пользователь может обновить пост в блоге...
+  public function update(Request $request, Post $post): RedirectResponse
+  {
+    if ($request->user()->cannot('update', $post)) {abort(403);}
     return redirect('/posts');
+  }
 }
-</code></pre></details></details><details><summary>Requests</summary><p>- запросы позволяют создавать правила валидации, авторизации и преобразования данных в контроллерах, маршрутах и сервисах<br>
-- создать запрос</p><code>php artisan make:request StoreUserRequest</code><p>создать запрос с правилами валидации</p><code>php artisan make:request StoreUserRequest --rules=store</code><p>запрос - это объект класса Illuminate\Http\Request<br>
-доступ к запросу<br></p><pre><code>use Illuminate\Http\Request;
-
-Route::get('/', function (Request $request) {});
-
+public function store(Request $request): RedirectResponse
+{
+  if ($request->user()->cannot('create', Post::class)) {abort(403);}    // имя класса определяет используемую политику
+  return redirect('/posts');
+}
+</code></pre></details></details><details><summary>Requests</summary><p>запросы позволяют создавать правила валидации, авторизации и преобразования данных в контроллерах, маршрутах и сервисах</p><pre><code>php artisan make:request StoreUserRequest    // создать запрос
+php artisan make:request StoreUserRequest --rules=store    // создать запрос с правилами валидации
+php artisan make:request App\Http\Requests\StoreUserRequest   // указать путь к классу
+php artisan make:request App\Http\Requests\StoreUserRequest --namespace=App\Http\Requests   // указать путь к классу и пространство имен</code></pre><p>в запросе App/Http/Requests</p><pre><code>public function authorize(): bool {return true;}    // если логика авторизации обрабатывается в другом месте
+- авторизация запросов
+use App\Models\Comment;
+public function authorize(): bool
+{
+  $comment = Comment::find($this->route('comment'));    // route() - доступ к параметрам URI
+  return $comment && $this->user()->can('update', $comment);  // user() - текущй аутентифицированный пользователь
+}
+return $this->user()->can('update', $this->comment);    // либо с привязкой модели к маршруту
+- изменить сообщения об ошибках
+public function messages(): array
+{
+  return [
+    'title.required' => 'A title is required',
+    'body.required' => 'A message is required',
+  ];
+}
+- изменить имя атрибута
+public function attributes(): array
+{return ['email' => 'email address'];}
+- подготовить данные из запроса для валидации
+use Illuminate\Support\Str;
+protected function prepareForValidation(): void
+{$this->merge(['slug' => Str::slug($this->slug)]);}
+- получить отвалидированные данные
+$validated = $request->validated();
+либо через валидатор
+$validated = $validator->validated();
+либо метод safe вернёт экземпляр Illuminate\Support\ValidatedInput с методами only, except, и all
+$validated = $request->safe()->only(['name', 'email']);
+$validated = $request->safe()->except(['name', 'email']);
+$validated = $request->safe()->all();
+- итерировать проверенные данные
+foreach ($request->safe() as $key => $value) { }
+- доступ к проверенным данным как в массиве
+$validated = $request->safe();
+$email = $validated['email'];
+- добавить поля к проверенным данным
+$validated = $request->safe()->merge(['name' => 'Taylor Otwell']);
+- получить проверенные данные в виде экземпляра collection
+$collection = $request->safe()->collect();
+- нормализовать данные после валидации
+protected function passedValidation(): void
+{$this->replace(['name' => 'Taylor']);}
+- данные формы ввода
+$input = $request->all();   // все данные в виде массива
+$input = $request->collect();   // все данные в виде коллекции
+$input = $request->input();   // все данные как ассоциированный массив
+$name = $request->input('name', 'Sally');   // данные одного поля, второй параметр - значение по умолчанию
+$name = $request->input('products.0.name');   // получить элемент из массива данных формы
+$names = $request->input('products.*.name');  // получить по указанному фильтру массив из массива данных формы
+$query = $request->query();   // все данные из строки запроса в виде ассоциативного массива
+$name = $request->query('name', 'Helen');   // данные отдельного параметра из строки запроса, второй параметр - значение по умолчанию
+$name = $request->string('name')->trim();   // в виде объекта String
+$perPage = $request->integer('per_page');   // в виде целого числа
+$archived = $request->boolean('archived');  // в логическом виде
+$elapsed = $request->date('elapsed', '!H:i', 'Europe/Madrid');    // дата - имя параметра, формат вывода и часовой пояс
+$status = $request->enum('status', Status::class);    // перечисление - имя параметра и класс перечислений
+$products = $request->enums('products', Product::class);    // перечесления в виде массива
+$input = $request->only(['username', 'password']);    // получить только указанный массив
+$input = $request->only('username', 'password');    // получить только указанный список
+$input = $request->except(['credit_card']);   // получить всё кроме указанного массива
+$input = $request->except('credit_card');   // получить всё кроме указанного списка
+if ($request->has('name')) { }    // если есть параметр в запросе
+if ($request->has(['name', 'email'])) { }    // если есть в запросе все параметры из массива
+if ($request->hasAny(['name', 'email'])) { }    // если есть в запросе любой параметр из массива
+$request->whenHas('name', function (string $input) { });    // выполнить функцию если в запросе параметр есть
+$request->whenHas('name', function (string $input) { }, function () { });    // выполнить первую функцию если в запросе параметр есть, вторую если нет
+if ($request->filled('name')) { }   // проверить есть ли значение
+if ($request->isNotFilled('name')) { }    // проверить отсутствие значения или пустая строка
+if ($request->isNotFilled(['name', 'email'])) { }   // все ли отсутствуют или пустые
+if ($request->anyFilled(['name', 'email'])) { }   // true если хоть один не пустой
+$request->whenFilled('name', function (string $input) { });   // если не пустой, то выполнит действие
+$request->whenFilled('name', function (string $input) { }, function () { });    // если нет значения, то выполнить второе действие
+if ($request->missing('name')) { }    // проверить существует ли ключ параметра в запросе
+$request->whenMissing('name', function () { }, function () { });    // если отсутствует, то первое действие, если присутствует - то второе
+$request->merge(['votes' => 0]);    // объединить существующие данные запроса с данными из ввода с перезаписью по ключу
+$request->mergeIfMissing(['votes' => 0]);   // добавить в запрос данные из ввода если в запросе такого ключа нет
+$request->flash();    // сохранить входные данные запроса в сессии, для доступа только во время следующего запроса
+$request->flashOnly(['username', 'email']);   // сохранить в сессии входные данные запроса только по указанным ключам
+$request->flashExcept('password');   // сохранить в сессии входные данные запроса кроме указанного ключа
+return redirect('/form')->withInput();    // сохранить в сессии входные данные запроса и вернуть к форме
+return redirect()->route('user.create')->withInput();    // сохранить в сессии входные данные запроса и перенаправить по маршруту
+return redirect('/form')->withInput($request->except('password'));  // сохранить в сессии входные данные запроса кроме указанного ключа и вернуть к форме
+$username = $request->old('username');    // получить данные предыдущего запроса
+&lt;input type="text" name="username" value="{{ old('username') }}"&gt;    // получить данные предыдущего запроса в шаблоне Blade
+$value = $request->cookie('name');   // получить значение cookie
+$file = $request->file('photo');    // получить файл из запроса
+$file = $request->photo;    // получить файл из запроса динамически
+if ($request->hasFile('photo')) { }   // проверить если файл в запросе
+if ($request->file('photo')->isValid()) { }   // валидация загрузки файла
+$path = $request->photo->path();    // доступ к пути файла
+$extension = $request->photo->extension();    // доступ к расширению файла
+- сохранить файл из запроса
+$path = $request->photo->store('images', 's3'); // имя файла автоматически, 's3' - имя диска сохранения (необязательный)
+$path = $request->photo->storeAs('images', 'filename.jpg', 's3');   // задать имя файла</code></pre><p>сообщение об ошибке</p><pre><code>$validator - экземпляр Illuminate\Support\Facades\Validator
+$errors = $validator->errors();   // вернёт экземпляр Illuminate\Support\MessageBag
+echo $errors->first('email');   // получить первое сообщение об ошибке для указанного поля
+- Illuminate\Support\MessageBag - набор методов для работы с сообщениями об ошибках
+foreach ($errors->get('email') as $message) { }    // получить массив всех сообщений для указанного поля
+foreach ($errors->get('attachments.*') as $message) { }    // получить все сообщения для каждого из элементов массива
+foreach ($errors->all() as $message) { }   // получить массив всех сообщений для всех полей
+if ($errors->has('email')) { }   // проверить наличие сообщений об ошибках для указанного поля</code></pre><p>при ошибке, Laravel запишет ошибки и входящие данные запроса в массив $errors сессии</p><pre><code>- /resources/views/post/create.blade.php
+&lt;h1&gt;Создание поста блога&lt;/h1&gt;
+@if ($errors->any())
+  &lt;div class="alert alert-danger"&gt;
+    &lt;ul&gt;
+      @foreach ($errors->all() as $error)
+        &lt;li&gt;{{ $error }}&lt;/li&gt;
+      @endforeach
+    &lt;/ul&gt;
+  &lt;/div&gt;
+@endif
+- проверить наличие ошибок и вывести
+&lt;label for="title"&gt;Название сообщения&lt;/label&gt;
+&lt;input
+  id="title"
+  type="text"
+  name="title"
+  class="@error('title') is-invalid @enderror"
+/&gt;
+@error('title')
+  &lt;div class="alert alert-danger"&gt;{{ $message }}&lt;/div&gt;
+@enderror
+- перезаполнить форму данными предыдущего запроса из сессии
+$title = $request->old('title');
 либо
+&lt;input type="text" name="title" value="{{ old('title') }}"&gt;</code></pre><p>доступ к запросу</p><pre><code>- в контроллере
 namespace App\Http\Controllers;
-
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-
 class UserController extends Controller
 {
-    public function store(Request $request): RedirectResponse
-    {
-        $name = $request->input('name');
-        return redirect('/users');
-    }
-}</code></pre><p>путь запроса</p><pre><code>$uri = $request->path();  // путь запроса
-if ($request->is('admin/*')) {}  // соответствие пути запроса шаблону
-if ($request->routeIs('admin.*')) {}  // соответствие пути запроса именованному маршруту
-
-получить полный URL для входящего запроса
-$url = $request->url();
-либо
-$urlWithQueryString = $request->fullUrl();</code></pre><p>добавить строку запроса в массив переменных строки запроса</p><code>$request->fullUrlWithQuery(['type' => 'phone']);</code><p>получить строку запроса без указанного параметра</p><code>$request->fullUrlWithoutQuery(['type']);</code><p>получить host входящего запроса</p><pre><code>$request->host();
+  public function store(Request $request): RedirectResponse
+  {
+    $name = $request->input('name');
+    return redirect('/users');
+  }
+}
+- в маршруте
+Route::get('/', function (Request $request) { });</code></pre><p>путь запроса</p><pre><code>$uri = $request->path();    // получить путь запроса
+if ($request->is('admin/*')) {}   // соответствие пути запроса шаблону
+if ($request->routeIs('admin.*')) {}    // соответствие пути запроса именованному маршруту
+$url = $request->url();   // получить URL для входящего запроса
+$urlWithQueryString = $request->fullUrl();   // получить полный URL для входящего запроса
+$request->fullUrlWithQuery(['type' => 'phone']);   // добавить строку запроса в массив переменных строки запроса
+$request->fullUrlWithoutQuery(['type']);   // получить строку запроса без указанного параметра</code></pre><p>получить host входящего запроса</p><pre><code>$request->host();
 $request->httpHost();
-$request->schemeAndHttpHost();</code></pre><p>получить метод запроса и проверить</p><pre><code>$method = $request->method();
-if ($request->isMethod('post')) {}</code></pre><p>получить заголовок запроса</p><pre><code>второй параметр не обязательный
-$value = $request->header('X-Header-Name', 'default');</code></pre><p>проверить наличие заголовка</p><code>if ($request->hasHeader('X-Header-Name')) {}</code><p>получить токен из заголовка Authorization</p><code>$token = $request->bearerToken();</code><p>получить ip-адрес клиента, который сделал запрос</p><pre><code>$ipAddress = $request->ip();
-
-все ip-адреса с перенаправлением и прокси
-$ipAddresses = $request->ips();</code></pre><p>тип контента, который запрашивает клиентт в заголовке Accept<br>
-получить массив типов контента, принятые запросом</p><code>$contentTypes = $request->getAcceptableContentTypes();</code><p>true если один из типов контента принят запросом, иначе false</p><code>if ($request->accepts(['text/html', 'application/json'])) {}</code><p>указать предпочитаемый для запроса тип контента из массива</p><code>$preferred = $request->prefers(['text/html', 'application/json']);</code><p>если ждём только JSON</p><code>if ($request->expectsJson()) {}</code><p>получить запрос в формате PSR-7</p><pre><code>установить зависимости
+$request->schemeAndHttpHost();</code></pre><p>метод запроса</p><pre><code>- данные формы могут быть отправлены в запросе с помощью метода GET, POST, PUT, PATCH, DELETE, OPTIONS, HEAD, TRACE, CONNECT<br>
+$method = $request->method();   // получить
+if ($request->isMethod('post')) { }   // проверить</code></pre><p>заголовок запроса</p><pre><code>- получить из запроса данные JSON: заголовок Content-Type = application/json<br>
+- получить из запроса данные формы: заголовок Content-Type = application/x-www-form-urlencoded<br>
+$value = $request->header('X-Header-Name', 'default');    // второй параметр не обязательный
+if ($request->hasHeader('X-Header-Name')) { }    // проверить наличие заголовка
+$token = $request->bearerToken();    // получить токен из заголовка Authorization
+$ipAddress = $request->ip();    // получить ip-адрес клиента, который сделал запрос
+$ipAddresses = $request->ips();   // все ip-адреса с перенаправлением и прокси</code></pre><p>тип контента в заголовке Accept</p><pre><code>$contentTypes = $request->getAcceptableContentTypes();   // получить массив типов контента, принятые запросом
+if ($request->accepts(['text/html', 'application/json'])) { }    // true если один из типов контента принят запросом, иначе false
+$preferred = $request->prefers(['text/html', 'application/json']);   // указать предпочитаемый для запроса тип контента из массива
+if ($request->expectsJson()) {}    // если ждём только JSON</code></pre><p>получить запрос в формате PSR-7</p><pre><code>- установить зависимости
 composer require symfony/psr-http-message-bridge
 composer require nyholm/psr7
-
-интерфейс в маршрут или контроллер
+- интерфейс в маршрут или контроллер
 use Psr\Http\Message\ServerRequestInterface;
-
-Route::get('/', function (ServerRequestInterface $request) {});
-</code></pre></details><details><summary>Validate</summary><p>- валидация - это процесс проверки данных на соответствие определенным правилам с помощью встроенных, пользовательских правил, сообщений и кастомных атрибутов<br>
-- создать класс запроса для валидации данных<br></p><pre><code>php artisan make:request StoreUserRequest
-
-либо указать путь к классу
-php artisan make:request App\Http\Requests\StoreUserRequest
-
-либо указать путь к классу и пространство имен
-php artisan make:request App\Http\Requests\StoreUserRequest --namespace=App\Http\Requests</code></pre><p>класс запроса в каталоге app/Http/Requests для валидации и авторизации данных<br></p><pre><code>namespace App\Http\Requests;
+Route::get('/', function (ServerRequestInterface $request) { });          
+</code></pre><details><summary>Validate</summary><p>валидация - проверка данных на соответствие встроенным и пользовательских правилам</p><pre><code>- валидация и авторизация данных
+namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 class StoreUserRequest extends FormRequest
 {
   public function authorize(): bool
-  {
-    return true;
-  }
+  {return true;}
   public function rules(): array
-  {
-    return [
-      'name' => 'required|string|max:255',
-      'email' => 'required|string|email|max:255|unique:users',
-      'password' => 'required|string|min:8|confirmed',
-    ];
-  }
-}</code></pre><p>валидировать данные в контроллере<br></p><pre><code>use App\Http\Requests\StoreUserRequest;
-
+  {return [
+    'name' => 'required|string|max:255',
+    'email' => 'required|string|email|max:255|unique:users',
+    'password' => 'required|string|min:8|confirmed',
+  ]};
+}
+- применение в контроллере
+use App\Http\Requests\StoreUserRequest;
 class UserController extends Controller
 {
-    public function store(StoreUserRequest $request): RedirectResponse
-    {
-        // Данные валидированы...
-        return redirect('/users');
-    }
-}</code></pre><p>валидировать данные в маршруте<br></p><pre><code>use App\Http\Requests\StoreUserRequest;
-
-Route::post('/user', function (StoreUserRequest $request) {
-    // Данные валидированы...
+  public function store(StoreUserRequest $request): RedirectResponse
+  {
+    // использую уже валидированые данные
     return redirect('/users');
-});</code></pre><p>валидировать данные в middleware<br></p><pre><code>use App\Http\Requests\StoreUserRequest;
-
+  }
+}
+- применение в маршруте
+use App\Http\Requests\StoreUserRequest;
+Route::post('/user', function (StoreUserRequest $request) {
+  // использую уже валидированые данные
+  return redirect('/users');
+});
+- применение в middleware
+use App\Http\Requests\StoreUserRequest;
 class StoreUserMiddleware
 {
-    public function handle(Request $request, Closure $next): Response
-    {
-        $request->validateWithBag('user', (new StoreUserRequest())->rules());
-
-        return $next($request);
-    }
-}</code></pre><p>валидация - проверка входящих данных</p><pre><code>- routes/web.php
+  public function handle(Request $request, Closure $next): Response
+  {
+    $request->validateWithBag('user', (new StoreUserRequest())->rules());
+    return $next($request);
+  }
+}</code></pre><p>валидация в контроллере</p><pre><code>- routes/web.php
 use App\Http\Controllers\PostController;
-
 Route::get('/post/create', [PostController::class, 'create']);
 Route::post('/post', [PostController::class, 'store']);
-
 - App\Http\Controllers\PostController.php
 namespace App\Http\Controllers;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
-
 class PostController extends Controller
 {
-    /**
-    * Показать форму для создания нового сообщения в блоге.
-    */
-    public function create(): View
-    {
-        return view('post.create');
-    }
-
-    /**
-    * Сохранить новую запись в блоге.
-    */
-    public function store(Request $request): RedirectResponse
-    {
-        $validated = $request->validate([
-            'title' => 'required|unique:posts|max:255',
-            'body' => 'required',
-        ]);
-
-    либо
-        $validatedData = $request->validate([
-        'title' => ['required', 'unique:posts', 'max:255'],
-        'body' => ['required'],
-        ]);
-
-    либо сохранение любых сообщений об ошибках в именованную коллекцию ошибок
-        $validatedData = $request->validateWithBag('post', [
-        'title' => ['required', 'unique:posts', 'max:255'],
-        'body' => ['required'],
-        ]);
-
-        return redirect('/posts');
-    }
-}</code></pre><p>правило bail: прекратить выполнение правил валидации для атрибута после первой ошибки</p><pre><code>$request->validate([
-    'title' => 'bail|required|unique:posts|max:255',
+  // показать форму для создания нового сообщения в блоге
+  public function create(): View
+  {return view('post.create');}
+  // сохранить новую запись в блоге
+  public function store(Request $request): RedirectResponse
+  {
+  $validated = $request->validate([
+    'title' => 'required|unique:posts|max:255',
     'body' => 'required',
-]);</code></pre><p>вложенные поля в HTTP-запросе</p><pre><code>$request->validate([
-    'title' => 'required|unique:posts|max:255',
-    'author.name' => 'required',
-    'author.description' => 'required',
-]);</code></pre><p>экранировать символ</p><pre><code>$request->validate([
-    'title' => 'required|unique:posts|max:255',
-    'v1\.0' => 'required',
-]);</code></pre><p>при ошибке, Laravel перенаправит пользователя обратно и запишет все ошибки валидации и входящие данные запроса в сессию в массив $errors</p><pre><code>- /resources/views/post/create.blade.php
-<h1>Создание поста блога</h1>
-
-@if ($errors->any())
-    <div class="alert alert-danger">
-        <ul>
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
-@endif
-
-// Форма для создания поста блога</code></pre><p>локализация сообщений<br>
-Каждое встроенное правило валидации Laravel содержит сообщение об ошибке в файле lang/en/validation.php<br></p><pre><code>опубликовать сообщения по умолчанию
-php artisan lang:publish
-
-чтобы создать свой перевод - скопируй lang/en/validation.php и отредактируй
-resources/lang/ru/validation.php
-'custom' => [
-    'email' => [
-        'required' => 'Нам нужно знать ваш адрес электронной почты!',
-        'max' => 'Ваш адрес электронной почты слишком длинный!'
-    ],
-],</code></pre><p>заменить имя атрибута по умолчанию в языковых файлах</p><pre><code>resources/lang/en/validation.php
-
-'attributes' => [
-    'email' => 'email address',
-],</code></pre><p>пользовательские имена для атрибутов в языковых файлах</p><pre><code>Validator::make($request->all(), [
-    'credit_card_number' => 'required_if:payment_type,cc'
+  ]);
+  либо
+  $validatedData = $request->validate([
+    'title' => ['required', 'unique:posts', 'max:255'],
+    'body' => ['required'],
+  ]);
+  либо сохранение любых сообщений об ошибках в именованную коллекцию ошибок
+  $validatedData = $request->validateWithBag('post', [
+    'title' => ['required', 'unique:posts', 'max:255'],
+    'body' => ['required'],
+  ]);
+  return redirect('/posts');
+  }
+}
+- bail: прекратить выполнение правил валидации для атрибута после первой ошибки
+$request->validate([
+  'title' => 'bail|required|unique:posts|max:255',
+  'body' => 'required',
 ]);
-
-resources/lang/ru/validation.php
-'values' => [
-    'payment_type' => [
-        'cc' => 'кредитная карта'
-    ],
-],</code></pre><p>использование одного сообщения валидации для полей на основе массива</p><pre><code>'custom' => [
-    'person.*.email' => [
-        'unique' => 'Each person must have a unique email address',
-    ]
-],</code></pre><p>проверить наличие ошибок и вывести</p><pre><code>- /resources/views/post/create.blade.php
-&lt;label for="title"&gt;Название сообщения&lt;/label&gt;
-&lt;input
-    id="title"
-    type="text"
-    name="title"
-    class="@error('title') is-invalid @enderror"
-/&gt;
-
-@error('title')
-    &lt;div class="alert alert-danger"&gt;{{ $message }}&lt;/div&gt;
-@enderror</code></pre><p>перезаполнить форму данными предыдущего запроса из сессии</p><pre><code>$title = $request->old('title');
-
-либо
-<input type="text" name="title" value="{{ old('title') }}"></code></pre><p>необязательные поля помечать nullable</p><pre><code>$request->validate([
-    'title' => 'required|unique:posts|max:255',
-    'body' => 'required',
-    'publish_at' => 'nullable|date',
-]);</code></pre><p>создать свой валидатор в контроллере, используя фасад Validator</p><pre><code>namespace App\Http\Controllers;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
-
-class PostController extends Controller
-{
-    /**
-    * Сохранить новую запись в блоге.
-    */
-    public function store(Request $request): RedirectResponse
-    {
-        $validator = Validator::make($request->all(), [
-            'title' => 'required|unique:posts|max:255',
-            'body' => 'required',
-        ]);
-
-        if ($validator->fails()) {
-            return redirect('/post/create')
-                        ->withErrors($validator) // передать ошибки в сессию в переменную $errors
-                        ->withInput();
-        }
-
-        // Получить проверенные данные...
-        $validated = $validator->validated();
-
-        // Получить часть проверенных данных...
-        $validated = $validator->safe()->only(['name', 'email']);
-        $validated = $validator->safe()->except(['name', 'email']);
-
-        // Сохранить сообщение блога...
-
-        return redirect('/posts');
-    }
-}</code></pre><p>прекратить валидацию всех атрибутов после возникновения первой ошибки</p><code>if ($validator->stopOnFirstFailure()->fails()) {}</code><p>для автоматического перенаправления вызвать validate()</p><pre><code>Validator::make($request->all(), [
-    'title' => 'required|unique:posts|max:255',
-    'body' => 'required',
-])->validate();</code></pre><p>сохранить сообщения об ошибках в именованной коллекции ошибок</p><pre><code>Validator::make($request->all(), [
-    'title' => 'required|unique:posts|max:255',
-    'body' => 'required',
-])->validateWithBag('post');</code></pre><p>- именованные коллекции ошибок<br>
-- с помощью именованных коллекций ошибок можно разделить ошибки валидации на разные группы<br>
-- у каждой формы свой экземпляр MessageBag, содержащий ошибки валидации каждому экземпляру MessageBag можно присвоить имя (второй аргумент withErrors)<br></p><pre><code>задать имя коллекции ошибок
-return redirect('/register')->withErrors($validator, 'login');
-
-получить доступ к именованному экземпляру MessageBag из переменной $errors сессии
-{{ $errors->login->first('email') }}</code></pre><p>собственные сообщения об ошибках в валидаторе</p><pre><code>$validator = Validator::make($input, $rules, $messages = [
-    'required' => 'Поле :attribute является обязательным.',
-]);</code></pre><p>кастомные сообщения об ошибке</p><pre><code>$messages = [
-    'email.required' => 'Нам нужно знать ваш адрес электронной почты!',
-];</code></pre><p>кастомные имена для атрибутов валидатора</p><pre><code>$validator = Validator::make($input, $rules, $messages, [
-    'email' => 'Адрес электронной почты',
-]);</code></pre><p> дополнительная валидация after()</p><pre><code>use Illuminate\Support\Facades\Validator;
-
+- вложенные поля в HTTP-запросе
+$request->validate([
+  'title' => 'required|unique:posts|max:255',
+  'author.name' => 'required',
+  'author.description' => 'required',
+]);
+- экранировать символ
+$request->validate([
+  'title' => 'required|unique:posts|max:255',
+  'v1\.0' => 'required',
+]);
+- необязательные поля помечать nullable
+$request->validate([
+  'title' => 'required|unique:posts|max:255',
+  'body' => 'required',
+  'publish_at' => 'nullable|date',
+]);</code></pre><p>создать свой валидатор</p><pre><code>$validator = Validator::make($request->all(), [
+  'title' => 'required|unique:posts|max:255',
+  'body' => 'required',
+]);
+if ($validator->fails()) {return redirect('/post/create')->withErrors($validator)->withInput();} // withErrors() - передать ошибки в $errors сессии
+if ($validator->stopOnFirstFailure()->fails()) { }   // прекратить валидацию всех атрибутов после возникновения первой ошибки
+$validated = $validator->validated();   // получить проверенные данные
+$validated = $validator->safe()->only(['name', 'email']);   // получить только указанные данные
+$validated = $validator->safe()->except(['name', 'email']);   // получить все данные кроме указанных
+- для автоматического перенаправления вызвать validate()
+Validator::make($request->all(), [
+  'title' => 'required|unique:posts|max:255',
+  'body' => 'required',
+])->validate();
+- свои сообщения об ошибках в валидаторе
+$validator = Validator::make($input, $rules, $messages = [
+  'required' => 'Поле :attribute является обязательным.',
+]);
+- сохранить сообщения об ошибках в именованной коллекции ошибок
+Validator::make($request->all(), [
+  'title' => 'required|unique:posts|max:255',
+  'body' => 'required',
+])->validateWithBag('post');
+- свои имена для атрибутов валидатора
+$validator = Validator::make($input, $rules, $messages, [
+  'email' => 'Адрес электронной почты',
+]);
+- дополнительная валидация after()
 $validator = Validator::make(/* ... */);
 $validator->after(function ($validator) {
-    if ($this->somethingElseIsInvalid()) {
-        $validator->errors()->add(
-            'field', 'Что-то не так с этим полем!'
-        );
-    }
+  if ($this->somethingElseIsInvalid()) {
+    $validator->errors()->add('field', 'Что-то не так с этим полем!');
+  }
 });
-
-if ($validator->fails()) {}</code></pre><p>условное добавление правил<br>
-- не проверять поле, если другое поле имеет указанное значение exclude_if<br></p><pre><code>use Illuminate\Support\Facades\Validator;
-
+- exclude_if - не проверять это поле, если указанное поле имеет заданное значение
 $validator = Validator::make($data, [
-    'has_appointment' => 'required|boolean',
-    'appointment_date' => 'exclude_if:has_appointment,false|required|date',
-    'doctor_name' => 'exclude_if:has_appointment,false|required|string',
-]);</code></pre><p>не проверять поле, если другое поле не имеет указанное значение exclude_unless</p><pre><code>$validator = Validator::make($data, [
-    'has_appointment' => 'required|boolean',
-    'appointment_date' => 'exclude_unless:has_appointment,true|required|date',
-    'doctor_name' => 'exclude_unless:has_appointment,true|required|string',
-]);</code></pre><p>проверить поле если оно существует sometimes</p><pre><code>$validator = Validator::make($data, [
+  'has_appointment' => 'required|boolean',
+  'appointment_date' => 'exclude_if:has_appointment,false|required|date',
+  'doctor_name' => 'exclude_if:has_appointment,false|required|string',
+]);
+- exclude_unless - не проверять это поле, если указанное поле не имеет заданное значение
+$validator = Validator::make($data, [
+  'has_appointment' => 'required|boolean',
+  'appointment_date' => 'exclude_unless:has_appointment,true|required|date',
+  'doctor_name' => 'exclude_unless:has_appointment,true|required|string',
+]);
+- sometimes - проверить поле если оно существует
+$validator = Validator::make($data, [
     'email' => 'sometimes|required|email',
-]);</code></pre><p>проверка полей при условии</p><pre><code>создать валидатор
-use Illuminate\Support\Facades\Validator;
-
+]);
+$validator = Validator::make($request->all(), ['photos.profile' => 'required|image']);  // HTTP-запрос содержит поле photos[profile]
+//проверить каждый элемент массива
 $validator = Validator::make($request->all(), [
-    'email' => 'required|email',
-    'stars' => 'required|numeric',
-]);
-
-условие проверки
-use Illuminate\Support\Fluent;
-
-$validator->sometimes('reason', 'required|max:500', function (Fluent $input) {
-    return $input->stars >= 100;
-});
-
-// reason - поле для проверки
-// required|max:500 - правила проверки
-// function (Fluent $input) - условие, при котором проверяем
-
-либо
-$validator->sometimes(['reason', 'cost'], 'required', function (Fluent $input) {
-    return $input->stars >= 100;
-});
-
-либо
-$input = [
-    'channels' => [
-        [
-            'type' => 'email',
-            'address' => 'abigail@example.com',
-        ],
-        [
-            'type' => 'url',
-            'address' => 'https://example.com',
-        ],
-    ],
-];
-
-$validator->sometimes('channels.*.address', 'email', function (Fluent $input, Fluent $item) {
-    return $item->type === 'email';
-});
-
-$validator->sometimes('channels.*.address', 'url', function (Fluent $input, Fluent $item) {
-    return $item->type !== 'email';
-});</code></pre><p>валидация массивов</p><pre><code>правило array - список разрешенных ключей массива
-use Illuminate\Support\Facades\Validator;
-
-$input = [
-    'user' => [
-        'name' => 'Taylor Otwell',
-        'username' => 'taylorotwell',
-        'admin' => true,
-    ],
-];
-
-Validator::make($input, [
-    'user' => 'array:name,username',
-]);
-
-HTTP-запрос содержит поле photos[profile]
-$validator = Validator::make($request->all(), [
-    'photos.profile' => 'required|image',
-]);
-
-проверить каждый элемент массива
-$validator = Validator::make($request->all(), [
-    'person.*.email' => 'email|unique:users',
-    'person.*.first_name' => 'required_with:person.*.last_name',
-]);</code></pre><p>применить правила проверки к каждому элементу массива подлежащего проверке атрибута</p><pre><code>use App\Rules\HasPermission;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rule;
-
-$validator = Validator::make($request->all(), [
-    'companies.*.id' => Rule::forEach(function (string|null $value, string $attribute) {
-        return [
-            Rule::exists(Company::class, 'id'),
-            new HasPermission('manage-company', $value),
-        ];
-    }),
-]);</code></pre><p>указать индекс или позицию элемента массива в сообщении об ошибке</p><pre><code>use Illuminate\Support\Facades\Validator;
-
-$input = [
-    'photos' => [
-        [
-            'name' => 'BeachVacation.jpg',
-            'description' => 'Фото моего пляжного отдыха!',
-        ],
-        [
-            'name' => 'GrandCanyon.jpg',
-            'description' => '',
-        ],
-    ],
-];
-
-Validator::validate($input, [
-    'photos.*.description' => 'required',
-], [
-    'photos.*.description.required' => 'Пожалуйста, укажите описание для фото № :position.',
-]);
-// ссылаться на более глубокие вложенные индексы и позиции с использованием second-index, second-position, third-index, third-position</code></pre><p>валидация файлов</p><pre><code>для файла
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rules\File;
-
-Validator::validate($input, [
-    'attachment' => [
-        'required',
-        File::types(['mp3', 'wav'])
-            ->min(1024)
-            ->max(12 * 1024),
-    ],
-]);
-
-либо с размерами kb, mb, gb и tb
-File::image()
-    ->min('1kb')
-    ->max('10mb')
-
-для изображения
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rule;
-use Illuminate\Validation\Rules\File;
-
-Validator::validate($input, [
-    'photo' => [
-        'required',
-        File::image()
-            ->min(1024)
-            ->max(12 * 1024)
-            ->dimensions(Rule::dimensions()->maxWidth(1000)->maxHeight(500)),
-            // dimensions - размер изображения
-    ],
-]);</code></pre><p>валидация паролей<br>
-- объект правила Password для настройки требования к сложности пароля<br></p><pre><code>use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rules\Password;
-
-$validator = Validator::make($request->all(), [
-    'password' => ['required', 'confirmed', Password::min(8)],
-]);
-
-либо
-// Требуется не менее 8 символов...
-Password::min(8)
-
-// Требуется хотя бы одна буква...
-Password::min(8)->letters()
-
-// Требуется хотя бы одна заглавная и одна строчная буква...
-Password::min(8)->mixedCase()
-
-// Требовать хотя бы одна цифра...
-Password::min(8)->numbers()
-
-// Требуется хотя бы один символ...
-Password::min(8)->symbols()
-
-// Убедиться, что пароль не был скомпрометирован
-Password::min(8)->uncompromised()
-
-// Все вместе
-Password::min(8)
-    ->letters()
-    ->mixedCase()
-    ->numbers()
-    ->symbols()
-    ->uncompromised()</code></pre><p>указать правила проверки паролей по умолчанию в одном месте приложения</p><pre><code>в App\Providers\AppServiceProvider
-use Illuminate\Validation\Rules\Password;
-
-public function boot(): void
-{
-    Password::defaults(function () {
-        $rule = Password::min(8);
-
-        return $this->app->isProduction()
-                    ? $rule->mixedCase()->uncompromised()
-                    : $rule;
-    });
-}
-
-применить правила проверки паролей по умолчанию
-'password' => ['required', Password::defaults()],</code></pre><p>отвалидированные данные<br>
-- получить данные входящего запроса, которые действительно прошли проверку с помощью запроса формы или вручную созданного экземпляра валидатора</p><pre><code>вызвать метод validated в запросе формы или экземпляре валидатора: вернёт массив проверенных данных
-$validated = $request->validated();
-$validated = $validator->validated();
-
-вызвать метод safe в запросе формы или экземпляре валидатора: вернёт экземпляр Illuminate\Support\ValidatedInput с методами only, except, и all
-$validated = $request->safe()->only(['name', 'email']);
-$validated = $request->safe()->except(['name', 'email']);
-$validated = $request->safe()->all();
-
-// Проверенные данные можно повторять...
-foreach ($request->safe() as $key => $value) {}
-
-// Доступ к проверенным данным можно получить как массив...
-$validated = $request->safe();
-$email = $validated['email'];
-
-// Добавить поля к проверенным данным
-$validated = $request->safe()->merge(['name' => 'Taylor Otwell']);
-
-// Получить проверенные данные в виде экземпляра collection
-$collection = $request->safe()->collect();</code></pre><p>собственные правила валидации<br>
-- создать новый объект правил<br></p><pre><code>php artisan make:rule Uppercase
-
-в app/Rules/Uppercase.php
+  'person.*.email' => 'email|unique:users',
+  'person.*.first_name' => 'required_with:person.*.last_name',
+]);</code></pre><p>правила валидации</p><pre><code>php artisan make:rule Uppercase   // создать правило
+php artisan make:rule Uppercase --implicit   // создать правило для обязательного атрибута
+- в app/Rules/Uppercase.php
 namespace App\Rules;
-
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
-
 class Uppercase implements ValidationRule
 {
-    /**
-    * Запустить правило проверки.
-    */
-    public function validate(string $attribute, mixed $value, Closure $fail): void
-    {
-        if (strtoupper($value) !== $value) {
-            $fail('The :attribute must be uppercase.');
-        }
-    }
+  public function validate(string $attribute, mixed $value, Closure $fail): void
+  {if (strtoupper($value) !== $value) {$fail('The :attribute must be uppercase.');}}
 }
-
-применить правило
+- применить правило
 use App\Rules\Uppercase;
-
-$request->validate([
-    'name' => ['required', 'string', new Uppercase],
-]);</code></pre><p>вызвать локализацию сообщения об ошибке</p><pre><code>if (strtoupper($value) !== $value) {
-    $fail('validation.uppercase')->translate();
-}
-
+$request->validate(['name' => ['required', 'string', new Uppercase]]);
+if (strtoupper($value) !== $value) {$fail('validation.uppercase')->translate();}  // вызвать локализацию сообщения об ошибке
 либо
-$fail('validation.location')->translate([
-    'value' => $this->value,
-], 'fr')</code></pre><p>получить доступ к внешним данным из собственного класса правил</p><pre><code>namespace App\Rules;
-
+$fail('validation.location')->translate(['value' => $this->value], 'fr')
+- доступ к внешним данным из класса правил
+namespace App\Rules;
 use Illuminate\Contracts\Validation\DataAwareRule;
 use Illuminate\Contracts\Validation\ValidationRule;
-
 class Uppercase implements DataAwareRule, ValidationRule
 {
-    /**
-    * Все данные находятся на проверке.
-    *
-    * @var array<string, mixed>
-    */
-    protected $data = [];
-
-    // ...
-
-    /**
-    * Установите данные для проверки.
-    *
-    * @param  array<string, mixed>  $data
-    */
-    public function setData(array $data): static
-    {
-        $this->data = $data;
-
-        return $this;
-    }
-}</code></pre><p>доступ к экземпляру валидатора, выполняющему проверку</p><pre><code>namespace App\Rules;
-
+  protected $data = [];
+  public function setData(array $data): static
+  {
+    $this->data = $data;
+    return $this;
+  }
+}
+- доступ к экземпляру валидатора, выполняющему проверку
+namespace App\Rules;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Contracts\Validation\ValidatorAwareRule;
 use Illuminate\Validation\Validator;
-
 class Uppercase implements ValidationRule, ValidatorAwareRule
 {
-    /**
-    * Экземпляр валидатора.
-    *
-    * @var \Illuminate\Validation\Validator
-    */
-    protected $validator;
-
-    // ...
-
-    /**
-    * Установите текущий валидатор.
-    */
-    public function setValidator(Validator $validator): static
-    {
-        $this->validator = $validator;
-
-        return $this;
-    }
-}</code></pre><p>собственное правило без создания класса через $fail</p><pre><code>use Illuminate\Support\Facades\Validator;
+  protected $validator;
+  public function setValidator(Validator $validator): static
+  {
+    $this->validator = $validator;
+    return $this;
+  }
+}
+- правило без создания класса через $fail
+use Illuminate\Support\Facades\Validator;
 use Closure;
-
 $validator = Validator::make($request->all(), [
-    'title' => [
-        'required',
-        'max:255',
-        function (string $attribute, mixed $value, Closure $fail) {
-            if ($value === 'foo') {
-                $fail("The {$attribute} is invalid.");
-            }
-        },
-    ],
-]);</code></pre><p>любые правила валидации не применяются, если проверяемый атрибут отсутствует или содержит пустую строку<br>
---implicit - подразумевает, что проверяемый атрибут является обязательным<br></p><code>php artisan make:rule Uppercase --implicit</code><p>запрос формы – кастомный класс запроса своей логики валидации и авторизации</p><pre><code>php artisan make:request StorePostRequest
-
-app/Http/Requests
-/**
-* Получить массив правил валидации, которые будут применены к запросу.
-*
-* @return array&lt;string, \Illuminate\Contracts\Validation\ValidationRule|array&lt;mixed&gt;|string&gt;
-*/
-public function rules(): array
-{
-    return [
-        'title' => 'required|unique:posts|max:255',
-        'body' => 'required',
-    ];
-}
-
-в контроллере
-/**
-* Сохранить новую запись в блоге.
-*/
-public function store(StorePostRequest $request): RedirectResponse
-{
-    // Входящий запрос прошел валидацию...
-
-    // Получить проверенные входные данные...
-    $validated = $request->validated();
-
-    // Получить часть проверенных входных данных...
-    $validated = $request->safe()->only(['name', 'email']);
-    $validated = $request->safe()->except(['name', 'email']);
-
-    // Сохранить апись в блоге...
-
-    return redirect('/posts');
-}</code></pre><p>дополнительная валидация после завершения начальной валидации</p><pre><code>use Illuminate\Validation\Validator;
-
-/**
-* Получите вызываемые объекты проверки «после» для запроса.
-*/
-public function after(): array
-{
-    return [
-        function (Validator $validator) {
-            if ($this->somethingElseIsInvalid()) {
-                $validator->errors()->add(
-                    'field',
-                    'Something is wrong with this field!'
-                );
-            }
-        }
-    ];
-}</code></pre><p>прекратить валидацию всех атрибутов после возникновения первой ошибки</p><pre><code>/**
-* @var bool
-*/
-protected $stopOnFirstFailure = true;</code></pre><p>перенаправить при ошибке вручную</p><pre><code>/**
-* @var string
-*/
+  'title' => ['required', 'max:255',
+    function (string $attribute, mixed $value, Closure $fail) {
+      if ($value === 'foo') {$fail("The {$attribute} is invalid.");}
+    },
+  ],
+]);
+protected $stopOnFirstFailure = true;   // прекратить валидацию всех атрибутов после первой ошибки
+- перенаправить при ошибке вручную
 protected $redirect = '/dashboard';
-
 либо
-protected $redirectRoute = 'dashboard';</code></pre><p>авторизация запросов</p><pre><code>app/Http/Requests
-
-use App\Models\Comment;
-/**
-* Определить, уполномочен ли пользователь выполнить этот запрос.
-*/
-public function authorize(): bool
-{
-    // route() - доступ к параметрам URI
-    $comment = Comment::find($this->route('comment'));
-
-    return $comment && $this->user()->can('update', $comment);
-}
-// user() - доступ к текущему аутентифицированному пользователю
-
-либо если есть привязка модели к маршруту
-public function authorize(): bool
-{
-    return $this->user()->can('update', $this->comment);
-}
-
-если логика авторизации обрабатывается в другом месте
-public function authorize(): bool
-{
-    return true;
-}</code></pre><p>изменить сообщения об ошибках</p><pre><code>app/Http/Requests
-
-/**
-* Получить сообщения об ошибках для определенных правил валидации.
-*
-* @return array&lt;string, string&gt;
-*/
-public function messages(): array
-{
+protected $redirectRoute = 'dashboard';</code></pre><p>именованные коллекции ошибок позволяют делить ошибки валидации на разные группы (экземпляр MessageBag)</p><pre><code>return redirect('/register')->withErrors($validator, 'login');    // задать имя коллекции ошибок
+{{ $errors->login->first('email') }}    // получить доступ к именованной коллекции из переменной $errors сессии</code></pre><p>каждое встроенное правило валидации Laravel содержит текст сообщения об ошибке в файле lang/en/validation.php</p><pre><code>// свой перевод - скопируй lang/en/validation.php и отредактируй
+php artisan lang:publish    // опубликовать сообщения по умолчанию
+- в resources/lang/ru/validation.php
+'custom' => [
+  'email' => [
+    'required' => 'Нам нужно знать ваш адрес электронной почты!',
+    'max' => 'Ваш адрес электронной почты слишком длинный!'
+  ],
+],
+'attributes' => ['email' => 'email address']    // заменить имя атрибута по умолчанию
+// пользовательские имена для атрибутов
+Validator::make($request->all(), ['credit_card_number' => 'required_if:payment_type,cc']);
+'values' => ['payment_type' => ['cc' => 'кредитная карта']],    // в resources/lang/ru/validation.php
+// использование одного сообщения валидации для полей на основе массива
+'custom' => [
+  'person.*.email' => [
+    'unique' => 'Each person must have a unique email address',
+  ]
+]    </code></pre><p>проверка полей при условии</p><pre><code>- создать валидатор
+use Illuminate\Support\Facades\Validator;
+$validator = Validator::make($request->all(), [
+  'email' => 'required|email',
+  'stars' => 'required|numeric',
+]);
+- условие проверки: reason - поле проверки, required|max:500 - правила проверки,
+- function (Fluent $input) - условие, при котором проверяем
+use Illuminate\Support\Fluent;
+$validator->sometimes('reason', 'required|max:500', function (Fluent $input) {return $input->stars >= 100;});
+либо
+$input = [
+  'channels' => [
+    ['type' => 'email', 'address' => 'abigail@example.com'],
+    ['type' => 'url', 'address' => 'https://example.com'],
+  ],
+];
+$validator->sometimes('channels.*.address', 'email', function (Fluent $input, Fluent $item) {
+    return $item->type === 'email';
+});
+$validator->sometimes('channels.*.address', 'url', function (Fluent $input, Fluent $item) {
+    return $item->type !== 'email';
+});</code></pre><p>валидация массивов</p><pre><code>use Illuminate\Support\Facades\Validator;
+$input = [
+  'user' => [
+    'name' => 'Taylor Otwell',
+    'username' => 'taylorotwell',
+    'admin' => true,
+  ],
+];
+Validator::make($input, ['user' => 'array:name,username']);   // правило array - список разрешенных ключей массива</code></pre><p>применить правила проверки к каждому элементу массива подлежащего проверке атрибута</p><pre><code>use App\Rules\HasPermission;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
+$validator = Validator::make($request->all(), [
+  'companies.*.id' => Rule::forEach(function (string|null $value, string $attribute) {
     return [
-        'title.required' => 'A title is required',
-        'body.required' => 'A message is required',
+      Rule::exists(Company::class, 'id'),
+      new HasPermission('manage-company', $value),
     ];
-}</code></pre><p>изменить имя атрибута</p><pre><code>app/Http/Requests
-
-/**
-* Получить пользовательские имена атрибутов для формирования ошибок валидатора.
-*
-* @return array&lt;string, string&gt;
-*/
-public function attributes(): array
-{
-    return [
-        'email' => 'email address',
-    ];
-}</code></pre><p>подготовить данные из запроса для валидации</p><pre><code>app/Http/Requests
-
-use Illuminate\Support\Str;
-/**
-* Подготовить данные для валидации.
-*/
-protected function prepareForValidation(): void
-{
-    $this->merge([
-        'slug' => Str::slug($this->slug),
-    ]);
-}</code></pre><p>нормализовать данные после валидации</p><pre><code>app/Http/Requests
-
-/**
-* Обработка успешной попытки валидации:
-*/
-protected function passedValidation(): void
-{
-    $this->replace(['name' => 'Taylor']);
+  }),
+]);</code></pre><p>указать индекс или позицию элемента массива в сообщении об ошибке</p><pre><code>use Illuminate\Support\Facades\Validator;
+$input = [
+  'photos' => [
+    ['name' => 'BeachVacation.jpg', 'description' => 'Фото моего пляжного отдыха!'],
+    ['name' => 'GrandCanyon.jpg', 'description' => '']
+  ],
+];
+Validator::validate(
+  $input,
+  ['photos.*.description' => 'required'],
+  ['photos.*.description.required' => 'Пожалуйста, укажите описание для фото № :position.']
+);</code></pre><p>валидация файлов</p><pre><code>- для файла
+Validator::validate($input, ['attachment' => [
+  'required', File::types(['mp3', 'wav'])->min(1024)->max(12 * 1024)],
+]);
+либо с размерами kb, mb, gb и tb
+File::image()->min('1kb')->max('10mb')
+- для изображения
+Validator::validate($input, [
+  'photo' => ['required',   // dimensions - размер изображения
+    File::image()->min(1024)->max(12 * 1024)->dimensions(Rule::dimensions()->maxWidth(1000)->maxHeight(500))],
+]);</code></pre><p>валидация паролей</p><pre><code>use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rules\Password;
+$validator = Validator::make($request->all(), ['password' => ['required', 'confirmed', Password::min(8)],]);
+Password::min(8)    // не менее 8 символов
+Password::min(8)->letters()   // хотя бы одна буква
+Password::min(8)->mixedCase()   // хотя бы одна заглавная и одна строчная буква
+Password::min(8)->numbers()   // хотя бы одна цифра
+Password::min(8)->symbols()   // хотя бы один символ
+Password::min(8)->uncompromised()   // убедиться, что пароль не был скомпрометирован
+Password::min(8)->letters()->mixedCase()->numbers()->symbols()->uncompromised()   // все вместе</code></pre><p>указать правила проверки паролей по умолчанию в одном месте приложения</p><pre><code>namespace App\Providers
+use Illuminate\Validation\Rules\Password;
+class AppServiceProvider extends ServiceProvider {
+  public function boot(): void
+  {
+    Password::defaults(function () {
+      $rule = Password::min(8);
+      return $this->app->isProduction() ? $rule->mixedCase()->uncompromised() : $rule;
+    });
+  }
 }
-</code></pre><details><summary>Exceptions</summary><p>- метод withExceptions в bootstrap/app.php управляет исключениями и выводом сообщений о них<br>
+- применить правила проверки паролей по умолчанию
+'password' => ['required', Password::defaults()],
+</code></pre></details><details><summary>Exceptions</summary><p>- метод withExceptions в bootstrap/app.php управляет исключениями и выводом сообщений о них<br>
 - $exceptions - экземпляр Illuminate\Foundation\Configuration\Exceptions<br>
 - debug в config/app.php определяет сколько показать информации об ошибке<br>
 - переменная окружения APP_DEBUG в .env при разработке = true, на продакшине false<br>
 - выполняться, когда необходимо сообщить об исключении определенного типа<br>
-- php artisan make:exception CustomException --render --report --force --quiet --no-interaction --no-ansi - создание пользовательского исключения с методами render и report, если файл уже существует, без вывода сообщений в консоль, без интерактивного ввода и без ANSI-вывода<br></p><pre><code>bootstrap/app.php
-->withExceptions(function (Exceptions $exceptions) {
-  $exceptions->report(function (InvalidOrderException $e) { });
-})</code></pre><p>остановить регистрацию исключения в стек журналов логирования по умолчанию</p><pre><code>bootstrap/app.php
-->withExceptions(function (Exceptions $exceptions) {
-  $exceptions->report(function (InvalidOrderException $e) { })->stop();
-
+- сообщения об исключениях записываются в журнал с указанием уровня серьезности и важности<br>
+- по умолчанию Laravel преобразует исключения в HTTP-ответ<br></p><pre><code>- создать исключения с методами render и report, если файл уже существует, без вывода сообщений в консоль,
+  без интерактивного ввода и без ANSI-вывода
+php artisan make:exception CustomException --render --report --force --quiet --no-interaction --no-ansi</code></pre><p>опубликовать стандартные шаблоны страниц ошибок</p><code>php artisan vendor:publish --tag=laravel-errors</code><p>шаблоны страниц ошибок если нет страницы для нужного кода ошибки</p><pre><code>resources/views/errors/4xx.blade.php
+resources/views/errors/5xx.blade.php</code></pre><p>вывести ошибку в resources/views/errors/404.blade.php</p><code>&lt;h2&gt;{{ $exception->getMessage() }}&lt;/h2&gt;</code><p>вызвать исключение</p><pre><code>abort(404);
+abort(403, 'Unauthorized action.');
+abort(403, 'Unauthorized action.', ['X-Header' => 'Value']);</code></pre><p>управлять исключениями в bootstrap/app.php</p><pre><code>->withExceptions(function (Exceptions $exceptions) {$exceptions->report(function (InvalidOrderException $e) { });})
+- остановить регистрацию исключения в стек журналов логирования по умолчанию
+->withExceptions(function (Exceptions $exceptions) {$exceptions->report(function (InvalidOrderException $e) { })->stop();})
 либо
-  $exceptions->report(function (InvalidOrderException $e) {
-    return false;
-  });
-})</code></pre><p>определить свои собственные глобальные контекстные данные</p><pre><code>bootstrap/app.php
+$exceptions->report(function (InvalidOrderException $e) {return false;});
+- определить свои собственные глобальные контекстные данные
+->withExceptions(function (Exceptions $exceptions) {$exceptions->context(fn () => ['foo' => 'bar']);})
+- об одном экземпляре исключения сообщать только один раз
+->withExceptions(function (Exceptions $exceptions) {$exceptions->dontReportDuplicates();})
+применить
+$original = new RuntimeException('Whoops!');
+report($original); // сообщено
+try {throw $original;} catch (Throwable $caught) {report($caught);} // проигнорировано
+report($original); // проигнорировано
+report($caught); // проигнорировано
+- задать сообщению уровень для записи
+use PDOException;
+use Psr\Log\LogLevel;
+->withExceptions(function (Exceptions $exceptions) {$exceptions->level(PDOException::class, LogLevel::CRITICAL);})
+- игнорировать исключения
+use App\Exceptions\InvalidOrderException;
+->withExceptions(function (Exceptions $exceptions) {$exceptions->dontReport([InvalidOrderException::class]);})
+либо
+namespace App\Exceptions;
+use Exception;
+use Illuminate\Contracts\Debug\ShouldntReport;
+class PodcastProcessingException extends Exception implements ShouldntReport { }
+- прекратить игнорировать определенный тип исключения
+use Symfony\Component\HttpKernel\Exception\HttpException;
+->withExceptions(function (Exceptions $exceptions) {$exceptions->stopIgnoring(HttpException::class);})
+- изменить тип исключения
+use App\Exceptions\InvalidOrderException;
+use Illuminate\Http\Request;
 ->withExceptions(function (Exceptions $exceptions) {
-  $exceptions->context(fn () => [
-    'foo' => 'bar',
-  ]);
+  $exceptions->render(function (InvalidOrderException $e, Request $request) {
+    return response()->view('errors.invalid-order', status: 500);
+  });
+})
+либо
+use Illuminate\Http\Request;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+->withExceptions(function (Exceptions $exceptions) {
+  $exceptions->render(function (NotFoundHttpException $e, Request $request) {
+    if ($request->is('api/*')) {return response()->json(['message' => 'Record not found.'], 404);}
+  });
+})
+- отобразить исключение в формате JSON
+use Illuminate\Http\Request;
+use Throwable;
+->withExceptions(function (Exceptions $exceptions) {
+  $exceptions->shouldRenderJsonWhen(function (Request $request, Throwable $e) {
+    if ($request->is('admin/*')) {return true;}
+    return $request->expectsJson();
+  });
+})
+- настроить HTTP-ответ на исключение
+use Symfony\Component\HttpFoundation\Response;
+->withExceptions(function (Exceptions $exceptions) {
+  $exceptions->respond(function (Response $response) {
+    if ($response->getStatusCode() === 419) {
+      return back()->with(['message' => 'The page expired, please try again.']);
+    }
+    return $response;
+  });
+})
+- выбрать случайное количество исключений
+use Illuminate\Support\Lottery;
+use Throwable;
+->withExceptions(function (Exceptions $exceptions) {
+  $exceptions->throttle(function (Throwable $e) {return Lottery::odds(1, 1000);});
+})
+- выбрать исключения определённого типа
+use Illuminate\Broadcasting\BroadcastException;
+use Illuminate\Cache\RateLimiting\Limit;
+use Throwable;
+->withExceptions(function (Exceptions $exceptions) {
+  $exceptions->throttle(function (Throwable $e) {
+    if ($e instanceof BroadcastException) {return Limit::perMinute(300);}
+  });
+})
+либо
+use Illuminate\Broadcasting\BroadcastException;
+use Illuminate\Cache\RateLimiting\Limit;
+use Throwable;
+->withExceptions(function (Exceptions $exceptions) {
+  $exceptions->throttle(function (Throwable $e) {
+    if ($e instanceof BroadcastException) {return Limit::perMinute(300)->by($e->getMessage());}
+  });
+})
+либо
+use App\Exceptions\ApiMonitoringException;
+use Illuminate\Broadcasting\BroadcastException;
+use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Support\Lottery;
+use Throwable;
+->withExceptions(function (Exceptions $exceptions) {
+  $exceptions->throttle(function (Throwable $e) {
+    return match (true) {
+      $e instanceof BroadcastException => Limit::perMinute(300),
+      $e instanceof ApiMonitoringException => Lottery::odds(1, 1000),
+      default => Limit::none(),
+    };
+  });
 })</code></pre><p>добавить уникальный контекст для конкретного исключения</p><pre><code>namespace App\Exceptions;
 use Exception;
 class InvalidOrderException extends Exception
 {
-  - Получить контекстную информацию исключения
   public function context(): array
-  {
-    return ['order_id' => $this->orderId];
-  }
+  {return ['order_id' => $this->orderId];}
 }</code></pre><p>сообщить об исключении и продолжить обработку текущего запроса, не отображая страницу с ошибкой</p><pre><code>public function isValid(string $value): bool
 {
   try {
@@ -6941,422 +6609,82 @@ class InvalidOrderException extends Exception
     report($e);
     return false;
   }
-}</code></pre><p>об одном экземпляре исключения сообщать только один раз</p><pre><code>bootstrap/app.php
-->withExceptions(function (Exceptions $exceptions) {
-  $exceptions->dontReportDuplicates();
-})
-$original = new RuntimeException('Whoops!');
-report($original); // сообщено
-try {
-  throw $original;
-} catch (Throwable $caught) {
-  report($caught); // проигнорировано
-}
-report($original); // проигнорировано
-report($caught); // проигнорировано</code></pre><p>сообщения об исключениях записываются в журнал с указанием уровня серьезности и важности<br>
-задать сообщению уровень для записи:<br></p><pre><code>bootstrap/app.php
-use PDOException;
-use Psr\Log\LogLevel;
-->withExceptions(function (Exceptions $exceptions) {
-    $exceptions->level(PDOException::class, LogLevel::CRITICAL);
-})</code></pre><p>игнорировать исключения</p><pre><code>bootstrap/app.php
-use App\Exceptions\InvalidOrderException;
-->withExceptions(function (Exceptions $exceptions) {
-    $exceptions->dontReport([
-        InvalidOrderException::class,
-    ]);
-})
-
-либо
-namespace App\Exceptions;
-use Exception;
-use Illuminate\Contracts\Debug\ShouldntReport;
-class PodcastProcessingException extends Exception implements ShouldntReport { }</code></pre><p>прекратить игнорировать определенный тип исключения</p><pre><code>use Symfony\Component\HttpKernel\Exception\HttpException;
-->withExceptions(function (Exceptions $exceptions) {
-    $exceptions->stopIgnoring(HttpException::class);
-})</code></pre><p>по умолчанию Laravel преобразует исключения в HTTP-ответ, изменить тип исключения</p><pre><code>use App\Exceptions\InvalidOrderException;
-use Illuminate\Http\Request;
-->withExceptions(function (Exceptions $exceptions) {
-    $exceptions->render(function (InvalidOrderException $e, Request $request) {
-        return response()->view('errors.invalid-order', status: 500);
-    });
-})
-
-либо
-use Illuminate\Http\Request;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-->withExceptions(function (Exceptions $exceptions) {
-    $exceptions->render(function (NotFoundHttpException $e, Request $request) {
-        if ($request->is('api/*')) {
-            return response()->json([
-                'message' => 'Record not found.'
-            ], 404);
-        }
-    });
-})</code></pre><p>отобразить исключение в формате JSON</p><pre><code>use Illuminate\Http\Request;
-use Throwable;
-->withExceptions(function (Exceptions $exceptions) {
-    $exceptions->shouldRenderJsonWhen(function (Request $request, Throwable $e) {
-        if ($request->is('admin/*')) {
-            return true;
-        }
-        return $request->expectsJson();
-    });
-})</code></pre><p>настроить HTTP-ответ на исключение</p><pre><code>use Symfony\Component\HttpFoundation\Response;
-->withExceptions(function (Exceptions $exceptions) {
-    $exceptions->respond(function (Response $response) {
-        if ($response->getStatusCode() === 419) {
-            return back()->with([
-                'message' => 'The page expired, please try again.',
-            ]);
-        }
-        return $response;
-    });
-})</code></pre><p>поведение отчетов и отображение ошибок определено методами report и render</p><pre><code>namespace App\Exceptions;
+}</code></pre><p>поведение отчетов и отображение ошибок определено методами report и render</p><pre><code>namespace App\Exceptions;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 class InvalidOrderException extends Exception
 {
-    - Отчитаться об исключении.
-    public function report(): void { }
-    - Преобразовать исключение в HTTP-ответ.
-    public function render(Request $request): Response
-    {
-        return response(/* ... */);
-    }
-}</code></pre><p>выбрать случайное количество исключений</p><pre><code>use Illuminate\Support\Lottery;
-use Throwable;
-->withExceptions(function (Exceptions $exceptions) {
-    $exceptions->throttle(function (Throwable $e) {
-        return Lottery::odds(1, 1000);
-    });
-})</code></pre><p>выбрать исключения определённого типа</p><pre><code>use Illuminate\Broadcasting\BroadcastException;
-use Illuminate\Cache\RateLimiting\Limit;
-use Throwable;
-->withExceptions(function (Exceptions $exceptions) {
-    $exceptions->throttle(function (Throwable $e) {
-        if ($e instanceof BroadcastException) {
-            return Limit::perMinute(300);
-        }
-    });
-})
-
-либо
-use Illuminate\Broadcasting\BroadcastException;
-use Illuminate\Cache\RateLimiting\Limit;
-use Throwable;
-->withExceptions(function (Exceptions $exceptions) {
-    $exceptions->throttle(function (Throwable $e) {
-        if ($e instanceof BroadcastException) {
-            return Limit::perMinute(300)->by($e->getMessage());
-        }
-    });
-})
-
-либо
-use App\Exceptions\ApiMonitoringException;
-use Illuminate\Broadcasting\BroadcastException;
-use Illuminate\Cache\RateLimiting\Limit;
-use Illuminate\Support\Lottery;
-use Throwable;
-->withExceptions(function (Exceptions $exceptions) {
-    $exceptions->throttle(function (Throwable $e) {
-        return match (true) {
-            $e instanceof BroadcastException => Limit::perMinute(300),
-            $e instanceof ApiMonitoringException => Lottery::odds(1, 1000),
-            default => Limit::none(),
-        };
-    });
-})</code></pre><p>создать исключение</p><pre><code>abort(404);
-abort(403, 'Unauthorized action.');
-abort(403, 'Unauthorized action.', ['X-Header' => 'Value']);</code></pre><p>опубликовать стандартные шаблоны страниц ошибок</p><code>php artisan vendor:publish --tag=laravel-errors</code><p>шаблоны страниц ошибок если нет страницы для нужного кода ошибки</p><pre><code>resources/views/errors/4xx.blade.php
-resources/views/errors/5xx.blade.php</code></pre><p>в resources/views/errors/404.blade.php</p><code><h2>{{ $exception->getMessage() }}</h2></code></details><details><summary>Error messages</summary><p>- вызов метода errors на экземпляре Validator вернёт экземпляр Illuminate\Support\MessageBag<br>
-- переменная $errors - экземпляр Illuminate\Support\MessageBag, которая доступна для всех шаблонов<br>
-- Illuminate\Support\MessageBag - набор методов для работы с сообщениями об ошибках<br>
-- получить первое сообщение об ошибке для указанного поля<br></p><pre><code>$errors = $validator->errors();
-echo $errors->first('email');</code></pre><p>получить массив всех сообщений для указанного поля</p><code>foreach ($errors->get('email') as $message) {}</code><p>получить все сообщения для каждого из элементов массива</p><code>foreach ($errors->get('attachments.*') as $message) {}</code><p>получить массив всех сообщений для всех полей</p><code>foreach ($errors->all() as $message) {}</code><p>провеить наличие сообщений об ошибках для указанного поля</p><code>if ($errors->has('email')) {}</code></details></details><details><summary>Input data</summary><p>- данные формы могут быть отправлены в запросе с помощью метода GET, POST, PUT, PATCH, DELETE, OPTIONS, HEAD, TRACE, CONNECT<br>
-- получить из запроса данные JSON: заголовок Content-Type = application/json<br>
-- получить из запроса данные формы: заголовок Content-Type = application/x-www-form-urlencoded<br></p><pre><code>все данные в виде массива
-$input = $request->all();
-
-все данные в виде коллекции
-$input = $request->collect();
-
-все данные как ассоциированный массив
-$input = $request->input();
-
-данные одного поля, второй параметр - значение по умолчанию
-$name = $request->input('name', 'Sally');
-
-данные формы содержащей массив, доступ к элементу через точку
-$name = $request->input('products.0.name');
-$names = $request->input('products.*.name');
-
-все данные из строки запроса в виде ассоциативного массива
-$query = $request->query();
-
-данные отдельного параметра из строки запроса, второй параметр - значение по умолчанию
-$name = $request->query('name', 'Helen');
-
-в виде объекта String
-$name = $request->string('name')->trim();
-
-в виде целого числа
-$perPage = $request->integer('per_page');
-
-в логическом виде
-$archived = $request->boolean('archived');
-
-дата - имя параметра, формат вывода и часовой пояс
-$elapsed = $request->date('elapsed', '!H:i', 'Europe/Madrid');
-
-перечисление - имя параметра и класс перечислений
-$status = $request->enum('status', Status::class);
-
-перечесления в виде массива
-$products = $request->enums('products', Product::class);
-
-выборочное получение - либо массив, либо динамический список
-$input = $request->only(['username', 'password']);
-$input = $request->only('username', 'password');
-
-$input = $request->except(['credit_card']);
-$input = $request->except('credit_card');</code></pre><p>проверить начилие параметра в запросе (true/false)</p><pre><code>один параметр
-if ($request->has('name')) {}
-
-все из массива
-if ($request->has(['name', 'email'])) {}
-
-любой из массива
-if ($request->hasAny(['name', 'email'])) {}
-
-выполнит действие если в запросе присутствует параметр
-$request->whenHas('name', function (string $input) {});
-
-если параметр присутствует в за просе, то выполнит первое действие, если нет - то второе
-$request->whenHas('name', function (string $input) {}, function () {});
-
-проверить есть ли значение
-if ($request->filled('name')) {}
-
-проверить отсутствие или пустая строка
-if ($request->isNotFilled('name')) {}
-
-все ли отсутствуют или пустые
-if ($request->isNotFilled(['name', 'email'])) {}
-
-true если хоть один не пустой
-if ($request->anyFilled(['name', 'email'])) {}
-
-если не пустой, то выполнит действие
-$request->whenFilled('name', function (string $input) {});
-
-если нет значения, то выполнить второе действие
-$request->whenFilled('name', function (string $input) {}, function () {});
-
-проверить существует ли ключ параметра в запросе
-if ($request->missing('name')) {}
-
-если отсутствует, то первое действие, если присутствует - то второе
-$request->whenMissing('name', function () {}, function () {});</code></pre><p>объединить существующие данные запроса с данными из ввода</p><pre><code>у существующих данных значение по ключу будет перезаписано
-$request->merge(['votes' => 0]);
-
-добавить в запрос данные из ввода если в запросе такого ключа нет
-$request->mergeIfMissing(['votes' => 0]);</code></pre><p>сохранить данные предыдущего запроса</p><pre><code>сохранить входные данные в сессии, для доступа только во время следующего запроса
-$request->flash();
-
-выборочное сохранение
-$request->flashOnly(['username', 'email']);
-$request->flashExcept('password');
-
-сохранение с перенаправлением
-return redirect('/form')->withInput();
-return redirect()->route('user.create')->withInput();
-return redirect('/form')->withInput($request->except('password'));</code></pre><p>получить данные предыдущего запроса</p><pre><code>$username = $request->old('username');
-
-для шаблона Blade
-^lt;input type="text" name="username" value="{{ old('username') }}"&gt;</code></pre><p>получить значение cookie</p><code>$value = $request->cookie('name');</code><p>форматирование значений поля ввода настраивается Illuminate\Foundation\Http\Middleware\TrimStrings и Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull в bootstrap/app.php</p><p>загрузка файлов</p><pre><code>получить файл из запроса либо
-$file = $request->file('photo');
-
-либо динамически
-$file = $request->photo;
-
-проверить если файл в запросе
-if ($request->hasFile('photo')) {}
-
-валидация загрузки файла
-if ($request->file('photo')->isValid()) {}
-
-доступ к пути файла
-$path = $request->photo->path();
-
-доступ к расширению файла
-$extension = $request->photo->extension();</code></pre><p>сохранить файл из запроса</p><pre><code>имя файла генерится автоматически, второй аргумент имя диска сохранения (необязательный)
-$path = $request->photo->store('images', 's3');
-
-задать имя файла
-$path = $request->photo->storeAs('images', 'filename.jpg', 's3');</code></pre><p>доверенные прокси-сервера</p><pre><code>доверенные прокси указать в bootstrap/app.php
-->withMiddleware(function (Middleware $middleware) {
-    $middleware->trustProxies(at: [
-        '192.168.1.1',
-        '10.0.0.0/8',
-    ]);
-})
-
-заголовки доверенных прокси
-->withMiddleware(function (Middleware $middleware) {
-    $middleware->trustProxies(headers: Request::HEADER_X_FORWARDED_FOR |
-        Request::HEADER_X_FORWARDED_HOST |
-        Request::HEADER_X_FORWARDED_PORT |
-        Request::HEADER_X_FORWARDED_PROTO |
-        Request::HEADER_X_FORWARDED_AWS_ELB
-    );
-})
-
-доверять всем прокси
-->withMiddleware(function (Middleware $middleware) {
-    $middleware->trustProxies(at: '*');
-})</code></pre><p>доверенный host</p><pre><code>имя хоста, на которого реагировать указать в bootstrap/app.php
-->withMiddleware(function (Middleware $middleware) {
-    $middleware->trustHosts(at: ['laravel.test']);
-})
-
-не доверять поддоменам хоста
-->withMiddleware(function (Middleware $middleware) {
-    $middleware->trustHosts(at: ['laravel.test'], subdomains: false);
-})
-
-указать доверенные хосты в файле конфигурации
-->withMiddleware(function (Middleware $middleware) {
-    $middleware->trustHosts(at: fn () => config('app.trusted_hosts'));
-})
-</code></pre></details><details><summary>Response</summary><p>- ответ - это HTTP-ответ, который возвращается пользователю в виде HTML, JSON, XML, текстового файла, изображения, редиректа и т.д.<br>
-- вернуть ответ в контроллере</p><pre><code>return response('Hello World', 200);
-
-вернуть JSON-ответ
-return response()->json(['name' => 'John Doe']);
-
-вернуть JSONP-ответ
-return response()->json(['name' => 'John Doe'], 200, [], JSON_PRETTY_PRINT);
-
-вернуть редирект
-return redirect('/home');
-
-вернуть редирект с сообщением
-return redirect('/home')->with('status', 'Profile updated!');</code></pre><p>вернуть ответ в маршруте</p><pre><code>преобразует в НТТР-ответ
-Route::get('/', function () {
-    return 'Hello World';
-});
-
-преобразует в JSON
-Route::get('/', function () {
-    return [1, 2, 3];
-});
-
-модель преобразует в JSON
-use App\Models\User;
-
-Route::get('/user/{user}', function (User $user) {
-    return $user;
-});
-
-передать код и заголовок
-Route::get('/home', function () {
-    return response('Hello World', 200)
-                  ->header('Content-Type', 'text/plain');
-});
-
-по одному заголовку
-return response($content)
-            ->header('Content-Type', $type)
-            ->header('X-Header-One', 'Header Value')
-            ->header('X-Header-Two', 'Header Value');
-
-массив заголовков
-return response($content)
-            ->withHeaders([
-                'Content-Type' => $type,
-                'X-Header-One' => 'Header Value',
-                'X-Header-Two' => 'Header Value',
-            ]);
-
-установить Cache-Control
+  public function report(): void { }    // отчитаться об исключении
+  public function render(Request $request): Response    // преобразовать исключение в HTTP-ответ
+  {return response();}
+}
+</code></pre></details></details><details><summary>Response</summary><p>Response - это HTTP-ответ, который возвращается пользователю в виде HTML, JSON, XML, текстового файла, изображения, редиректа и т.д.</p><pre><code>- вернуть ответ в контроллере
+return response('Hello World', 200);
+return response()->json(['name' => 'John Doe']);    // вернуть JSON-ответ
+return response()->json(['name' => 'John Doe'], 200, [], JSON_PRETTY_PRINT);    // вернуть JSONP-ответ
+return redirect('/home');   // вернуть редирект
+return redirect('/home')->with('status', 'Profile updated!');   // вернуть редирект с сообщением
+// добавить заголовки
+return response($content)->header('Content-Type', $type)->header('X-Header-One', 'Header Value')->header('X-Header-Two', 'Header Value');
+return response($content)->withHeaders(['Content-Type' => $type, 'X-Header-One' => 'Header Value', 'X-Header-Two' => 'Header Value',]);
+- вернуть ответ в маршруте
+Route::get('/', function () {return 'Hello World';});   // преобразует в НТТР-ответ
+Route::get('/', function () {return [1, 2, 3];});   // преобразует в JSON
+Route::get('/user/{user}', function (User $user) {return $user;});    // модель преобразует в JSON
+Route::get('/home', function () {return response('Hello World', 200)->header('Content-Type', 'text/plain');});  // передать код и заголовок
+- установить Cache-Control
 Route::middleware('cache.headers:public;max_age=2628000;etag')->group(function () {
-    Route::get('/privacy', function () {});
-    Route::get('/terms', function () {});
-});</code></pre><p>cookies</p><pre><code>добавить файл куки к ответу
-return response('Hello World')->cookie(
-    'name', 'value', $minutesб 'name', 'value', $minutes, $path, $domain, $secure, $httpOnly
-);
-
-поставить куки в очередь для добавления к ответу когда он будет создан
+  Route::get('/privacy', function () {});
+  Route::get('/terms', function () {});
+});</code></pre><p>cookies</p><pre><code>- добавить файл куки к ответу
+return response('Hello World')->cookie('name', 'value', $minutes, $path, $domain, $secure, $httpOnly);
+- поставить куки в очередь для добавления к ответу когда он будет создан
 use Illuminate\Support\Facades\Cookie;
-
 Cookie::queue('name', 'value', $minutes);
-
 либо
 $cookie = cookie('name', 'value', $minutes);
-
 return response('Hello World')->cookie($cookie);
-
-удалить куки, обнулив срок действия
+- удалить куки, обнулив срок действия
 return response('Hello World')->withoutCookie('name');
-
 либо Cookie::expire('name');
-
-отключить шифрование и подпись куки в bootstrap/app.php
+- отключить шифрование и подпись куки в bootstrap/app.php
 ->withMiddleware(function (Middleware $middleware) {
-    $middleware->encryptCookies(except: [
-        'cookie_name',
-    ]);
+  $middleware->encryptCookies(except: ['cookie_name']);
 })</code></pre><p>потоковые ответы</p><pre><code>function streamedContent(): Generator {
     yield 'Hello, ';
     yield 'World!';
 }
-
 Route::get('/stream', function () {
-    return response()->stream(function (): void {
-        foreach (streamedContent() as $chunk) {
-            echo $chunk;
-            ob_flush();
-            flush();  // для отправки буферизованного содержимого
-            sleep(2); // Simulate delay between chunks...
-        }
-    }, 200, ['X-Accel-Buffering' => 'no']);
+  return response()->stream(function (): void {
+    foreach (streamedContent() as $chunk) {
+      echo $chunk;
+      ob_flush();
+      flush();  // для отправки буферизованного содержимого
+      sleep(2); // Simulate delay between chunks...
+    }
+  }, 200, ['X-Accel-Buffering' => 'no']);
 });
-
-JSON
+- отправить JSON из маршрута
 use App\Models\User;
-
 Route::get('/users.json', function () {
-    return response()->streamJson([
-        'users' => User::cursor(),
-    ]);
+  return response()->streamJson(['users' => User::cursor()]);
 });
-
-отправить в ответ результат функции без записи на диск
+- отправить в ответ результат функции без записи на диск
 use App\Services\GitHub;
-
 return response()->streamDownload(function () {
-    echo GitHub::api('repo')
-                ->contents()
-                ->readme('laravel', 'laravel')['contents'];
+  echo GitHub::api('repo')->contents()->readme('laravel', 'laravel')['contents'];
 }, 'laravel-readme.md');</code></pre><p>создать свой ответ</p><pre><code>namespace App\Providers;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\ServiceProvider;
-
 class AppServiceProvider extends ServiceProvider
 {
-    public function boot(): void
-    {
-        Response::macro('caps', function (string $value) {
-            return Response::make(strtoupper($value));
-        });
-    }
+  public function boot(): void
+  {Response::macro('caps', function (string $value) {
+    return Response::make(strtoupper($value));
+  });}
 }
-
-вызвать свой ответ в контроллере
+- применить в контроллере
 return response()->caps('foo');
 </code></pre></details></details><details><summary>Views</summary><details> <summary>Templates</summary><p>- шаблоны Blade - это HTML и директивы Blade в файле с расширением .blade.php, компилируются в обычные PHP-файлы и кэшируются<br>
 - могут содержать: обычный PHP-код, другие шаблоны Blade, директивы Blade, секции и компоновщики (для создания многоразовых шаблонов) и компоненты (для многоразовых элементов интерфейса)<br></p><pre><code>создать Blade-шаблон
