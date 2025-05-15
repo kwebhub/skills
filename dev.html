@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="ru"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="robots" content="noindex, nofollow"><meta name="robots" content="none"><meta name="robots" content="noimageindex, nofollow"><link rel="stylesheet" type="text/css" href="./style.min.css"><title>Skills</title></head><body><div class="wrapper"><header> <a class="logo" href="https://kwebhub.github.io/skills/">MAY THE FORCE BE WITH YOU</a></header><main><nav class="menu"><div class="menu__inner"><details><summary>Platform</summary><p>Design: react - tailwind | pug - scss - alpinejs</p><a href="https://github.com">Github</a><a href="http://www.figma.com">Figma</a><a href="https://dbdiagram.io">DB Diagram</a><a href="https://nodejs.org/en/download/">Node.js</a><a href="https://code.visualstudio.com">VSCode (Theme: Catppuccin Mocha, Font: Cascadia Code)</a><a href="http://www.contentful.com/blog/react-app-tailwind-css">React App Tailwind CSS</a><a href="http://www.github.com/gitname/react-gh-pages/">React GitHub Pages</a><br><p>Development:</p><a href="https://refactoring.guru/ru">Паттерны, рефакторинг, SOLID</a><a href="http://docs.docker.com/engine">Docker</a><a href="https://aws.amazon.com/ru/?nc2=h_lg">AWS</a><a href="https://laravel.com">laravel</a><a href="https://laravel.su/">laravel(ru)<br></a><br><p>Security: bash, linux, rust, net, crypto</p></details><details><summary>Symbols</summary><p>Symbols<br>
+<!DOCTYPE html><html lang="ru"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="robots" content="noindex, nofollow"><meta name="robots" content="none"><meta name="robots" content="noimageindex, nofollow"><link rel="stylesheet" type="text/css" href="./style.min.css"><title>Skills</title></head><body><div class="wrapper"><header> <a class="logo" href="https://kwebhub.github.io/skills/">MAY THE FORCE BE WITH YOU</a></header><main><nav class="menu"><div class="menu__inner"><details><summary>Platform</summary><p>Design: react - tailwind | pug - scss - alpinejs</p><a href="https://github.com">Github</a><a href="http://www.figma.com">Figma</a><a href="https://dbdiagram.io">DB Diagram</a><a href="https://nodejs.org/en/download/">Node.js</a><a href="https://code.visualstudio.com">VSCode (Theme: Catppuccin Mocha, Font: Cascadia Code)</a><a href="http://www.contentful.com/blog/react-app-tailwind-css">React App Tailwind CSS</a><a href="http://www.github.com/gitname/react-gh-pages/">React GitHub Pages</a><br><p>Development:</p><a href="https://refactoring.guru/ru">Паттерны, рефакторинг, SOLID</a><a href="http://docs.docker.com/engine">Docker</a><a href="https://aws.amazon.com/ru/?nc2=h_lg">AWS</a><a href="https://laravel.com">laravel</a><a href="https://laravel.su/">laravel(ru)<br></a><br><p>Security: bash, linux, rust, net, crypto</p></details><details> <summary>Languages</summary><details><summary>Symbols</summary><p>Symbols<br>
 <b>0b11111111</b> - бинарная (двоичная) форма записи числа 255<br>
 <b>0о377</b> - восьмиричная форма записи числа 255<br>
 <b>0xff</b> - шестнадцатиричная форма записи числа 255<br>
@@ -993,53 +993,7 @@ font2web.com<br>
 <br>
 <em>Комментарии</em>:<br>
 <b>/* */</b> - отображается и в файле scss и в css<br>
-<b>//</b> - отображается только в файле scss<br></p><br><a href="https://sass-scss.ru/">Manual</a></details><details><summary>jQuery</summary><p>(function( $ ) {alert($.fn.jquery);}) - проверить версию<br>
-<br>
-Подключить<br></p><code>&lt;script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"&gt;</code><p><b>compressed</b> - сжатая и минифицированная, поключают к готовому сайту<br>
-<b>uncompressed</b> - обычная, удобочитаемая, поключают при разработке<br>
-<b>slim</b> - без анимации и без Ajax<br>
-<br>
-<em>Скрипт</em></p><pre><code><span>запускать скрипт только после загрузки страницы</span>
-$(document).ready(function() {
-  <span>при нажатии кнопки</span>
-  $("button").on("click", function() {
-    <span>скрыть заголовок в течении 3-х секунд</span>
-    $("h1").hide(3000);
-  });
-});</code></pre><br><p><em>Селекторы</em> - все как в CSS</p><pre><code>$('a'); = document.querySelectorAll("a");
-$('sel').method();
-
-<span>выбрать элементы по атрибуту - target</span>
-$('a[target]');
-
-<span>выбрать элементы с атрибутом target равное _blank</span>
-$('a[target="_blank"]')</code></pre><br><p>По элементам форм:<br>
-:button<br>
-:password<br>
-:disabled<br>
-:file<br>
-<br>
-CSS</p><code>$("p").css("background-color", "#2ecc71");</code><br><p>Пример:<br>
-&lt;a href="https://ya.ru" target="_blank" title="Переход на Яндекс"&gt;Yandex&lt;/a&gt<br>
-<br>
-Выбрать элементы, у которых значение атрибута:<br>
-<b>$('a[href^="https"]')</b> - href начинается с https<br>
-<b>$('a[href$=".ru"]')</b> - href заканчивается на .ru<br>
-<b>$('a[title~="Яндекс"]')</b> - title содержит слово Яндекс<br>
-<b>$('a[title*="epe"]')</b> - title содержит подстроку ере<br>
-<b>$('a[href!="https://www.google.com"]')</b> - выберет элементы, у которых либо нет указанного атрибута, либо у атрибута другое значение
-<br>
-<em>Фильтры</em><br>
-<b>$("li:first").css("color", "green")</b>;<br> 
-- <b>:first, :last, :even, :odd</b> - первый, последний, чётный, нечётный из выборки<br>
-- <b>:eq(), :gt(), :lt()</b> - индексы элемнтов выборки<br>
-- <b>:root, :header, :focus, :lang()</b>, :target - HTML-элементы<br>
-- <b>:not()</b>, :animated - отрицанние и анимирование<br>
-<br>
-<b>$("li").filter(":first").css("color", "green")</b>; - :first - не является частью языка css, поэтому через метод filter()</p><br><a href="https://jquery.com">jQuery</a><a href="https://www.w3schools.com/jquery/default.asp">W3schools</a><a href="https://core.trac.wordpress.org/query">Wordpress jQuery</a></details><details><summary>Alpinejs</summary><a href="https://alpinejs.dev/">alpinejs<br></a><p>К событию JS нужно добавить @. Например @click. </p><a href="https://developer.mozilla.org/ru/docs/Web/Events">Events</a><table><caption>Directives</caption><thead><tr> <th>Directive</th><th>Description</th></tr></thead><tbody> <tr><td> <a href="https://alpinejs.dev/directives/data">x-data</a></td><td>определяет часть HTML как компонент Alpinejs и предоставляет ему данные </td></tr><tr><td> <a href="https://alpinejs.dev/directives/init">x-init</a></td><td>позволяет выполнить действие в момент когда Alpinejs инициализирует элемент </td></tr><tr><td> <a href="https://alpinejs.dev/directives/show">x-show</a></td><td>показывает или прячет DOM элемент</td></tr><tr><td> <a href="https://alpinejs.dev/directives/bind">x-bind</a></td><td>устанавливает атрибуты HTML элемента на основании вычислений</td></tr><tr><td> <a href="https://alpinejs.dev/directives/on">x-on</a></td><td>выполняет код при получении события</td></tr><tr><td> <a href="https://alpinejs.dev/directives/text">x-text</a></td><td>вставляет текст в элемент</td></tr><tr><td> <a href="https://alpinejs.dev/directives/html">x-html</a></td><td>вставляет html разметку в элемент</td></tr><tr><td> <a href="https://alpinejs.dev/directives/model">x-model</a></td><td>связавыет значение с данными</td></tr><tr><td> <a href="https://alpinejs.dev/directives/modelable">x-modelable</a></td><td>указывает значение, которое нужно связать со значением x-model</td></tr><tr><td> <a href="https://alpinejs.dev/directives/for">x-for</a></td><td>создаёт DOM элементы перебирая массивы и объекты</td></tr><tr><td> <a href="https://alpinejs.dev/directives/transition">x-transition</a></td><td>плавное появление и исчезновение элемента</td></tr><tr><td> <a href="https://alpinejs.dev/directives/effect">x-effect</a></td><td>меняет элемент когда меняются его зависимости</td></tr><tr><td> <a href="https://alpinejs.dev/directives/ignore">x-ignore</a></td><td>Alpine пропускает этот элемент во время инициализации</td></tr><tr><td> <a href="https://alpinejs.dev/directives/ref">x-ref</a></td><td>обозначает элемент для $refs</td></tr><tr><td> <a href="https://alpinejs.dev/directives/cloak">x-cloak</a></td><td>скрывает элемент пока не загрузится Alpine<br>
-add to CSS [x-cloak] { display: none !important; }</td></tr><tr><td> <a href="https://alpinejs.dev/directives/teleport">x-teleport</a></td><td>переносит часть шаблона < template > в другую часть страницы</td></tr><tr><td> <a href="https://alpinejs.dev/directives/if">x-if</a></td><td>добавляет и удаляет элементы по словию</td></tr><tr><td> <a href="https://alpinejs.dev/directives/id">x-id</a></td><td>собирает в массив id сгенерированные с помощью $id<br>
-создаёт им scope и добавляет к ним суффикс
-</td></tr></tbody></table><table><caption>Magics</caption><thead><tr><th>Magic</th><th>Description</th></tr></thead><tbody> <tr><td> <a href="https://alpinejs.dev/magics/el">$el</a></td><td>выбирает текущий элемент</td></tr><tr><td><a href="https://alpinejs.dev/magics/refs">$refs</a></td><td>выбирает элемент c x-ref</td></tr><tr><td><a href="https://alpinejs.dev/magics/store">$store</a></td><td>доступ к глобальному хранилищу, созданного через Alpine.store()</td></tr><tr><td><a href="https://alpinejs.dev/magics/watch">$watch</a></td><td>наблюдает за указанным элементом</td></tr><tr><td><a href="https://alpinejs.dev/magics/dispatch">$dispatch</a></td><td>создает события браузера</td></tr><tr><td><a href="https://alpinejs.dev/magics/nextTick">$nextTick</a></td><td>выполняет действие после после выполнения первого</td></tr><tr><td><a href="https://alpinejs.dev/magics/root">$root</a></td><td>выбирает ближайший родительский элемент с x-data</td></tr><tr><td><a href="https://alpinejs.dev/magics/data">$data</a></td><td>содежит значения всех x-data, через которых всплывает событие</td></tr><tr><td><a href="https://alpinejs.dev/magics/id">$id</a></td><td>создаёт id для элементов избегая конфликтов одинаковых имён</td></tr></tbody></table><table><caption>Globals</caption><thead><tr><th>Global</th><th>Description</th></tr></thead><tbody> <tr><td> <a href="https://alpinejs.dev/globals/alpine-data">Alpine.data()</a></td><td>вынести контекст x-data в отдельную функцию и переиспользовать</td></tr><tr><td> <a href="https://alpinejs.dev/globals/alpine-bind">Alpine.bind()</a></td><td>вынести контекст x-data в отдельную функцию и переиспользовать</td></tr><tr><td> <a href="https://alpinejs.dev/globals/alpine-store">Alpine.store()</a></td><td>управление глобальным хранилищем</td></tr></tbody></table></details><details><summary>JS</summary><details><summary>Синтаксис</summary><p>&lt;<b>script</b>&gt;alert('Привет мир!') &lt;/<b>script</b>&gt; - вставить скрипт в html, либо<br>
+<b>//</b> - отображается только в файле scss<br></p><br><a href="https://sass-scss.ru/">Manual</a></details><details><summary>JS</summary><details><summary>Синтаксис</summary><p>&lt;<b>script</b>&gt;alert('Привет мир!') &lt;/<b>script</b>&gt; - вставить скрипт в html, либо<br>
 &lt;<b>script</b> src="/path/to/script.js"&gt; &lt;/<b>script</b>&gt; - подключить в html файл со скриптом.<br>
 <b>"use strict"</b> или <b>'use strict'</b> - строгий режим. Отключить невозможно.<br>
 Классы и модули строгий режим включают автоматически.<br>
@@ -1098,7 +1052,7 @@ describe ("pow", function(){
 </p><details><summary>Object</summary><pre><code>Object {
         property1: value1,
         property2: value2
-       }
+      }
 
 let someObj = new Object();
 let someObj = {
@@ -1727,7 +1681,7 @@ hoisting передвигает только объявления функций
 и формируется исходя из того, где переменные, функции и инструкции размещены в коде.<br>
 <br>
 лексемы:<br>
- <b>var a = 2;</b><br>
+<b>var a = 2;</b><br>
 <em>var</em> - объявление переменной<br>
 <em>a</em> - идентификатор (имя) переменной<br>
 <em>=</em> - оператор присваивания<br>
@@ -2738,7 +2692,466 @@ IndexedDB работает на стороне клиента (в браузер
 Для поиска по ключу вызвать метод непосредственно у хранилища объектов.<br>
 Для поиска по любому полю объекта нужно создать индекс.<br>
 Если данных не помещаются в памяти, то используй курсор.
-</p></details></details></details><details><summary>React</summary><p><b>npx create-react-app название папки (проекта)</b><br>
+</p></details></details></details><details><summary>SQL</summary><a href="https://dbdiagram.io/home">Diagram</a><details><summary>Определение (Definition)</summary><p><dfn>SQL</dfn> — применяется для создания, модификации и управления данными в реляционной базе данных, 
+управляемой соответствующей системой управления базами данных.<br>
+В базовом варианте SQL является информационно-логическим языком, а не языком программирования. <br>
+<br>
+<dfn>Система управления базами данных (СУБД)</dfn> — совокупность программных и лингвистических средств
+общего или специального назначения, обеспечивающих управление созданием и использованием баз данных. <br>
+<br>
+<dfn>База данных (БД)</dfn> - под базой данных (БД) понимают хранилище структурированных данных, 
+при этом данные должны быть непротиворечивы, минимально избыточны и целостны. <br>
+<br>
+<dfn>Реляционная база данных</dfn> — база данных, основанная на реляционной модели данных. <br>
+Реляционные БД представляют связанную между собой совокупность таблиц-сущностей базы данных. <br>
+Каждая таблица БД представляется как совокупность строк и столбцов, где строки соответствуют
+экземпляру объекта, конкретному событию или явлению, а столбцы - атрибутам (признакам,
+характеристикам, параметрам) объекта, события, явления. <br>
+При практической разработке БД таблицы-сущности зовутся таблицами, строки-экземпляры - записями,
+столбцы-атрибуты - полями. <br>
+<br>
+<em>Преимущества SQL</em> - наличие стандартов и независимость от конкретной СУБД. <br>
+<em>Недостатки SQL</em> - сложность. <br></p><br><p><dfn>Классификация по модели данных:</dfn><br>
+<em>Иерархическая</em><br>
+<em>Объектная и объектно-ориентированная</em><br>
+<em>Объектно-реляционная</em><br>
+<em>Реляционная</em><br>
+<em>Сетевая</em><br>
+<em>Функциональная</em><br>
+<br></p><p><dfn>Типы отношений:</dfn><br>
+<em>Один к одному (one-to-one)</em> <br>
+<em>Один ко многим (one-to-many)</em> <br>
+<em>Многие к одному (many-to-one)</em> <br>
+<em>Многие ко многим (many-to-many, реализуется через отдельную таблицу)</em> <br></p><img src="../img/sql/SQL12.png" alt=""><p>Источник:<a href="https://drawsql.app/">Рисовать диаграмму БД онлайн</a><a href="https://sql-ex.ru/?Lang=0">sql-ex</a><a href="https://sqlbolt.com/lesson/">sqlbolt</a><a href="https://sql-academy.org/ru/guide">sql-academy</a><a href="https://www.w3schools.com/sql/default.asp">W3Schools SQL Tutorial</a><a href="https://www.w3schools.com/sql/exercise.asp?">w3schools SQL Exercises</a></p></details><details><summary>Операторы определения данных (Data Definition Language, DDL)</summary><p><dfn>CREATE</dfn> - создает объект БД (саму базу, таблицу, представление, пользователя и т. д.)<br>
+to create a new SQL database<br>
+<dfn>CREATE DATABASE</dfn> database name;<br>
+Создать таблицу table со столбцами id, field_1, field_2, field_3.<br>
+По каждому столбцу заданы тип и количество символов.<br></p><pre><code><dfn>CREATE TABLE</dfn> table(
+  id <dfn>INT PRIMARY KEY</dfn>,
+  field_1 <dfn>VARCHAR</dfn>(100),
+  field_2 <dfn>VARCHAR</dfn>(30),
+  field_3 <dfn>INT</dfn>
+);</code></pre><p><dfn>DESCRIBE</dfn> table - информация о таблице<br>
+<dfn>PRIMARY KEY</dfn> - уникальный идентификатор записей.<br>
+<dfn>FOREIGN KEY</dfn> - внешний ключ, значения идентификатора записей в связанной таблице.<br>
+<dfn>SERIAL</dfn> - автоинкремент идентификатора в PostgreSQL<br>
+<dfn>AUTO_INCREMENT</dfn> - автоинкремент идентификатора в MySQL<br></p><pre><code><dfn>CREATE TABLE</dfn> table(
+  id <dfn>SERIAL PRIMARY KEY</dfn>,
+  field_1 <dfn>VARCHAR</dfn>(100),
+  field_2 <dfn>VARCHAR</dfn>(30),
+  field_3 <dfn>INT</dfn>
+);
+</code></pre><p>Ограничения на уровне таблицы:<br>
+Значения в столбцах id и field_1 уникальные и не пустые<br>
+Значения столбца field_table_2_id - ссылки на id таблицы table_2<br>
+Либо RESTRICT - запретить удалять id таблицы table_2<br>
+Либо CASCADE -  при удалении id таблицы table_2, удалить соответствующие записи<br>
+Ограничение с именем positive_field<br>
+Значения в столбце field_3 должны быть положительными<br></p><pre><code><dfn>CREATE TABLE</dfn> table_1(
+  id <dfn>PRIMARY KEY</dfn>,
+  field_1 <dfn>VARCHAR</dfn>(100) <dfn>UNIQUE NOT NULL</dfn>, 
+  field_2 <dfn>VARCHAR</dfn>(30),
+  field_3 <dfn>INT</dfn>,
+  field_table_2_id <dfn>INT REFERENCES</dfn> table_2(id)
+  <dfn>ON DELETE RESTRICT</dfn>
+  <dfn>CONSTRAINT</dfn> positive_field
+  <dfn>CHEK</dfn> (field_3 >= 0)
+);</code></pre><p>Уникальный идентификатор состоит из двух столбцов</p><pre><code><dfn>CREATE TABLE</dfn> table_1(
+  field_table_2_id <dfn>INT REFERENCES</dfn> table_2(id),
+  field_table_3_id <dfn>INT REFERENCES</dfn> table_3(id),
+  quantity <dfn>INT</dfn>,
+  <dfn>PRIMARY KEY</dfn>(field_table_2_id, field_table_3_id)
+);</code></pre><p><dfn>ALTER</dfn> - изменяет объект
+Изменить таблицу table, добавить столбец field_4 с типом BOOLEAN</p><pre><code><dfn>ALTER TABLE</dfn> table 
+<dfn>ADD COLUMN</dfn> field_4 <dfn>BOOLEAN</dfn>;</code><br></pre><p>Изменить таблицу table, удалить столбец field_4</p><pre><code><dfn>ALTER TABLE</dfn> table 
+<dfn>DROP COLUMN</dfn> field_4;</code><br></pre><p>Изменить таблицу table, переименовать столбец field_4 в field_5</p><pre><code><dfn>ALTER TABLE</dfn> table 
+<dfn>RENAME COLUMN</dfn> field_4 <dfn>TO</dfn> field_5;</code><br></pre><p>Изменить таблицу table, переименовать в another_table</p><pre><code><dfn>ALTER TABLE</dfn> table 
+<dfn>RENAME TO</dfn> another_table;</code><br>     </pre><p><dfn>DROP</dfn> - удаляет объект</p><code><dfn>DROP TABLE</dfn> table </code><p>Скрипт создания таблицы:</p><pre><code><dfn>DROP TABLE IF EXISTS</dfn> table;
+<dfn>CREATE TABLE</dfn> table(
+  id <dfn>SERIAL PRIMARY KEY</dfn>,
+  field_1 <dfn>VARCHAR</dfn>(100),
+  field_2 <dfn>VARCHAR</dfn>(30),
+  field_3 <dfn>INT</dfn>
+);</code><br></pre><p><dfn>BACKUP</dfn> - резервное копирование</p><pre><code><dfn>BACKUP DATABASE</dfn> testDB
+<dfn>TO DISK</dfn> = 'D:\backups\testDB.bak'; 
+</code></pre></details><details><summary>Операторы манипуляции данными (Data Manipulation Language, DML)</summary><details><summary>SELECT</summary><p><dfn>SELECT</dfn> - выбирает данные, удовлетворяющие заданным условиям, </p><code><dfn>SELECT * FROM</dfn> table</code><p>Для примера используем таблицу table со столбцами field_1, field_2 и т.д.
+У каждого столбца свои значения value_1, value_2, value_3 и т.д.
+Выбираю столбец (field_1) и столбец (field_2) из таблицы (table)</p><pre><code><dfn>SELECT</dfn> field_1, field_2
+<dfn>FROM</dfn> table;</code></pre><p>Ключевое слово AS назначает псевдоним f1 столбцу field_1</p><pre><code><dfn>SELECT</dfn> field_1 <dfn>AS</dfn> f1
+<dfn>FROM</dfn> table;</code></pre><p>Выбрать только уникальные значения столбца field_1</p><pre><code><dfn>SELECT</dfn> <dfn>DISTINCT</dfn>(field_1)
+<dfn>FROM</dfn> table;</code></pre><p>Выбрать первых 10 уникальных значений столбца field_1</p><pre><code><dfn>SELECT</dfn> <dfn>DISTINCT</dfn>(field_1)
+<dfn>FROM</dfn> table
+<dfn>LIMIT</dfn> 10;</code></pre><p>Выбрать из таблицы table все строки со значением value в столбце field_2</p><pre><code><dfn>SELECT</dfn> *
+<dfn>FROM</dfn> table
+<dfn>WHERE</dfn> field_2 = 'value';</code></pre><p>Ключевое слово WHERE и фильтр field_2 = 'value'</p><pre>Используем в <dfn>WHERE</dfn>:
+  =         Равно
+  <>, !=    Неравно
+  >         Больше
+  >=        Больше или равно
+  <         Меньше
+  <=        Меньше или равно
+  BETWEEN   Значение в диапозоне
+  IN        Значение в списке
+  LIKE      Соответствие шаблону
+  AND       Логическое И
+  OR        Логическое ИЛИ
+  NOT       Логическое НЕ
+</pre><p>Выбрать из таблицы table все строки со значениями от value_1 по value_2 в столбце field_2</p><pre><code><dfn>SELECT</dfn> *
+<dfn>FROM</dfn> table
+<dfn>WHERE</dfn> field_2
+<dfn>BETWEEN</dfn> value_1 AND value_2;
+</code></pre><p>Выбрать из таблицы table все строки со значениями по списку IN из столбца field_2</p><pre><code><dfn>SELECT</dfn> *
+<dfn>FROM</dfn> table
+<dfn>WHERE</dfn> field_2
+<dfn>IN</dfn> (value_1, value_2, value_3);
+</code></pre><p>Выбрать из таблицы table все строки, у которых в столбе field_2 значение содержит value</p><pre><code><dfn>SELECT</dfn> *
+<dfn>FROM</dfn> table
+<dfn>WHERE</dfn> field_2
+<dfn>LIKE</dfn> '%value%';</code></pre><p>Спец.символы в шаблонах LIKE:<br>
+<dfn>%</dfn> - любое количество символов (можно и без символов)<br>
+<dfn>_</dfn> - ровно один символ
+</p><p>Return all customers starting with "a", "b", "c", "d", "e" or "f":</p><pre><code><dfn>SELECT</dfn> * <dfn>FROM</dfn> Customers
+<dfn>WHERE</dfn> CustomerName <dfn>LIKE</dfn> '[a-f]%';
+</code></pre><p>Return all customers starting with either "b", "s", or "p":</p><pre><code><dfn>SELECT</dfn> * <dfn>FROM</dfn> Customers
+<dfn>WHERE</dfn> CustomerName <dfn>LIKE</dfn> '[bsp]%';
+</code></pre><p>Return all customers starting with NOT either "b", "s", or "p":</p><pre><code><dfn>SELECT</dfn> * <dfn>FROM</dfn> Customers
+<dfn>WHERE</dfn> City <dfn>LIKE</dfn> '[!bsp]%';
+</code></pre><p>Выбрать из таблицы table все строки, у которых одновременно в столбе field_1 значение value_3 и в столбце field_2 значение value_2</p><pre><code><dfn>SELECT</dfn> *
+<dfn>FROM</dfn> table
+<dfn>WHERE</dfn> field_1 = value_3
+<dfn>AND</dfn> field_2 = value_2;
+</code></pre><p>Выбрать из таблицы table все строки, у которых в столбце field_1 значение value_3 либо в столбце field_2 значение value_2</p><pre><code><dfn>SELECT</dfn> *
+<dfn>FROM</dfn> table
+<dfn>WHERE</dfn> field_1 = value_3
+<dfn>OR</dfn> field_2 = value_2;
+</code></pre><p>Выбрать из таблицы table все строки со значениями вне списка IN из столбца field_2</p><pre><code><dfn>SELECT</dfn> *
+<dfn>FROM</dfn> table
+<dfn>WHERE</dfn> field_2
+<dfn>NOT IN</dfn> (value_1, value_2, value_3);
+</code></pre><p>Порядок сортировки в ORDER BY:<br>
+<dfn>ASC</dfn> (ascending) - сортировка по возрастанию (по умолчанию)<br>
+<dfn>DESC</dfn> (descending) - сортировка по убыванию<br>
+</p><p>Выбрать из таблицы table все строки и отсортировать их по столбцу field_3
+Сортировка данных по столбцу field_3, по умолчанию это ASC</p><pre><code><dfn>SELECT</dfn> *
+<dfn>FROM</dfn> table
+<dfn>ORDER BY</dfn> field_3</code></pre><p>Сортировка данных по столбцу field_3 по убыванию</p><pre><code><dfn>SELECT</dfn> *
+<dfn>FROM</dfn> table
+<dfn>ORDER BY</dfn> field_3 <dfn>DESC</dfn>;
+</code></pre><p>Выбрать из таблицы table все строки, у которых в столбце field_1 значение value_3 и отсортировать по столбцу field_3 по убыванию</p><pre><code><dfn>SELECT</dfn> *
+<dfn>FROM</dfn> table
+<dfn>WHERE</dfn> field_1 = value_3
+<dfn>ORDER BY</dfn> field_3 <dfn>DESC</dfn>;
+</code></pre><p>Выбрать из таблицы table все строки, у которых одновременно в столбе field_1 значение value_3 и в столбце field_2 значение value_2 и отсортировать по столбцу field_3 по убыванию и вывести первые пять строк</p><pre><code><dfn>SELECT</dfn> *
+<dfn>FROM</dfn> table
+<dfn>WHERE</dfn> field_1 = value_3
+<dfn>AND</dfn> field_2 = value_2
+<dfn>ORDER BY</dfn> field_3 <dfn>DESC</dfn>
+<dfn>LIMIT</dfn> 5;
+</code></pre><p>Выбрать из таблицы table все строки и отсортировать по двум столбцам</p><pre><code><dfn>SELECT</dfn> *
+<dfn>FROM</dfn> table
+<dfn>ORDER BY</dfn> field_3, field_2;
+</code></pre><p>Выбрать из таблицы table столбец field_1 строки в котором не имеют значений</p><pre><code><dfn>SELECT</dfn> field_1
+<dfn>FROM</dfn> table
+<dfn>WHERE</dfn> field_1 <dfn>IS</dfn> <dfn>NULL</dfn>; 
+</code></pre><p>Выбрать из таблицы table столбец field_1 строки в котором имеют значения</p><pre><code><dfn>SELECT</dfn> field_1
+<dfn>FROM</dfn> table
+<dfn>WHERE</dfn> field_1 <dfn>IS</dfn> <dfn>NOT</dfn> <dfn>NULL</dfn>;
+</code></pre><p>The EXISTS operator is used to test for the existence of any record in a subquery.
+The EXISTS operator returns TRUE if the subquery returns one or more records.</p><pre><code><dfn>SELECT</dfn> field_1
+<dfn>FROM</dfn> table
+<dfn>WHERE</dfn> <dfn>EXISTS</dfn>
+(<dfn>SELECT</dfn> field_2
+<dfn>FROM</dfn> table
+<dfn>WHERE</dfn> condition); 
+</code></pre><p>ANY means that the condition will be true if the operation is true for any of the values in the range.</p><pre><code><dfn>SELECT</dfn> field_1
+<dfn>FROM</dfn> table
+<dfn>WHERE</dfn> field_1 = <dfn>ANY</dfn>
+(<dfn>SELECT</dfn> field_1
+<dfn>FROM</dfn> table
+<dfn>WHERE</dfn> condition);
+</code></pre><p>ALL means that the condition will be true only if the operation is true for all values in the range.</p><pre><code><dfn>SELECT</dfn> <dfn>ALL</dfn> field_1
+<dfn>FROM</dfn> table
+<dfn>WHERE</dfn> condition;code.
+<dfn>SELECT</dfn> field_1
+<dfn>FROM</dfn> table
+<dfn>WHERE</dfn> field_1 = <dfn>ALL</dfn>
+(<dfn>SELECT</dfn> field_2
+<dfn>FROM</dfn> table
+<dfn>WHERE</dfn> condition);
+</code></pre><p>Copy all columns into a new table</p><pre><code><dfn>SELECT</dfn> *
+<dfn>INTO</dfn> newtable [IN externaldb]
+<dfn>FROM</dfn> oldtable
+<dfn>WHERE</dfn> condition;
+</code></pre><p>The following SQL statement uses the IN clause to copy the table into a new table in another database</p><pre><code><dfn>SELECT</dfn> *
+<dfn>INTO</dfn> CustomersBackup2017
+<dfn>IN</dfn> 'Backup.mdb'
+<dfn>FROM</dfn> Customers;
+</code></pre><p>The following SQL statement copies only a few columns into a new table</p><pre><code><dfn>SELECT</dfn> CustomerName, ContactName
+<dfn>INTO</dfn> CustomersBackup2017
+<dfn>FROM</dfn> Customers;</code></pre><br><p><dfn>Агрегатные функции:</dfn>
+<br>
+<dfn>COUNT</dfn> - Возвращает количество строк источника записей
+Считает количество записей в таблице table</p><pre><code><dfn>SELECT</dfn> <dfn>COUNT</dfn>(*)
+<dfn>FROM</dfn> table</code></pre><p>Считает количество записей в столбцe field_2 таблицы table</p><pre><code><dfn>SELECT</dfn> <dfn>COUNT</dfn>(field_2)
+<dfn>FROM</dfn> table</code></pre><p>Выбрать столбец field_2, сгруппировать в стобце field_2 значения по видам и посчитать сколько записей каждого вида</p><pre><code><dfn>SELECT</dfn> field_2,
+<dfn>COUNT</dfn>(*)
+<dfn>FROM</dfn> table
+<dfn>GROUP BY</dfn> field_2
+</code></pre><p>Выбрать столбец field_2, сгруппировать в стобце field_2 значения по видам,
+посчитать сколько записей каждого вида в столбце field_3 и вывести в новом столбе field_3</p><pre><code><dfn>SELECT</dfn> field_2,
+<dfn>COUNT</dfn>(field_2) AS field_3
+<dfn>FROM</dfn> table
+<dfn>GROUP BY</dfn> field_2</code></pre><br><p><dfn>SUM</dfn> - Возвращает сумму значений в указанном столбце.
+Выбрать столбец field_2, сгруппировать в стобце field_2 значения по видам,
+посчитать сколько записей каждого вида и суммировать значения в столбце field_3 соответствующих сгруппированным видам</p><pre><code><dfn>SELECT</dfn> field_2,
+<dfn>COUNT</dfn>(*),
+<dfn>SUM</dfn>(field_3)
+<dfn>FROM</dfn> table
+<dfn>GROUP BY</dfn> field_2</code></pre><br>  <p><dfn>AVG</dfn> - Возвращает среднее значение в указанном столбце.
+Выбрать столбец field_2, сгруппировать в стобце field_2 значения по видам,
+посчитать среднее значение по каждому виду в столбце field_3.
+Среднее расчитывается со знаками после запятой.</p><pre><code><dfn>SELECT</dfn> field_2,
+<dfn>AVG</dfn>(field_3) 
+<dfn>FROM</dfn> table
+<dfn>GROUP BY</dfn> field_2
+</code></pre><p>Посчитать среднее без знака после запятой</p><pre><code><dfn>SELECT</dfn> field_2,
+<dfn>SUM</dfn>(field_3)/<dfn>COUNT</dfn>(*)
+<dfn>AS</dfn> average 
+<dfn>FROM</dfn> table
+<dfn>GROUP BY</dfn> field_2</code></pre><br><p><dfn>MIN</dfn> - Возвращает минимальное значение в указанном столбце
+Выбрать столбец field_2, сгруппировать в стобце field_2 значения по видам,
+определить минимальное и максимальное значение каждого вида в столбце field_3, вывести столбец field_2 
+с групированными значениями, столбец минимальных и столбец максимальных значений каждого вида,
+отсортировать по убыванию по столбцу максимальных значений</p><pre><code><dfn>SELECT</dfn> field_2,
+<dfn>MIN</dfn>(field_3),
+<dfn>MAX</dfn>(field_3)
+<dfn>FROM</dfn> table
+<dfn>GROUP BY</dfn> field_2
+<dfn>ORDER BY MAX</dfn>(field_3) <dfn>DESC</dfn></code></pre><br><p><dfn>MAX</dfn> - Возвращает максимальное значение в указанном столбцe.
+Считает все функции в таблице table</p><pre><code><dfn>SELECT COUNT</dfn>(*),
+<dfn>MIN</dfn>(field_2),
+<dfn>MAX</dfn>(field_2),
+<dfn>SUM</dfn>(field_2),
+<dfn>AVG</dfn>(field_2)
+<dfn>FROM</dfn> table</code></pre><br><p><dfn>LENGTH()</dfn> - возвращает длину строки</p><pre><code><dfn>SELECT</dfn> field_1
+<dfn>FROM</dfn> table
+<dfn>WHERE LENGTH</dfn>(field_2) > 15;
+</code></pre><p>Вывести id строк, в которых значение temperature больше temperature предыдущего дня </p><pre><code><dfn>SELECT</dfn> current_day.id
+<dfn>FROM</dfn> Weather <dfn>AS</dfn> current_day
+<dfn>WHERE EXISTS</dfn> (
+  <dfn>SELECT</dfn> 1
+  <dfn>FROM</dfn> Weather <dfn>AS</dfn> yesterday
+  <dfn>WHERE</dfn> current_day.temperature > yesterday.temperature
+  <dfn>AND</dfn> current_day.recordDate = yesterday.recordDate + 1
+);</code></pre><br><p><dfn>Подзапросы (subqueries)</dfn>:<br>
+Сначала выполняются подзапросы.
+Выбрать из таблицы table все строки со значением value_3 в столбце field_1,
+отсортировать по видам в столбце field_2, посчитать количество строк по каждому виду,
+отсортировать виды, у которых количество строк больше 10.
+HAVING работает с результатами группировки</p><pre><code><dfn>SELECT</dfn> field_2, <dfn>COUNT</dfn>(*)
+<dfn>FROM</dfn> table
+<dfn>WHERE</dfn> field_1 = value_3
+<dfn>GROUP BY</dfn> field_2
+<dfn>HAVING COUNT</dfn>(*) > 10
+</code></pre><p>Выбрать столбцы field_2 и field_3 из таблицы table и выбрать максимальное значение столбца field_3 таблицы table</p><pre><code><dfn>SELECT</dfn> field_2, field_3
+<dfn>FROM</dfn> table
+<dfn>WHERE</dfn> field_3 = (
+  <dfn>SELECT</dfn> <dfn>MAX</dfn>(field_3) 
+  <dfn>FROM</dfn> table)
+</code></pre><p>Выбрать столбцы field_2 и field_3 из таблицы table_1 и отобрать строки, id которых есть в столбце field_table_1_id таблицы table_2</p><pre><code><dfn>SELECT</dfn> field_2, field_3
+<dfn>FROM</dfn> table_1
+<dfn>WHERE</dfn> id <dfn>IN</dfn> (
+  <dfn>SELECT</dfn> field_table_1_id 
+  <dfn>FROM</dfn> table_2)
+</code></pre><p>Выбрать значения id таблицы table_1 у которых в столбце field_3 значение value_1,
+увеличить значения столбца field_2 на 500 в строках, 
+у которых значение в столбце field_table_1_id равно значениям отобранных id</p><pre><code><dfn>UPDATE</dfn> table_2
+<dfn>SET</dfn> field_2 = field_2 + 500
+<dfn>WHERE</dfn> field_table_1_id = (
+  <dfn>SELECT</dfn> id 
+  <dfn>FROM</dfn> table_1
+  <dfn>WHERE</dfn> field_3 = value_1)</code></pre><br><p><dfn>Представления</dfn>:<br>
+Представление <dfn>VIEW</dfn> - псевдоним для запроса <dfn>SELECT</dfn>.<br>
+Данные в представлении не хранятся, представление ссылается на таблицу.<br>
+Представление можно создавать из нескольких таблиц.<br>
+Используется как обычная таблица.<br>
+Применяется для ограничения доступа к данным, сокрытия реализации базы данных,
+для избегания повторять выполнение сложных запросов и составных таблиц.<br>
+Удалить представление <dfn>DROP VIEW</dfn></p><pre><code><dfn>CREATE VIEW</dfn> table_v field_1, field_2
+<dfn>AS SELECT</dfn> field_1, field_2
+<dfn>FROM</dfn> table</code></pre><p>Материализованное представление <dfn>MATERIALIZED VIEW</dfn> - псевдоним для запроса <dfn>SELECT</dfn>.
+Поддерживаются не всеми СУБД.
+Данные храняться в представлении.
+Представление можно создавать из нескольких таблиц.
+Используется как обычная таблица.
+Применяется для часто используемых запросом с длительным выполнением.
+В случае изменения данных в таблице, на которую ссылается материализованное представление, <br>
+выполнить <dfn>REFRESH MATERIALIZED VIEW</dfn> table_v <br>
+Удалить материализованное представление <dfn>DROP MATERIALIZED VIEW</dfn></p><pre><code><dfn>CREATE MATERIALIZED VIEW</dfn> table_v field_1, field_2
+<dfn>AS SELECT</dfn> field_1, field_2
+<dfn>FROM</dfn> table</code></pre><br><p><dfn>Индексы</dfn>:<br>
+Индексы - повышают производительность выполнения запросов <dfn>SELECT</dfn>.<br>
+СУБД применяют индексы при выполнении операторов автоматически.<br>
+Создать индекс<br>
+Название индекса table_field_idx<br>
+Индекс создаётся для столбца field таблицы table<br></p><pre><code><dfn>CREATE INDEX</dfn> table_field_idx
+<dfn>ON</dfn> table(field)</code></pre><p>Удаление индекса</p><code><dfn>DROP INDEX</dfn> table_field_idx;</code></details><details><summary>CASE</summary><p>The CASE expression goes through conditions and returns a value when the first condition is met (like an if-then-else statement).<br>
+So, once a condition is true, it will stop reading and return the result.<br>
+If no conditions are true, it returns the value in the ELSE clause.<br>
+If there is no ELSE part and no conditions are true, it returns NULL.</p><pre><code><dfn>CASE</dfn>
+  <dfn>WHEN</dfn> condition1 <dfn>THEN</dfn> result1
+  <dfn>WHEN</dfn> condition2 <dfn>THEN</dfn> result2
+  <dfn>WHEN</dfn> conditionN <dfn>THEN</dfn> resultN
+  <dfn>ELSE</dfn> result
+<dfn>END</dfn>; 
+</code></pre></details><details><summary>JOIN</summary><p>Внутренее объединение INNER:<br>
+Внутренее объединение - это соединение строк из одной таблицы 
+для которых есть соответствующие строки из другой таблицы.<br>
+<br>
+<dfn>Неявное объединение:</dfn><br>
+Выбрать все столбцы из таблицы table_1 и table_2,<br>
+строки сопоставить по значению в столбце id (PRIMARY KEY) table_1 
+равно значению столбца field_table_1_id (FOREIGN KEY) таблицы table_2</p><pre><code><dfn>SELECT</dfn> * 
+<dfn>FROM</dfn> table_1, table_2
+<dfn>WHERE</dfn> table_1.id = table_2.field_table_1_id</code></pre><p>либо</p><pre><code><dfn>SELECT</dfn> * <dfn>FROM</dfn> table_1 
+<dfn>CROSS</dfn> <dfn>JOIN</dfn> table_2 
+<dfn>WHERE</dfn> table_1.id = table_2.field_table_1_id</code></pre><br><p><dfn>Явное объединение:</dfn><br>
+Выбрать столбeц field.2 из таблицы table_1 и столбец field.3 из table_2,
+строки сопоставить по значению в столбце id (PRIMARY KEY) table_1
+равно значению столбца field_table_1_id (FOREIGN KEY) таблицы table_2</p><pre><code><dfn>SELECT</dfn> table_1.field.2, table_2.field_3
+<dfn>FROM</dfn> table_1 <dfn>JOIN</dfn> table_2 
+<dfn>ON</dfn> table_1.id = table_2.field_table_1_id</code></pre><br><p>Псевдонимы</p><pre><code><dfn>SELECT</dfn> t1.field.2, t2.field_3
+<dfn>FROM</dfn> table_1 <dfn>AS</dfn> t1 
+<dfn>JOIN</dfn> table_2 <dfn>AS</dfn> t2
+<dfn>ON</dfn> t1.id = t2.field_table_1_id</code></pre><p>либо</p><pre><code><dfn>SELECT</dfn> t1.field.2, t2.field_3
+<dfn>FROM</dfn> table_1 t1 <dfn>JOIN</dfn> table_2 t2
+<dfn>ON</dfn> t1.id = t2.field_table_1_id</code></pre><p>Выбрать столбeц field.2 из таблицы table_1 и столбец field.3 из table_2,
+строки сопоставить по значению в столбце id (PRIMARY KEY) table_1
+равно значению столбца field_table_1_id (FOREIGN KEY) таблицы table_2,
+отобрать строки где значение в столбце field_2 таблицы table_1 равно value_1
+и где значение в столбце field_3 таблицы table_2 равно value_4, отсортировать по столбцу field_2 таблицы table_2</p><pre><code><dfn>SELECT</dfn> t1.field.2, t2.field_3
+<dfn>FROM</dfn> table_1 <dfn>AS</dfn> t1 
+<dfn>JOIN</dfn> table_2 <dfn>AS</dfn> t2
+<dfn>ON</dfn> t1.id = t2.field_table_1_id
+<dfn>WHERE</dfn> t1.field_2 = value_1
+<dfn>AND</dfn> t2.field_3 = value_4
+<dfn>ORDER BY</dfn> t2.field_2 DESC</code></pre><br><p>Внешнее объединение {[LEFT] | [RIGHT] | [FULL]} OUTER:
+Внутренее объединение - это соединение строк из одной таблицы 
+для которых нет соответствующих строк из другой таблицы.</p><br><p><dfn>LEFT</dfn> - все строки таблицы слева от ключевого слова <dfn>JOIN</dfn></p><pre><code><dfn>SELECT</dfn> t1.field.2, t2.field_3
+<dfn>FROM</dfn> table_1 <dfn>AS</dfn> t1 
+<dfn>LEFT OUTER JOIN</dfn> table_2 <dfn>AS</dfn> t2
+<dfn>ON</dfn> t1.id = t2.field_table_1_id</code></pre><br><p><dfn>RIGHT</dfn> - все строки таблицы справа от ключевого слова <dfn>JOIN</dfn></p><pre><code><dfn>SELECT</dfn> t1.field.2, t2.field_3
+<dfn>FROM</dfn> table_1 <dfn>AS</dfn> t1 
+<dfn>RIGHT OUTER JOIN</dfn> table_2 <dfn>AS</dfn> t2
+<dfn>ON</dfn> t1.id = t2.field_table_1_id</code></pre><br><p><dfn>FULL</dfn> - все строки обеих таблиц</p><pre><code><dfn>SELECT</dfn> t1.field.2, t2.field_3
+<dfn>FROM</dfn> table_1 <dfn>AS</dfn> t1 
+<dfn>FULL OUTER JOIN</dfn> table_2 <dfn>AS</dfn> t2
+<dfn>ON</dfn> t1.id = t2.field_table_1_id</code></pre><br><p>Перекрёсное объединение CROSS:
+Перекрёсное объединение - это соединение строк из обоих таблиц 
+по принципу каждая с каждой.</p><pre><code><dfn>SELECT</dfn> t1.field.2, t2.field_3
+<dfn>FROM</dfn> table_1 <dfn>CROSS JOIN</dfn> table_2
+</code></pre></details><details><summary>INSERT</summary><p><dfn>INSERT</dfn> добавляет новые данные
+Вставить в таблицу table значение value_2 в столбец field_1, value_4 в столбец field_2</p><pre><code><dfn>INSERT INTO</dfn> table (field_1, field_2)
+<dfn>VALUES</dfn> (value_2, value_4);</code></pre><p>Copy all columns from one table to another table</p><pre><code><dfn>INSERT</dfn> <dfn>INTO</dfn> table2
+<dfn>SELECT</dfn> * <dfn>FROM</dfn> table1
+<dfn>WHERE</dfn> condition;</code></pre><p>Copy only some columns from one table into another table</p><pre><code><dfn>INSERT</dfn>
+<dfn>INTO</dfn> table2 (column1, column2, column3, ...)
+<dfn>SELECT</dfn> column1, column2, column3, ...
+<dfn>FROM</dfn> table1 <dfn>WHERE</dfn> condition;
+</code></pre></details><details><summary>UPDATE</summary><p><dfn>UPDATE</dfn> изменяет существующие данные
+Обновить значения value_3 в столбец field_2, value_2 в столбец field_3, в строке с id = 1</p><pre><code><dfn>UPDATE</dfn> table
+<dfn>SET</dfn> field_2 = value_3, field_3 = value_2
+<dfn>WHERE</dfn> id = 1</code></pre><p>Обновить значения во всех строках где в столбце field_2 значение value_1, 
+вставить в столбец field_3 значение value_2</p><pre><code><dfn>UPDATE</dfn> table
+<dfn>SET</dfn> field_3 = value_2
+<dfn>WHERE</dfn> field_2 = value_1
+</code></pre></details><details><summary>DELETE</summary><p><dfn>DELETE</dfn> удаляет данные<br>
+Удалить из таблицы table строку с id = 2</p><code><dfn>DELETE</dfn> <dfn>FROM</dfn> table <dfn>WHERE</dfn> id = 2</code><p>Удалить из таблицы table строки со значением value_1 в столбце field_2</p><code><dfn>DELETE</dfn> <dfn>FROM</dfn> table <dfn>WHERE</dfn> field_2 = value_1</code><p>Удалить из таблицы table все данные</p><code><dfn>DELETE</dfn> <dfn>FROM</dfn> table</code><p>to delete all data inside a table.</p><code><dfn>TRUNCATE</dfn> <dfn>TABLE</dfn> table;</code></details><details><summary>UNION</summary><p><dfn>UNION</dfn> – объединение:<br>
+применяется для объединения результатов двух SQL-запросов
+в единую таблицу, состоящую из схожих строк.<br> Оба запроса должны
+возвращать одинаковое число столбцов и совместимые типы данных
+в соответствующих столбцах!!!</p><pre><code><dfn>SELECT</dfn> columns <dfn>FROM</dfn> table1
+<dfn>UNION</dfn> <dfn>ALL</dfn>
+<dfn>SELECT</dfn> columns <dfn>FROM</dfn> table2
+</code></pre></details><details><summary>INTERSECT</summary><p><dfn>INTERSECT</dfn> - Пересечение:<br>
+Пересечение — множество, состоящее из элементов, которые
+одновременно принадлежат всем данным множествам.<br>
+<dfn>INTERSECT</dfn>, также как и <dfn>UNION</dfn> обладает ограничением на результат
+запросов, которые должны быть совместимы по объединению</p><pre><code><dfn>SELECT</dfn> columns <dfn>FROM</dfn> table1
+<dfn>INTERSECT</dfn>
+<dfn>SELECT</dfn> columns <dfn>FROM</dfn> table2
+</code></pre></details><details><summary>MINUS или EXCEPT</summary><p><dfn>MINUS или EXCEPT</dfn> - Разность:<br>
+Разность двух множеств — это операция, результатом которой
+является множество, в которое входят все элементы первого
+множества, не входящие во второе множество</p><pre><code><dfn>SELECT</dfn> columns <dfn>FROM</dfn> table1
+<dfn>MINUS</dfn> <span>либо</span> <dfn>EXCEPT</dfn>
+<dfn>SELECT</dfn> columns <dfn>FROM</dfn> table2
+</code></pre></details></details><details><summary>Операторы определения доступа к данным (Data Control Language, DCL)</summary><p><dfn>GRANT</dfn> - предоставляет пользователю (группе) разрешения на определенные операции с объектом<br>
+<dfn>REVOKE</dfn> - отзывает ранее выданные разрешения<br>
+<dfn>DENY</dfn> - задает запрет, имеющий приоритет над разрешением<br>
+</p></details><details><summary>Операторы управления транзакциями (Transaction Control Language, TCL)</summary><p><dfn>Транзакция</dfn> - последовательность команд SQL, 
+которые должны быть выполнены полностью или не выполнены вообще.
+<br>
+Например перевод денег со счёта на счёт</p><pre><code><dfn>START</dfn> <dfn>TRANSACTION</dfn>;
+<dfn>UPDATE</dfn> accounts
+<dfn>SET</dfn> balance = balance - 15000
+<dfn>WHERE</dfn> account_number = 1234567;
+<dfn>UPDATE</dfn> accounts
+<dfn>SET</dfn> balance = balance + 15000
+<dfn>WHERE</dfn> account_number = 9876543;
+</code></pre><p><dfn>COMMIT</dfn> применяет транзакцию, записывает изменения в базу данных<br>
+либо<br>
+<dfn>ROLLBACK</dfn> откатывает все изменения, сделанные в контексте текущей транзакции<br>
+В PostgreSQL <dfn>START TRANSACTION</dfn> и <dfn>AUTOCOMMIT</dfn> включён по умолчанию.<br>
+<dfn>SET AUTOCOMMIT</dfn> = value; value может быть 1 (ON) либо 0 (OFF)<br>
+<dfn>SAVEPOINT</dfn> - делит транзакцию на более мелкие участки
+</p></details></details></details><details><summary>Libraries</summary><details><summary>jQuery</summary><p>(function( $ ) {alert($.fn.jquery);}) - проверить версию<br>
+<br>
+Подключить<br></p><code>&lt;script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"&gt;</code><p><b>compressed</b> - сжатая и минифицированная, поключают к готовому сайту<br>
+<b>uncompressed</b> - обычная, удобочитаемая, поключают при разработке<br>
+<b>slim</b> - без анимации и без Ajax<br>
+<br>
+<em>Скрипт</em></p><pre><code><span>запускать скрипт только после загрузки страницы</span>
+$(document).ready(function() {
+  <span>при нажатии кнопки</span>
+  $("button").on("click", function() {
+    <span>скрыть заголовок в течении 3-х секунд</span>
+    $("h1").hide(3000);
+  });
+});</code></pre><br><p><em>Селекторы</em> - все как в CSS</p><pre><code>$('a'); = document.querySelectorAll("a");
+$('sel').method();
+
+<span>выбрать элементы по атрибуту - target</span>
+$('a[target]');
+
+<span>выбрать элементы с атрибутом target равное _blank</span>
+$('a[target="_blank"]')</code></pre><br><p>По элементам форм:<br>
+:button<br>
+:password<br>
+:disabled<br>
+:file<br>
+<br>
+CSS</p><code>$("p").css("background-color", "#2ecc71");</code><br><p>Пример:<br>
+&lt;a href="https://ya.ru" target="_blank" title="Переход на Яндекс"&gt;Yandex&lt;/a&gt<br>
+<br>
+Выбрать элементы, у которых значение атрибута:<br>
+<b>$('a[href^="https"]')</b> - href начинается с https<br>
+<b>$('a[href$=".ru"]')</b> - href заканчивается на .ru<br>
+<b>$('a[title~="Яндекс"]')</b> - title содержит слово Яндекс<br>
+<b>$('a[title*="epe"]')</b> - title содержит подстроку ере<br>
+<b>$('a[href!="https://www.google.com"]')</b> - выберет элементы, у которых либо нет указанного атрибута, либо у атрибута другое значение
+<br>
+<em>Фильтры</em><br>
+<b>$("li:first").css("color", "green")</b>;<br> 
+- <b>:first, :last, :even, :odd</b> - первый, последний, чётный, нечётный из выборки<br>
+- <b>:eq(), :gt(), :lt()</b> - индексы элемнтов выборки<br>
+- <b>:root, :header, :focus, :lang()</b>, :target - HTML-элементы<br>
+- <b>:not()</b>, :animated - отрицанние и анимирование<br>
+<br>
+<b>$("li").filter(":first").css("color", "green")</b>; - :first - не является частью языка css, поэтому через метод filter()</p><br><a href="https://jquery.com">jQuery</a><a href="https://www.w3schools.com/jquery/default.asp">W3schools</a><a href="https://core.trac.wordpress.org/query">Wordpress jQuery</a></details><details><summary>Alpinejs</summary><a href="https://alpinejs.dev/">alpinejs<br></a><p>К событию JS нужно добавить @. Например @click. </p><a href="https://developer.mozilla.org/ru/docs/Web/Events">Events</a><table><caption>Directives</caption><thead><tr> <th>Directive</th><th>Description</th></tr></thead><tbody> <tr><td> <a href="https://alpinejs.dev/directives/data">x-data</a></td><td>определяет часть HTML как компонент Alpinejs и предоставляет ему данные </td></tr><tr><td> <a href="https://alpinejs.dev/directives/init">x-init</a></td><td>позволяет выполнить действие в момент когда Alpinejs инициализирует элемент </td></tr><tr><td> <a href="https://alpinejs.dev/directives/show">x-show</a></td><td>показывает или прячет DOM элемент</td></tr><tr><td> <a href="https://alpinejs.dev/directives/bind">x-bind</a></td><td>устанавливает атрибуты HTML элемента на основании вычислений</td></tr><tr><td> <a href="https://alpinejs.dev/directives/on">x-on</a></td><td>выполняет код при получении события</td></tr><tr><td> <a href="https://alpinejs.dev/directives/text">x-text</a></td><td>вставляет текст в элемент</td></tr><tr><td> <a href="https://alpinejs.dev/directives/html">x-html</a></td><td>вставляет html разметку в элемент</td></tr><tr><td> <a href="https://alpinejs.dev/directives/model">x-model</a></td><td>связавыет значение с данными</td></tr><tr><td> <a href="https://alpinejs.dev/directives/modelable">x-modelable</a></td><td>указывает значение, которое нужно связать со значением x-model</td></tr><tr><td> <a href="https://alpinejs.dev/directives/for">x-for</a></td><td>создаёт DOM элементы перебирая массивы и объекты</td></tr><tr><td> <a href="https://alpinejs.dev/directives/transition">x-transition</a></td><td>плавное появление и исчезновение элемента</td></tr><tr><td> <a href="https://alpinejs.dev/directives/effect">x-effect</a></td><td>меняет элемент когда меняются его зависимости</td></tr><tr><td> <a href="https://alpinejs.dev/directives/ignore">x-ignore</a></td><td>Alpine пропускает этот элемент во время инициализации</td></tr><tr><td> <a href="https://alpinejs.dev/directives/ref">x-ref</a></td><td>обозначает элемент для $refs</td></tr><tr><td> <a href="https://alpinejs.dev/directives/cloak">x-cloak</a></td><td>скрывает элемент пока не загрузится Alpine<br>
+add to CSS [x-cloak] { display: none !important; }</td></tr><tr><td> <a href="https://alpinejs.dev/directives/teleport">x-teleport</a></td><td>переносит часть шаблона < template > в другую часть страницы</td></tr><tr><td> <a href="https://alpinejs.dev/directives/if">x-if</a></td><td>добавляет и удаляет элементы по словию</td></tr><tr><td> <a href="https://alpinejs.dev/directives/id">x-id</a></td><td>собирает в массив id сгенерированные с помощью $id<br>
+создаёт им scope и добавляет к ним суффикс
+</td></tr></tbody></table><table><caption>Magics</caption><thead><tr><th>Magic</th><th>Description</th></tr></thead><tbody> <tr><td> <a href="https://alpinejs.dev/magics/el">$el</a></td><td>выбирает текущий элемент</td></tr><tr><td><a href="https://alpinejs.dev/magics/refs">$refs</a></td><td>выбирает элемент c x-ref</td></tr><tr><td><a href="https://alpinejs.dev/magics/store">$store</a></td><td>доступ к глобальному хранилищу, созданного через Alpine.store()</td></tr><tr><td><a href="https://alpinejs.dev/magics/watch">$watch</a></td><td>наблюдает за указанным элементом</td></tr><tr><td><a href="https://alpinejs.dev/magics/dispatch">$dispatch</a></td><td>создает события браузера</td></tr><tr><td><a href="https://alpinejs.dev/magics/nextTick">$nextTick</a></td><td>выполняет действие после после выполнения первого</td></tr><tr><td><a href="https://alpinejs.dev/magics/root">$root</a></td><td>выбирает ближайший родительский элемент с x-data</td></tr><tr><td><a href="https://alpinejs.dev/magics/data">$data</a></td><td>содежит значения всех x-data, через которых всплывает событие</td></tr><tr><td><a href="https://alpinejs.dev/magics/id">$id</a></td><td>создаёт id для элементов избегая конфликтов одинаковых имён</td></tr></tbody></table><table><caption>Globals</caption><thead><tr><th>Global</th><th>Description</th></tr></thead><tbody> <tr><td> <a href="https://alpinejs.dev/globals/alpine-data">Alpine.data()</a></td><td>вынести контекст x-data в отдельную функцию и переиспользовать</td></tr><tr><td> <a href="https://alpinejs.dev/globals/alpine-bind">Alpine.bind()</a></td><td>вынести контекст x-data в отдельную функцию и переиспользовать</td></tr><tr><td> <a href="https://alpinejs.dev/globals/alpine-store">Alpine.store()</a></td><td>управление глобальным хранилищем</td></tr></tbody></table></details><details><summary>React</summary><p><b>npx create-react-app название папки (проекта)</b><br>
   - создаст папку с названием проекта и стартовым шаблоном внутри.<br>
 <em>JSX</em>:<br>
   - это синтаксический сахар для React.createElement.<br>
@@ -2952,8 +3365,8 @@ function Square (props) {
   )}
 
 <span>возвращаем кнопку для подстановки
- в качестве объекта this
- в блок render в классе Board</span>
+в качестве объекта this
+в блок render в классе Board</span>
                                                                                               
 class Board extends React.Component{
   <span>props i из блока render() ниже</span>
@@ -3566,420 +3979,7 @@ export default mongoose.model('PostMessage', postSchdfna);</code></pre><br><p><d
       return [ …posts, action.payload ];
     default: return posts;
   }
-}</code></pre><br><img src="../img/js/react/redux.jpg" alt=""></details><details><summary>SQL</summary><a href="https://dbdiagram.io/home">Diagram</a><details><summary>Определение (Definition)</summary><p><dfn>SQL</dfn> — применяется для создания, модификации и управления данными в реляционной базе данных, 
-управляемой соответствующей системой управления базами данных.<br>
-В базовом варианте SQL является информационно-логическим языком, а не языком программирования. <br>
-<br>
-<dfn>Система управления базами данных (СУБД)</dfn> — совокупность программных и лингвистических средств
-общего или специального назначения, обеспечивающих управление созданием и использованием баз данных. <br>
-<br>
-<dfn>База данных (БД)</dfn> - под базой данных (БД) понимают хранилище структурированных данных, 
-при этом данные должны быть непротиворечивы, минимально избыточны и целостны. <br>
-<br>
-<dfn>Реляционная база данных</dfn> — база данных, основанная на реляционной модели данных. <br>
-Реляционные БД представляют связанную между собой совокупность таблиц-сущностей базы данных. <br>
-Каждая таблица БД представляется как совокупность строк и столбцов, где строки соответствуют
-экземпляру объекта, конкретному событию или явлению, а столбцы - атрибутам (признакам,
-характеристикам, параметрам) объекта, события, явления. <br>
-При практической разработке БД таблицы-сущности зовутся таблицами, строки-экземпляры - записями,
-столбцы-атрибуты - полями. <br>
-<br>
-<em>Преимущества SQL</em> - наличие стандартов и независимость от конкретной СУБД. <br>
-<em>Недостатки SQL</em> - сложность. <br></p><br><p><dfn>Классификация по модели данных:</dfn><br>
-<em>Иерархическая</em><br>
-<em>Объектная и объектно-ориентированная</em><br>
-<em>Объектно-реляционная</em><br>
-<em>Реляционная</em><br>
-<em>Сетевая</em><br>
-<em>Функциональная</em><br>
-<br></p><p><dfn>Типы отношений:</dfn><br>
-<em>Один к одному (one-to-one)</em> <br>
-<em>Один ко многим (one-to-many)</em> <br>
-<em>Многие к одному (many-to-one)</em> <br>
-<em>Многие ко многим (many-to-many, реализуется через отдельную таблицу)</em> <br></p><img src="../img/sql/SQL12.png" alt=""><p>Источник:<a href="https://drawsql.app/">Рисовать диаграмму БД онлайн</a><a href="https://sql-ex.ru/?Lang=0">sql-ex</a><a href="https://sqlbolt.com/lesson/">sqlbolt</a><a href="https://sql-academy.org/ru/guide">sql-academy</a><a href="https://www.w3schools.com/sql/default.asp">W3Schools SQL Tutorial</a><a href="https://www.w3schools.com/sql/exercise.asp?">w3schools SQL Exercises</a></p></details><details><summary>Операторы определения данных (Data Definition Language, DDL)</summary><p><dfn>CREATE</dfn> - создает объект БД (саму базу, таблицу, представление, пользователя и т. д.)<br>
-to create a new SQL database<br>
-<dfn>CREATE DATABASE</dfn> database name;<br>
-Создать таблицу table со столбцами id, field_1, field_2, field_3.<br>
-По каждому столбцу заданы тип и количество символов.<br></p><pre><code><dfn>CREATE TABLE</dfn> table(
-  id <dfn>INT PRIMARY KEY</dfn>,
-  field_1 <dfn>VARCHAR</dfn>(100),
-  field_2 <dfn>VARCHAR</dfn>(30),
-  field_3 <dfn>INT</dfn>
-);</code></pre><p><dfn>DESCRIBE</dfn> table - информация о таблице<br>
-<dfn>PRIMARY KEY</dfn> - уникальный идентификатор записей.<br>
-<dfn>FOREIGN KEY</dfn> - внешний ключ, значения идентификатора записей в связанной таблице.<br>
-<dfn>SERIAL</dfn> - автоинкремент идентификатора в PostgreSQL<br>
-<dfn>AUTO_INCREMENT</dfn> - автоинкремент идентификатора в MySQL<br></p><pre><code><dfn>CREATE TABLE</dfn> table(
-  id <dfn>SERIAL PRIMARY KEY</dfn>,
-  field_1 <dfn>VARCHAR</dfn>(100),
-  field_2 <dfn>VARCHAR</dfn>(30),
-  field_3 <dfn>INT</dfn>
-);
-</code></pre><p>Ограничения на уровне таблицы:<br>
-Значения в столбцах id и field_1 уникальные и не пустые<br>
-Значения столбца field_table_2_id - ссылки на id таблицы table_2<br>
-Либо RESTRICT - запретить удалять id таблицы table_2<br>
-Либо CASCADE -  при удалении id таблицы table_2, удалить соответствующие записи<br>
-Ограничение с именем positive_field<br>
-Значения в столбце field_3 должны быть положительными<br></p><pre><code><dfn>CREATE TABLE</dfn> table_1(
-  id <dfn>PRIMARY KEY</dfn>,
-  field_1 <dfn>VARCHAR</dfn>(100) <dfn>UNIQUE NOT NULL</dfn>, 
-  field_2 <dfn>VARCHAR</dfn>(30),
-  field_3 <dfn>INT</dfn>,
-  field_table_2_id <dfn>INT REFERENCES</dfn> table_2(id)
-  <dfn>ON DELETE RESTRICT</dfn>
-  <dfn>CONSTRAINT</dfn> positive_field
-  <dfn>CHEK</dfn> (field_3 >= 0)
-);</code></pre><p>Уникальный идентификатор состоит из двух столбцов</p><pre><code><dfn>CREATE TABLE</dfn> table_1(
-  field_table_2_id <dfn>INT REFERENCES</dfn> table_2(id),
-  field_table_3_id <dfn>INT REFERENCES</dfn> table_3(id),
-  quantity <dfn>INT</dfn>,
-  <dfn>PRIMARY KEY</dfn>(field_table_2_id, field_table_3_id)
-);</code></pre><p><dfn>ALTER</dfn> - изменяет объект
-Изменить таблицу table, добавить столбец field_4 с типом BOOLEAN</p><pre><code><dfn>ALTER TABLE</dfn> table 
-<dfn>ADD COLUMN</dfn> field_4 <dfn>BOOLEAN</dfn>;</code><br></pre><p>Изменить таблицу table, удалить столбец field_4</p><pre><code><dfn>ALTER TABLE</dfn> table 
-<dfn>DROP COLUMN</dfn> field_4;</code><br></pre><p>Изменить таблицу table, переименовать столбец field_4 в field_5</p><pre><code><dfn>ALTER TABLE</dfn> table 
-<dfn>RENAME COLUMN</dfn> field_4 <dfn>TO</dfn> field_5;</code><br></pre><p>Изменить таблицу table, переименовать в another_table</p><pre><code><dfn>ALTER TABLE</dfn> table 
-<dfn>RENAME TO</dfn> another_table;</code><br>     </pre><p><dfn>DROP</dfn> - удаляет объект</p><code><dfn>DROP TABLE</dfn> table </code><p>Скрипт создания таблицы:</p><pre><code><dfn>DROP TABLE IF EXISTS</dfn> table;
-<dfn>CREATE TABLE</dfn> table(
-  id <dfn>SERIAL PRIMARY KEY</dfn>,
-  field_1 <dfn>VARCHAR</dfn>(100),
-  field_2 <dfn>VARCHAR</dfn>(30),
-  field_3 <dfn>INT</dfn>
-);</code><br></pre><p><dfn>BACKUP</dfn> - резервное копирование</p><pre><code><dfn>BACKUP DATABASE</dfn> testDB
-<dfn>TO DISK</dfn> = 'D:\backups\testDB.bak'; 
-</code></pre></details><details><summary>Операторы манипуляции данными (Data Manipulation Language, DML)</summary><details><summary>SELECT</summary><p><dfn>SELECT</dfn> - выбирает данные, удовлетворяющие заданным условиям, </p><code><dfn>SELECT * FROM</dfn> table</code><p>Для примера используем таблицу table со столбцами field_1, field_2 и т.д.
-У каждого столбца свои значения value_1, value_2, value_3 и т.д.
-Выбираю столбец (field_1) и столбец (field_2) из таблицы (table)</p><pre><code><dfn>SELECT</dfn> field_1, field_2
-<dfn>FROM</dfn> table;</code></pre><p>Ключевое слово AS назначает псевдоним f1 столбцу field_1</p><pre><code><dfn>SELECT</dfn> field_1 <dfn>AS</dfn> f1
-<dfn>FROM</dfn> table;</code></pre><p>Выбрать только уникальные значения столбца field_1</p><pre><code><dfn>SELECT</dfn> <dfn>DISTINCT</dfn>(field_1)
-<dfn>FROM</dfn> table;</code></pre><p>Выбрать первых 10 уникальных значений столбца field_1</p><pre><code><dfn>SELECT</dfn> <dfn>DISTINCT</dfn>(field_1)
-<dfn>FROM</dfn> table
-<dfn>LIMIT</dfn> 10;</code></pre><p>Выбрать из таблицы table все строки со значением value в столбце field_2</p><pre><code><dfn>SELECT</dfn> *
-<dfn>FROM</dfn> table
-<dfn>WHERE</dfn> field_2 = 'value';</code></pre><p>Ключевое слово WHERE и фильтр field_2 = 'value'</p><pre>Используем в <dfn>WHERE</dfn>:
-  =         Равно
-  <>, !=    Неравно
-  >         Больше
-  >=        Больше или равно
-  <         Меньше
-  <=        Меньше или равно
-  BETWEEN   Значение в диапозоне
-  IN        Значение в списке
-  LIKE      Соответствие шаблону
-  AND       Логическое И
-  OR        Логическое ИЛИ
-  NOT       Логическое НЕ
-</pre><p>Выбрать из таблицы table все строки со значениями от value_1 по value_2 в столбце field_2</p><pre><code><dfn>SELECT</dfn> *
-<dfn>FROM</dfn> table
-<dfn>WHERE</dfn> field_2
-<dfn>BETWEEN</dfn> value_1 AND value_2;
-</code></pre><p>Выбрать из таблицы table все строки со значениями по списку IN из столбца field_2</p><pre><code><dfn>SELECT</dfn> *
-<dfn>FROM</dfn> table
-<dfn>WHERE</dfn> field_2
-<dfn>IN</dfn> (value_1, value_2, value_3);
-</code></pre><p>Выбрать из таблицы table все строки, у которых в столбе field_2 значение содержит value</p><pre><code><dfn>SELECT</dfn> *
-<dfn>FROM</dfn> table
-<dfn>WHERE</dfn> field_2
-<dfn>LIKE</dfn> '%value%';</code></pre><p>Спец.символы в шаблонах LIKE:<br>
-<dfn>%</dfn> - любое количество символов (можно и без символов)<br>
-<dfn>_</dfn> - ровно один символ
-</p><p>Return all customers starting with "a", "b", "c", "d", "e" or "f":</p><pre><code><dfn>SELECT</dfn> * <dfn>FROM</dfn> Customers
-<dfn>WHERE</dfn> CustomerName <dfn>LIKE</dfn> '[a-f]%';
-</code></pre><p>Return all customers starting with either "b", "s", or "p":</p><pre><code><dfn>SELECT</dfn> * <dfn>FROM</dfn> Customers
-<dfn>WHERE</dfn> CustomerName <dfn>LIKE</dfn> '[bsp]%';
-</code></pre><p>Return all customers starting with NOT either "b", "s", or "p":</p><pre><code><dfn>SELECT</dfn> * <dfn>FROM</dfn> Customers
-<dfn>WHERE</dfn> City <dfn>LIKE</dfn> '[!bsp]%';
-</code></pre><p>Выбрать из таблицы table все строки, у которых одновременно в столбе field_1 значение value_3 и в столбце field_2 значение value_2</p><pre><code><dfn>SELECT</dfn> *
-<dfn>FROM</dfn> table
-<dfn>WHERE</dfn> field_1 = value_3
-<dfn>AND</dfn> field_2 = value_2;
-</code></pre><p>Выбрать из таблицы table все строки, у которых в столбце field_1 значение value_3 либо в столбце field_2 значение value_2</p><pre><code><dfn>SELECT</dfn> *
-<dfn>FROM</dfn> table
-<dfn>WHERE</dfn> field_1 = value_3
-<dfn>OR</dfn> field_2 = value_2;
-</code></pre><p>Выбрать из таблицы table все строки со значениями вне списка IN из столбца field_2</p><pre><code><dfn>SELECT</dfn> *
-<dfn>FROM</dfn> table
-<dfn>WHERE</dfn> field_2
-<dfn>NOT IN</dfn> (value_1, value_2, value_3);
-</code></pre><p>Порядок сортировки в ORDER BY:<br>
-<dfn>ASC</dfn> (ascending) - сортировка по возрастанию (по умолчанию)<br>
-<dfn>DESC</dfn> (descending) - сортировка по убыванию<br>
-</p><p>Выбрать из таблицы table все строки и отсортировать их по столбцу field_3
-Сортировка данных по столбцу field_3, по умолчанию это ASC</p><pre><code><dfn>SELECT</dfn> *
-<dfn>FROM</dfn> table
-<dfn>ORDER BY</dfn> field_3</code></pre><p>Сортировка данных по столбцу field_3 по убыванию</p><pre><code><dfn>SELECT</dfn> *
-<dfn>FROM</dfn> table
-<dfn>ORDER BY</dfn> field_3 <dfn>DESC</dfn>;
-</code></pre><p>Выбрать из таблицы table все строки, у которых в столбце field_1 значение value_3 и отсортировать по столбцу field_3 по убыванию</p><pre><code><dfn>SELECT</dfn> *
-<dfn>FROM</dfn> table
-<dfn>WHERE</dfn> field_1 = value_3
-<dfn>ORDER BY</dfn> field_3 <dfn>DESC</dfn>;
-</code></pre><p>Выбрать из таблицы table все строки, у которых одновременно в столбе field_1 значение value_3 и в столбце field_2 значение value_2 и отсортировать по столбцу field_3 по убыванию и вывести первые пять строк</p><pre><code><dfn>SELECT</dfn> *
-<dfn>FROM</dfn> table
-<dfn>WHERE</dfn> field_1 = value_3
-<dfn>AND</dfn> field_2 = value_2
-<dfn>ORDER BY</dfn> field_3 <dfn>DESC</dfn>
-<dfn>LIMIT</dfn> 5;
-</code></pre><p>Выбрать из таблицы table все строки и отсортировать по двум столбцам</p><pre><code><dfn>SELECT</dfn> *
-<dfn>FROM</dfn> table
-<dfn>ORDER BY</dfn> field_3, field_2;
-</code></pre><p>Выбрать из таблицы table столбец field_1 строки в котором не имеют значений</p><pre><code><dfn>SELECT</dfn> field_1
-<dfn>FROM</dfn> table
-<dfn>WHERE</dfn> field_1 <dfn>IS</dfn> <dfn>NULL</dfn>; 
-</code></pre><p>Выбрать из таблицы table столбец field_1 строки в котором имеют значения</p><pre><code><dfn>SELECT</dfn> field_1
-<dfn>FROM</dfn> table
-<dfn>WHERE</dfn> field_1 <dfn>IS</dfn> <dfn>NOT</dfn> <dfn>NULL</dfn>;
-</code></pre><p>The EXISTS operator is used to test for the existence of any record in a subquery.
-The EXISTS operator returns TRUE if the subquery returns one or more records.</p><pre><code><dfn>SELECT</dfn> field_1
-<dfn>FROM</dfn> table
-<dfn>WHERE</dfn> <dfn>EXISTS</dfn>
-(<dfn>SELECT</dfn> field_2
-<dfn>FROM</dfn> table
-<dfn>WHERE</dfn> condition); 
-</code></pre><p>ANY means that the condition will be true if the operation is true for any of the values in the range.</p><pre><code><dfn>SELECT</dfn> field_1
-<dfn>FROM</dfn> table
-<dfn>WHERE</dfn> field_1 = <dfn>ANY</dfn>
-(<dfn>SELECT</dfn> field_1
-<dfn>FROM</dfn> table
-<dfn>WHERE</dfn> condition);
-</code></pre><p>ALL means that the condition will be true only if the operation is true for all values in the range.</p><pre><code><dfn>SELECT</dfn> <dfn>ALL</dfn> field_1
-<dfn>FROM</dfn> table
-<dfn>WHERE</dfn> condition;code.
-<dfn>SELECT</dfn> field_1
-<dfn>FROM</dfn> table
-<dfn>WHERE</dfn> field_1 = <dfn>ALL</dfn>
-(<dfn>SELECT</dfn> field_2
-<dfn>FROM</dfn> table
-<dfn>WHERE</dfn> condition);
-</code></pre><p>Copy all columns into a new table</p><pre><code><dfn>SELECT</dfn> *
-<dfn>INTO</dfn> newtable [IN externaldb]
-<dfn>FROM</dfn> oldtable
-<dfn>WHERE</dfn> condition;
-</code></pre><p>The following SQL statement uses the IN clause to copy the table into a new table in another database</p><pre><code><dfn>SELECT</dfn> *
-<dfn>INTO</dfn> CustomersBackup2017
-<dfn>IN</dfn> 'Backup.mdb'
-<dfn>FROM</dfn> Customers;
-</code></pre><p>The following SQL statement copies only a few columns into a new table</p><pre><code><dfn>SELECT</dfn> CustomerName, ContactName
-<dfn>INTO</dfn> CustomersBackup2017
-<dfn>FROM</dfn> Customers;</code></pre><br><p><dfn>Агрегатные функции:</dfn>
-<br>
-<dfn>COUNT</dfn> - Возвращает количество строк источника записей
-Считает количество записей в таблице table</p><pre><code><dfn>SELECT</dfn> <dfn>COUNT</dfn>(*)
-<dfn>FROM</dfn> table</code></pre><p>Считает количество записей в столбцe field_2 таблицы table</p><pre><code><dfn>SELECT</dfn> <dfn>COUNT</dfn>(field_2)
-<dfn>FROM</dfn> table</code></pre><p>Выбрать столбец field_2, сгруппировать в стобце field_2 значения по видам и посчитать сколько записей каждого вида</p><pre><code><dfn>SELECT</dfn> field_2,
-<dfn>COUNT</dfn>(*)
-<dfn>FROM</dfn> table
-<dfn>GROUP BY</dfn> field_2
-</code></pre><p>Выбрать столбец field_2, сгруппировать в стобце field_2 значения по видам,
-посчитать сколько записей каждого вида в столбце field_3 и вывести в новом столбе field_3</p><pre><code><dfn>SELECT</dfn> field_2,
-<dfn>COUNT</dfn>(field_2) AS field_3
-<dfn>FROM</dfn> table
-<dfn>GROUP BY</dfn> field_2</code></pre><br><p><dfn>SUM</dfn> - Возвращает сумму значений в указанном столбце.
-Выбрать столбец field_2, сгруппировать в стобце field_2 значения по видам,
-посчитать сколько записей каждого вида и суммировать значения в столбце field_3 соответствующих сгруппированным видам</p><pre><code><dfn>SELECT</dfn> field_2,
-<dfn>COUNT</dfn>(*),
-<dfn>SUM</dfn>(field_3)
-<dfn>FROM</dfn> table
-<dfn>GROUP BY</dfn> field_2</code></pre><br>  <p><dfn>AVG</dfn> - Возвращает среднее значение в указанном столбце.
-Выбрать столбец field_2, сгруппировать в стобце field_2 значения по видам,
-посчитать среднее значение по каждому виду в столбце field_3.
-Среднее расчитывается со знаками после запятой.</p><pre><code><dfn>SELECT</dfn> field_2,
-<dfn>AVG</dfn>(field_3) 
-<dfn>FROM</dfn> table
-<dfn>GROUP BY</dfn> field_2
-</code></pre><p>Посчитать среднее без знака после запятой</p><pre><code><dfn>SELECT</dfn> field_2,
-<dfn>SUM</dfn>(field_3)/<dfn>COUNT</dfn>(*)
-<dfn>AS</dfn> average 
-<dfn>FROM</dfn> table
-<dfn>GROUP BY</dfn> field_2</code></pre><br><p><dfn>MIN</dfn> - Возвращает минимальное значение в указанном столбце
-Выбрать столбец field_2, сгруппировать в стобце field_2 значения по видам,
-определить минимальное и максимальное значение каждого вида в столбце field_3, вывести столбец field_2 
-с групированными значениями, столбец минимальных и столбец максимальных значений каждого вида,
-отсортировать по убыванию по столбцу максимальных значений</p><pre><code><dfn>SELECT</dfn> field_2,
-<dfn>MIN</dfn>(field_3),
-<dfn>MAX</dfn>(field_3)
-<dfn>FROM</dfn> table
-<dfn>GROUP BY</dfn> field_2
-<dfn>ORDER BY MAX</dfn>(field_3) <dfn>DESC</dfn></code></pre><br><p><dfn>MAX</dfn> - Возвращает максимальное значение в указанном столбцe.
-Считает все функции в таблице table</p><pre><code><dfn>SELECT COUNT</dfn>(*),
-<dfn>MIN</dfn>(field_2),
-<dfn>MAX</dfn>(field_2),
-<dfn>SUM</dfn>(field_2),
-<dfn>AVG</dfn>(field_2)
-<dfn>FROM</dfn> table</code></pre><br><p><dfn>LENGTH()</dfn> - возвращает длину строки</p><pre><code><dfn>SELECT</dfn> field_1
-<dfn>FROM</dfn> table
-<dfn>WHERE LENGTH</dfn>(field_2) > 15;
-</code></pre><p>Вывести id строк, в которых значение temperature больше temperature предыдущего дня </p><pre><code><dfn>SELECT</dfn> current_day.id
-<dfn>FROM</dfn> Weather <dfn>AS</dfn> current_day
-<dfn>WHERE EXISTS</dfn> (
-  <dfn>SELECT</dfn> 1
-  <dfn>FROM</dfn> Weather <dfn>AS</dfn> yesterday
-  <dfn>WHERE</dfn> current_day.temperature > yesterday.temperature
-  <dfn>AND</dfn> current_day.recordDate = yesterday.recordDate + 1
-);</code></pre><br><p><dfn>Подзапросы (subqueries)</dfn>:<br>
-Сначала выполняются подзапросы.
-Выбрать из таблицы table все строки со значением value_3 в столбце field_1,
-отсортировать по видам в столбце field_2, посчитать количество строк по каждому виду,
-отсортировать виды, у которых количество строк больше 10.
-HAVING работает с результатами группировки</p><pre><code><dfn>SELECT</dfn> field_2, <dfn>COUNT</dfn>(*)
-<dfn>FROM</dfn> table
-<dfn>WHERE</dfn> field_1 = value_3
-<dfn>GROUP BY</dfn> field_2
-<dfn>HAVING COUNT</dfn>(*) > 10
-</code></pre><p>Выбрать столбцы field_2 и field_3 из таблицы table и выбрать максимальное значение столбца field_3 таблицы table</p><pre><code><dfn>SELECT</dfn> field_2, field_3
-<dfn>FROM</dfn> table
-<dfn>WHERE</dfn> field_3 = (
-  <dfn>SELECT</dfn> <dfn>MAX</dfn>(field_3) 
-  <dfn>FROM</dfn> table)
-</code></pre><p>Выбрать столбцы field_2 и field_3 из таблицы table_1 и отобрать строки, id которых есть в столбце field_table_1_id таблицы table_2</p><pre><code><dfn>SELECT</dfn> field_2, field_3
-<dfn>FROM</dfn> table_1
-<dfn>WHERE</dfn> id <dfn>IN</dfn> (
-  <dfn>SELECT</dfn> field_table_1_id 
-  <dfn>FROM</dfn> table_2)
-</code></pre><p>Выбрать значения id таблицы table_1 у которых в столбце field_3 значение value_1,
-увеличить значения столбца field_2 на 500 в строках, 
-у которых значение в столбце field_table_1_id равно значениям отобранных id</p><pre><code><dfn>UPDATE</dfn> table_2
-<dfn>SET</dfn> field_2 = field_2 + 500
-<dfn>WHERE</dfn> field_table_1_id = (
-  <dfn>SELECT</dfn> id 
-  <dfn>FROM</dfn> table_1
-  <dfn>WHERE</dfn> field_3 = value_1)</code></pre><br><p><dfn>Представления</dfn>:<br>
-Представление <dfn>VIEW</dfn> - псевдоним для запроса <dfn>SELECT</dfn>.<br>
-Данные в представлении не хранятся, представление ссылается на таблицу.<br>
-Представление можно создавать из нескольких таблиц.<br>
-Используется как обычная таблица.<br>
-Применяется для ограничения доступа к данным, сокрытия реализации базы данных,
-для избегания повторять выполнение сложных запросов и составных таблиц.<br>
-Удалить представление <dfn>DROP VIEW</dfn></p><pre><code><dfn>CREATE VIEW</dfn> table_v field_1, field_2
-<dfn>AS SELECT</dfn> field_1, field_2
-<dfn>FROM</dfn> table</code></pre><p>Материализованное представление <dfn>MATERIALIZED VIEW</dfn> - псевдоним для запроса <dfn>SELECT</dfn>.
-Поддерживаются не всеми СУБД.
-Данные храняться в представлении.
-Представление можно создавать из нескольких таблиц.
-Используется как обычная таблица.
-Применяется для часто используемых запросом с длительным выполнением.
-В случае изменения данных в таблице, на которую ссылается материализованное представление, <br>
-выполнить <dfn>REFRESH MATERIALIZED VIEW</dfn> table_v <br>
-Удалить материализованное представление <dfn>DROP MATERIALIZED VIEW</dfn></p><pre><code><dfn>CREATE MATERIALIZED VIEW</dfn> table_v field_1, field_2
-<dfn>AS SELECT</dfn> field_1, field_2
-<dfn>FROM</dfn> table</code></pre><br><p><dfn>Индексы</dfn>:<br>
-Индексы - повышают производительность выполнения запросов <dfn>SELECT</dfn>.<br>
-СУБД применяют индексы при выполнении операторов автоматически.<br>
-Создать индекс<br>
-Название индекса table_field_idx<br>
-Индекс создаётся для столбца field таблицы table<br></p><pre><code><dfn>CREATE INDEX</dfn> table_field_idx
-<dfn>ON</dfn> table(field)</code></pre><p>Удаление индекса</p><code><dfn>DROP INDEX</dfn> table_field_idx;</code></details><details><summary>CASE</summary><p>The CASE expression goes through conditions and returns a value when the first condition is met (like an if-then-else statement).<br>
-So, once a condition is true, it will stop reading and return the result.<br>
-If no conditions are true, it returns the value in the ELSE clause.<br>
-If there is no ELSE part and no conditions are true, it returns NULL.</p><pre><code><dfn>CASE</dfn>
-  <dfn>WHEN</dfn> condition1 <dfn>THEN</dfn> result1
-  <dfn>WHEN</dfn> condition2 <dfn>THEN</dfn> result2
-  <dfn>WHEN</dfn> conditionN <dfn>THEN</dfn> resultN
-  <dfn>ELSE</dfn> result
-<dfn>END</dfn>; 
-</code></pre></details><details><summary>JOIN</summary><p>Внутренее объединение INNER:<br>
-Внутренее объединение - это соединение строк из одной таблицы 
-для которых есть соответствующие строки из другой таблицы.<br>
-<br>
-<dfn>Неявное объединение:</dfn><br>
-Выбрать все столбцы из таблицы table_1 и table_2,<br>
-строки сопоставить по значению в столбце id (PRIMARY KEY) table_1 
-равно значению столбца field_table_1_id (FOREIGN KEY) таблицы table_2</p><pre><code><dfn>SELECT</dfn> * 
-<dfn>FROM</dfn> table_1, table_2
-<dfn>WHERE</dfn> table_1.id = table_2.field_table_1_id</code></pre><p>либо</p><pre><code><dfn>SELECT</dfn> * <dfn>FROM</dfn> table_1 
-<dfn>CROSS</dfn> <dfn>JOIN</dfn> table_2 
-<dfn>WHERE</dfn> table_1.id = table_2.field_table_1_id</code></pre><br><p><dfn>Явное объединение:</dfn><br>
-Выбрать столбeц field.2 из таблицы table_1 и столбец field.3 из table_2,
-строки сопоставить по значению в столбце id (PRIMARY KEY) table_1
-равно значению столбца field_table_1_id (FOREIGN KEY) таблицы table_2</p><pre><code><dfn>SELECT</dfn> table_1.field.2, table_2.field_3
-<dfn>FROM</dfn> table_1 <dfn>JOIN</dfn> table_2 
-<dfn>ON</dfn> table_1.id = table_2.field_table_1_id</code></pre><br><p>Псевдонимы</p><pre><code><dfn>SELECT</dfn> t1.field.2, t2.field_3
-<dfn>FROM</dfn> table_1 <dfn>AS</dfn> t1 
-<dfn>JOIN</dfn> table_2 <dfn>AS</dfn> t2
-<dfn>ON</dfn> t1.id = t2.field_table_1_id</code></pre><p>либо</p><pre><code><dfn>SELECT</dfn> t1.field.2, t2.field_3
-<dfn>FROM</dfn> table_1 t1 <dfn>JOIN</dfn> table_2 t2
-<dfn>ON</dfn> t1.id = t2.field_table_1_id</code></pre><p>Выбрать столбeц field.2 из таблицы table_1 и столбец field.3 из table_2,
-строки сопоставить по значению в столбце id (PRIMARY KEY) table_1
-равно значению столбца field_table_1_id (FOREIGN KEY) таблицы table_2,
-отобрать строки где значение в столбце field_2 таблицы table_1 равно value_1
-и где значение в столбце field_3 таблицы table_2 равно value_4, отсортировать по столбцу field_2 таблицы table_2</p><pre><code><dfn>SELECT</dfn> t1.field.2, t2.field_3
-<dfn>FROM</dfn> table_1 <dfn>AS</dfn> t1 
-<dfn>JOIN</dfn> table_2 <dfn>AS</dfn> t2
-<dfn>ON</dfn> t1.id = t2.field_table_1_id
-<dfn>WHERE</dfn> t1.field_2 = value_1
-<dfn>AND</dfn> t2.field_3 = value_4
-<dfn>ORDER BY</dfn> t2.field_2 DESC</code></pre><br><p>Внешнее объединение {[LEFT] | [RIGHT] | [FULL]} OUTER:
-Внутренее объединение - это соединение строк из одной таблицы 
-для которых нет соответствующих строк из другой таблицы.</p><br><p><dfn>LEFT</dfn> - все строки таблицы слева от ключевого слова <dfn>JOIN</dfn></p><pre><code><dfn>SELECT</dfn> t1.field.2, t2.field_3
-<dfn>FROM</dfn> table_1 <dfn>AS</dfn> t1 
-<dfn>LEFT OUTER JOIN</dfn> table_2 <dfn>AS</dfn> t2
-<dfn>ON</dfn> t1.id = t2.field_table_1_id</code></pre><br><p><dfn>RIGHT</dfn> - все строки таблицы справа от ключевого слова <dfn>JOIN</dfn></p><pre><code><dfn>SELECT</dfn> t1.field.2, t2.field_3
-<dfn>FROM</dfn> table_1 <dfn>AS</dfn> t1 
-<dfn>RIGHT OUTER JOIN</dfn> table_2 <dfn>AS</dfn> t2
-<dfn>ON</dfn> t1.id = t2.field_table_1_id</code></pre><br><p><dfn>FULL</dfn> - все строки обеих таблиц</p><pre><code><dfn>SELECT</dfn> t1.field.2, t2.field_3
-<dfn>FROM</dfn> table_1 <dfn>AS</dfn> t1 
-<dfn>FULL OUTER JOIN</dfn> table_2 <dfn>AS</dfn> t2
-<dfn>ON</dfn> t1.id = t2.field_table_1_id</code></pre><br><p>Перекрёсное объединение CROSS:
-Перекрёсное объединение - это соединение строк из обоих таблиц 
-по принципу каждая с каждой.</p><pre><code><dfn>SELECT</dfn> t1.field.2, t2.field_3
-<dfn>FROM</dfn> table_1 <dfn>CROSS JOIN</dfn> table_2
-</code></pre></details><details><summary>INSERT</summary><p><dfn>INSERT</dfn> добавляет новые данные
-Вставить в таблицу table значение value_2 в столбец field_1, value_4 в столбец field_2</p><pre><code><dfn>INSERT INTO</dfn> table (field_1, field_2)
-<dfn>VALUES</dfn> (value_2, value_4);</code></pre><p>Copy all columns from one table to another table</p><pre><code><dfn>INSERT</dfn> <dfn>INTO</dfn> table2
-<dfn>SELECT</dfn> * <dfn>FROM</dfn> table1
-<dfn>WHERE</dfn> condition;</code></pre><p>Copy only some columns from one table into another table</p><pre><code><dfn>INSERT</dfn>
-<dfn>INTO</dfn> table2 (column1, column2, column3, ...)
-<dfn>SELECT</dfn> column1, column2, column3, ...
-<dfn>FROM</dfn> table1 <dfn>WHERE</dfn> condition;
-</code></pre></details><details><summary>UPDATE</summary><p><dfn>UPDATE</dfn> изменяет существующие данные
-Обновить значения value_3 в столбец field_2, value_2 в столбец field_3, в строке с id = 1</p><pre><code><dfn>UPDATE</dfn> table
-<dfn>SET</dfn> field_2 = value_3, field_3 = value_2
-<dfn>WHERE</dfn> id = 1</code></pre><p>Обновить значения во всех строках где в столбце field_2 значение value_1, 
-вставить в столбец field_3 значение value_2</p><pre><code><dfn>UPDATE</dfn> table
-<dfn>SET</dfn> field_3 = value_2
-<dfn>WHERE</dfn> field_2 = value_1
-</code></pre></details><details><summary>DELETE</summary><p><dfn>DELETE</dfn> удаляет данные<br>
-Удалить из таблицы table строку с id = 2</p><code><dfn>DELETE</dfn> <dfn>FROM</dfn> table <dfn>WHERE</dfn> id = 2</code><p>Удалить из таблицы table строки со значением value_1 в столбце field_2</p><code><dfn>DELETE</dfn> <dfn>FROM</dfn> table <dfn>WHERE</dfn> field_2 = value_1</code><p>Удалить из таблицы table все данные</p><code><dfn>DELETE</dfn> <dfn>FROM</dfn> table</code><p>to delete all data inside a table.</p><code><dfn>TRUNCATE</dfn> <dfn>TABLE</dfn> table;</code></details><details><summary>UNION</summary><p><dfn>UNION</dfn> – объединение:<br>
-применяется для объединения результатов двух SQL-запросов
-в единую таблицу, состоящую из схожих строк.<br> Оба запроса должны
-возвращать одинаковое число столбцов и совместимые типы данных
-в соответствующих столбцах!!!</p><pre><code><dfn>SELECT</dfn> columns <dfn>FROM</dfn> table1
-<dfn>UNION</dfn> <dfn>ALL</dfn>
-<dfn>SELECT</dfn> columns <dfn>FROM</dfn> table2
-</code></pre></details><details><summary>INTERSECT</summary><p><dfn>INTERSECT</dfn> - Пересечение:<br>
-Пересечение — множество, состоящее из элементов, которые
-одновременно принадлежат всем данным множествам.<br>
-<dfn>INTERSECT</dfn>, также как и <dfn>UNION</dfn> обладает ограничением на результат
-запросов, которые должны быть совместимы по объединению</p><pre><code><dfn>SELECT</dfn> columns <dfn>FROM</dfn> table1
-<dfn>INTERSECT</dfn>
-<dfn>SELECT</dfn> columns <dfn>FROM</dfn> table2
-</code></pre></details><details><summary>MINUS или EXCEPT</summary><p><dfn>MINUS или EXCEPT</dfn> - Разность:<br>
-Разность двух множеств — это операция, результатом которой
-является множество, в которое входят все элементы первого
-множества, не входящие во второе множество</p><pre><code><dfn>SELECT</dfn> columns <dfn>FROM</dfn> table1
-<dfn>MINUS</dfn> <span>либо</span> <dfn>EXCEPT</dfn>
-<dfn>SELECT</dfn> columns <dfn>FROM</dfn> table2
-</code></pre></details></details><details><summary>Операторы определения доступа к данным (Data Control Language, DCL)</summary><p><dfn>GRANT</dfn> - предоставляет пользователю (группе) разрешения на определенные операции с объектом<br>
-<dfn>REVOKE</dfn> - отзывает ранее выданные разрешения<br>
-<dfn>DENY</dfn> - задает запрет, имеющий приоритет над разрешением<br>
-</p></details><details><summary>Операторы управления транзакциями (Transaction Control Language, TCL)</summary><p><dfn>Транзакция</dfn> - последовательность команд SQL, 
-которые должны быть выполнены полностью или не выполнены вообще.
-<br>
-Например перевод денег со счёта на счёт</p><pre><code><dfn>START</dfn> <dfn>TRANSACTION</dfn>;
-<dfn>UPDATE</dfn> accounts
-<dfn>SET</dfn> balance = balance - 15000
-<dfn>WHERE</dfn> account_number = 1234567;
-<dfn>UPDATE</dfn> accounts
-<dfn>SET</dfn> balance = balance + 15000
-<dfn>WHERE</dfn> account_number = 9876543;
-</code></pre><p><dfn>COMMIT</dfn> применяет транзакцию, записывает изменения в базу данных<br>
-либо<br>
-<dfn>ROLLBACK</dfn> откатывает все изменения, сделанные в контексте текущей транзакции<br>
-В PostgreSQL <dfn>START TRANSACTION</dfn> и <dfn>AUTOCOMMIT</dfn> включён по умолчанию.<br>
-<dfn>SET AUTOCOMMIT</dfn> = value; value может быть 1 (ON) либо 0 (OFF)<br>
-<dfn>SAVEPOINT</dfn> - делит транзакцию на более мелкие участки
-</p></details></details><details><summary>WordPress</summary><details><summary class="menu__submenu">Источники</summary><a href="https://developer.wordpress.org/">WordPress<br></a><a href="https://developer.wordpress.org/block-editor/reference-guides/">Guides<br></a><a href="https://developer.wordpress.org/reference/functions/">wp core functions<br></a><a href="https://wordpress.github.io/gutenberg/?path=/docs/docs-introduction--page/">wp story book<br></a><a href="https://codex.wordpress.org/">Codex<br></a><a href="https://codex.wordpress.org/Theme_Unit_Test">Theme_Unit_Test<br></a><a href="https://wordpress.org/plugins/theme-check/">Theme-check<br></a><a href="https://wordpress.org/plugins/debug-bar/">Debug-bar<br></a><a href="https://wordpress.org/plugins/query-monitor/">Query-monitor<br></a><a href="https://wordpress.org/plugins/cmb2/">custom fields & metaboxes classic theme PHP adding<br></a><a href="https://gutenberg.10up.com/">custom fields & metaboxes block theme React adding<br></a><a href="https://happyprime.github.io/wphtml-converter/">Convert WordPress block HTML to its JavaScript object or PHP array forms.<br></a><a href="https://wp-kama.ru">WP-Kama<br></a><a href="https://developer.woocommerce.com/docs/">Woocommerce<br></a><a href="https://github.com/ndiego/editor-curation-examples">Отключение и блокировка блоков</a><a href="https://www.briancoords.com/">Brian Coords</a><p>Plugins:<br>
+}</code></pre><br><img src="../img/js/react/redux.jpg" alt=""></details></details><details><summary>Framewrks</summary><details><summary>WordPress</summary><details><summary class="menu__submenu">Источники</summary><a href="https://developer.wordpress.org/">WordPress<br></a><a href="https://developer.wordpress.org/block-editor/reference-guides/">Guides<br></a><a href="https://developer.wordpress.org/reference/functions/">wp core functions<br></a><a href="https://wordpress.github.io/gutenberg/?path=/docs/docs-introduction--page/">wp story book<br></a><a href="https://codex.wordpress.org/">Codex<br></a><a href="https://codex.wordpress.org/Theme_Unit_Test">Theme_Unit_Test<br></a><a href="https://wordpress.org/plugins/theme-check/">Theme-check<br></a><a href="https://wordpress.org/plugins/debug-bar/">Debug-bar<br></a><a href="https://wordpress.org/plugins/query-monitor/">Query-monitor<br></a><a href="https://wordpress.org/plugins/cmb2/">custom fields & metaboxes classic theme PHP adding<br></a><a href="https://gutenberg.10up.com/">custom fields & metaboxes block theme React adding<br></a><a href="https://happyprime.github.io/wphtml-converter/">Convert WordPress block HTML to its JavaScript object or PHP array forms.<br></a><a href="https://wp-kama.ru">WP-Kama<br></a><a href="https://developer.woocommerce.com/docs/">Woocommerce<br></a><a href="https://github.com/ndiego/editor-curation-examples">Отключение и блокировка блоков</a><a href="https://www.briancoords.com/">Brian Coords</a><p>Plugins:<br>
 Advanced Custom Fields PRO<br>
 Contact Form 7<br>
 Site Kit by Google<br>
@@ -4532,7 +4532,7 @@ Settings Sidebar - компонент InspectorControls (@wordpress/block-editor
 CSS компонентов находится по адресу node_modules/@wordpress/components/build-style/style.css<br>
 в консоле браузера wp.data.select('core/editor').getBlocks() - вернет все доступные блоки
 </p></details><details><summary>Работа с данными</summary><p>@wordpress/core-data - предоставляет resolvers, selectors и actions для работы с API ядра WordPress
-</p></details></details></details><details><summary>Laravel</summary><details><summary>Framework</summary><p>Laravel - это фреймворк MVC, который использует шаблон проектирования MVC (Model-View-Controller).<br>
+</p></details></details></details><details></details><summary>Laravel</summary><details><summary>Framework</summary><p>Laravel - это фреймворк MVC, который использует шаблон проектирования MVC (Model-View-Controller).<br>
 Он разделяет приложение на три основных компонента:<br>
 - Модель (Model) - отвечает за работу с данными и бизнес-логикой приложения.<br>
 - Представление (View) - отвечает за отображение данных пользователю.<br>
@@ -6687,43 +6687,22 @@ class AppServiceProvider extends ServiceProvider
 - применить в контроллере
 return response()->caps('foo');
 </code></pre></details></details><details><summary>Views</summary><details> <summary>Templates</summary><p>- шаблоны Blade - это HTML и директивы Blade в файле с расширением .blade.php, компилируются в обычные PHP-файлы и кэшируются<br>
-- могут содержать: обычный PHP-код, другие шаблоны Blade, директивы Blade, секции и компоновщики (для создания многоразовых шаблонов) и компоненты (для многоразовых элементов интерфейса)<br></p><pre><code>создать Blade-шаблон
+- могут содержать: обычный PHP-код, другие шаблоны Blade, директивы Blade, секции, компоновщики и компоненты<br></p><pre><code>- создать Blade-шаблон
 php artisan make:view greeting
-
-для шаблонов blade вызов глобального помошника view
-Route::get('/', function () {
-  return view('greeting', ['name' => 'James']);
-});
-
+- для шаблонов blade вызов глобального помошника view
+Route::get('/', function () {return view('greeting', ['name' => 'James']);});
 либо вызов фасада View
 use Illuminate\Support\Facades\View;
 return View::make('greeting', ['name' => 'James']);
-greeting - имя файла, переменую name можно вывести в шаблоне
-можно передать в шаблон массив данных
-
-вызвать первый шаблон из массива
-use Illuminate\Support\Facades\View;
-return View::first(['custom.admin', 'admin'], $data);
-
-существует ли шаблон
-use Illuminate\Support\Facades\View;
-
-if (View::exists('admin.profile')) {}
-
-передать в шаблон отдельные данные
-return view('greeting')
-        ->with('name', 'Victoria')
-        ->with('occupation', 'Astronaut');
-
-вызвать resources/views/admin/profile.blade.php
-return view('admin.profile', $data);
-
-сделать данные доступными для всех шаблонов в App\Providers\AppServiceProvider
-public function boot(): void
-{
-  View::share('key', 'value');
-}
-</code></pre></details><details><summary>Templates composers</summary><p>компоновщики шаблонов - это классы или анонимные функции, которые позволяют привязывать к шаблону перед его отрисовкой данные которые: <br>
+greeting - имя файла шаблона
+name - вывести в шаблоне значение, либо в шаблон массив данных
+return View::first(['custom.admin', 'admin'], $data);   // вызвать первый шаблон из массива
+if (View::exists('admin.profile')) { }    // существует ли шаблон
+return view('greeting')->with('name', 'Victoria')->with('occupation', 'Astronaut');   // передать в шаблон отдельные данные
+return view('admin.profile', $data);    // вызвать resources/views/admin/profile.blade.php
+- в App\Providers\AppServiceProvider
+public function boot(): void {View::share('key', 'value');}   // сделать данные доступными для всех шаблонов</code></pre><p>Templates composers - это классы или анонимные функции для создания многоразовых шаблонов, чтобы привязывать к шаблону данные перед его отрисовкой.<br>
+Привязываемые данные:<br>
 - не зависят от контроллеров<br>
 - зависят от других данных<br>
 - зависят от других шаблонов<br>
@@ -6731,65 +6710,45 @@ public function boot(): void
 - данные к шаблону, которые вызываются при его каждой отрисовке<br></p><pre><code>в App\Providers\AppServiceProvider
 public function boot(): void
 {
-    // Использование компоновщиков на основе классов...
-    Facades\View::composer('profile', ProfileComposer::class);
-
-    // Использование анонимных компоновщиков...
-    Facades\View::composer('welcome', function (View $view) {
-        // ...
-    });
-
-    Facades\View::composer('dashboard', function (View $view) {
-        // ...
-    });
+  Facades\View::composer('profile', ProfileComposer::class);    // компоновщик на основе класса
+  Facades\View::composer('welcome', function (View $view) { });   // компоновщик на основе анонимной функции
 }
-
-создать app/View/Composers/ProfileComposer.php
+- создать нового компоновщика профиля
 namespace App\View\Composers;
 use App\Repositories\UserRepository;
 use Illuminate\View\View;
-
 class ProfileComposer
 {
-    /**
-    * Создать нового компоновщика профиля.
-    */
-    public function __construct(
-        protected UserRepository $users,
-    ) {}
-
-    /**
-    * Привязать данные к шаблону.
-    */
-    public function compose(View $view): void
-    {
-        $view->with('count', $this->users->count());
-    }
-}</code></pre><p>прикрепить компоновщик к нескольким шаблонам</p><pre><code>use App\Views\Composers\MultiComposer;
+  public function __construct(protected UserRepository $users) { }
+  public function compose(View $view): void
+  {$view->with('count', $this->users->count());}    // привязать данные к шаблону
+}
+- прикрепить компоновщик к нескольким шаблонам
+use App\Views\Composers\MultiComposer;
 use Illuminate\Support\Facades\View;
-
-View::composer(
-    ['profile', 'dashboard'],
-    MultiComposer::class
-);</code></pre><p>прикрепить компоновщик ко всем шаблонам</p><pre><code>use Illuminate\Support\Facades;
+View::composer(['profile', 'dashboard'], MultiComposer::class);
+- прикрепить компоновщик ко всем шаблонам
+use Illuminate\Support\Facades;
 use Illuminate\View\View;
-
-Facades\View::composer('*', function (View $view) {});</code></pre><p>создатели шаблонов выполняются сразу после создания экземпляра, не дожидаясь отрисовки шаблона</p><pre><code>use App\View\Creators\ProfileCreator;
+Facades\View::composer('*', function (View $view) { });
+- создатели шаблонов выполняются сразу после создания экземпляра, не дожидаясь отрисовки шаблона
+use App\View\Creators\ProfileCreator;
 use Illuminate\Support\Facades\View;
-
-View::creator('profile', ProfileCreator::class);</code></pre><p>оптимизация шаблонов</p><pre><code>предварительная компиляции всех шаблонов при развёртывании
-php artisan view:cache
-
-очистка кеша шаблонов
-php artisan view:clear</code></pre><p>удалить кешированные шаблоны</p><code>php artisan view:clear</code><p>поместить РНР код в шаблон Blade</p><code>{{ }}</code><p>текущее UNIX-время</p><code>{{ time() }}.</code><p>отключить экранирование данных (экранирование нужно для предотвращения XSS-атак)</p><code>Привет, {!! $name !!}</code><p>передать в HTML без обработки</p><pre><code>Привет, @{{ name }}
-@@if()</code></pre><p>@verbatim - передать в HTML без обработки несколько строк</p><pre><code>@verbatim
-    &lt;div class="container"&gt;
-        Hello, {{ name }}.
-    &lt;/div&gt;
-@endverbatim</code></pre><p>передать массив шаблону в виде JSON</p><pre><code>&lt;script&gt;
-    var app = {{ Js::from($array) }};
-&lt;/script&gt;
-</code></pre></details><details><summary>Blade directives</summary><p>- директивы Blade - это команды для выполнения действий в шаблонах Blade, начинаются с символа @, могут быть вложенными друг в друга и содержать<br>
+View::creator('profile', ProfileCreator::class);</code></pre><p>оптимизация шаблонов</p><pre><code>php artisan view:cache    // предварительная компиляция всех шаблонов при развёртывании
+php artisan view:clear    // очистка кеша шаблонов
+php artisan view:clear   // удалить кешированные шаблоны
+{{ }}    // поместить РНР код в шаблон Blade
+{{ time() }}    //текущее UNIX-время
+Привет, {!! $name !!}   // отключить экранирование данных (экранирование нужно для предотвращения XSS-атак)
+Привет, @{{ name }} либо @@if()   // передать в HTML без обработки
+ - передать в HTML без обработки несколько строк
+@verbatim
+  &lt;div class="container"&gt;
+    Hello, {{ name }}.
+  &lt;/div&gt;
+@endverbatim
+&lt;script&gt; var app = {{ Js::from($array) }}; &lt;/script&gt;    // передать массив шаблону в виде JSON
+</code></pre><details><summary>Blade directives</summary><p>- директивы Blade - это команды для выполнения действий в шаблонах Blade, начинаются с символа @, могут быть вложенными друг в друга и содержать<br>
 параметры, другие директивы Blade, код (PHP, HTML, JavaScript, CSS)<br>
 - условие<br></p><pre><code>@if (count($records) === 1)
     У меня есть одна запись!
@@ -7439,7 +7398,7 @@ resources/views/child.blade.php
 @section('content')
     &lt;p&gt;Это содержимое моей страницы.&lt;/p&gt;
 @endsection
-</code></pre></details><details><summary>URL creation</summary><p>url используется для генерации URL-адресов приложения</p><code>url("/posts/{$post->id}");  // http://example.com/posts/1</code><p>URL-адрес с запросом</p><pre><code>echo url()->query('/posts', ['search' => 'Laravel']);   // https://example.com/posts?search=Laravel
+</code></pre></details></details><details><summary>URL creation</summary><p>url используется для генерации URL-адресов приложения</p><code>url("/posts/{$post->id}");  // http://example.com/posts/1</code><p>URL-адрес с запросом</p><pre><code>echo url()->query('/posts', ['search' => 'Laravel']);   // https://example.com/posts?search=Laravel
 echo url()->query('/posts?sort=latest', ['search' => 'Laravel']);   // http://example.com/posts?sort=latest&search=Laravel
 echo url()->query('/posts?sort=latest', ['sort' => 'oldest']);  // http://example.com/posts?sort=oldest
 echo $url = url()->query('/posts', ['columns' => ['title', 'body']]);   // http://example.com/posts?columns%5B0%5D=title&columns%5B1%5D=body
