@@ -6818,6 +6818,194 @@ block menu
             - Представление (View) - отвечает за отображение данных пользователю.<br>
             - Контроллер (Controller) - связывает модель и представление, обрабатывает запросы и управляет логикой приложения.<br>
 
+          //- Artisan
+          //- интерфейс командной строки в Laravel
+          details
+            summary Create app
+            pre
+              code.
+                php artisan list    // списка всех доступных команд Artisan
+                php artisan help migrate    // вызвать справку
+                php artisan tinker    // взаимодействовать с приложением из командной строки
+                php artisan vendor:publish --provider="Laravel\Tinker\TinkerServiceProvider"    // конфигурационный файл Tinker
+                'commands' => [App\Console\Commands\ExampleCommand::class]    // добавление команд в config/tinker.php
+                'dont_alias' => [App\Models\User::class]    //    черный список псевдонимов классов в config/tinker.php
+                php artisan make:command SendEmails   // сгенерировать новую команду в app/Console/Commands
+                - определить команду artisan в виде класса
+                namespace App\Console\Commands;
+                use App\Models\User;
+                use App\Support\DripEmailer;
+                use Illuminate\Console\Command;
+                class SendEmails extends Command {
+                  protected $signature = 'mail:send {user}';    // имя команды и вводимые данные
+                  protected $description = 'Отправка письма пользователю';  // описание команды для list
+                  public function handle(DripEmailer $drip): void
+                  {$drip->send(User::find($this->argument('user')));}}    // выполнение команды
+                - коды завершения команды:
+                0 - команда выполнена успешно
+                // вернуть ошибку из public function handle()
+                $this->error('Что-то пошло не так.');
+                return 1;
+                // прервать выполнение комады и вернуть код завершения 1
+                $this->fail('Что-то пошло не так.');
+                - определить команду artisan в routes/console.php
+                Artisan::command('mail:send {user}', function (string $user) {$this->info("Отправка почты на: {$user}!");});
+                - типизация зависимостей
+                use App\Models\User;
+                use App\Support\DripEmailer;
+                Artisan::command('mail:send {user}', function (DripEmailer $drip, string $user) {$drip->send(User::find($user));});
+                - добавить описание команды
+                Artisan::command('mail:send {user}', function (string $user) { })->purpose('Отправка письма пользователю');
+                - изолированные команды: одновременно выполняется только один экземпляр команды
+                namespace App\Console\Commands;
+                use Illuminate\Console\Command;
+                use Illuminate\Contracts\Console\Isolatable;
+                class SendEmails extends Command implements Isolatable { }
+                // выполнить изолированную команду: блокировка других экземпляров этой команды в кэш-драйвере
+                php artisan mail:send 1 --isolated
+                // указать код статуса завершения, если команда не может выполниться
+                php artisan mail:send 1 --isolated=12
+                // задать id команды для изоляции в кэше (по умолчанию - имя команды)
+                public function isolatableId(): string {return $this->argument('user');}
+                // время блокировки истекает либо по завершению команды либо через час после прерывания выполнения команды
+                  настроить время блокировки
+                use DateTimeInterface;
+                use DateInterval;
+                public function isolationLockExpiresAt(): DateTimeInterface|DateInterval {return now()->addMinutes(5);}
+                - вводимые данные (использовать пакет Prompts)
+                protected $signature = 'mail:send {user}';    // один обязательный аргумент user
+                protected $signature = 'mail:send {user?}';    // один необязательный аргумент user
+                protected $signature = 'mail:send {user=foo}';    // один необязательный аргумент user со значением по умолчанию
+                protected $signature = 'mail:send {user} {--queue}';    // параметр {--queue} как логический переключатель
+                php artisan mail:send 1   // вызов команды: user = 1, --queue = false
+                php artisan mail:send 1 --queue   // вызов команды: user = 1, --queue = true
+                protected $signature = 'mail:send {user} {--queue=}';   //  параметр {--queue=} ожидает значение
+                php artisan mail:send 1   // вызов команды: user = 1, --queue = null
+                php artisan mail:send 1 --queue=foo   // вызов команды: user = 1, --queue = foo
+                protected $signature = 'mail:send {user} {--queue=default}';   // параметр --queue со значением по умолчанию
+                protected $signature = 'mail:send {user} {--Q!queue}';   // назначить псевдоним Q для параметра --queue
+                php artisan mail:send 1 -Qfoo  // вызов команды: user = 1, --queue = foo
+                - назначить описания входным аргументам и параметрам
+                protected $signature = 'mail:send {user : Идентификатор пользователя} {--queue : Поставить ли задание в очередь}';
+                - массивы вводимых данных
+                protected $signature = 'mail:send {user*}'    // аргумент ожидает массив данных
+                php artisan mail:send 1 2   // вызов команды: user = [1, 2]
+                protected $signature = 'mail:send {user?*}'    // необязательный аргумент ожидает массив данных
+                protected $signature = 'mail:send {--id*}'    // параметр ожидает массив данных
+                php artisan mail:send --id=1 --id=2   // вызов команды: id = [1, 2]
+                - запрос отсутствующего ввода
+                // запросить у пользователя ввод значения аргумента
+                namespace App\Console\Commands;
+                use Illuminate\Console\Command;
+                use Illuminate\Contracts\Console\PromptsForMissingInput;
+                class SendEmails extends Command implements PromptsForMissingInput {
+                  protected $signature = 'mail:send {user}';}
+                // настроить вопрос для пользователя
+                protected function promptForMissingArgumentsUsing(): array {
+                  return ['user' => 'Какой идентификатор пользователя должен получать почту?'];}
+                // настроить вопрос для пользователя с заполнителем
+                return ['user' => 'Какой идентификатор пользователя должен получать почту?', 'Например: 123'];}
+                // полный контроль запроса на ввод данных пользователем
+                use App\Models\User;
+                use function Laravel\Prompts\search;
+                return [
+                  'user' => fn () => search(
+                    label: 'Найдите пользователя:',
+                    placeholder: 'Например: Тейлор Отвелл',
+                    options: fn ($value) => strlen($value) > 0
+                      ? User::where('name', 'like', "%{$value}%")->pluck('name', 'id')->all() : [])];
+                // запрашивать у пользователя только после автоматического запроса ввести отсутствующие аргументы
+                use Symfony\Component\Console\Input\InputInterface;
+                use Symfony\Component\Console\Output\OutputInterface;
+                use function Laravel\Prompts\confirm;
+                protected function afterPromptingForMissingArguments(InputInterface $input, OutputInterface $output): void {
+                  $input->setOption('queue', confirm(
+                    label: 'Хотите поставить почту в очередь?',
+                    default: $this->option('queue')));}
+                - получить доступ к значениям введенных аргументов и параметров (методы argument и option)
+                public function handle(): void {$userId = $this->argument('user');}
+                $arguments = $this->arguments();    // получить все аргументы в виде массива
+                $queueName = $this->option('queue');    // получить параметр
+                $options = $this->options();    // получить массив
+                // запросить у пользователя данные во время выполнения команды
+                public function handle(): void {$name = $this->ask('Как вас зовут?');}
+                $name = $this->ask('Как вас зовут?', 'Тейлор');   // со значением по умолчанию
+                $password = $this->secret('Какой пароль?');   // вводимые символы не отображаются
+                if ($this->confirm('Хотите продолжить?')) { }   // запрос подтверждения «yes or no»
+                if ($this->confirm('Хотите продолжить?', true)) { }   // со значением по умолчанию
+                // возможные варианты автоматического завершения
+                $name = $this->anticipate('Как вас зовут?', ['Тейлор', 'Дэйл']);
+                // принимать введенные пользователем данные, и возвращать массив вариантов для автозавершения
+                $name = $this->anticipate('Какой у вас адрес?', function (string $input) { // возврнуть массив вариантов... });
+                // предопределенный набор вариантов 
+                $name = $this->choice(
+                  'Как вас зовут?',       // вопрос пользователю
+                  ['Тейлор', 'Дэйл'],     // массиив предопределенных вариантов
+                  $defaultIndex,          // индекс значения по умолчанию из массива вариантов
+                  $maxAttempts = null,    // максимальное количество попыток
+                  $allowMultipleSelections = false);    // множественный выбор
+                - вывод данных в консоль (методы line, info, comment, question, warn и error)
+                public function handle(): void {$this->info('Команда выполнена успешно!');}
+                $this->error('Something went wrong!');
+                $this->line('Отобразить это на экране');
+                $this->newLine();   // отобразить пустую строку
+                $this->newLine(3);   // отобразить 3 пустые строки
+                // форматирование нескольких строк / столбцов данных ('Name', 'Email' - имена столбцов)
+                use App\Models\User;
+                $this->table(['Name', 'Email'], User::all(['name', 'email'])->toArray());
+                // отображать индикатор выполнения
+                use App\Models\User;
+                $users = $this->withProgressBar(User::all(), function (User $user) {$this->performTask($user);});
+                // настроить индикатор вручную
+                $users = App\Models\User::all();
+                $bar = $this->output->createProgressBar(count($users));
+                $bar->start();
+                foreach ($users as $user) {
+                  $this->performTask($user);
+                  $bar->advance();}
+                $bar->finish();
+                - в bootstrap/app.php
+                // сканировать каталоги на наличие команд (по умолчанию в app/Console/Commands)
+                ->withCommands([__DIR__.'/../app/Domain/Orders/Commands'])
+                // зарегистрировать команду вручную
+                use App\Domain\Orders\Commands\SendEmails;
+                ->withCommands([SendEmails::class])
+                - запустить команду Artisan в маршруте или контроллере
+                use Illuminate\Support\Facades\Artisan;
+                Route::post('/user/{user}/mail', function (string $user) {
+                  $exitCode = Artisan::call('mail:send', ['user' => $user, '--queue' => 'default']);});
+                либо
+                Artisan::call('mail:send 1 --queue=default');
+                либо с массивом
+                Route::post('/mail', function () {$exitCode = Artisan::call('mail:send', ['--id' => [5, 13]]);});
+                либо с логическим переключателем
+                $exitCode = Artisan::call('migrate:refresh', ['--force' => true,]);
+                - поставить команды Artisan в очередь для обработки в фоновом режиме
+                use Illuminate\Support\Facades\Artisan;
+                Route::post('/user/{user}/mail', function (string $user) {
+                  Artisan::queue('mail:send', ['user' => $user, '--queue' => 'default']);});
+                // указать соединение или очередь, в которую должна быть отправлена команда
+                Artisan::queue('mail:send', ['user' => 1, '--queue' => 'default'])
+                  ->onConnection('redis')->onQueue('commands');
+                // вызвать другие команды из существующей
+                public function handle(): void {$this->call('mail:send', ['user' => 1, '--queue' => 'default']);}
+                // вызвать команду в тихом режиме
+                $this->callSilently('mail:send', ['user' => 1, '--queue' => 'default']);
+                - прослушивать сигналы операционных систем в командах Artisan и выполнять код при их возникновении
+                public function handle(): void {
+                  $this->trap(SIGTERM, fn () => $this->shouldKeepRunning = false);
+                  while ($this->shouldKeepRunning) { }}
+                // прослушивания нескольких сигналов сразу
+                $this->trap([SIGTERM, SIGQUIT], function (int $signal) {
+                  $this->shouldKeepRunning = false;
+                  dump($signal);});
+                - опубликовать заготовки создания классов командой make для их изменения
+                php artisan stub:publish
+                - Artisan запускает три события при выполнении команд:
+                Illuminate\Console\Events\ArtisanStarting - после запуска Artisan
+                Illuminate\Console\Events\CommandStarting - перед запуском команды
+                Illuminate\Console\Events\CommandFinished - после завершения команды
+
           //- Create app
           details
             summary Create app
@@ -7254,7 +7442,7 @@ block menu
               - Pennant - комплект флагов без крафт. Флаги позволяют постепенно внедрять новые функции приложений, А/Б тестировать новые интерфейсы, дополнять стратегию развития на основе ствола<br>
               - Pint - стиль кода, устанавливается по умолчанию<br>
               - Precognition - предвидеть результат будущего HTTP-запроса, выполнит всю промежуточную обработку маршрута и разрешит зависимости контроллера, включая валидацию запросов формы без выполнения метода контроллера.<br>
-              - Prompts - добавление красивых и удобных форм к приложениям командной строки с функциями браузера<br>
+              - Prompts - добавление красивых и удобных форм и подсказок к приложениям командной строки с функциями браузера<br>
               - Pulse - сведения о производительности и использовании приложения<br>
               - Reverb - масштабируемый в реальном времени WebSocket коммуникаций<br>
               - Sail - взаимодействие со средой разработки Docker<br>
@@ -8012,6 +8200,8 @@ block menu
             summary Routes
             p.
               маршрут это URI и поведение при запросе этого URI<br>
+              ананимные функции маршрутов - это альтернатива контроллеров и консольных команд в виде классов<br>
+              routes/console.php не определяет HTTP-маршруты, он определяет консольные точки входа<br>
               - api.php - маршруты API<br>
               - channels.php - маршруты широковещательной передачи<br>
               - console.php - маршруты консоли<br>
@@ -8171,7 +8361,7 @@ block menu
                 Route::middleware(['first', 'second'])->group(function () {Route::get('/', function () {});});  // по middleware `first` и `second`
                 Route::prefix('admin')->group(function () {Route::get('/users', function () {});});   // по преффиксу: /admin/users
                 Route::name('admin')->group(function () {Route::get('/users', function () {})->name('users');});  // по имени маршрута: admin.users
-            p middleware can(действие, маршрут) - на этот маршрут разрешено тому, кто может совершать указанное действие
+            p middleware can(действие, маршрут) - на этот маршрут разрешено тому, кому политикой разрешено совершать указанное действие
             pre
               code.
                 // обновить пост
