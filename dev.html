@@ -6048,8 +6048,7 @@ sail up -d
 sailar migrate
 http://localhost</code></pre><p>остановить контейнеры</p><code>sail stop </code><p>удалить контейнеры</p><code>sail down</code><p>удалить контейнеры и тома</p><code>sail down -v</code><p>удалить контейнеры, тома и образы</p><code>sail down --rmi all</code><p>удалить только тома</p><code>sail down --volumes</code><p>удалить контейнеры, которые не определены в docker-compose.yml</p><code>sail down --remove-orphans</code><p>пересобрать контейнеры</p><code>sail build</code><p>пересобрать контейнеры без кеша</p><code>sail build --no-cache</code><p>пересобрать контейнеры с обновлением образов без кеша</p><code>sail build --pull --no-cache</code><p>запуск очереди</p><code>sail artisan queue:work --queue=default --tries=3 --timeout=90 --sleep=3 --delay=0 --max-jobs=1000 --max-time=3600</code><p>версия php</p><code>sail php --version</code><p>выполнить скрипт php</p><code>sail php script.php</code><p>установить пакет</p><code>sail composer require laravel/sanctum</code><p>запустить скрипт npm</p><code>sail npm run dev</code><p>запустить yarn</p><code>sail yarn</code><p>запустить сервер на указанном хосте</p><code>sail artisan serve --host=yourhost</code><p>Обновить образы:</p><pre><code>docker compose down -v
 sail build --no-cache
-sail up -d
-</code></pre></details><details><summary>Folder structure</summary><p>- app - основная папка приложения, код приложения<br>
+sail up -d</code></pre><p>установить пакет Telescope</p></details><details><summary>Folder structure</summary><p>- app - основная папка приложения, код приложения<br>
 - bootstrap - начальная загрузка приложения и кеширование<br>
 - config - конфигурация приложения<br>
 - database - миграции, фабрики, наполнители (seeders), sqlite<br>
@@ -8241,6 +8240,7 @@ class AppServiceProvider extends ServiceProvider
 return response()->caps('foo');
 </code></pre></details><details> <summary>Queue</summary><a href="https://laravel.su/docs/12.x/queues#dopolnitelnye-zavisimosti-draiverov">зависимости драйверов</a><p>Laravel позволяет создавать задания (jobs) в очереди (queue), которые могут обрабатываться в фоновом режиме.<br>
 Конфигурации очереди в config/queue.php.<br>
+Драйвер sync является драйвером очереди по-умолчанию.<br>
 Пакет Horizon - панель мониторинга и система настройки для очередей на базе Redis.<br>
 Соединение может иметь несколько очередей и определяет параметры подключения к серверным службам очередей,
 таким как Amazon SQS, Beanstalk или Redis.<br>
@@ -8269,7 +8269,94 @@ $this->app->bindMethod([ProcessPodcast::class, 'handle'], function (ProcessPodca
   'after_commit' => false]
 'block_for' => 5,   //  драйвер блокируется на пять секунд, ожидая, пока задание станет доступным
 // предотвратить обработку сигнала SIGTERM пока не будет обработано следующее задание.
-'block_for' => 0,   //  обработчики очереди блокируются пока задание не станет доступным.</code></pre><p>Задание</p><pre><code>- метод handle, который вызывается, когда задание обрабатывается очередью
+'block_for' => 0,   //  обработчики очереди блокируются пока задание не станет доступным.</code></pre><p>посредник (middleware) задания позволяет обернуть пользовательскую логику вокруг выполнения заданий в очереди</p><pre><code>// при использовании Redis лучше использовать посредника Illuminate\Queue\Middleware\RateLimitedWithRedis
+// ограничения частоты в методе handle
+use Illuminate\Support\Facades\Redis;
+public function handle(): void {
+  Redis::throttle('key')->block(0)->allow(1)->every(5)->then(function () {
+    info('Lock obtained...');
+    // Обработка задания
+    }, function () {
+    // Не удалось получить блокировку
+    return $this->release(5);});}   // обрабатывать только одно задание каждые пять секунд
+// определить посредника задания
+namespace App\Jobs\Middleware;
+use Closure;
+use Illuminate\Support\Facades\Redis;
+class RateLimited {
+  public function handle(object $job, Closure $next): void {
+    Redis::throttle('key')->block(0)->allow(1)->every(5)
+      ->then(function () use ($job, $next) {
+        // Блокировка получена
+        $next($job);
+      }, function () use ($job) {
+        // Не удалось получить блокировку
+        $job->release(5);});}}
+// применить посредника
+use App\Jobs\Middleware\RateLimited;
+public function middleware(): array {return [new RateLimited];}
+- в App\Providers\AppServiceProvider
+// ограничить частоту выполнения задания
+use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Support\Facades\RateLimiter;
+public function boot(): void {
+  RateLimiter::for('backups', function (object $job) {
+    return $job->user->vipCustomer()
+      ? Limit::none() : Limit::perHour(1)->by($job->user->id);});}
+либо
+  return Limit::perMinute(50)->by($job->user->id);
+// применить ограничение
+use Illuminate\Queue\Middleware\RateLimited;
+public function middleware(): array {return [new RateLimited('backups')];}
+// чтобы задание не возвращалось в очередь
+public function middleware(): array {return [(new RateLimited('backups'))->dontRelease()];}
+- предотвращение дублирования задания
+use Illuminate\Queue\Middleware\WithoutOverlapping;
+public function middleware(): array {return [new WithoutOverlapping($this->user->id)];}
+// время до повторной попытки выполнения возвращенного в очередь задания
+public function middleware(): array {
+  return [(new WithoutOverlapping($this->order->id))->releaseAfter(60)];}
+// удалить все дублирующиеся задания
+public function middleware(): array {
+  return [(new WithoutOverlapping($this->order->id))->dontRelease()];}
+// определить время истечения блокировки
+public function middleware(): array {
+    return [(new WithoutOverlapping($this->order->id))->expireAfter(180)];}
+// применять ключ блокировки ко всем классам заданий
+use Illuminate\Queue\Middleware\WithoutOverlapping;
+class ProviderIsDown {
+  public function middleware(): array {
+    return [(new WithoutOverlapping("status:{$this->provider}"))->shared()];}}
+class ProviderIsUp {
+  public function middleware(): array {
+    return [(new WithoutOverlapping("status:{$this->provider}"))->shared()];}}
+- ограничение частоты генерации исключений
+// после вызова указанного количества исключений выполнение задания на время откладывается
+use DateTime;
+use Illuminate\Queue\Middleware\ThrottlesExceptions;
+// после 10 исключений подряд, прервать выполнение на 5 минут
+public function middleware(): array {return [new ThrottlesExceptions(10, 5 * 60)];}
+// пытаться выполнить задание в течении 30 минут
+public function retryUntil(): DateTime {return now()->addMinutes(30);}
+// после каждого исключения повторить попытку выполнить задание через 5 минут
+public function middleware(): array {return [(new ThrottlesExceptions(10, 5 * 60))->backoff(5)];}
+// по умолчанию имя класса задания - это ключ кеша, переопределить ключ кеша
+use Illuminate\Queue\Middleware\ThrottlesExceptions;
+public function middleware(): array {return [(new ThrottlesExceptions(10, 10 * 60))->by('key')];}
+// применить посредника по условию
+use Illuminate\Http\Client\HttpClientException;
+use Illuminate\Queue\Middleware\ThrottlesExceptions;
+public function middleware(): array {
+  return [(new ThrottlesExceptions(10, 10 * 60))->when(
+    fn (Throwable $throwable) => $throwable instanceof HttpClientException)];}
+либо
+use Illuminate\Http\Client\HttpClientException;
+use Illuminate\Queue\Middleware\ThrottlesExceptions;
+public function middleware(): array {
+  return [(new ThrottlesExceptions(10, 10 * 60))->report(
+    fn (Throwable $throwable) => $throwable instanceof HttpClientException)];}
+// более эффективно управление ограничениями исключений с помощью Redis
+  класс Illuminate\Queue\Middleware\ThrottlesExceptionsWithRedis</code></pre><p>Задание</p><pre><code>- метод handle, который вызывается, когда задание обрабатывается очередью
 namespace App\Jobs;
 use App\Models\Podcast;
 use App\Services\AudioProcessor;
@@ -8317,9 +8404,297 @@ class UpdateSearchIndex implements ShouldQueue, ShouldBeUnique {
 use Illuminate\Contracts\Queue\ShouldBeEncrypted;
 use Illuminate\Contracts\Queue\ShouldQueue;
 class UpdateSearchIndex implements ShouldQueue, ShouldBeEncrypted { }
+- пропуск заданий
+// Skip::when удаляет задание, если условие  true, а Skip::unless если условие false
+use Illuminate\Queue\Middleware\Skip;
+public function middleware(): array {return [Skip::when($someCondition)];}
+либо
+use Illuminate\Queue\Middleware\Skip;
+public function middleware(): array
+{return [Skip::when(function (): bool {return $this->shouldSkip();})];}
+- отправка заданий
+namespace App\Http\Controllers;
+use App\Http\Controllers\Controller;
+use App\Jobs\ProcessPodcast;
+use App\Models\Podcast;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+class PodcastController extends Controller {
+  public function store(Request $request): RedirectResponse {
+    $podcast = Podcast::create(/* ... */);
+    ProcessPodcast::dispatch($podcast);
+    return redirect('/podcasts');}}
+// отправить задание по условию
+ProcessPodcast::dispatchIf($accountActive, $podcast);
+ProcessPodcast::dispatchUnless($accountSuspended, $podcast);
+// отложенная отправка
+задание будет доступно для обработки через 10 минут после его отправки
+namespace App\Http\Controllers;
+use App\Http\Controllers\Controller;
+use App\Jobs\ProcessPodcast;
+use App\Models\Podcast;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+class PodcastController extends Controller {
+  public function store(Request $request): RedirectResponse {
+    $podcast = Podcast::create(/* ... */);
+    ProcessPodcast::dispatch($podcast)->delay(now()->addMinutes(10));
+    return redirect('/podcasts');}}
+// отправить задание на немедленную обработку
+ProcessPodcast::dispatch($podcast)->withoutDelay();
+// отправка задания после отправки ответа в браузер
+use App\Jobs\SendNotification;
+SendNotification::dispatchAfterResponse();
+либо
+use App\Mail\WelcomeMessage;
+use Illuminate\Support\Facades\Mail;
+dispatch(function () {Mail::to('taylor@example.com')->send(new WelcomeMessage);})->afterResponse();
+// синхронная отправка: задание не будет поставлено в очередь, а выполнено немедленно в текущем процессе
+namespace App\Http\Controllers;
+use App\Http\Controllers\Controller;
+use App\Jobs\ProcessPodcast;
+use App\Models\Podcast;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+class PodcastController extends Controller {
+  public function store(Request $request): RedirectResponse {
+    $podcast = Podcast::create(/* ... */);
+    ProcessPodcast::dispatchSync($podcast);
+    return redirect('/podcasts');}}
+- задания и транзакции базы данных
+// Laravel отправит задание после завершения родительской транзакции БД
+  в config/database.php
+'redis' => ['driver' => 'redis', 'after_commit' => true]
+либо
+use App\Jobs\ProcessPodcast;
+ProcessPodcast::dispatch($podcast)->afterCommit();
+// отправить задание не дожидаясь завершения транзакций БД
+ProcessPodcast::dispatch($podcast)->beforeCommit();   // при 'after_commit' => true в config/database.php
+- цепочка заданий - список заданий в очереди,
+  которые должны выполняться друг за другом после успешного выполнения основного задания
+// Bus - компонент нижнего уровня, на котором построена диспетчеризация заданий в очереди
+use App\Jobs\OptimizePodcast;
+use App\Jobs\ProcessPodcast;
+use App\Jobs\ReleasePodcast;
+use Illuminate\Support\Facades\Bus;
+Bus::chain([new ProcessPodcast, new OptimizePodcast, new ReleasePodcast])->dispatch();
+либо
+Bus::chain([new ProcessPodcast, new OptimizePodcast, function () {Podcast::update( ... );}])->dispatch();
+// соединения и очередь цепочки заданий
+  указать соединение и очередь для связанных заданий
+Bus::chain([new ProcessPodcast, new OptimizePodcast, new ReleasePodcast])
+  ->onConnection('redis')->onQueue('podcasts')->dispatch();
+// добавить задание в существующую цепочку
+public function handle(): void {
+  $this->prependToChain(new TranscribePodcast);
+  $this->appendToChain(new TranscribePodcast);}
+// указать функцию, которая вызываеться, если задание в цепочке провалилось
+use Illuminate\Support\Facades\Bus;
+use Throwable;
+Bus::chain([new ProcessPodcast, new OptimizePodcast, new ReleasePodcast])
+  ->catch(function (Throwable $e) { })->dispatch();
+- Настройка соединения и очереди
+// отправка заданий в разные очереди, позволяет группировать задания и определять приоритеты,
+  назначать разные обработчики в разные очереди.
+namespace App\Http\Controllers;
+use App\Http\Controllers\Controller, App\Jobs\ProcessPodcast, App\Models\Podcast;
+use Illuminate\Http\RedirectResponse, Illuminate\Http\Request;
+class PodcastController extends Controller {
+  public function store(Request $request): RedirectResponse {
+    $podcast = Podcast::create(/* ... */);
+    ProcessPodcast::dispatch($podcast)->onQueue('processing');
+    return redirect('/podcasts');}}
+либо
+namespace App\Jobs;
+use Illuminate\Contracts\Queue\ShouldQueue, Illuminate\Foundation\Queue\Queueable;
+class ProcessPodcast implements ShouldQueue {
+  use Queueable;
+  public function __construct() {$this->onQueue('processing');}}
+// указать, на какое соединение отправить задание
+namespace App\Http\Controllers;
+use App\Http\Controllers\Controller, App\Jobs\ProcessPodcast, App\Models\Podcast;
+use Illuminate\Http\RedirectResponse, Illuminate\Http\Request;
+class PodcastController extends Controller {
+  public function store(Request $request): RedirectResponse {
+    $podcast = Podcast::create(/* ... */);
+    ProcessPodcast::dispatch($podcast)->onConnection('sqs');
+    return redirect('/podcasts');}}
+либо
+ProcessPodcast::dispatch($podcast)->onConnection('sqs')->onQueue('processing');
+либо в задании
+namespace App\Jobs;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Foundation\Queue\Queueable;
+class ProcessPodcast implements ShouldQueue {
+  use Queueable;
+  public function __construct() {$this->onConnection('sqs');}}
+- максимальное количество попыток
+php artisan queue:work --tries=3    // применяеться ко всем заданиям обработчика
+--tries=0 - задание будет повторяться бесконечно
+// указанное количество попыток в классе задания имеет приоритет над значением --tries
+namespace App\Jobs;
+class ProcessPodcast implements ShouldQueue {public $tries = 5;}
+// управлять динамически числом попыток выполнения задания из класса задания
+public function tries(): int {return 5;}
+- максимальное время для попыток выполнения задания
+// для таймаута необходимо расширение pcntl, а значение таймаута в задании всегда меньше “retry after”
+php artisan queue:work --timeout=30   // максимальное количество секунд для выполнения задания
+// таймаут указанный в классе задания имеет приоритет над значением --timeout
+namespace App\Jobs;
+class ProcessPodcast implements ShouldQueue {public $timeout = 120;}
+public $failOnTimeout = true;   // пометить задание как failed по истечении таймаута
+либо через DateTime
+use DateTime;
+public function retryUntil(): DateTime {return now()->addMinutes(10);}
+- максимальное количество исключений
+namespace App\Jobs;
+use Illuminate\Support\Facades\Redis;
+class ProcessPodcast implements ShouldQueue {
+  public $tries = 25;   // 25 попыток выполнения с интервалом в 10 секунд
+  public $maxExceptions = 3;    // до трёх необработанных исключений
+  public function handle(): void {
+    Redis::throttle('key')->allow(10)->every(60)->then(function () {
+      // Блокировка получена, обрабатываем подкаст
+    }, function () {
+      // Невозможно получить блокировку
+      return $this->release(10);
+    });}}
+- обработка ошибок
+public function handle(): void {$this->release();}   // вернуть задание в очередь вручную
+// обработать задание через указанное количество секунд
+$this->release(10);
+$this->release(now()->addSeconds(10));
+public function handle(): void {$this->fail();}   // пометить задание как «неудачное» вручную
+$this->fail($exception);    // передать исключение 
+$this->fail('Something went wrong.');   // передать строковое сообщение об ошибке</code></pre><p>пакетная обработка заданий позволяет совершить действия после выполнения пакета заданий</p><a href="https://laravel.su/docs/12.x/queues#xranenie-paketov-v-dynamodb"> Хранение пакетов в Amazon DynamoDB</a><pre><code>php artisan make:queue-batches-table  // построить таблицу с метаинформацией о пакетах заданий
+php artisan migrate
+// определить задание с возможностью пакетной передачи
+namespace App\Jobs;
+use Illuminate\Bus\Batchable;     // обеспечивает доступ к методу batch
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Foundation\Queue\Queueable;
+class ImportCsv implements ShouldQueue {
+  use Batchable, Queueable;
+  // batch используется для получения текущего пакета, в котором выполняется задание
+  public function handle(): void {
+    if ($this->batch()->cancelled()) {return;}    // был ли пакет отменен
+    // выполняю задание}}
+// отправляем в очередь пакет заданий, каждое из которых обрабатывает часть строк из файла CSV
+use App\Jobs\ImportCsv;
+use Illuminate\Bus\Batch;
+use Illuminate\Support\Facades\Bus;
+use Throwable;
+$batch = Bus::batch([
+  new ImportCsv(1, 100),
+  new ImportCsv(101, 200),
+  new ImportCsv(201, 300),
+  new ImportCsv(301, 400),
+  new ImportCsv(401, 500),
+])->before(function (Batch $batch) {
+  // Пакет заданий создан, но не добавлено ни одно задание
+})->progress(function (Batch $batch) {
+  // Одна задача успешно завершена
+})->then(function (Batch $batch) {
+  // Все задания успешно завершены
+})->catch(function (Batch $batch, Throwable $e) {
+  // Обнаружено первое проваленное задание из пакета
+})->finally(function (Batch $batch) {
+  // Завершено выполнение пакета
+})->dispatch();
+return $batch->id;
+$batch->id    // получить доступ к идентификатору пакета
+// присвоить пакету произвольное имя
+$batch = Bus::batch([...])->then(function (Batch $batch) {...})->name('Import CSV')->dispatch();
+// указать соединение и очередь, все пакетные задания выполняются в одном соединении и в одной очереди
+$batch = Bus::batch([...])->then(function (Batch $batch) {...})->onConnection('redis')->onQueue('imports')->dispatch();
+// определить набор связанных заданий в пакете
+use App\Jobs\ReleasePodcast;
+use App\Jobs\SendPodcastReleaseNotification;
+use Illuminate\Bus\Batch;
+use Illuminate\Support\Facades\Bus;
+Bus::batch([    // выполнить две цепочки заданий параллельно и после выполнить замыкание
+  [new ReleasePodcast(1), new SendPodcastReleaseNotification(1)],
+  [new ReleasePodcast(2), new SendPodcastReleaseNotification(2)]])
+  ->then(function (Batch $batch) {...})->dispatch();
+// объединить пакеты в цепочку
+use App\Jobs\FlushPodcastCache;
+use App\Jobs\ReleasePodcast;
+use App\Jobs\SendPodcastReleaseNotification;
+use Illuminate\Support\Facades\Bus;
+Bus::chain([
+  new FlushPodcastCache,
+  Bus::batch([new ReleasePodcast(1), new ReleasePodcast(2)]),
+  Bus::batch([new SendPodcastReleaseNotification(1), new SendPodcastReleaseNotification(2)])])->dispatch();
+// добавлять задания в пакет можно только из задания, которое принадлежит к тому же пакету
+$batch = Bus::batch([
+  new LoadImportBatch,
+  new LoadImportBatch,
+  new LoadImportBatch,
+])->then(function (Batch $batch) {...})->name('Import Contacts')->dispatch();
+// add метод экземпляра пакета, к которому можно получить доступ через метод batch задания
+use App\Jobs\ImportContacts;
+use Illuminate\Support\Collection;
+public function handle(): void {
+  if ($this->batch()->cancelled()) {return;}
+  $this->batch()->add(Collection::times(1000, function () {return new ImportContacts;}));}
+// экземпляр Illuminate\Bus\Batch передается замыканиям по завершению пакета и предоставляет:
+$batch->id;   // UUID пакета
+$batch->name;   // Название пакета (если применимо)
+$batch->totalJobs;    // Количество заданий, назначенных пакету
+$batch->pendingJobs;    // Количество заданий, которые не были обработаны очередью
+$batch->failedJobs;   // Количество неудачных заданий
+$batch->processedJobs();    // Количество заданий, обработанных на данный момент
+$batch->progress();   // Процент завершения пакетной обработки (0-100)
+$batch->finished();   // Указывает, завершено ли выполнение пакета
+$batch->cancel();   // Отменить выполнение пакета
+$batch->cancelled();    // Указывает, был ли пакет отменен
+// возврат пакетов заданий из маршрутов
+use Illuminate\Support\Facades\Bus, Illuminate\Support\Facades\Route;
+Route::get('/batch/{batchId}', function (string $batchId) {return Bus::findBatch($batchId);});
+// отменить выполнение пакета
+public function handle(): void {
+  if ($this->user->exceedsImportLimit()) {return $this->batch()->cancel();}
+  if ($this->batch()->cancelled()) {return;}}   // был ли соответствующий пакет отменен
+// определять был ли соответствующий пакет отменен в посреднике
+use Illuminate\Queue\Middleware\SkipIfBatchCancelled;
+public function middleware(): array {return [new SkipIfBatchCancelled];}
+// разрешить невыполнение задания в пакете
+$batch = Bus::batch([...])->then(function (Batch $batch) {...})->allowFailures()->dispatch();
+// повторить все неудачные задания для пакета с UUID 32dbc76c-4f82-4749-b610-a639fe0099b5
+php artisan queue:retry-batch 32dbc76c-4f82-4749-b610-a639fe0099b5
+// запланировать очистку таблицы job_batches от записей о пакетах
+use Illuminate\Support\Facades\Schedule;
+Schedule::command('queue:prune-batches')->daily();
+либо очищать каждые 48 часов
+Schedule::command('queue:prune-batches --hours=48')->daily();
+// либо очистить записи о невыполненых и незавершённых пакетах
+Schedule::command('queue:prune-batches --hours=48 --unfinished=72')->daily();
+// либо очистить записи об отмененных пакетах
+Schedule::command('queue:prune-batches --hours=48 --cancelled=72')->daily();
 
-https://laravel.su/docs/12.x/queues#posrednik-middleware-zadaniia
+https://laravel.su/docs/12.x/queues#anonimnye-oceredi
 
+
+
+
+
+
+
+</code></pre><p>обработка заданий в очереди</p><pre><code>php artisan queue:work --queue=emails --tries=3 --timeout=90 --sleep=3 --max-jobs=1000
+php artisan queue:work --queue=emails --tries=3 --timeout=90 --sleep=3 --max-time=3600
+php artisan queue:work --queue=emails --tries=3 --timeout=90 --sleep=3 --max-failures=5
+php artisan queue:work --queue=emails --tries=3 --timeout=90 --sleep=3 --max-batches=10
+php artisan queue:work --queue=emails --tries=3 --timeout=90 --sleep=3 --max-batch-size=1000
+- обработка заданий в очереди с помощью Supervisor
+- обработка заданий в очереди с помощью Horizon</code></pre><p>пакетная обработка заданий</p><pre><code>use App\Jobs\ProcessPodcast;
+use Illuminate\Support\Facades\Bus;
+Bus::batch([
+  new ProcessPodcast($podcast),
+  new ProcessPodcast($podcast2),
+  new ProcessPodcast($podcast3),
+])->dispatch();</code></pre><p>события и слушатели в очереди</p><pre><code>use App\Events\OrderShipped;
+use App\Listeners\SendOrderShippedNotification;
+Event::listen(OrderShipped::class, SendOrderShippedNotification::class);    
 </code></pre></details><details> <summary>Events</summary><p>Классы событий обычно хранятся в каталоге app/Events, а их слушатели – в app/Listeners.</p><pre><code>php artisan make:event PodcastProcessed   // сгенерировать событие
 php artisan make:listener SendPodcastNotification --event=PodcastProcessed    // сгенерировать слушателя
 php artisan event:list    // список всех слушателей</code></pre><p>в bootstrap/app.php</p><code>->withEvents(discover: [__DIR__.'/../app/Domain/Orders/Listeners'])   // искать слушатели в указаном каталоге</code><p>в AppServiceProvider</p><pre><code>- регистрация вручную событий и соответствующих им слушателей
