@@ -12201,6 +12201,7 @@ block menu
                 return response()->caps('foo');
 
           //- Queue
+          //- задания (jobs) в очереди (queue) для обрабатки в фоновом режиме
           details 
             summary Queue
             a(href="https://laravel.su/docs/12.x/queues#dopolnitelnye-zavisimosti-draiverov") зависимости драйверов
@@ -12549,6 +12550,13 @@ block menu
                 public function handle(): void {$this->fail();}   // пометить задание как «неудачное» вручную
                 $this->fail($exception);    // передать исключение 
                 $this->fail('Something went wrong.');   // передать строковое сообщение об ошибке
+                - анонимные очереди
+                // вместо задания в очередь можно отправить функцию для быстрых и простых задач вне текущего цикла запроса
+                $podcast = App\Podcast::find(1);
+                dispatch(function () use ($podcast) {$podcast->publish();});
+                // catch определяет функцию для обработки неудачного завершения анонимной очереди
+                use Throwable;
+                dispatch(function () use ($podcast) {$podcast->publish();})->catch(function (Throwable $e) { });
             p пакетная обработка заданий позволяет совершить действия после выполнения пакета заданий
             a(href="https://laravel.su/docs/12.x/queues#xranenie-paketov-v-dynamodb")  Хранение пакетов в Amazon DynamoDB
             pre
@@ -12566,7 +12574,15 @@ block menu
                   public function handle(): void {
                     if ($this->batch()->cancelled()) {return;}    // был ли пакет отменен
                     // выполняю задание}}
-                // отправляем в очередь пакет заданий, каждое из которых обрабатывает часть строк из файла CSV
+                // отправить в очередь пакет заданий
+                use App\Jobs\ProcessPodcast;
+                use Illuminate\Support\Facades\Bus;
+                Bus::batch([
+                  new ProcessPodcast($podcast),
+                  new ProcessPodcast($podcast2),
+                  new ProcessPodcast($podcast3),
+                ])->dispatch();
+                // отправить в очередь пакет заданий, каждое из которых обрабатывает часть строк из файла CSV
                 use App\Jobs\ImportCsv;
                 use Illuminate\Bus\Batch;
                 use Illuminate\Support\Facades\Bus;
@@ -12658,42 +12674,245 @@ block menu
                 Schedule::command('queue:prune-batches --hours=48 --unfinished=72')->daily();
                 // либо очистить записи об отмененных пакетах
                 Schedule::command('queue:prune-batches --hours=48 --cancelled=72')->daily();
-
-                https://laravel.su/docs/12.x/queues#anonimnye-oceredi
-
-
-
-
-
-
-
-
-            p обработка заданий в очереди
+            p обработчики очереди – это долгоживущие процессы, которые хранят состояние загруженного приложения в памяти.
             pre
               code.
+                php artisan queue:work  // запускает обработчика очереди и обрабатывает новые задания пока не остановят
+                php artisan queue:work -v   // выводить идентификаторы обработанных заданий
+                php artisan queue:listen  // менее эффективна, чем queue:work, но учитывает обновленный код и состояние приложения
+                php artisan queue:work redis    // указать обработчику соединение (одно из config/queue.php)
+                php artisan queue:work redis --queue=emails   // обрабатывать только очередь emails из соединения redis
+                php artisan queue:work --once   // обработать только одно задание из очереди
+                php artisan queue:work --max-jobs=1000    // обработать 1000 заданий и выйти
+                php artisan queue:work --stop-when-empty    // обработать все задания и затем корректно завершить работу
+                php artisan queue:work --max-time=3600    // обрабатывать задания в течение заданных секунд и выйти
+                php artisan queue:work --sleep=3    // сколько секунд обработчик будет «спать», если нет заданий
+                php artisan queue:work --force    // обрабатывать задания в очереди, даже если включён режим обслуживания
+                dispatch((new Job)->onQueue('high'));   // поместить задание в очередь с «высоким» (high) приоритетом
+                php artisan queue:work --queue=high,low   // задания очереди high будут обработаны, прежде чем в очереди low
+                php artisan queue:restart   // ерезапустить всех обработчиков, нужен диспетчер процессов Supervisor для запуска
+                - сроки и таймауты задания
+                // параметр retry_after в config/queue.php указывает сколько секунд ждать до повторной попытки выполнения задания
+                php artisan queue:work --timeout=60   // количество секунд на обработку задания
+                --timeout всегда должно быть меньше, чем значение retry_after
                 php artisan queue:work --queue=emails --tries=3 --timeout=90 --sleep=3 --max-jobs=1000
                 php artisan queue:work --queue=emails --tries=3 --timeout=90 --sleep=3 --max-time=3600
                 php artisan queue:work --queue=emails --tries=3 --timeout=90 --sleep=3 --max-failures=5
                 php artisan queue:work --queue=emails --tries=3 --timeout=90 --sleep=3 --max-batches=10
                 php artisan queue:work --queue=emails --tries=3 --timeout=90 --sleep=3 --max-batch-size=1000
-                - обработка заданий в очереди с помощью Supervisor
-                - обработка заданий в очереди с помощью Horizon
-            p пакетная обработка заданий
+            p Supervisor - диспетчер процессов: запускать одновременно и перезапускает процессы queue:work
+            a(href="https://supervisord.org/index.html") Supervisor
             pre
               code.
-                use App\Jobs\ProcessPodcast;
-                use Illuminate\Support\Facades\Bus;
-                Bus::batch([
-                  new ProcessPodcast($podcast),
-                  new ProcessPodcast($podcast2),
-                  new ProcessPodcast($podcast3),
-                ])->dispatch();
+                sudo apt-get install supervisor   // установить Supervisor
+                // создать файл конфигурации laravel-worker.conf в /etc/supervisor/conf.d для запуска и отслеживания queue:work
+                [program:laravel-worker]
+                process_name=%(program_name)s_%(process_num)02d
+                command=php /home/forge/app.com/artisan queue:work sqs --sleep=3 --tries=3 --max-time=3600  // подключить соединение
+                autostart=true
+                autorestart=true
+                stopasgroup=true
+                killasgroup=true
+                user=forge
+                numprocs=8      // запустить и отслеживать 8 процессов queue:work
+                redirect_stderr=true
+                stdout_logfile=/home/forge/app.com/worker.log
+                stopwaitsecs=3600   // должно быть большего самого продолжительного задания
+                // обновить конфигурацию Supervisor и запустить процессы
+                sudo supervisorctl reread
+                sudo supervisorctl update
+                sudo supervisorctl start "laravel-worker:*"
+            p Неудачные задания
+            a(href="https://laravel.su/docs/12.x/queues#xranenie-neudacnyx-zadanii-v-dynamodb") хранение а Amazon DynamoDB
+            pre
+              code.
+                // неудачное асинхронное задание будет помещено в таблицу БД failed_jobs
+                // исключения синхронного задания обрабатываются немедленно
+                // таблица БД failed_jobs создаётся по умолчанию
+                // создать таблицу БД failed_jobs вручную
+                php artisan make:queue-failed-table
+                php artisan migrate
+                php artisan queue:failed    // просмотреть таблицу БД failed_jobs
+                // повторить неудачное задание с идентификатором ce7bb17c-cdd8-41f0-a8ec-7b4fef4e5ece
+                php artisan queue:retry ce7bb17c-cdd8-41f0-a8ec-7b4fef4e5ece
+                либо повторить два
+                php artisan queue:retry ce7bb17c-cdd8-41f0-a8ec-7b4fef4e5ece 91401d2c-0784-4f43-824c-34f94a33c24d
+                php artisan queue:retry --queue=name    // повторить все из очереди name
+                php artisan queue:retry all   // повторить все
+                php artisan queue:forget 91401d2c-0784-4f43-824c-34f94a33c24d   // удалить неудачное задание
+                php artisan queue:flush   // удалить все неудачные задания из таблицы failed_jobs
+                php artisan queue:prune-failed    // удалить все записи в таблице failed_jobs
+                php artisan queue:prune-failed --hours=48   // удалить записи старше 48 часов в таблице failed_jobs
+                php artisan queue:work redis --tries=3    // максимальное количество попыток выполнения задания
+                php artisan queue:work redis --tries=3 --backoff=3    // сколько секунд ждать перед повторной попыткой
+                либо в классе задания в виде переменной
+                public $backoff = 3;
+                либо в классе задания в виде функции
+                public function backoff(): int {return 3;}
+                либо повторная попытка для первой попытки через 1 секунду, для второй через 5, для третьей и последующих через 10
+                public function backoff(): array {return [1, 5, 10];}
+                // отправить предупреждение о сбое и отменить действия частично выполненые заданием
+                namespace App\Jobs;
+                use App\Models\Podcast;
+                use App\Services\AudioProcessor;
+                use Illuminate\Contracts\Queue\ShouldQueue;
+                use Illuminate\Foundation\Queue\Queueable;
+                use Throwable;
+                class ProcessPodcast implements ShouldQueue {
+                  use Queueable;
+                  public function __construct(public Podcast $podcast) { }  // создать новый экземпляр задания
+                  public function handle(AudioProcessor $processor): void { выполнить задание }
+                  public function failed(?Throwable $exception): void { обработать провал задания }}
+                public $deleteWhenMissingModels = true;   // автоматическое удаление заданий с отсутствующими моделями
+                // отбрасывать невыполненные задания без сохранения: установить параметр конфигурации queue.failed.driver
+                QUEUE_FAILED_DRIVER=null
+                - удалить задания из очереди
+                php artisan queue:clear   // удалить все задания из соединения и очереди по умолчанию
+                php artisan queue:clear redis --queue=emails   // удалить все задания из соединения redis и очереди emails
             p события и слушатели в очереди
             pre
               code.
                 use App\Events\OrderShipped;
                 use App\Listeners\SendOrderShippedNotification;
                 Event::listen(OrderShipped::class, SendOrderShippedNotification::class);    
+                - зарегистрировать слушатель событий, который будет вызываться при сбое задания
+                namespace App\Providers;
+                use Illuminate\Support\Facades\Queue;
+                use Illuminate\Support\ServiceProvider;
+                use Illuminate\Queue\Events\JobFailed;
+                class AppServiceProvider extends ServiceProvider {
+                  public function register(): void { }
+                  public function boot(): void {
+                    Queue::failing(function (JobFailed $event) {
+                      // $event->connectionName
+                      // $event->job
+                      // $event->exception});}}
+                - указать функции, которые будут выполняться до или после обработки задания в очереди
+                namespace App\Providers;
+                use Illuminate\Support\Facades\Queue;
+                use Illuminate\Support\ServiceProvider;
+                use Illuminate\Queue\Events\JobProcessed;
+                use Illuminate\Queue\Events\JobProcessing;
+                class AppServiceProvider extends ServiceProvider {
+                  public function register(): void { }
+                  public function boot(): void {
+                    Queue::before(function (JobProcessing $event) {
+                      // $event->connectionName
+                      // $event->job
+                      // $event->job->payload()
+                    });
+                    Queue::after(function (JobProcessed $event) {
+                      // $event->connectionName
+                      // $event->job
+                      // $event->job->payload()
+                    });}}
+                - отправить событие если количество заданий в очереди больше заданного
+                php artisan queue:monitor redis:default,redis:deployments --max=100
+                // прослушать это событие
+                use App\Notifications\QueueHasLongWaitTime;
+                use Illuminate\Queue\Events\QueueBusy;
+                use Illuminate\Support\Facades\Event;
+                use Illuminate\Support\Facades\Notification;
+                public function boot(): void {Event::listen(function (QueueBusy $event) {
+                  Notification::route('mail', 'dev@example.com')->notify(new QueueHasLongWaitTime(
+                    $event->connection,
+                    $event->queue,
+                    $event->size));});}
+                - выполнить функцию до того, как обработчик попытается получить задание из очереди
+                // откат любых транзакций, оставшихся открытыми из-за ранее неудачного задания
+                use Illuminate\Support\Facades\DB;
+                use Illuminate\Support\Facades\Queue;
+                Queue::looping(function () {while (DB::transactionLevel() > 0) {DB::rollBack();}});
+            p тестирование
+            pre
+              code.
+                // предотвратить фактическую отправку заданий очередь
+                use App\Jobs\AnotherJob;
+                use App\Jobs\FinalJob;
+                use App\Jobs\ShipOrder;
+                use Illuminate\Support\Facades\Queue;
+                test('orders can be shipped', function () {
+                  Queue::fake();
+                  Queue::assertNothingPushed();   // Assert that no jobs were pushed
+                  Queue::assertPushedOn('queue-name', ShipOrder::class);  // Assert a job was pushed to a given queue
+                  Queue::assertPushed(ShipOrder::class, 2);   // Assert a job was pushed twice
+                  Queue::assertNotPushed(AnotherJob::class);    // Assert a job was not pushed
+                  Queue::assertClosurePushed();   // Assert that a Closure was pushed to the queue
+                  Queue::assertCount(3);    // Assert the total number of jobs that were pushed});
+                либо
+                Queue::assertPushed(function (ShipOrder $job) use ($order) {return $job->order->id === $order->id;});
+                // передать имена классов заданий, которые нужно имитировать
+                test('orders can be shipped', function () {
+                  Queue::fake([ShipOrder::class]);
+                  Queue::assertPushed(ShipOrder::class, 2);});   // Assert a job was pushed twice
+                // имитировать все задания, кроме указанных
+                Queue::fake()->except([ShipOrder::class]);
+                // протестировать цепочки заданий
+                use App\Jobs\RecordShipment;
+                use App\Jobs\ShipOrder;
+                use App\Jobs\UpdateInventory;
+                use Illuminate\Support\Facades\Bus;
+                Bus::fake();
+                Bus::assertChained([
+                  ShipOrder::class,
+                  RecordShipment::class,
+                  UpdateInventory::class]);
+                либо
+                Bus::assertChained([
+                  new ShipOrder,
+                  new RecordShipment,
+                  new UpdateInventory]);
+                // подтвердить, что задание было отправлено без цепочки заданий
+                Bus::assertDispatchedWithoutChain(ShipOrder::class);
+                // подтвердить, что задание имеет ожидаемую цепочку оставшихся заданий
+                $job = new ProcessPodcast;
+                $job->handle();
+                $job->assertHasChain([
+                  new TranscribePodcast,
+                  new OptimizePodcast,
+                  new ReleasePodcast]);
+                // подтвердить, что оставшаяся цепочка задания пуста
+                $job->assertDoesntHaveChain();
+                // тестирование цепочки пакетов
+                use App\Jobs\ShipOrder;
+                use App\Jobs\UpdateInventory;
+                use Illuminate\Bus\PendingBatch;
+                use Illuminate\Support\Facades\Bus;
+                Bus::assertChained([
+                  new ShipOrder,
+                  Bus::chainedBatch(function (PendingBatch $batch) {return $batch->jobs->count() === 3;}),
+                  new UpdateInventory]);
+                // подтвердить, что пакет заданий был отправлен
+                use Illuminate\Bus\PendingBatch;
+                use Illuminate\Support\Facades\Bus;
+                Bus::fake();
+                Bus::assertBatched(function (PendingBatch $batch) {
+                  return $batch->name == 'import-csv' && $batch->jobs->count() === 10;});
+                // подтвердить, что было отправлено заданное количество пакетов
+                Bus::assertBatchCount(3);
+                // подтвердить, что никакие пакеты не были отправлены
+                Bus::assertNothingBatched();
+                // протестировать взаимодействие отдельного задания с его базовым пакетом
+                [$job, $batch] = (new ShipOrder)->withFakeBatch();    // назначить заданию поддельный пакет
+                $job->handle();
+                $this->assertTrue($batch->cancelled());
+                $this->assertEmpty($batch->added);
+                // протестировать взаимодействие задания с очередью
+                use App\Exceptions\CorruptedAudioException;
+                use App\Jobs\ProcessPodcast;
+                $job = (new ProcessPodcast)->withFakeQueueInteractions();   // поддельное взаимодействие
+                $job->handle();
+                $job->assertReleased(delay: 30);
+                $job->assertDeleted();
+                $job->assertNotDeleted();
+                $job->assertFailed();
+                $job->assertFailedWith(CorruptedAudioException::class);
+                $job->assertNotFailed();
+            p обработка заданий в очереди с помощью Horizon
+            pre
+              code.
+                php artisan horizon:forget 91401d2c-0784-4f43-824c-34f94a33c24d   // удаления неудачного задания
+                php artisan horizon:clear   // удалить все задания из соединения и очереди по умолчанию
 
           //- Events
           //- реализация паттерна Наблюдатель: подписываться и отслеживать события в приложении
@@ -12882,6 +13101,7 @@ block menu
                     {return [Login::class => 'handleUserLogin', Logout::class => 'handleUserLogout'];}}
 
           //- Broadcasting
+          //- отправка событий от сервера к клиенту без обновления страницы
           details 
             summary Broadcasting
             p.
@@ -12889,7 +13109,161 @@ block menu
               Он делает возможным более тесное взаимодействие между браузером и веб-сайтом, способствуя распространению интерактивного содержимого и созданию приложений реального времени.<br>
               Когда некоторые данные обновляются на сервере, тогда обычно отправляется сообщение через соединение WebSocket для обработки клиентом.<br>
               Широковещание используется для отправки события от сервера к клиенту, которое будет получено в JavaScript приложения без обновления страницы.<br>
-              Клиенты подключаются к именованным каналам во внешнем интерфейсе, Laravel транслирует события на эти каналы во внутреннем интерфейсе.<br>
+              Клиенты подключаются к именованным каналам во внешнем интерфейсе, Laravel транслирует события для этих каналов во внутреннем интерфейсе.<br>
+              Вся трансляция событий выполняются через задания в очереди.<br>
+              Трансляция событий на стороне сервера (конфигурация config/broadcasting.php)<br>
+              Драйвера трансляции: Laravel Reverb, Pusher Channels, и Ably<br>
+            a(href="https://laravel.su/docs/12.x/reverb") пакет Laravel Reverb
+            pre
+              code.
+                // драйвер log для локальной разработки и отладки, драйвер null - отключить трансляцию во время тестирования
+                php artisan install:broadcasting    // включить трансляцию (создаст config/broadcasting.php и routes/channels.php)
+                // установить Reverb вручную
+                composer require laravel/reverb
+                php artisan reverb:install
+            a(href="https://pusher.com/channels/") Pusher Channels
+            pre
+              code.
+                composer require pusher/pusher-php-server   // установить PHP SDK Pusher Channels
+                // настроить учетные данные в config/broadcasting.php
+                PUSHER_APP_ID="your-pusher-app-id"
+                PUSHER_APP_KEY="your-pusher-key"
+                PUSHER_APP_SECRET="your-pusher-secret"
+                PUSHER_HOST=
+                PUSHER_PORT=443
+                PUSHER_SCHEME="https"
+                PUSHER_APP_CLUSTER="mt1"
+                BROADCAST_CONNECTION=pusher   // в .env
+            a(href="https://ably.io/") Ably<br>
+            a(href="https://github.com/ably/laravel-broadcaster") Ably laravel
+            pre
+              code.
+                composer require ably/ably-php    // установить PHP SDK Ably
+                // настроить учетные данные Ably в config/broadcasting.php
+                // в .env
+                ABLY_KEY=your-ably-key
+                BROADCAST_CONNECTION=ably
+            p Установка на стороне клиента
+            a(href="https://github.com/laravel/echo") Laravel Echo — библиотека JS для подписки на каналы и прослушивания событий от сервера
+            pre
+              code.
+                php artisan install:broadcasting    // автоматически устанавливает пакеты laravel-echo и pusher-js
+                // установить пакеты laravel-echo и pusher-js вручную
+                npm install --save-dev laravel-echo pusher-js // Echo использует протокол Pusher для подписок, каналов и сообщений WebSocket
+                - Reverb
+                // в resources/js/bootstrap.js либо в resources/js/echo.js
+                import Echo from 'laravel-echo';
+                import Pusher from 'pusher-js';
+                window.Pusher = Pusher;
+                window.Echo = new Echo({
+                  broadcaster: 'reverb',
+                  key: import.meta.env.VITE_REVERB_APP_KEY,
+                  wsHost: import.meta.env.VITE_REVERB_HOST,
+                  wsPort: import.meta.env.VITE_REVERB_PORT,
+                  wssPort: import.meta.env.VITE_REVERB_PORT,
+                  forceTLS: (import.meta.env.VITE_REVERB_SCHEME ?? 'https') === 'https',
+                  enabledTransports: ['ws', 'wss'],
+                });
+                - Pusher Channels
+                // в resources/js/echo.js
+                import Echo from 'laravel-echo';
+                import Pusher from 'pusher-js';
+                window.Pusher = Pusher;
+                window.Echo = new Echo({
+                  broadcaster: 'pusher',
+                  key: import.meta.env.VITE_PUSHER_APP_KEY,
+                  cluster: import.meta.env.VITE_PUSHER_APP_CLUSTER,
+                  forceTLS: true
+                });
+                // использовать существующий экземпляр клиента Pusher Channelsimport Echo from 'laravel-echo';
+                import Pusher from 'pusher-js';
+                const options = {broadcaster: 'pusher', key: 'your-pusher-channels-key'}
+                window.Echo = new Echo({...options, client: new Pusher(options.key, options)});
+                // в .env
+                PUSHER_APP_ID="your-pusher-app-id"
+                PUSHER_APP_KEY="your-pusher-key"
+                PUSHER_APP_SECRET="your-pusher-secret"
+                PUSHER_HOST=
+                PUSHER_PORT=443
+                PUSHER_SCHEME="https"
+                PUSHER_APP_CLUSTER="mt1"
+                VITE_APP_NAME="${APP_NAME}"
+                VITE_PUSHER_APP_KEY="${PUSHER_APP_KEY}"
+                VITE_PUSHER_HOST="${PUSHER_HOST}"
+                VITE_PUSHER_PORT="${PUSHER_PORT}"
+                VITE_PUSHER_SCHEME="${PUSHER_SCHEME}"
+                VITE_PUSHER_APP_CLUSTER="${PUSHER_APP_CLUSTER}"
+                - Ably
+                // включить поддержку протокола Pusher в разделе настроек «Protocol Adapter Settings» панели Ably
+                // в resources/js/echo.js
+                import Echo from 'laravel-echo';
+                import Pusher from 'pusher-js';
+                window.Pusher = Pusher;
+                window.Echo = new Echo({
+                  broadcaster: 'pusher',
+                  key: import.meta.env.VITE_ABLY_PUBLIC_KEY,    // часть ключа Ably перед символом :
+                  wsHost: 'realtime-pusher.ably.io',
+                  wsPort: 443,
+                  disableStats: true,
+                  encrypted: true,
+                });
+                npm run dev   // скомпилировать ресурсы
+            p Пример: статус доставки заказов в интернет-магазине
+            pre
+              code.
+                use App\Events\OrderShipmentStatusUpdated;
+                OrderShipmentStatusUpdated::dispatch($order);   // событие запускается при обновлении статуса доставки
+                - ShouldBroadcast: транслировать событие при его запуске
+                namespace App\Events;
+                use App\Models\Order;
+                use Illuminate\Broadcasting\Channel;
+                use Illuminate\Broadcasting\InteractsWithSockets;
+                use Illuminate\Broadcasting\PresenceChannel;
+                use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+                use Illuminate\Queue\SerializesModels;
+                class OrderShipmentStatusUpdated implements ShouldBroadcast {public $order;}
+                // получить каналы трансляции события в классе события
+                use Illuminate\Broadcasting\Channel;
+                use Illuminate\Broadcasting\PrivateChannel;
+                // транслировать событие на частном канале, привязанном к конкретному заказу
+                public function broadcastOn(): Channel {return new PrivateChannel('orders.'.$this->order->id);}
+                // передать событие по нескольким каналам
+                use Illuminate\Broadcasting\PrivateChannel;
+                public function broadcastOn(): array {return [new PrivateChannel('orders.'.$this->order->id)];}
+                - определить правила авторизации каналов в файле routes/channels.php
+                use App\Models\Order;
+                use App\Models\User;
+                    // прослушивать канал может только создатель заказа
+                Broadcast::channel('orders.{orderId}', function (User $user, int $orderId) {
+                  return $user->id === Order::findOrNew($orderId)->user_id;});
+                - прослушивать событие: метод private для подписки на частный канал
+                Echo.private(`orders.${orderId}`).listen('OrderShipmentStatusUpdated', (e) => {console.log(e.order);});
+            p Транслируемые события
+            pre
+              code.
+                - для трансляции события интерфейс ShouldBroadcast и метод broadcastOn
+                // экземпляры Channel - публичные каналы, на которые может подписаться любой пользователь,
+                // PrivateChannels и PresenceChannels - частные каналы, для которых требуется авторизация канала
+                namespace App\Events;
+                use App\Models\User;
+                use Illuminate\Broadcasting\Channel;
+                use Illuminate\Broadcasting\InteractsWithSockets;
+                use Illuminate\Broadcasting\PresenceChannel;
+                use Illuminate\Broadcasting\PrivateChannel;
+                use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+                use Illuminate\Queue\SerializesModels;
+                class ServerCreated implements ShouldBroadcast {
+                  use SerializesModels;
+                  public function __construct(public User $user) {}   // создать новый экземпляр события
+                  // получить каналы трансляции события
+                  public function broadcastOn(): array {return [new PrivateChannel('user.'.$this->user->id)];}}
+                // после запуска события, задание в очереди автоматически транслирует событие, используя указанный драйвер трансляции
+
+                https://laravel.su/docs/12.x/broadcasting#imia-transliruemogo-sobytiia
+
+
+
+
 
         //- Views
         details
