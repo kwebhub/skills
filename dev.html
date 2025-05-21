@@ -9185,8 +9185,61 @@ class ServerCreated implements ShouldBroadcast {
   // получить каналы трансляции события
   public function broadcastOn(): array {return [new PrivateChannel('user.'.$this->user->id)];}}
 // после запуска события, задание в очереди автоматически транслирует событие, используя указанный драйвер трансляции
+- изменить имя транслируемого события (по умолчанию имя класса события)
+public function broadcastAs(): string {return 'server.created';}
+// слушатель с ведущим символом . чтобы не добавлять пространство имен приложения к событию
+.listen('.server.created', function (e) { });
+- при трансляции события, все его публичные свойства автоматически сериализуются
+{
+  "user": {
+    "id": 1,
+    "name": "Patrick Stewart"
+  }
+}
+// получить массив данных в качестве полезной нагрузки при трансляции события
+public function broadcastWith(): array {return ['id' => $this->user->id];}
+- изменить соединение очереди и имя очереди для транслируемого события
+public $connection = 'redis';
+public $queue = 'default';
+либо имя очереди трансляции
+public function broadcastQueue(): string {return 'default';}
+// транслировать событие с помощью очереди sync вместо драйвера очереди по умолчанию
+use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
+class OrderShipmentStatusUpdated implements ShouldBroadcastNow { }
+- транслировать событие по условию
+public function broadcastWhen(): bool {return $this->order->value > 100;}
+- транслируемое событие будет отправлено после фиксации всех транзакций БД
+namespace App\Events;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+use Illuminate\Contracts\Events\ShouldDispatchAfterCommit;
+use Illuminate\Queue\SerializesModels;
+class ServerCreated implements ShouldBroadcast, ShouldDispatchAfterCommit {use SerializesModels;}
+- для авторизации каналов маршрут /broadcasting/auth автоматически помещается в группу посредников web
+// определить логику может ли текущий аутентифицированный пользователь прослушивать канал в routes/channels.php
+use App\Models\User;
+Broadcast::channel('orders.{orderId}', function (User $user, int $orderId) {
+  return $user->id === Order::findOrNew($orderId)->user_id;});
+php artisan channel:list    // просмотреть список замыканий авторизации вещания
+- привязка модели к маршруту канала
+use App\Models\Order;
+use App\Models\User;
+Broadcast::channel('orders.{order}', function (User $user, Order $order) {return $user->id === $order->user_id;});
+- назначить своих охранников для аутентификации входящего запроса
+Broadcast::channel('channel', function () { }, ['guards' => ['web', 'admin']]);
+- вместо использования замыканий для авторизации каналов можно использовать классы каналов
+php artisan make:channel OrderChannel   // сгенерировать новый класс канала в app/Broadcasting
+// зарегистрировать канал в routes/channels.php
+use App\Broadcasting\OrderChannel;
+Broadcast::channel('orders.{order}', OrderChannel::class);
+// логику авторизации для канала в методе join
+namespace App\Broadcasting;
+use App\Models\Order, App\Models\User;
+class OrderChannel {
+  public function __construct() { }
+  public function join(User $user, Order $order): array|bool {return $user->id === $order->user_id;}}
 
-https://laravel.su/docs/12.x/broadcasting#imia-transliruemogo-sobytiia
+https://laravel.su/docs/12.x/broadcasting#transliaciia-sobytii
+
 
 
 
