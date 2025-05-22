@@ -9237,9 +9237,246 @@ use App\Models\Order, App\Models\User;
 class OrderChannel {
   public function __construct() { }
   public function join(User $user, Order $order): array|bool {return $user->id === $order->user_id;}}
-
-https://laravel.su/docs/12.x/broadcasting#transliaciia-sobytii
-
+- запустить трансляцию события
+use App\Events\OrderShipmentStatusUpdated;
+OrderShipmentStatusUpdated::dispatch($order);
+// трансляция события всем подписчикам канала, кроме текущего пользователя
+use App\Events\OrderShipmentStatusUpdated;
+broadcast(new OrderShipmentStatusUpdated($update))->toOthers();
+// для toOthers() глобальный экземпляр Axios прикрепляет идентификатор сокета к каждому исходящему запросу в заголовке X-Socket-ID
+var socketId = Echo.socketId();   // получить идентификатор сокета
+// указать, на какое соединение отправлять событие
+use App\Events\OrderShipmentStatusUpdated;
+broadcast(new OrderShipmentStatusUpdated($update))->via('pusher');
+либо указать широковещательное соединение события в конструкторе события
+namespace App\Events;
+use Illuminate\Broadcasting\Channel;
+use Illuminate\Broadcasting\InteractsWithBroadcasting;
+use Illuminate\Broadcasting\InteractsWithSockets;
+use Illuminate\Broadcasting\PresenceChannel;
+use Illuminate\Broadcasting\PrivateChannel;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+use Illuminate\Queue\SerializesModels;
+class OrderShipmentStatusUpdated implements ShouldBroadcast {
+  use InteractsWithBroadcasting;
+  public function __construct() {$this->broadcastVia('pusher');}}
+- анонимные события
+//  транслировать простое событие без создания специального класса событий
+Broadcast::on('orders.'.$order->id)->send();
+  // будет транслироваться
+{
+  "event": "AnonymousEvent",
+  "data": "[]",
+  "channel": "orders.1"
+}
+// настроить имя и данные события
+Broadcast::on('orders.'.$order->id)->as('OrderPlaced')->with($order)->send();
+  // будет транслироваться
+{
+  "event": "OrderPlaced",
+  "data": "{ id: 1, total: 100 }",
+  "channel": "orders.1"
+}
+// транслировать анонимное событие на частном канале или канале присутствия
+Broadcast::private('orders.'.$order->id)->send();
+Broadcast::presence('channels.'.$channel->id)->send();
+// немедленно транслировать событие без постановки в очередь
+Broadcast::on('orders.'.$order->id)->sendNow();
+// транслировать событие всем подписчикам канала, кроме текущего аутентифицированного пользователя
+Broadcast::on('orders.'.$order->id)->toOthers()->send();</code></pre><p>Приём трансляций</p><pre><code>- прослушивание событий
+// метод channel для получения экземпляра канала, метод listen для прослушивания события
+Echo.channel(`orders.${this.order.id}`).listen('OrderShipmentStatusUpdated', (e) => {console.log(e.order.name);});
+// прослушивать несколько событий на частном канале
+Echo.private(`orders.${this.order.id}`).listen(/* ... */).listen(/* ... */).listen(/* ... */);
+// прекратить прослушивание данного события не покидая канал
+Echo.private(`orders.${this.order.id}`).stopListening('OrderShipmentStatusUpdated')
+// покинуть канал, а также связанные с ним частные каналы и каналы присутствия
+Echo.leave(`orders.${this.order.id}`);
+// Echo автоматически предполагает, что события находятся в пространстве имен App\Events
+// изменить пространство имен при создании экземпляра Echo
+window.Echo = new Echo({broadcaster: 'pusher', namespace: 'App.Other.Namespace'});
+// префикс . позволяет указывать полное имя класса
+Echo.channel('orders').listen('.Namespace\\Event\\Class', (e) => { });</code></pre><p>Каналы присутствия</p><pre><code>// основаны на безопасности частных каналов и позволяют уведомление пользователей,
+  когда другой пользователь просматривает ту же страницу, или перечисление пользователей комнаты чата.
+- авторизация каналов присутствия
+// если пользователь авторизован для присоединения к каналу, то вернуть массив данных о пользователе,
+  если не авторизован, то вернуть false или null
+use App\Models\User;
+Broadcast::channel('chat.{roomId}', function (User $user, int $roomId) {
+  if ($user->canJoinRoom($roomId)) {return ['id' => $user->id, 'name' => $user->name];}});
+- присоединиться к каналу присутствия
+// метод join вернет реализацию PresenceChannel, с методом listen, чтобы подписаться на события here, joining и leave
+Echo.join(`chat.${roomId}`).here((users) => { }).joining((user) => {console.log(user.name);})
+  .leaving((user) => {console.log(user.name);}).error((error) => {console.error(error);});
+- трансляция на каналы присутствия
+// получить канал трансляции события
+public function broadcastOn(): array {return [new PresenceChannel('chat.'.$this->message->room_id)];}
+// отправить событие
+broadcast(new NewMessage($message));
+либо
+broadcast(new NewMessage($message))->toOthers();
+// прослушивать события
+Echo.join(`chat.${roomId}`).here(/* ... */).joining(/* ... */).leaving(/* ... */).listen('NewMessage', (e) => { });</code></pre><p>Трансляция моделей</p><pre><code>- обычно транслируются события, когда модели Eloquent создаются, обновляются или удаляются
+  чтобы не создавать классы событий с единственной целью их широковещательной передачи,
+  модель Eloquent может автоматически транслировать изменения своего состояния
+namespace App\Models;
+use Illuminate\Broadcasting\Channel;
+use Illuminate\Broadcasting\PrivateChannel;
+use Illuminate\Database\Eloquent\BroadcastsEvents;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+class Post extends Model {
+  use BroadcastsEvents, HasFactory;
+  // получить пользователя, которому принадлежит сообщение
+  public function user(): BelongsTo {return $this->belongsTo(User::class);}
+  // получите каналы, по которым должны транслироваться события модели
+  public function broadcastOn(string $event): array {return [$this, $this->user];}}
+  // аргумент $event - тип события, которое произошло: created, updated, deleted, trashed или restored
+// определить, на какие каналы (если есть) модель должна транслировать конкретное событие
+public function broadcastOn(string $event): array {
+  return match ($event) {'deleted' => [], default => [$this, $this->user]};}
+// настроить создание базового события трансляции модели
+use Illuminate\Database\Eloquent\BroadcastableModelEventOccurred;
+protected function newBroadcastableEvent(string $event): BroadcastableModelEventOccurred {
+  return (new BroadcastableModelEventOccurred($this, $event))->dontBroadcastToCurrentUser();}
+- соглашение о трансляции моделей
+// Laravel автоматически создаст экземпляр частного канала для модели,
+  используя имя класса модели и идентификатор первичного ключа для названия канала
+App\Models\User с id равным 1 вернёт экземпляр Illuminate\Broadcasting\PrivateChannel с именем App.Models.User.1
+либо вручную
+для модели App\Models\User с id равным 1 метод $user->broadcastChannel() вернёт App.Models.User.1
+либо возвращать полные экземпляры Channel для трансляции события модели вручную
+use Illuminate\Broadcasting\PrivateChannel;
+public function broadcastOn(string $event): array {return [new PrivateChannel('user.'.$this->id)];}
+// передать экземпляр модели Eloquent в конструктор канала
+return [new Channel($this->user)];
+- соглашение о событиях
+// обновление модели App\Models\Post будет транслировать событие PostUpdated с полезной нагрузкой
+{
+  "model": {"id": 1, "title": "Мой первый пост"},
+  "socket": "someSocketId",
+}
+// определить собственное имя трансляции и полезную нагрузку
+public function broadcastAs(string $event): string|null {
+  return match ($event) {'created' => 'post.created', default => null};}
+public function broadcastWith(string $event): array {
+  return match ($event) {'created' => ['title' => $this->title], default => ['model' => $this]};}
+- прослушивание трансляций моделей
+// имя события должно иметь префикс ., чтобы указать, что оно не принадлежит определенному пространству имен
+  метод private для получения экземпляра канала, метод listen для прослушивания указанного события,
+  свойство model, содержит все транслируемые свойства модели
+Echo.private(`App.Models.User.${this.user.id}`).listen('.PostUpdated', (e) => {console.log(e.model);});</code></pre><p>Клиентские события</p><pre><code>- транслировать событие другим подключенным клиентам, не затрагивая приложение Laravel
+// предупредить пользователей приложения, что другой пользователь печатает сообщение
+Echo.private(`chat.${roomId}`).whisper('typing', {name: this.user.name});   // транслировать клиентские события
+Echo.private(`chat.${roomId}`).listenForWhisper('typing', (e) => {console.log(e.name);}); // слушать клиентские события</code></pre><p>Уведомления</p><pre><code>- связать трансляцию событий с уведомлениями, чтобы получать новые уведомления без обновления страницы
+// уведомления App\Models\User через канал broadcast получены в замыкании
+  авторизация канала App.Models.User.{id} включена в файл routes/channels.php
+Echo.private(`App.Models.User.${userId}`).notification((notification) => {console.log(notification.type);});
+</code></pre></details><details> <summary>Notifications</summary><p>каждое уведомление представлено единым классом в app/Notifications</p><pre><code>php artisan make:notification InvoicePaid   // сгенерировать новое уведомление
+- отправка уведомлений через трейт Notifiable
+namespace App\Models;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+class User extends Authenticatable {use Notifiable;}
+// получить экземпляр уведомления
+use App\Notifications\InvoicePaid;
+$user->notify(new InvoicePaid($invoice));
+- отправка уведомлений через фасад Notification полезно при отправке уведомления нескольким объектам
+use Illuminate\Support\Facades\Notification;
+Notification::send($users, new InvoicePaid($invoice));
+// отправить немедленно без постановки в очередь
+Notification::sendNow($developers, new DeploymentCompleted($deployment));
+// метод via определяет по каким каналам будет доставлено уведомление
+  каналы: mail, database, broadcast, vonage, slack и http://laravel-notification-channels.com/
+public function via(object $notifiable): array {return $notifiable->prefers_sms ? ['vonage'] : ['mail', 'database'];}
+- поместить уведомление в очередь
+// для каждой комбинации получателя и каналов будет создана задача в очереди
+// если у уведомления три получателя и два канала, то в очередь будет отправлено шесть задач
+namespace App\Notifications;
+use App\Models\User;
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Notifications\Notification;
+class InvoicePaid extends Notification implements ShouldQueue {
+  use Queueable;
+  $user->notify(new InvoicePaid($invoice));}
+- отложить доставку уведомления
+$delay = now()->addMinutes(10);
+$user->notify((new InvoicePaid($invoice))->delay($delay));
+либо указать величину задержки
+$user->notify((new InvoicePaid($invoice))->delay(['mail' => now()->addMinutes(5), 'sms' => now()->addMinutes(10)]));
+либо в классе уведомления
+public function withDelay(object $notifiable): array {
+return ['mail' => now()->addMinutes(5), 'sms' => now()->addMinutes(10)];}
+- указать соединение вручную
+namespace App\Notifications;
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Notifications\Notification;
+class InvoicePaid extends Notification implements ShouldQueue {
+  use Queueable;
+  public function __construct() {$this->onConnection('redis');}}
+// указать соединение для каждого канала
+public function viaConnections(): array {return ['mail' => 'redis', 'database' => 'sync'];}
+// указать очередь для каждого канала
+public function viaQueues(): array {return ['mail' => 'mail-queue', 'slack' => 'slack-queue'];}
+- посредник для уведомлений в очереди в классе уведомления
+use Illuminate\Queue\Middleware\RateLimited;
+public function middleware(object $notifiable, string $channel) {
+  return match ($channel) {
+    'email' => [new RateLimited('postmark')],
+    'slack' => [new RateLimited('slack')],
+    default => []};}
+- уведомления в очереди и транзакции в БД
+use App\Notifications\InvoicePaid;
+$user->notify((new InvoicePaid($invoice))->afterCommit());
+либо
+namespace App\Notifications;
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Notifications\Notification;
+class InvoicePaid extends Notification implements ShouldQueue {
+  use Queueable;
+  public function __construct() {$this->afterCommit();}}
+- следует ли отправлять уведомление в очереди после его обработки обработчиком очереди
+public function shouldSend(object $notifiable, string $channel): bool {return $this->invoice->isPaid();}
+- уведомления по запросу
+// отправить уведомление тому, чьи данные не сохранены в БД
+use Illuminate\Broadcasting\Channel;
+use Illuminate\Support\Facades\Notification;
+Notification::route('mail', 'taylor@example.com')
+  ->route('vonage', '5555555555')
+  ->route('slack', '#slack-channel')
+  ->route('broadcast', [new Channel('channel-name')])
+  ->notify(new InvoicePaid($invoice));
+// указать имя получателя при отправке уведомления по запросу
+Notification::route('mail', ['barrett@example.com' => 'Barrett Blair'])->notify(new InvoicePaid($invoice));
+// несколько маршрутов для нескольких каналов уведомлений
+Notification::routes([
+  'mail' => ['barrett@example.com' => 'Barrett Blair'],
+  'vonage' => '5555555555',
+])->notify(new InvoicePaid($invoice));</code></pre><p>почтовые уведомления</p><pre><code>- сформировать почтовое уведомление
+параметр name в config/app.php используется в верхнем и нижнем колонтитулах почтовых уведомлений
+public function toMail(object $notifiable): MailMessage {
+  $url = url('/invoice/'.$this->invoice->id);
+  return (new MailMessage)->greeting('Hello!')->line('One of your invoices has been paid!')
+    ->lineIf($this->amount > 0, "Amount paid: {$this->amount}")->action('View Invoice', $url)
+    ->line('Thank you for using our application!');}
+// указать, что почтовое сообщение относится к ошибке: кнопка действия будет красной
+public function toMail(object $notifiable): MailMessage {
+  return (new MailMessage)->error()->subject('Invoice Payment Failed')->line('...');}
+// указать собственный шаблон почтового уведомления
+public function toMail(object $notifiable): MailMessage {
+  return (new MailMessage)->view('mail.invoice.paid', ['invoice' => $this->invoice]);}
+либо с текстовым содержимым
+public function toMail(object $notifiable): MailMessage {
+  return (new MailMessage)->view(
+    ['mail.invoice.paid', 'mail.invoice.paid-text'],
+    ['invoice' => $this->invoice]);}
+// в сообщении только текст
+public function toMail(object $notifiable): MailMessage {
+  return (new MailMessage)->text('mail.invoice.paid-text', ['invoice' => $this->invoice]);}
 
 
 
