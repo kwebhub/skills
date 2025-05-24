@@ -9550,8 +9550,7 @@ public function toMail(object $notifiable): MailMessage {
   # Invoice Paid
   Your invoice has been paid!
   <x-mail::button :url="$url">View Invoice</x-mail::button>
-  Thanks,<br>
-  {{ config('app.name') }}
+  Thanks, {{ config('app.name') }}
 </x-mail::message>
 // создать кнопку
 <x-mail::button :url="$url" color="green">View Invoice</x-mail::button>
@@ -9807,11 +9806,383 @@ class InvoicePaid extends Notification {
   use Queueable;
   public function via(object $notifiable): string {return VoiceChannel::class;}   // получить канал
   public function toVoice(object $notifiable): VoiceMessage { }}   // получить содержимое голосового сообщения
+</code></pre></pre></details><details> <summary>Mail</summary><p>Каждая почтовая программа, настроенная в config/mail.php, может иметь свою собственную уникальную конфигурацию.</p><pre><code>- драйвер Mailgun
+composer require symfony/mailgun-mailer symfony/http-client   // установить пакет
+// в config/mail.php параметр default присвоить mailgun
+// в массив mailers добавить
+'mailgun' => [
+  'transport' => 'mailgun',
+  // 'client' => ['timeout' => 5]]
+// добавить в config/services.php
+'mailgun' => [
+  'domain' => env('MAILGUN_DOMAIN'),
+  'secret' => env('MAILGUN_SECRET'),
+  'endpoint' => env('MAILGUN_ENDPOINT', 'api.mailgun.net'),   // регион США
+  'scheme' => 'https']
+либо
+'endpoint' => env('MAILGUN_ENDPOINT', 'api.eu.mailgun.net'),    // регион Европа
+- драйвер Postmark
+composer require symfony/postmark-mailer symfony/http-client    // установить пакет
+// в config/mail.php параметр default присвоить postmark
+// в массив mailers добавить
+'postmark' => [
+  'transport' => 'postmark',
+  'message_stream_id' => env('POSTMARK_MESSAGE_STREAM_ID'),   // необязательно указать поток сообщений Postmark
+  // 'client' => ['timeout' => 5]]
+// добавить в config/services.php
+'postmark' => ['token' => env('POSTMARK_TOKEN')]
+- драйвер Resend
+composer require resend/resend-php    // установить пакет
+// в config/mail.php параметр default присвоить resend
+// добавить в config/services.php
+'resend' => ['key' => env('RESEND_KEY')]
+- драйвер SES
+composer require aws/aws-sdk-php    // установить пакет
+// в config/mail.php параметр default присвоить ses
+// добавить в config/services.php
+'ses' => [
+  'key' => env('AWS_ACCESS_KEY_ID'),
+  'secret' => env('AWS_SECRET_ACCESS_KEY'),
+  'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
+  'token' => env('AWS_SESSION_TOKEN')]    // необязательно AWS временные учетные данные через токен сеанса
+//  дополнительные параметры для метода SendEmail AWS SDK при отправке электронной почты
+'ses' => [
+  'key' => env('AWS_ACCESS_KEY_ID'),
+  'secret' => env('AWS_SECRET_ACCESS_KEY'),
+  'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
+  'options' => ['ConfigurationSetName' => 'MyConfigurationSet', 'EmailTags' => [['Name' => 'foo', 'Value' => 'bar']]]]
+// заголовок в массиве из метода headers почтового сообщения для взаимодействия с функциями управления подпиской SES
+public function headers(): Headers {
+  return new Headers(text: [
+    'X-Ses-List-Management-Options' => 'contactListName=MyContactList;topicName=MyTopic']);}
+- драйвер MailerSend: сервис для отправки транзакционных электронных писем и SMS-сообщений, поддерживает драйвер для Laravel
+composer require mailersend/laravel-driver    // установить пакет
+// в .env
+MAIL_MAILER=mailersend
+MAIL_FROM_ADDRESS=app@yourdomain.com
+MAIL_FROM_NAME="Имя приложения"
+MAILERSEND_API_KEY=ваш-ключ-api
+// в массив mailers в config/mail.php
+'mailersend' => ['transport' => 'mailersend']
+- резервная конфигурация доставки почты
+// массив failover содержит массив mailers, который определяет очередность выбора почтовой программы
+'mailers' => ['failover' => ['transport' => 'failover', 'mailers' => ['postmark', 'mailgun', 'sendmail']]]
+// в config/mail.php
+'default' => env('MAIL_MAILER', 'failover')
+- транспорт roundrobin позволяет распределить почтовую нагрузку между несколькими почтовыми клиентами
+'mailers' => ['roundrobin' => ['transport' => 'roundrobin', 'mailers' => ['ses', 'postmark']]]
+// в config/mail.php
+'default' => env('MAIL_MAILER', 'roundrobin')
+- транспорт failover обеспечивает доступность, транспорт roundrobin обеспечивает балансировку нагрузки</code></pre><p>письмо электронной почты</p><pre><code>php artisan make:mail OrderShipped    // создать почтовый класс в app/Mail
+- метод envelope
+// отправитель и тема электронной почты
+use Illuminate\Mail\Mailables\Address;
+use Illuminate\Mail\Mailables\Envelope;
+public function envelope(): Envelope {
+  return new Envelope(
+    from: new Address('jeffrey@example.com', 'Jeffrey Way'),
+    subject: 'Order Shipped');}
+// указать адрес ответа
+return new Envelope(
+  from: new Address('jeffrey@example.com', 'Jeffrey Way'),
+  replyTo: [new Address('taylor@example.com', 'Taylor Otwell')],
+  subject: 'Заказ отправлен');
+// указать глобальный адрес отправителя и reply_to в config/mail.php
+'from' => [
+  'address' => env('MAIL_FROM_ADDRESS', 'hello@example.com'),
+  'name' => env('MAIL_FROM_NAME', 'Example')],
+'reply_to' => ['address' => 'example@example.com', 'name' => 'App Name']
+- метод content
+// указать какой шаблон Blade используется для электронного письма
+public function content(): Content {
+  return new Content(view: 'mail.orders.shipped');}
+// определить версию письма в HTML и обычный текст
+public function content(): Content {
+  return new Content(view: 'mail.orders.shipped', text: 'mail.orders.shipped-text');}
+либо
+return new Content(html: 'mail.orders.shipped', text: 'mail.orders.shipped-text');
+// передать данные шаблону
+namespace App\Mail;
+use App\Models\Order;
+use Illuminate\Bus\Queueable;
+use Illuminate\Mail\Mailable;
+use Illuminate\Mail\Mailables\Content;
+use Illuminate\Queue\SerializesModels;
+class OrderShipped extends Mailable {
+  use Queueable, SerializesModels;
+  public function __construct(public Order $order) {}   // автоматический доступ к свойствам $order
+  public function content(): Content {return new Content(view: 'mail.orders.shipped');}}
+// доступ в шаблоне Blade
+&lt;div&gt;Price: {{ $order->price }}&lt;/div&gt;
+либо
+class OrderShipped extends Mailable {
+  use Queueable, SerializesModels;
+  public function __construct(protected Order $order) {}   // нет автоматического доступа к свойствам $order
+  public function content(): Content {
+    return new Content(
+      view: 'mail.orders.shipped',
+      with: ['orderName' => $this->order->name, 'orderPrice' => $this->order->price]);}}  // даёт доступ
+// доступ в шаблоне Blade
+&lt;div&gt;Price: {{ $orderPrice }}&lt;/div&gt;
+- метод attachments
+use Illuminate\Mail\Mailables\Attachment;
+public function attachments(): array {return [Attachment::fromPath('/path/to/file')];}
+либо
+public function attachments(): array {
+  return [Attachment::fromPath('/path/to/file')->as('name.pdf')->withMime('application/pdf')];}
+// прикрепить файл с диска
+public function attachments(): array {return [Attachment::fromStorage('/path/to/file')];}
+либо
+public function attachments(): array {return [Attachment::fromStorage('/path/to/file')
+  ->as('name.pdf')->withMime('application/pdf')];}
+// указать диск не по умолчанию
+public function attachments(): array {return [Attachment::fromStorageDisk('s3', '/path/to/file')
+  ->as('name.pdf')->withMime('application/pdf')];}
+// присоединить сырую строку байтов (сгенерированный в памяти PDF-файл без записи на диск)
+public function attachments(): array {return [Attachment::fromData(fn () => $this->pdf, 'Report.pdf')
+  ->withMime('application/pdf')];}
+// вставить изображение в шаблон
+&lt;body&gt;Here is an image: &lt;img src="{{ $message->embed($pathToImage) }}"&gt;&lt;/body&gt;
+// переменная $message автоматически доступна для всех шаблонов с встроенными вложениями
+// вставить строку необработанных данных изображения
+&lt;body&gt;Here is an image from raw data: &lt;img src="{{ $message->embedData($data, 'example-image.jpg') }}"&gt;&lt;/body&gt;
+// прикрепить объект
+// в модели прикрепляемого объекта
+namespace App\Models;
+use Illuminate\Contracts\Mail\Attachable;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Mail\Attachment;
+class Photo extends Model implements Attachable {
+  public function toMailAttachment(): Attachment {return Attachment::fromPath('/path/to/file');}}
+// в классе письма
+public function attachments(): array {return [$this->photo];}
+либо                
+return Attachment::fromStorage($this->path);    // создать вложение из файла на основном диске
+return Attachment::fromStorageDisk('backblaze', $this->path);   // создать вложение из файла на указанном диске
+return Attachment::fromData(fn () => $this->content, 'Имя фотографии');   // создать вложение из данных, хранящихся в памяти
+// задать имя файла и MIME-тип
+return Attachment::fromPath('/путь/к/файлу')->as('Имя фотографии')->withMime('image/jpeg');
+- прикрепить дополнительные заголовки в классе письма
+use Illuminate\Mail\Mailables\Headers;
+public function headers(): Headers {
+  return new Headers(
+    messageId: 'custom-message-id@example.com',
+    references: ['previous-message@example.com'],
+    text: ['X-Custom-Header' => 'Custom Value']);}
+- добавить теги и метаданные к письму
+use Illuminate\Mail\Mailables\Envelope;
+public function envelope(): Envelope {
+  return new Envelope(
+    subject: 'Заказ отправлен',
+    tags: ['shipment'],
+    metadata: ['order_id' => $this->order->id]);}
+- глубокая настройка письма через Symfony Message
+use Illuminate\Mail\Mailables\Envelope;
+use Symfony\Component\Mime\Email;
+public function envelope(): Envelope {
+  return new Envelope(
+    subject: 'Заказ отправлен',
+    using: [function (Email $message) { }]);}</code></pre><p>письма с разметкой Markdown</p><pre> <code>php artisan make:mail OrderShipped --markdown=mail.orders.shipped   // сгенерировать почтовый класс с шаблоном Markdown
+- в методе content
+use Illuminate\Mail\Mailables\Content;
+public function content(): Content {
+  return new Content(
+    markdown: 'mail.orders.shipped',
+    with: ['url' => $this->orderUrl]);}
+// письма с Markdown используют комбинацию компонентов Blade и синтаксиса Markdown
+&lt;x-mail::message&gt;
+  # Order Shipped
+  Your order has been shipped!
+  &lt;x-mail::button :url="$url"&gt;View Order&lt;/x-mail::button&gt;
+  Thanks, {{ config('app.name') }}
+&lt;/x-mail::message&gt;
+// компонент кнопки
+&lt;x-mail::button :url="$url" color="success"&gt;View Order&lt;/x-mail::button&gt;
+// компонент панели
+&lt;x-mail::panel&gt;This is the panel content.&lt;/x-mail::panel&gt;
+// компонент таблицы
+&lt;x-mail::table&gt;
+| Laravel       | Table         | Example       |
+| ------------- | :-----------: | ------------: |
+| Col 2 is      | Centered      | $10           |
+| Col 3 is      | Right-Aligned | $20           |
+&lt;/x-mail::table&gt;
+- опубликует почтовые компоненты Markdown в каталоге resources/views/vendor/mail для внесения изменений
+php artisan vendor:publish --tag=laravel-mail
+// редактировать CSS в resources/views/vendor/mail/html/themes/default.css
+// создать файл CSS в html/themes, чтобы создать новую тему для компонентов Markdown
+// имя файла темы указать в параметре theme из config/mail.php
+// установить тему для отдельного письма: указать имя файла темы в свойстве $theme почтового класса</code></pre><p>отправка почты</p><pre><code>namespace App\Http\Controllers;
+use App\Http\Controllers\Controller;
+use App\Mail\OrderShipped;
+use App\Models\Order;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+class OrderShipmentController extends Controller {
+  public function store(Request $request): RedirectResponse {
+    $order = Order::findOrFail($request->order_id);
+    Mail::to($request->user())->send(new OrderShipped($order));
+    return redirect('/orders');}}
+либо
+Mail::to($request->user())->cc($moreUsers)->bcc($evenMoreUsers)->send(new OrderShipped($order));
+// отправить почтовое сообщение списку получателей
+foreach (['taylor@example.com', 'dries@example.com'] as $recipient) {
+  Mail::to($recipient)->send(new OrderShipped($order));}
+// указать драйвер при отправке почты вручную
+Mail::mailer('postmark')->to($request->user())->send(new OrderShipped($order));
+// поставить почтовое сообщение в очередь
+Mail::to($request->user())->cc($moreUsers)->bcc($evenMoreUsers)->queue(new OrderShipped($order));
+// отложить доставку электронного письма в очереди
+Mail::to($request->user())->cc($moreUsers)->bcc($evenMoreUsers)->later(now()->addMinutes(10), new OrderShipped($order));
+// указать соединение и имя очереди для письма
+$message = (new OrderShipped($order))->onConnection('sqs')->onQueue('emails');
+Mail::to($request->user())->cc($moreUsers)->bcc($evenMoreUsers)->queue($message);
+// письмо при отправке всегда будет ставиться в очередь
+use Illuminate\Contracts\Queue\ShouldQueue;
+class OrderShipped extends Mailable implements ShouldQueue { }
+- письма в очереди и транзакции в БД
+// указать, что это письмо в очереди будет отправлено после фиксации всех открытых транзакций БД
+Mail::to($request->user())->send((new OrderShipped($order))->afterCommit());
+либо из конструктора письма
+namespace App\Mail;
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Mail\Mailable;
+use Illuminate\Queue\SerializesModels;
+class OrderShipped extends Mailable implements ShouldQueue {
+  use Queueable, SerializesModels;
+  public function __construct() {$this->afterCommit();}}
+- получить HTML-содержимое письма, не отправляя его
+use App\Mail\InvoicePaid;
+use App\Models\Invoice;
+$invoice = Invoice::find(1);
+return (new InvoicePaid($invoice))->render();
+- предварительный просмотр письма в браузере
+Route::get('/mailable', function () {
+  $invoice = App\Models\Invoice::find(1);
+  return new App\Mail\InvoicePaid($invoice);});
+- локализация письма
+Mail::to($request->user())->locale('es')->send(new OrderShipped($order));
+// использовать сохраненный предпочитаемый язык каждого пользователя при отправке почты
+use Illuminate\Contracts\Translation\HasLocalePreference;
+class User extends Model implements HasLocalePreference {
+  public function preferredLocale(): string {return $this->locale;}}
+тогда без locale()
+Mail::to($request->user())->send(new OrderShipped($order));</code></pre><p>тестирование</p><pre><code>- проверка наличия ожидаемого содержимого в почтовом классе
+use App\Mail\InvoicePaid;
+use App\Models\User;
+test('mailable content', function () {
+  $user = User::factory()->create();
+  $mailable = new InvoicePaid($user);
+  $mailable->assertFrom('jeffrey@example.com');
+  $mailable->assertTo('taylor@example.com');
+  $mailable->assertHasCc('abigail@example.com');
+  $mailable->assertHasBcc('victoria@example.com');
+  $mailable->assertHasReplyTo('tyler@example.com');
+  $mailable->assertHasSubject('Invoice Paid');
+  $mailable->assertHasTag('example-tag');
+  $mailable->assertHasMetadata('key', 'value');
+  $mailable->assertSeeInHtml($user->email);
+  $mailable->assertSeeInHtml('Invoice Paid');
+  $mailable->assertSeeInOrderInHtml(['Invoice Paid', 'Thanks']);
+  $mailable->assertSeeInText($user->email);
+  $mailable->assertSeeInOrderInText(['Invoice Paid', 'Thanks']);
+  $mailable->assertHasAttachment('/path/to/file');
+  $mailable->assertHasAttachment(Attachment::fromPath('/path/to/file'));
+  $mailable->assertHasAttachedData($pdfData, 'name.pdf', ['mime' => 'application/pdf']);
+  $mailable->assertHasAttachmentFromStorage('/path/to/file', 'name.pdf', ['mime' => 'application/pdf']);
+  $mailable->assertHasAttachmentFromStorageDisk('s3', '/path/to/file', 'name.pdf', ['mime' => 'application/pdf']);});
+- тестировать отправку письма
+use App\Mail\OrderShipped;
+use Illuminate\Support\Facades\Mail;
+test('orders can be shipped', function () {
+  Mail::fake();
+  Mail::assertNothingSent();    // ни одно письмо не было отправлено
+  Mail::assertSent(OrderShipped::class);    // было отправлено одно письмо
+  Mail::assertSent(OrderShipped::class, 2);   // было отправлено два письма
+  Mail::assertSent(OrderShipped::class, 'example@laravel.com');   // письмо было отправлено на указанный адрес
+  Mail::assertSent(OrderShipped::class, ['example@laravel.com', '...']);    // письмо было отправлено на несколько адресов
+  Mail::assertNotSent(AnotherMailable::class);    // указанное письмо не было отправлено
+  Mail::assertSentCount(3);});    // всего было отправлено 3 письма
+либо если письмо отправлено в очередь
+  Mail::assertQueued(OrderShipped::class);
+  Mail::assertNotQueued(OrderShipped::class);
+  Mail::assertNothingQueued();
+  Mail::assertQueuedCount(3);
+// письмо не было отправлено или поставлено в очередь
+  Mail::assertNothingOutgoing();
+  Mail::assertNotOutgoing(function (OrderShipped $mail) use ($order) {return $mail->order->id === $order->id;});
+// письмо отправлено по условию
+Mail::assertSent(function (OrderShipped $mail) use ($order) {return $mail->order->id === $order->id;});
+// методы для анализа класса отправки электронной почты
+Mail::assertSent(OrderShipped::class, function (OrderShipped $mail) use ($user) {
+  return $mail->hasTo($user->email) &&
+    $mail->hasCc('...') &&
+    $mail->hasBcc('...') &&
+    $mail->hasReplyTo('...') &&
+    $mail->hasFrom('...') &&
+    $mail->hasSubject('...');});
+// методы анализа вложений в классе отправки электронной почты
+use Illuminate\Mail\Mailables\Attachment;
+Mail::assertSent(OrderShipped::class, function (OrderShipped $mail) {
+  return $mail->hasAttachment(Attachment::fromPath('/путь/к/файлу')->as('name.pdf')->withMime('application/pdf'));});
+Mail::assertSent(OrderShipped::class, function (OrderShipped $mail) {
+  return $mail->hasAttachment(Attachment::fromStorageDisk('s3', '/путь/к/файлу'));});
+Mail::assertSent(OrderShipped::class, function (OrderShipped $mail) use ($pdfData) {
+  return $mail->hasAttachment(Attachment::fromData(fn () => $pdfData, 'name.pdf'));});</code></pre><p>отправка почты при локальной разработке</p><pre><code>// почтовый драйвер log будет записывать все письма в файлы журналов для проверки
+// когда Sail запущен можно получить доступ к интерфейсу Mailpit по адресу: http://localhost:8025
+// HELO или Mailtrap и драйвер smtp отправять письма в фиктивный почтовый ящик
+// указать глобальный адрес кому в App\Providers\AppServiceProvider
+use Illuminate\Support\Facades\Mail;
+public function boot(): void {if ($this->app->environment('local')) {Mail::alwaysTo('taylor@example.com');}}</code></pre><p>события</p><pre><code>// событие MessageSending отправляется до отправки сообщения
+// событие MessageSent отправляется после отправки сообщения
+// события отправляются при отправке почты, а не при ее постановке в очередь
+// создать слушателя
+use Illuminate\Mail\Events\MessageSending;
+// use Illuminate\Mail\Events\MessageSent;
+class LogMessage {public function handle(MessageSending $event): void { }}</code></pre><p>написать свои транспорты для доставки электронной почты</p><pre><code>use MailchimpTransactional\ApiClient;
+use Symfony\Component\Mailer\SentMessage;
+use Symfony\Component\Mailer\Transport\AbstractTransport;
+use Symfony\Component\Mime\Address;
+use Symfony\Component\Mime\MessageConverter;
+class MailchimpTransport extends AbstractTransport {
+  public function __construct(protected ApiClient $client) {parent::__construct();}
+  protected function doSend(SentMessage $message): void {
+    $email = MessageConverter::toEmail($message->getOriginalMessage());
+    $this->client->messages->send(['message' => [
+      'from_email' => $email->getFrom(),
+      'to' => collect($email->getTo())->map(function (Address $email) {
+        return ['email' => $email->getAddress(), 'type' => 'to'];})->all(),
+      'subject' => $email->getSubject(),
+      'text' => $email->getTextBody()]]);}
+  public function __toString(): string {return 'mailchimp';}}   // строковое представление транспорта
+// зарегистрировать транспорт в App\Providers\AppServiceProvider
+use App\Mail\MailchimpTransport;
+use Illuminate\Support\Facades\Mail;
+public function boot(): void {
+  Mail::extend('mailchimp', function (array $config = []) {return new MailchimpTransport(/* ... */);});}
+// в config/mail.php
+'mailchimp' => ['transport' => 'mailchimp']
+// использовать другие транспорты Symfony
+composer require symfony/brevo-mailer symfony/http-client   // установить Symfony mailer “Brevo”
+// добавить запись с учетными данными API Brevo в config/services.php
+'brevo' => ['key' => 'ваш-ключ-api']
+// зарегистрировать Symfony mailer “Brevo” в App\Providers\AppServiceProvider
+use Illuminate\Support\Facades\Mail;
+use Symfony\Component\Mailer\Bridge\Brevo\Transport\BrevoTransportFactory;
+use Symfony\Component\Mailer\Transport\Dsn;
+public function boot(): void {
+  Mail::extend('brevo', function () {
+    return (new BrevoTransportFactory)->create(new Dsn('brevo+api', 'default', config('services.brevo.key')));});}
+// в config/mail.php
+'brevo' => ['transport' => 'brevo']
 
 
 
 
-</code></pre></pre></details></details><details><summary>Views</summary><details> <summary>Templates</summary><details> <summary>Blade</summary><p>- шаблоны Blade - это HTML и директивы Blade в файле с расширением .blade.php, компилируются в обычные PHP-файлы и кэшируются<br>
+
+</code></pre></details></details><details><summary>Views</summary><details> <summary>Templates</summary><details> <summary>Blade</summary><p>- шаблоны Blade - это HTML и директивы Blade в файле с расширением .blade.php, компилируются в обычные PHP-файлы и кэшируются<br>
 - могут содержать: обычный PHP-код, другие шаблоны Blade, директивы Blade, секции, компоновщики и компоненты<br></p><pre><code>- создать Blade-шаблон
 php artisan make:view greeting
 - для шаблонов blade вызов глобального помошника view
