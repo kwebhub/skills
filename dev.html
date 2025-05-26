@@ -12023,11 +12023,74 @@ namespace App\Models;
 use App\Support\UserCollection;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
-class User extends Model
-{
+class User extends Model {
   public function newCollection(array $models = []): Collection
-  {return new UserCollection($models);}
-}
+  {return new UserCollection($models);}}</code></pre><p>в App\Providers\AppServiceProvider</p><pre><code>- определить макрос
+use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
+public function boot(): void {
+  Collection::macro('toUpper', function () {
+    return $this->map(function (string $value) {return Str::upper($value);});});
+// вызвать макрос в любом месте приложения
+$collection = collect(['first', 'second']);
+$upper = $collection->toUpper();
+либо с дополнительными аргументами
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Lang;
+Collection::macro('toLocale', function (string $locale) {
+  return $this->map(function (string $value) use ($locale) {
+    return Lang::get($value, [], $locale);});});
+// вызвать макрос в любом месте приложения
+$collection = collect(['first', 'second']);
+$translated = $collection->toLocale('es');</code></pre><p>Класс Illuminate\Support\Collection обеспечивает гибкую и удобную обертку для работы с массивами данных</p><pre><code>- создать новый экземпляр коллекции из массива
+$collection = collect(['taylor', 'abigail', null])->map(function (?string $name) {
+  return strtoupper($name);})->reject(function (string $name) {return empty($name);});
+- создать коллекцию
+$collection = collect([1, 2, 3]);</code></pre><p>Сообщения высшего порядка - сокращения для выполнения действий с коллекциями<br>
+average, avg, contains, each, every, filter, first, flatMap, groupBy, keyBy, map, max, min, partition,
+reject, skipUntil, skipWhile, some, sortBy, sortByDesc, sum, takeUntil, takeWhile, unique</p><pre><code>- вызывать метод для каждого объекта коллекции
+use App\Models\User;
+$users = User::where('votes', '>', 500)->get();
+$users->each->markAsVip();
+- собрать общее количество «голосов» для коллекции пользователей
+$users = User::where('group', 'Development')->get();
+return $users->sum->votes;</code></pre><p>Отложенные коллекции использует генераторы PHP, чтобы работать с очень большим набором данных при низком потреблении памяти</p><pre> <code>- отложенные коллекции сохраняют в памяти только небольшую часть файла в текущий момент
+use App\Models\LogEntry;
+use Illuminate\Support\LazyCollection;
+LazyCollection::make(function () {
+  $handle = fopen('log.txt', 'r');
+  while (($line = fgets($handle)) !== false) {yield $line;}
+})->chunk(4)->map(function (array $lines) {return LogEntry::fromLines($lines);
+})->each(function (LogEntry $logEntry) { // Обработка записи журнала...});
+- cursor возвращает LazyCollection: в течении одиного запроса к БД, модели Eloquent загружать в память и обрабатывать по одной
+use App\Models\User;
+$users = User::cursor()->filter(function (User $user) {return $user->id > 500;});
+foreach ($users as $user) {echo $user->id;}
+- создать экземпляр отложенной коллекции
+use Illuminate\Support\LazyCollection;
+LazyCollection::make(function () {
+  $handle = fopen('log.txt', 'r');
+  while (($line = fgets($handle)) !== false) {yield $line;}});</code></pre><p>Класс Collection и класс LazyCollection реализуют контракт Illuminate\Support\Enumerable, который определяет методы:</p><a href="https://laravel.su/docs/12.x/collections#kontrakt-enumerable">методы доступные в классе Collection и LazyCollection</a><pre><code>- дополнительно класс LazyCollection содержит методы:
+- takeUntilTimeout - коллекция перечисляет значения до указанного времени
+$lazyCollection = LazyCollection::times(INF)->takeUntilTimeout(now()->addMinute());
+$lazyCollection->each(function (int $number) {
+  dump($number);
+  sleep(1);});
+либо запланировать отправку счетов из БД, которая запускается каждые 15 минут и обрабатывает счета максимум 14 минут
+use App\Models\Invoice;
+use Illuminate\Support\Carbon;
+Invoice::pending()->cursor()->takeUntilTimeout(
+  Carbon::createFromTimestamp(LARAVEL_START)->add(14, 'minutes'))->each(fn (Invoice $invoice) => $invoice->submit());
+- tapEach вызывает переданное замыкание только тогда, когда элементы извлекаются из списка один за другим
+$lazyCollection = LazyCollection::times(INF)->tapEach(function (int $value) {dump($value);});   // ничего не выведено
+$array = $lazyCollection->take(3)->all();   // три элемента выведено
+- throttle: каждое значение возвращается через указанное количество секунд
+use App\Models\User;
+User::where('vip', true)->cursor()->throttle(seconds: 1)->each(function (User $user) { // Вызов внешнего API... });
+- remember запоминает любые значения, которые уже были перечислены, и не будет извлекать их снова
+$users = User::cursor()->remember();    // запрос еще не выполнен
+$users->take(5)->all();   // первые 5 пользователей из БД включены в результирующую коллекцию
+$users->take(20)->all();    // первые 5 пользователей из кеша коллекции, а стальные из БД включены в результирующую коллекцию
 </code></pre></details><details> <summary>Eloquent ORM</summary><p>Eloquent ORM - это реализация Active Record для работы с БД с помощью PHP-кода, SQL-запросов, миграций, сидов, фабрик и отношений<br></p><details><summary>Модели</summary><p>models - классы моделей Eloquent для взаимодействия с таблицами БД методами построителя запросов<br>
 Eloquent будет предполагать, что модель Flight хранит записи в таблице flights<br>
 а модель AirTrafficController – в таблице air_traffic_controllers</p><pre><code>- создать модель
@@ -13899,7 +13962,46 @@ Redis::expire('key', 60);
 Redis::ttl('key');
 Redis::keys('*');
 Redis::flushAll();
-</code></pre></details><details><summary>Cache</summary><p></p><pre><code></code></pre></details><details><summary>Rate Limiting</summary><p></p><pre><code></code></pre></details><details><summary>MongoDB</summary><a href="http://laravel.su/docs/12.x/mongodb">mongodb</a><p>- MongoDB используется в качестве драйвера кэша, очереди, сессий, БД<br>
+</code></pre></details><details><summary>Cache</summary><p></p><pre><code></code></pre></details><details><summary>Rate Limiting</summary><p>ограничить любое действие в течение указанного периода времени, использует кеш приложения по умолчанию в config/cache.php</p><pre><code>- указать драйвер кеша для ограничителя скорости
+'default' => env('CACHE_STORE', 'database'),
+'limiter' => 'redis'
+- attempt возвращает false если не осталось доступных попыток либо вернет результат функции или true
+use Illuminate\Support\Facades\RateLimiter;
+$executed = RateLimiter::attempt(
+  'send-message:'.$user->id,
+  $perMinute = 5,
+  function() { // Отправляю сообщение...});
+if (! $executed) {return 'Отправлено слишком много сообщений!';}
+либо разрешить пять попыток каждые две минуты
+$executed = RateLimiter::attempt(
+  'send-message:'.$user->id,
+  $perTwoMinutes = 5,
+  function() { // Отправляем сообщение...},
+  $decayRate = 120);
+- определить не превышено ли максимальное количество разрешенных попыток в минуту
+use Illuminate\Support\Facades\RateLimiter;
+if (RateLimiter::tooManyAttempts('send-message:'.$user->id, $perMinute = 5)) {return 'Слишком много попыток!';}
+RateLimiter::increment('send-message:'.$user->id);
+- получение оставшегося количества попыток
+use Illuminate\Support\Facades\RateLimiter;
+if (RateLimiter::remaining('send-message:'.$user->id, $perMinute = 5)) {
+  RateLimiter::increment('send-message:'.$user->id);}
+- увеличить количество попыток для указанного ключа более чем на единицу
+RateLimiter::increment('send-message:'.$user->id, amount: 5);
+- availableIn возвращает количество секунд появления новых попыток
+use Illuminate\Support\Facades\RateLimiter;
+if (RateLimiter::tooManyAttempts('send-message:'.$user->id, $perMinute = 5)) {
+  $seconds = RateLimiter::availableIn('send-message:'.$user->id);
+  return 'Вы можете повторить попытку через '.$seconds.' секунд.';}
+  RateLimiter::increment('send-message:'.$user->id);
+- сбросить количество попыток
+use App\Models\Message;
+use Illuminate\Support\Facades\RateLimiter;
+public function read(Message $message): Message {
+  $message->markAsRead();
+  RateLimiter::clear('send-message:'.$message->user_id);
+  return $message;}
+</code></pre></details><details><summary>MongoDB</summary><a href="http://laravel.su/docs/12.x/mongodb">mongodb</a><p>- MongoDB используется в качестве драйвера кэша, очереди, сессий, БД<br>
 - драйвер MongoDB по умолчанию использует расширение mongodb<br>
 - расширение mongodb поддерживает MongoDB 2.6 и выше<br></p><code>php artisan vendor:publish --provider="Jenssegers\Mongodb\MongodbServiceProvider"</code></details></details><details><summary>How to</summary><details> <summary>Api</summary><p>Установить пакет Sanctum, создать роут, миграцию personal_access_tokens_table и токен аутентификацию для api</p><code>./sail artisan install:api</code><p>Создать модель с миграцией</p><code>./sail artisan make:model Category -m</code><p>Обновить таблицы</p><code>./sail artisan migrate</code><p>создать контроллер в отдельной структуре папок (v1 - версия)
 --model=Category - привязка к модели
