@@ -7583,9 +7583,345 @@ block menu
           //- глобальные вспомогательные функции
           details
             summary Helpers
-            p
+            p глобальные вспомогательные функции
+            a(href="https://laravel.su/docs/12.x/helpers#method-when") доступные методы
             pre
               code.
+                - массивы и объекты
+                // Arr::accessible - доступно ли переданное значение массиву (true/false)
+                use Illuminate\Support\Arr;
+                use Illuminate\Support\Collection;
+                $isAccessible = Arr::accessible(['a' => 1, 'b' => 2]);
+                $isAccessible = Arr::accessible(new Collection);
+                $isAccessible = Arr::accessible('abc');
+                $isAccessible = Arr::accessible(new stdClass);
+                // Arr::add - добавляет ключ/значение в массив, если ключа нет в массиве или установлен как null
+                $array = Arr::add(['name' => 'Desk'], 'price', 100);
+                $array = Arr::add(['name' => 'Desk', 'price' => null], 'price', 100);
+                // Arr::collapse - сворачивает массив массивов в один массив
+                $array = Arr::collapse([[1, 2, 3], [4, 5, 6], [7, 8, 9]]);    // [1, 2, 3, 4, 5, 6, 7, 8, 9]
+                // Arr::crossJoin - перекрестно соединяет массивы
+                $matrix = Arr::crossJoin([1, 2], ['a', 'b']);
+                // Arr::divide - возвращает два массива: один содержит ключи, другой – значения
+                [$keys, $values] = Arr::divide(['name' => 'Desk']);
+                // Arr::dot - объединяет многомерный массив в одноуровневый
+                $array = ['products' => ['desk' => ['price' => 100]]];
+                $flattened = Arr::dot($array);    // ['products.desk.price' => 100]
+                // Arr::undot - расширяет одномерный массив в многомерный
+                $array = ['user.name' => 'Kevin Malone', 'user.occupation' => 'Accountant'];
+                $array = Arr::undot($array);    // ['user' => ['name' => 'Kevin Malone', 'occupation' => 'Accountant']]
+                // Arr::except - удаляет переданные пары ключ/значение из массива
+                $array = ['name' => 'Desk', 'price' => 100];
+                $filtered = Arr::except($array, ['price']);   // ['name' => 'Desk']
+                // Arr::only - возвращает только указанные пары ключ/значение
+                $array = ['name' => 'Desk', 'price' => 100, 'orders' => 10];
+                $slice = Arr::only($array, ['name', 'price']);    // ['name' => 'Desk', 'price' => 100]
+                // Arr::exists - проверяет, существует ли ключ в массиве
+                $array = ['name' => 'John Doe', 'age' => 17];
+                $exists = Arr::exists($array, 'name');    // true
+                $exists = Arr::exists($array, 'salary');    // false
+                // Arr::first - возвращает первый элемент массива, соответствующий условию
+                $array = [100, 200, 300];
+                $first = Arr::first($array, function (int $value, int $key) {return $value >= 150;});   // 200
+                либо со значением по умолчанию, на случай если нет соответствий с условием
+                $first = Arr::first($array, $callback, $default);
+                // Arr::last - возвращает последний элемент массива, соответствующий условию
+                $array = [100, 200, 300, 110];
+                $last = Arr::last($array, function (int $value, int $key) {return $value >= 150;});   // 300
+                либо со значением по умолчанию, на случай если нет соответствий с условием
+                $last = Arr::last($array, $callback, $default);
+                // Arr::flatten - объединяет многомерный массив в одноуровневый
+                $array = ['name' => 'Joe', 'languages' => ['PHP', 'Ruby']];
+                $flattened = Arr::flatten($array);    // ['Joe', 'PHP', 'Ruby']
+                // Arr::forget - удаляет ключ/значение из глубоко вложенного массива
+                $array = ['products' => ['desk' => ['price' => 100]]];
+                Arr::forget($array, 'products.desk');   // ['products' => []]
+                // Arr::get - извлекает значение из глубоко вложенного массива
+                use Illuminate\Support\Arr;
+                $array = ['products' => ['desk' => ['price' => 100]]];
+                $price = Arr::get($array, 'products.desk.price');   // 100
+                либо со значением по умолчанию, если указанный ключ отсутствует в массиве
+                $discount = Arr::get($array, 'products.desk.discount', 0);    //0
+                // Arr::has - проверяет, существует ли переданный элемент или элементы в массиве
+                $array = ['product' => ['name' => 'Desk', 'price' => 100]];
+                $contains = Arr::has($array, 'product.name');   // true
+                $contains = Arr::has($array, ['product.price', 'product.discount']);    // false
+                // Arr::hasAny - проверяет, существует ли какой-либо элемент в переданном наборе в массиве
+                $array = ['product' => ['name' => 'Desk', 'price' => 100]];
+                $contains = Arr::hasAny($array, 'product.name');    // true
+                $contains = Arr::hasAny($array, ['product.name', 'product.discount']);    // true
+                $contains = Arr::hasAny($array, ['category', 'product.discount']);    // false
+                // Arr::isAssoc - массив считается ассоциативным, если в нем нет последовательных цифровых ключей, начинающихся с нуля
+                $isAssoc = Arr::isAssoc(['product' => ['name' => 'Desk', 'price' => 100]]);   // true
+                $isAssoc = Arr::isAssoc([1, 2, 3]);   // false
+                // Arr::isList - ключи массива - последовательные целые числа, начиная с нуля
+                $isList = Arr::isList(['foo', 'bar', 'baz']);   // true
+                $isList = Arr::isList(['product' => ['name' => 'Desk', 'price' => 100]]);   // false
+                // Arr::join - объединяет элементы массива в строку
+                $array = ['Tailwind', 'Alpine', 'Laravel', 'Livewire'];
+                $joined = Arr::join($array, ', ');    // Tailwind, Alpine, Laravel, Livewire
+                $joined = Arr::join($array, ', ', ' and ');   // Tailwind, Alpine, Laravel and Livewire
+                // Arr::keyBy - присваивает ключи элементам базового массива
+                $array = [['product_id' => 'prod-100', 'name' => 'Desk'], ['product_id' => 'prod-200', 'name' => 'Chair']];
+                $keyed = Arr::keyBy($array, 'product_id');
+                вернёт  ['prod-100' => ['product_id' => 'prod-100', 'name' => 'Desk'],
+                         'prod-200' => ['product_id' => 'prod-200', 'name' => 'Chair']]
+                // Arr::map - проходит по массиву и применяет функцию к каждому элементу
+                $array = ['first' => 'james', 'last' => 'kirk'];
+                $mapped = Arr::map($array, function (string $value, string $key)
+                {return ucfirst($value);});   // ['first' => 'James', 'last' => 'Kirk']
+                // Arr::mapSpread - формирует новый массив, применяя функцию к значениям вложенных элементов
+                $array = [[0, 1], [2, 3], [4, 5], [6, 7], [8, 9]];
+                $mapped = Arr::mapSpread($array, function (int $even, int $odd) {return $even + $odd;});    // [1, 5, 9, 13, 17]
+                // Arr::mapWithKeys - формирует новый массив, применяя функцию к ключам вложенных элементов
+                $array = [['name' => 'John', 'department' => 'Sales', 'email' => 'john@example.com'],
+                          ['name' => 'Jane', 'department' => 'Marketing', 'email' => 'jane@example.com']];
+                $mapped = Arr::mapWithKeys($array, function (array $item, int $key)
+                {return [$item['email'] => $item['name']];});   // ['john@example.com' => 'John', 'jane@example.com' => 'Jane']
+                // Arr::pluck - извлекает все значения указанного ключа
+                $array = [['developer' => ['id' => 1, 'name' => 'Taylor']], ['developer' => ['id' => 2, 'name' => 'Abigail']]];
+                $names = Arr::pluck($array, 'developer.name');    // ['Taylor', 'Abigail']
+                либо
+                $names = Arr::pluck($array, 'developer.name', 'developer.id');    // [1 => 'Taylor', 2 => 'Abigail']
+                // Arr::prepend - помещает элемент в начало массива
+                use Illuminate\Support\Arr;
+                $array = ['one', 'two', 'three', 'four'];
+                $array = Arr::prepend($array, 'zero');    // ['zero', 'one', 'two', 'three', 'four']
+                либо
+                $array = ['price' => 100];
+                $array = Arr::prepend($array, 'Desk', 'name');    // ['name' => 'Desk', 'price' => 100]
+                // Arr::prependKeysWith - добавляет указанный префикс ко всем именам ключей ассоциативного массива
+                $array = ['name' => 'Desk', 'price' => 100];
+                $keyed = Arr::prependKeysWith($array, 'product.');    // ['product.name' => 'Desk', 'product.price' => 100]
+                // Arr::pull - возвращает и удаляет пару ключ/значение из массива
+                $array = ['name' => 'Desk', 'price' => 100];
+                $name = Arr::pull($array, 'name');    // $name: Desk    $array: ['price' => 100]
+                либо значение по умолчанию, если клач не существует
+                $value = Arr::pull($array, $key, $default);
+                // Arr::query - преобразует массив в строку запроса
+                $array = ['name' => 'Taylor', 'order' => ['column' => 'created_at', 'direction' => 'desc']];
+                Arr::query($array);   // name=Taylor&order[column]=created_at&order[direction]=desc
+                // Arr::random - возвращает случайное значение из массива
+                $array = [1, 2, 3, 4, 5];
+                $random = Arr::random($array);    // 4
+                либо вернуть несколько случайных значений из массива
+                $items = Arr::random($array, 2);    // [2, 5]
+                // Arr::set - устанавливает значение во вложенном массиве
+                $array = ['products' => ['desk' => ['price' => 100]]];
+                Arr::set($array, 'products.desk.price', 200);   // ['products' => ['desk' => ['price' => 200]]] 
+                // Arr::shuffle - случайным образом перемешивает элементы в массиве
+                $array = Arr::shuffle([1, 2, 3, 4, 5]);   // [3, 2, 5, 1, 4]
+                // Arr::sort - сортирует массив по возрастанию
+                $array = ['Desk', 'Table', 'Chair'];
+                $sorted = Arr::sort($array);    // ['Chair', 'Desk', 'Table']
+                либо с применением функции
+                $array = [['name' => 'Desk'], ['name' => 'Table'], ['name' => 'Chair']];
+                $sorted = array_values(Arr::sort($array, function (array $value)
+                {return $value['name'];}));   // [['name' => 'Chair'], ['name' => 'Desk'], ['name' => 'Table']]
+                // Arr::sortDesc - сортирует массив по убыванию
+                $array = ['Desk', 'Table', 'Chair'];
+                $sorted = Arr::sortDesc($array);    // ['Table', 'Desk', 'Chair']
+                либо с применением функции
+                $array = [['name' => 'Desk'], ['name' => 'Table'], ['name' => 'Chair']];
+                $sorted = array_values(Arr::sortDesc($array, function (array $value)
+                {return $value['name'];}));   // [['name' => 'Table'], ['name' => 'Desk'], ['name' => 'Chair']]
+                // Arr::sortRecursive - рекурсивно сортирует массив
+                с помощью метода sort для числовых подмассивов и ksort для ассоциативных подмассивов
+                $array = [['Roman', 'Taylor', 'Li'], ['PHP', 'Ruby', 'JavaScript'], ['one' => 1, 'two' => 2, 'three' => 3]];
+                $sorted = Arr::sortRecursive($array);
+                вернёт [['JavaScript', 'PHP', 'Ruby'], ['one' => 1, 'three' => 3, 'two' => 2], ['Li', 'Roman', 'Taylor']]
+                либо по убыванию
+                $sorted = Arr::sortRecursiveDesc($array);
+                // Arr::take - возвращает новый массив с указанным количеством элементов
+                $array = [0, 1, 2, 3, 4, 5];
+                $chunk = Arr::take($array, 3);    // [0, 1, 2]
+                либо указанное количество элементов с конца массива
+                $chunk = Arr::take($array, -2);   // [4, 5]
+                // Arr::toCssClasses - составляет строку классов CSS исходя из заданных условий
+                $isActive = false;
+                $hasError = true;
+                $array = ['p-4', 'font-bold' => $isActive, 'bg-red' => $hasError];
+                $classes = Arr::toCssClasses($array);   // 'p-4 bg-red'
+                // Arr::toCssStyles - условно компилирует строку стилей CSS
+                $hasColor = true;
+                $array = ['background-color: blue', 'color: blue' => $hasColor];
+                $classes = Arr::toCssStyles($array);    // 'background-color: blue; color: blue;'
+                // Arr::where - фильтрует массив, используя функцию
+                $array = [100, '200', 300, '400', 500];
+                $filtered = Arr::where($array, function (string|int $value, int $key)
+                {return is_string($value);});   // [1 => '200', 3 => '400']
+                // Arr::whereNotNull - удаляет все значения null из массива
+                $array = [0, null];
+                $filtered = Arr::whereNotNull($array);    // [0 => 0]
+                // Arr::wrap - оборачивает переданное значение в массив
+                $string = 'Laravel';
+                $array = Arr::wrap($string);    // ['Laravel']
+                либо если передан null
+                $array = Arr::wrap(null);   // []
+                // data_fill - устанавливает отсутствующее значение во вложенном массиве или объекте
+                $data = ['products' => ['desk' => ['price' => 100]]];
+                data_fill($data, 'products.desk.price', 200);   // ['products' => ['desk' => ['price' => 100]]]
+                data_fill($data, 'products.desk.discount', 10);   // ['products' => ['desk' => ['price' => 100, 'discount' => 10]]]
+                либо
+                $data = ['products' => [['name' => 'Desk 1', 'price' => 100], ['name' => 'Desk 2']]];
+                data_fill($data, 'products.*.price', 200);
+                вернёт ['products' => [['name' => 'Desk 1', 'price' => 100], ['name' => 'Desk 2', 'price' => 200]]]
+                // data_get - возвращает значение из вложенного массива или объекта
+                $data = ['products' => ['desk' => ['price' => 100]]];
+                $price = data_get($data, 'products.desk.price');    // 100
+                либо значение по умолчанию, которое будет возвращено, если указанный ключ не найден
+                $discount = data_get($data, 'products.desk.discount', 0);   // 0
+                либо для любого ключа массива или объекта
+                $data = ['product-one' => ['name' => 'Desk 1', 'price' => 100], 'product-two' => ['name' => 'Desk 2', 'price' => 150]];
+                data_get($data, '*.name');    // ['Desk 1', 'Desk 2'];
+                либо {first} и {last} для получения первого или последнего элемента массива
+                $flight = ['segments' => [
+                  ['from' => 'LHR', 'departure' => '9:00', 'to' => 'IST', 'arrival' => '15:00'],
+                  ['from' => 'IST', 'departure' => '16:00', 'to' => 'PKX', 'arrival' => '20:00']]];
+                  data_get($flight, 'segments.{first}.arrival');    // 15:00
+                // data_set - устанавливает значение во вложенном массиве или объекте
+                $data = ['products' => ['desk' => ['price' => 100]]];
+                data_set($data, 'products.desk.price', 200);    // ['products' => ['desk' => ['price' => 200]]]
+                либо с *
+                $data = ['products' => [['name' => 'Desk 1', 'price' => 100], ['name' => 'Desk 2', 'price' => 150]]];
+                data_set($data, 'products.*.price', 200);
+                вернёт ['products' => [['name' => 'Desk 1', 'price' => 200], ['name' => 'Desk 2', 'price' => 200]]]
+                либо false в качестве четвертого аргумента чтобы существующие значения не перезаписывались
+                $data = ['products' => ['desk' => ['price' => 100]]];
+                data_set($data, 'products.desk.price', 200, overwrite: false);    // ['products' => ['desk' => ['price' => 100]]]
+                // data_forget - удаляет значение внутри вложенного массива или объекта
+                $data = ['products' => ['desk' => ['price' => 100]]];
+                data_forget($data, 'products.desk.price');    // ['products' => ['desk' => []]]
+                либо с *
+                $data = ['products' => [['name' => 'Desk 1', 'price' => 100], ['name' => 'Desk 2', 'price' => 150]]];
+                data_forget($data, 'products.*.price');   // ['products' => [['name' => 'Desk 1'], ['name' => 'Desk 2']]]
+                // head - возвращает первый элемент переданного массива
+                $array = [100, 200, 300];
+                $first = head($array);    // 100
+                // last - возвращает последний элемент переданного массива
+                $array = [100, 200, 300];
+                $last = last($array);   // 300
+                - числа
+                Number::abbreviate
+                Number::clamp
+                Number::currency
+                Number::defaultCurrency
+                Number::defaultLocale
+                Number::fileSize
+                Number::forHumans
+                Number::format
+                Number::ordinal
+                Number::pairs
+                Number::percentage
+                Number::spell
+                Number::trim
+                Number::useLocale
+                Number::withLocale
+                Number::useCurrency
+                Number::withCurrency
+                - пути
+                app_path
+                base_path
+                config_path
+                database_path
+                lang_path
+                mix
+                public_path
+                resource_path
+                storage_path
+                - URL-адреса
+                action
+                asset
+                route
+                secure_asset
+                secure_url
+                to_route
+                url
+                - разное
+                abort
+                abort_if
+                abort_unless
+                app
+                auth
+                back
+                bcrypt
+                blank
+                broadcast
+                cache
+                class_uses_recursive
+                collect
+                config
+                context
+                cookie
+                csrf_field
+                csrf_token
+                decrypt
+                dd
+                dispatch
+                dispatch_sync
+                dump
+                encrypt
+                env
+                event
+                fake
+                filled
+                info
+                literal
+                logger
+                method_field
+                now
+                old
+                once
+                optional
+                policy
+                redirect
+                report
+                report_if
+                report_unless
+                request
+                rescue
+                resolve
+                response
+                retry
+                session
+                tap
+                throw_if
+                throw_unless
+                today
+                trait_uses_recursive
+                transform
+                validator
+                value
+                view
+                with
+                when
+
+
+
+          //- Contracts
+          //- набор интерфейсов, которые определяют основные службы фреймворка
+          details
+            summary Contracts
+            p.
+              Набор интерфейсов для основных служб фреймворка.<br>
+              В отличие от фасадов контракты требуют инициализации в конструкторе класса позволяют определять явные зависимости для этого класса.<br>
+              Контракты и фасады не исключают друг друга.<br>
+              Фасады и хелперы обеспечивают использование сервисов без объявления типа зависимости и извлечения контракта из сервис-контейнера.<br>
+              При создании пакета, который будет интегрирован с несколькими PHP-фреймворками,
+              можно указать пакет illuminate/contracts в файле composer.json для интеграции со службами Laravel.<br>
+            a(href="https://laravel.orchid.software/docs/12.x/contracts") справочник контрактов и эквивалентных им фасадов
+            a(href="https://github.com/illuminate/contracts") репозитории GitHub
+            pre
+              code.
+                - чтобы получить экземляр контракта, нужно внедрить интерфейс в конструктор извлекаемого класса
+                namespace App\Listeners;
+                use App\Events\OrderWasPlaced;
+                use App\Models\User;
+                use Illuminate\Contracts\Redis\Factory;
+                class CacheOrderInformation {
+                  public function __construct(protected Factory $redis) {}    // создать экземпляр обработчика событий
+                  public function handle(OrderWasPlaced $event): void { }}    // обработать событие
+                // когда слушатель события будет вызван, сервис-контейнер, инициализирует тип Factory в конструкторе класса
 
           //- Folder structure & Lifecycle
           //- структура папок и жизненый цикл
@@ -10485,14 +10821,6 @@ block menu
           //- собирать, извлекать и обмениваться информацией в запросах, заданиях и командах
           details
             summary Context
-            p
-            pre
-              code.
-
-          //- Contracts*
-          //- набор интерфейсов, которые определяют основные службы фреймворка
-          details
-            summary Contracts
             p
             pre
               code.
@@ -18968,26 +19296,49 @@ block menu
                     Paginator::defaultView('view-name');
                     Paginator::defaultSimpleView('view-name');}}
 
-          //- Redis
-          //- используется как кэш и драйвер очереди
+          //- Cache
+          //- API для различных серверов кеширования
           details
-            summary Redis
-            a(href="http://laravel.su/docs/12.x/redis") redis
+            summary Cache
             p.
-              - Redis используется в качестве кэша и драйвера очереди<br>
-              - драйвер Redis по умолчанию использует расширение phpredis<br>
-              - расширение predis не поддерживается<br>
-              - расширение phpredis поддерживает Redis 3.0 и выше<br>
-              - кеширование данных в Redis<br>
-              - кеширование представлений в Redis<br>
-              - кеширование маршрутов в Redis<br>
-              - кеширование конфигурации в Redis<br>
+              Данные, извлечение и обработка которых требуют больших ресурсов ЦП или занимает много времени, кешируют на некоторое время.<br>
+              Указать хранилище по умолчанию в config/cache.php.<br>
+              Драйверы array и null предоставляют удобные механизмы кеширования для автоматических тестов.<br>
+            a(href="https://laravel.orchid.software/docs/12.x/redis#configuration") настройка Redis
+            a(href="https://pecl.php.net/package/memcached") установить пакет Memcached
+            a(href="https://aws.amazon.com/dynamodb") DynamoDB
+            a(href="https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/TTL.html") включить TTL
+            a(href="https://www.mongodb.com/docs/drivers/php/laravel-mongodb/current/cache/") MongoDB
+            a(href="https://laravel.orchid.software/docs/12.x/mongodb") Mongodb Laravel
             pre
               code.
+                - по умолчанию драйвера кэша database с таблицей БД для кеша 0001_01_01_000001_create_cache_table.php
+                // создать таблицу БД для кеша
+                php artisan make:cache-table
+                php artisan migrate
+                - Memcached: перечислить серверы в config/cache.php
+                'memcached' => ['servers' => [[
+                  'host' => env('MEMCACHED_HOST', '127.0.0.1'),
+                  'port' => env('MEMCACHED_PORT', 11211),
+                  'weight' => 100]]]
+                либо задать параметр host сокета UNIX
+                'memcached' => ['servers' => [[
+                  'host' => '/var/run/memcached/memcached.sock',
+                  'port' => 0,
+                  'weight' => 100]]]
+                - Redis: пакет Sail уже включает расширение PHP PhpRedis.
+                // Redis используется в качестве кэша и драйвера очереди
+                // драйвер Redis по умолчанию использует расширение phpredis
+                // расширение predis не поддерживается
+                // расширение phpredis поддерживает Redis 3.0 и выше
+                // кеширование данных в Redis
+                // кеширование представлений в Redis
+                // кеширование маршрутов в Redis
+                // кеширование конфигурации в Redis
                 php artisan config:cache
                 php artisan route:cache
                 php artisan view:cache
-
+                // методы
                 use Illuminate\Support\Facades\Redis;
                 Redis::set('key', 'value');
                 Redis::get('key');
@@ -18997,20 +19348,163 @@ block menu
                 Redis::ttl('key');
                 Redis::keys('*');
                 Redis::flushAll();
-
-          //- Cache*
-          //- API для различных серверов кеширования
-          details
-            summary Cache
-            p
+                - DynamoDB:
+                // создать таблицу DynamoDB (обычно называется cache)
+                // указать название таблицы в параметре DYNAMODB_CACHE_TABLE в .env - запишется в параметр stores.dynamodb.table в config/cache.php
+                // строковый ключ раздела в config/cache.php (по умолчанию key).
+                // в поле таблицы expires_at мя атрибута TTL
+                // установить AWS SDK
+                composer require aws/aws-sdk-php
+                // в .env
+                'dynamodb' => [
+                  'driver' => 'dynamodb',
+                  'key' => env('AWS_ACCESS_KEY_ID'),
+                  'secret' => env('AWS_SECRET_ACCESS_KEY'),
+                  'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
+                  'table' => env('DYNAMODB_CACHE_TABLE', 'cache'),
+                  'endpoint' => env('DYNAMODB_ENDPOINT')]
+                - MongoDB: официальный пакет mongodb/laravel-mongodb
+                // используется в качестве драйвера кэша, очереди, сессий, БД
+                // драйвер MongoDB по умолчанию использует расширение mongodb
+                // расширение mongodb поддерживает MongoDB 2.6 и выше
+                php artisan vendor:publish --provider="Jenssegers\Mongodb\MongodbServiceProvider"
+            p Управление кешем приложения
             pre
               code.
-
-          //- Rate Limiting
-          //- ограничить любое действие в течение указанного периода времени
-          details
-            summary Rate Limiting
-            p ограничить любое действие в течение указанного периода времени, использует кеш приложения по умолчанию в config/cache.php
+                - получить экземпляр кеша
+                namespace App\Http\Controllers;
+                use Illuminate\Support\Facades\Cache;
+                class UserController extends Controller {
+                  public function index(): array {$value = Cache::get('key');
+                  return [ //... ];}}
+                - доступ к кеш-хранилищу
+                // 'file' - одно из хранилищ в массиве stores файла config/cache.php
+                $value = Cache::store('file')->get('foo');
+                Cache::store('redis')->put('bar', 'baz', 600); // 10 Минут
+                - получить элемент из кеша
+                $value = Cache::get('key');
+                $value = Cache::get('key', 'default');
+                либо со значением по умолчанию из функции, если 'key' не найден
+                $value = Cache::get('key', function () {return DB::table(/* ... */)->get();});
+                - проверить наличие элемента
+                if (Cache::has('key')) { //... }
+                - увеличить или уменьшить целочисленные значения элементов в кеше, необязательный второй аргумент: на сколько                
+                Cache::add('key', 0, now()->addHours(4));   // инициализировать значение, если оно не существует
+                Cache::increment('key');
+                Cache::increment('key', $amount);
+                Cache::decrement('key');
+                Cache::decrement('key', $amount);
+                - сохранить значение по умолчанию, если запрошенный элемент не существует
+                $value = Cache::remember('users', $seconds, function () {return DB::table('users')->get();});
+                либо сохранить элемент навсегда, если он не существует
+                $value = Cache::rememberForever('users', function () {return DB::table('users')->get();});
+                - паттерн “stale-while-revalidate”: «устаревшего при повторной проверке»
+                // разрешить обслуживание частично устаревших данных во время пересчета кэшированного значения в фоновом режиме
+                // первое значение в массиве - количество секунд кеш свежий, второе - как долго он может использоваться как устаревшие данные
+                // запрос до первого значения - кэш возвращается сразу
+                // запрос между первым и вторым значениями - обновить кэш после отправки ответа пользователю
+                // запрос после второго значения - кеш просрочен, значение пересчитывается, занимает время
+                $value = Cache::flexible('users', [5, 10], function () {return DB::table('users')->get();});
+                - получить элемент из кеша, а затем удалить этот элемент
+                $value = Cache::pull('key');
+                $value = Cache::pull('key', 'default');
+                - сохранить элементы в кеше
+                Cache::put('key', 'value', $seconds = 10);
+                либо через DateTime
+                Cache::put('key', 'value', now()->addMinutes(10));
+                либо элемент будет храниться бесконечно
+                Cache::put('key', 'value');
+                - постоянное хранение элемента в кеше
+                Cache::forever('key', 'value');
+                - добавить элемент в кеш, только если его там нет
+                Cache::add('key', 'value', $seconds);
+                - удалить элемент из кеша
+                Cache::forget('key');
+                либо указав нулевой или отрицательной срок хранения
+                Cache::put('key', 'value', 0);
+                Cache::put('key', 'value', -5);
+                - очистить весь кеш: удаляет все записи из кеша не учитывая префиксы разных приложений в кеше
+                Cache::flush();
+                - глобальный помощник кеша
+                // получить значение из кеша по ключу
+                $value = cache('key');
+                // хранить значения в кеше в течение указанного времени
+                cache(['key' => 'value'], $seconds);
+                cache(['key' => 'value'], now()->addMinutes(10));
+                // получить экземпляр Illuminate\Contracts\Cache\Factory со всеми методыми кеширования
+                // сохранить значение по умолчанию, если запрошенный элемент не существует
+                cache()->remember('users', $seconds, function () {return DB::table('users')->get();});
+            p Атомарные блокировки: все серверы должны взаимодействовать с одним и тем же центральным сервером кеширования.
+            pre
+              code.
+                - блокировка получена на 10 секунд
+                use Illuminate\Support\Facades\Cache;
+                $lock = Cache::lock('foo', 10);
+                if ($lock->get()) {$lock->release();}
+                - получить блокировку и снять через 10 секунд
+                Cache::lock('foo', 10)->get(function () { });
+                - если блокировка недоступна, то попробывать через 5 секунд, если снова нет - выбросить исключение
+                use Illuminate\Contracts\Cache\LockTimeoutException;
+                $lock = Cache::lock('foo', 10);
+                try {$lock->block(5);} catch (LockTimeoutException $e) { } finally {$lock->release();}
+                либо если блокировка недоступна подождёт 5 секунд, если доступна - выполнит функцию и снимет блокировку
+                Cache::lock('foo', 10)->block(5, function () { });
+                - установить блокировку в одном процессе и снять ее в другом процессе
+                // отправим задание в очередь с токеном инициатора блокировки если блокировка получена
+                $podcast = Podcast::find($id);
+                $lock = Cache::lock('processing', 120);
+                if ($lock->get()) {ProcessPodcast::dispatch($podcast, $lock->owner());}
+                // восстановить и снять блокировку с помощью токена инициатора
+                Cache::restoreLock('processing', $this->owner)->release();
+                // принудительно снять блокировку без учета текущего инициатора
+                Cache::lock('processing')->forceRelease();
+            p Собственные драйвера кеша
+            pre
+              code.
+                - создать собственный драйвер кеша для MongoDB
+                namespace App\Extensions;
+                use Illuminate\Contracts\Cache\Store;
+                class MongoStore implements Store {
+                  public function get($key) {}
+                  public function many(array $keys) {}
+                  public function put($key, $value, $seconds) {}
+                  public function putMany(array $values, $seconds) {}
+                  public function increment($key, $value = 1) {}
+                  public function decrement($key, $value = 1) {}
+                  public function forever($key, $value) {}
+                  public function forget($key) {}
+                  public function flush() {}
+                  public function getPrefix() {}}
+                // далее реализовать каждый из этих методов, используя соединение MongoDB
+                - регистрация драйвера
+                Cache::extend('mongo', function (Application $app) {return Cache::repository(new MongoStore);});
+                // зарегистрировать свой драйвер кеша перед тем, как поставщики служб прочитают кешированные значения
+                namespace App\Providers;
+                use App\Extensions\MongoStore;
+                use Illuminate\Contracts\Foundation\Application;
+                use Illuminate\Support\Facades\Cache;
+                use Illuminate\Support\ServiceProvider;
+                class AppServiceProvider extends ServiceProvider {
+                  {$this->app->booting(function () {
+                    Cache::extend('mongo', function (Application $app) {
+                      return Cache::repository(new MongoStore);});});}
+                    public function boot(): void { }}
+                // extend: первый аргумент - имя драйвера = параметру driver в config/cache.php
+                // второй аргумент – возвращает экземпляр Illuminate\Cache\Repository, который будет передан экземпляру контейнера служб $app
+                // далее обновить переменную среды CACHE_STORE в .env или default в config/cache.php
+            p События
+            pre
+              code.
+                - события, запускаемые кэшем:
+                  Illuminate\Cache\Events\CacheHit
+                  Illuminate\Cache\Events\CacheMissed
+                  Illuminate\Cache\Events\KeyForgotten
+                  Illuminate\Cache\Events\KeyWritten
+                - отключить события кэширования в config/cache.php чтобы повысить производительность
+                'database' => [driver' => 'database', 'events' => false]
+            p.
+              Rate Limiting: ограничить любое действие в течение указанного периода времени,
+              использует кеш приложения по умолчанию в config/cache.php
             pre
               code.
                 - указать драйвер кеша для ограничителя скорости
@@ -19052,17 +19546,6 @@ block menu
                   $message->markAsRead();
                   RateLimiter::clear('send-message:'.$message->user_id);
                   return $message;}
-
-          //- MongoDB
-          //- используется как драйвер кэша, очереди, сессий и БД
-          details
-            summary MongoDB
-            a(href="http://laravel.su/docs/12.x/mongodb") mongodb
-            p.
-              - MongoDB используется в качестве драйвера кэша, очереди, сессий, БД<br>
-              - драйвер MongoDB по умолчанию использует расширение mongodb<br>
-              - расширение mongodb поддерживает MongoDB 2.6 и выше<br>
-            code php artisan vendor:publish --provider="Jenssegers\Mongodb\MongodbServiceProvider"
               
         //- How to
         details
