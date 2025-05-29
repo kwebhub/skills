@@ -7554,7 +7554,7 @@ block menu
               Ответ из middleware поступает в метод handle HTTP-ядра, который вызовит метод send для ответа.<br>
               Метод send отправит содержимое ответа в веб-браузер пользователя.<br>
 
-          //- Service provider*
+          //- Service provider
           //- регистрация компонентов фреймворка, связываний сервис-контейнера, слушателей событий, посредников, маршрутов и конфигурирование приложения
           details
             summary Service provider
@@ -7563,8 +7563,61 @@ block menu
               Сервис-провайдеры отвечают за начальную настройку компонентов фреймворка: база данных, очереди, валидация, маршрутизация и т.д.<br>
               Сервис-провайдеры инициализируют и настраивают множество функций, предоставляемых фреймворком.<br>
               Список пользовательских или сторонних сервис-провайдеров в bootstrap/providers.php<br>
-              Пользовательские сервис-провайдеры хранятся в каталоге app/Providers.<br>
+              Cервис-провайдеры созданные пользователем хранятся в каталоге app/Providers.<br>
               Провайдер по умолчанию AppServiceProvider для добавления собственной инициализации и связываний контейнера служб приложения.<br>
+            pre
+              code.
+                - написать сервис-провайдер
+                php artisan make:provider RiakServiceProvider   // сгенерировать новый сервис-провайдер в bootstrap/providers.php
+                // метод register только для связывания в контейнере служб
+                    в любом из методов сервис-провайдера у всегда есть доступ к свойству $app, которое обеспечивает доступ к контейнеру служб
+                namespace App\Providers;
+                use App\Services\Riak\Connection;
+                use Illuminate\Contracts\Foundation\Application;
+                use Illuminate\Support\ServiceProvider;
+                class RiakServiceProvider extends ServiceProvider {
+                  public function register(): void {
+                    $this->app->singleton(Connection::class, function (Application $app) {return new Connection(config('riak'));});}}
+                // использовать свойства bindings и singletons вместо ручной регистрации каждого связывания контейнера
+                namespace App\Providers;
+                use App\Contracts\DowntimeNotifier;
+                use App\Contracts\ServerProvider;
+                use App\Services\DigitalOceanServerProvider;
+                use App\Services\PingdomDowntimeNotifier;
+                use App\Services\ServerToolsProvider;
+                use Illuminate\Support\ServiceProvider;
+                class AppServiceProvider extends ServiceProvider {
+                  public $bindings = [ServerProvider::class => DigitalOceanServerProvider::class];
+                  public $singletons = [
+                    DowntimeNotifier::class => PingdomDowntimeNotifier::class,
+                    ServerProvider::class => ServerToolsProvider::class];}
+                // метод boot вызывается после регистрации всех остальных сервис-провайдеров
+                namespace App\Providers;
+                use Illuminate\Support\Facades\View;
+                use Illuminate\Support\ServiceProvider;
+                class ComposerServiceProvider extends ServiceProvider {
+                  public function boot(): void {View::composer('view', function () { //... });}}
+                // внедрение зависимости в методе boot
+                use Illuminate\Contracts\Routing\ResponseFactory;
+                public function boot(ResponseFactory $response): void {
+                  $response->macro('serialized', function (mixed $value) { //... });}
+                - регистрация сервис-провайдеров в bootstrap/providers.php
+                // при команде php artisan make:provider сгенерированный провайдер автоматически добавится в bootstrap/providers.php
+                // если класс провайдера создан вручную, то вручную добавить класс провайдера в массив в bootstrap/providers.php
+                return [
+                  App\Providers\AppServiceProvider::class,
+                  App\Providers\ComposerServiceProvider::class];
+                - отложенный сервис-провайдер: регистрирует только связывания в контейнере служб в момент когда это связывание понадобится.
+                  Laravel загрузит сервис-провайдер только при необходимости в одной из этих служб.
+                namespace App\Providers;
+                use App\Services\Riak\Connection;
+                use Illuminate\Contracts\Foundation\Application;
+                use Illuminate\Contracts\Support\DeferrableProvider;
+                use Illuminate\Support\ServiceProvider;
+                class RiakServiceProvider extends ServiceProvider implements DeferrableProvider {
+                  public function register(): void {
+                    $this->app->singleton(Connection::class, function (Application $app) {return new Connection($app['config']['riak']);});}
+                  public function provides(): array {return [Connection::class];}}
 
           //- Service container
           //- внедрение и управление зависимостями классов
@@ -11703,14 +11756,6 @@ block menu
             pre
               code.
 
-          //- File Storage*
-          //- абстракция файловой системы для работы с локальными и производственными файловыми системами
-          details
-            summary File Storage
-            p
-            pre
-              code.
-
           //- Localization*
           //- поддержка мультиязычности
           details
@@ -11727,10 +11772,10 @@ block menu
             pre
               code.
 
-          //- Package Development*
-          //- основной способ добавления функциональности в Laravel
+          //- File Storage*
+          //- абстракция файловой системы для работы с локальными и производственными файловыми системами
           details
-            summary Package Development
+            summary File Storage
             p
             pre
               code.
@@ -11747,6 +11792,14 @@ block menu
           //- управление запланированными задачами на сервере
           details
             summary Task Scheduling
+            p
+            pre
+              code.
+
+          //- Package Development*
+          //- основной способ добавления функциональности в Laravel
+          details
+            summary Package Development
             p
             pre
               code.
