@@ -5053,8 +5053,248 @@ Middleware позволяет внести изменения и провест�
 Список пользовательских или сторонних сервис-провайдеров в bootstrap/providers.php<br>
 Пользовательские сервис-провайдеры хранятся в каталоге app/Providers.<br>
 Провайдер по умолчанию AppServiceProvider для добавления собственной инициализации и связываний контейнера служб приложения.<br>
-</p></details><details><summary>Service container</summary><p></p></details><details><summary>Facades</summary><p>Фасады - статический интерфейс для классов, доступных в контейнере служб приложения.
-</p></details><details><summary>Helpers</summary><p>глобальные вспомогательные функции</p><a href="https://laravel.su/docs/12.x/helpers#method-when">доступные методы</a><pre><code>- массивы и объекты
+</p></details><details><summary>Service container</summary><p>Инструмент для управления зависимостями классов и выполнения внедрения зависимостей.<br>
+Внедрение зависимостей: зависимости вводятся в класс через конструктор в виде аргументов или через методы-сеттеры.<br>
+При создании класса или вызове методов фреймворк смотрит на список аргументов и создаёт экземпляры необходимых классов
+и сам подаёт их на вход конструктора или метода.<br>
+Контроллеры, слушатели событий, посредники всегда выполняются с помощью контейнера.</p><pre><code>namespace App\Http\Controllers;
+use App\Services\AppleMusic;
+use Illuminate\View\View;
+class PodcastController extends Controller {
+  public function __construct(protected AppleMusic $apple) {}
+  public function show(string $id): View {
+    return view('podcasts.show', ['podcast' => $this->apple->findPodcast($id)]);}}
+- неконфигурируемое автоматическое внедрение позволяет получить доступ к объекту не взаимодействуя с контейнером напрямую,
+  контейнером управляет внедрением зависимостей за кулисами
+  благодаря автоматическому внедрению зависимостей и фасадам не нужно вручную связывать или извлекать что-либо из контейнера
+  use Illuminate\Http\Request;    // контейнер внедряет объект запроса для обработки функцией маршрута
+  Route::get('/', function (Request $request) { //... });</code></pre><p>Связывание</p><pre><code>- простое связывание: доступ к контейнеру через свойство провайдера $this->app, метод bind - зарегистрировать связывание
+namespace App\Providers;
+class AppServiceProvider extends ServiceProvider {
+  $this->app->bind(Transistor::class,      // имя класса или интерфейса, которые хотим зарегистрировать, $app - контейнер
+    function (Application $app) {return new Transistor($app->make(PodcastParser::class));});} // возвращает экземпляр класса
+// взаимодействовать с контейнером в других частях приложения через фасад App
+use App\Services\Transistor;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Support\Facades\App;
+App::bind(Transistor::class, function (Application $app) { //... });
+// регистрация привязки bindIf только если для данного типа нет зарегистрированной привязки
+$this->app->bindIf(Transistor::class, function (Application $app) {return new Transistor($app->make(PodcastParser::class));});
+- связывание одиночек: singleton связывает класс или интерфейс,
+  обращения к которому будут получать один и тот же однажды полученный экземляр
+use App\Services\Transistor;
+use App\Services\PodcastParser;
+use Illuminate\Contracts\Foundation\Application;
+$this->app->singleton(Transistor::class, function (Application $app) {return new Transistor($app->make(PodcastParser::class));});
+// singletonIf только если для данного типа нет зарегистрированной привязки
+$this->app->singletonIf(Transistor::class, function (Application $app) {return new Transistor($app->make(PodcastParser::class));});
+- связывания одиночек с областью действия: scoped связывает класс или интерфейс,
+  экземляр которого получает только один раз в течение жизненного цикла запроса/задания.
+  экземпляры, зарегистрированные scoped, сбрасываются каждый раз, когда приложение запускает новый жизненный цикл.
+use App\Services\Transistor;
+use App\Services\PodcastParser;
+use Illuminate\Contracts\Foundation\Application;
+$this->app->scoped(Transistor::class, function (Application $app) {return new Transistor($app->make(PodcastParser::class));});
+// scopedIf только если для данного типа нет зарегистрированной привязки с областью действия
+$this->app->scopedIf(Transistor::class, function (Application $app) {return new Transistor($app->make(PodcastParser::class));});
+- привязать существующий экземпляр объекта instance: экземпляр всегда будет возвращен из контейнера при последующих вызовах
+use App\Services\Transistor;
+use App\Services\PodcastParser;
+$service = new Transistor(new PodcastParser);
+$this->app->instance(Transistor::class, $service);
+- связывать интерфейс с реализацией: рукописный класс RedisEventPusher реализует интерфейс EventPusher, связать RedisEventPusher
+use App\Contracts\EventPusher;
+use App\Services\RedisEventPusher;
+$this->app->bind(EventPusher::class, RedisEventPusher::class);
+// это сообщает контейнеру, что он должен внедрить RedisEventPusher, когда требуется реализация EventPusher
+use App\Contracts\EventPusher;
+public function __construct(protected EventPusher $pusher) {}
+- контекстная привязка: внедрить разные реализации в каждый класс когда оба класса используют один и тот же интерфейс
+// два контроллера зависят от разных реализаций контракта Illuminate\Contracts\Filesystem\Filesystem
+use App\Http\Controllers\PhotoController;
+use App\Http\Controllers\UploadController;
+use App\Http\Controllers\VideoController;
+use Illuminate\Contracts\Filesystem\Filesystem;
+use Illuminate\Support\Facades\Storage;
+$this->app->when(PhotoController::class)->needs(Filesystem::class)->give(function () {return Storage::disk('local');});
+$this->app->when([VideoController::class, UploadController::class])->needs(Filesystem::class)
+  ->give(function () {return Storage::disk('s3');});
+либо атрибуты контекстной привязки позволяют внедрять типы значений без ручного определения контекстных привязок
+// атрибут Storage используется для внедрения диска хранения
+namespace App\Http\Controllers;
+use Illuminate\Container\Attributes\Storage;
+use Illuminate\Contracts\Filesystem\Filesystem;
+class PhotoController extends Controller {
+  public function __construct(<Storage local></Storage> protected Filesystem $filesystem) { //... }}
+// атрибуты
+namespace App\Http\Controllers;
+use App\Models\Photo;
+use Illuminate\Container\Attributes\Auth;
+use Illuminate\Container\Attributes\Cache;
+use Illuminate\Container\Attributes\Config;
+use Illuminate\Container\Attributes\DB;
+use Illuminate\Container\Attributes\Log;
+use Illuminate\Container\Attributes\RouteParameter;
+use Illuminate\Container\Attributes\Tag;
+use Illuminate\Contracts\Auth\Guard;
+use Illuminate\Contracts\Cache\Repository;
+use Illuminate\Database\Connection;
+use Psr\Log\LoggerInterface;
+class PhotoController extends Controller {
+  public function __construct(
+    <Auth web></Auth> protected Guard $auth,
+    <Cache redis></Cache> protected Repository $cache,
+    <Config app.timezone></Config> protected string $timezone,
+    <DB mysql></DB> protected Connection $connection,
+    <Log daily></Log> protected LoggerInterface $log,
+    <RouteParameter photo></RouteParameter> protected Photo $photo,
+    <Tag reports></Tag> protected iterable $reports) { //... }}
+// атрибут CurrentUser для добавления текущего аутентифицированного пользователя в маршрут или класс
+use App\Models\User;
+use Illuminate\Container\Attributes\CurrentUser;
+Route::get('/user', function (<CurrentUser></CurrentUser> User $user) {return $user;})->middleware('auth');
+// создать свои контекстные атрибуты: метод resolve атрибута разрешит значение, которое должно быть введено в класс
+namespace App\Attributes;
+use Illuminate\Contracts\Container\ContextualAttribute;
+<Attribute Attribute::TARGET_PARAMETER></Attribute>
+class Config implements ContextualAttribute {
+  public function __construct(public string $key, public mixed $default = null) { }
+  public static function resolve(self $attribute, Container $container) {
+    return $container->make('config')->get($attribute->key, $attribute->default);}}
+- связывание примитивов
+use App\Http\Controllers\UserController;
+$this->app->when(UserController::class)->needs('$variableName')->give($value);
+// класс зависит от массива экземпляров, объединенных меткой контейнера
+$this->app->when(ReportAggregator::class)->needs('$reports')->giveTagged('reports');
+// внедрить значение из одного из конфигурационных файлов приложения
+$this->app->when(ReportAggregator::class)->needs('$timezone')->giveConfig('app.timezone');
+// класс получает массив типизированных объектов с использованием переменного количества аргументов конструктора
+use App\Models\Filter;
+use App\Services\Logger;
+class Firewall {
+  protected $filters;   // экземпляры фильтра
+  public function __construct(protected Logger $logger, Filter ...$filters) {$this->filters = $filters;}}
+// внедрить зависимость, используя метод give с замыканием, которое возвращает массив внедряемых экземпляров Filter
+$this->app->when(Firewall::class)->needs(Filter::class)->give(function (Application $app) {
+  return [$app->make(NullFilter::class), $app->make(ProfanityFilter::class), $app->make(TooLongFilter::class)];});
+либо передать массив имен классов, которые будут предоставлены контейнером каждый раз, когда для Firewall нужны экземпляры Filter
+$this->app->when(Firewall::class)->needs(Filter::class)->give([NullFilter::class, ProfanityFilter::class, TooLongFilter::class]);
+// для класса вариативной зависимостью Report ...$reports недрить все привязки с меткой для этой зависимости
+$this->app->when(ReportAggregator::class)->needs(Report::class)->giveTagged('reports');
+- добавление меток: получить все привязки определенной «категории»
+// назначить метку некоторым реализациям интерфейса Report
+$this->app->bind(CpuReport::class, function () { //... });
+$this->app->bind(MemoryReport::class, function () { //... });
+$this->app->tag([CpuReport::class, MemoryReport::class], 'reports');
+// получить помеченные реализации интерфейса Report
+$this->app->bind(ReportAnalyzer::class, function (Application $app) {return new ReportAnalyzer($app->tagged('reports'));});
+- расширяемость связываний: метод extend позволяет модифицировать извлеченные службы
+$this->app->extend(Service::class, function (Service $service, Application $app) {return new DecoratedService($service);});</code></pre><p>Извлечение</p><pre><code>- извлечение экземпляра класса из контейнера
+use App\Services\Transistor;
+$transistor = $this->app->make(Transistor::class);
+либо передать зависимость как ассоциативный массив
+use App\Services\Transistor;
+$transistor = $this->app->makeWith(Transistor::class, ['id' => 1]);
+// был ли класс или интерфейс явно привязан в контейнере
+if ($this->app->bound(Transistor::class)) { //... }
+- получить экземпляр класса из контейнера без доступа к поставщику служб и переменной $app
+use App\Services\Transistor;
+use Illuminate\Support\Facades\App;
+$transistor = App::make(Transistor::class);
+$transistor = app(Transistor::class);
+- указать класс Illuminate\Container\Container, чтобы экземпляр контейнера был внедрен в класс, извлекаемый контейнером
+use Illuminate\Container\Container;
+public function __construct(protected Container $container) {}</code></pre><p>Автоматическое внедрение зависимостей</p><pre><code>- зависимости лучше объявлять в конструкторе класса, который извлекается контейнером: контроллеры, слушатели событий, посредники
+  и в методе handle обработки заданий в очереди
+namespace App\Http\Controllers;
+use App\Services\AppleMusic;
+class PodcastController extends Controller {
+  public function __construct(protected AppleMusic $apple) {}   // сервис будет автоматически получен и внедрен в класс
+  public function show(string $id): Podcast {return $this->apple->findPodcast($id);}}</code></pre><p>Вызов и внедрение метода</p><pre><code>namespace App;
+use App\Services\AppleMusic;
+class PodcastStats
+public function generate(AppleMusic $apple): array {return [ //... ];}}
+// вызвать метод generate через контейнер
+use App\PodcastStats;
+use Illuminate\Support\Facades\App;
+$stats = App::call([new PodcastStats, 'generate']);
+либо
+use App\Services\AppleMusic;
+use Illuminate\Support\Facades\App;
+$result = App::call(function (AppleMusic $apple) { //...});</code><p>События контейнера: контейнер служб инициирует событие каждый раз, когда извлекает объект</p><pre><code>- прослушать событие контейнера служб: объект будет передан в замыкание для добавления свойств перед передачей получателю
+use App\Services\Transistor;
+use Illuminate\Contracts\Foundation\Application;
+$this->app->resolving(Transistor::class, function (Transistor $transistor, Application $app) {
+  // Вызывается, когда контейнер извлекает объекты типа `Transistor`});
+$this->app->resolving(function (mixed $object, Application $app) {
+  // Вызывается, когда контейнер извлекает объект любого типа});
+- перепривязка: rebinding прослушивает повторную привязку службы к контейнеру
+  полезно для обновления зависимостей или изменения поведения при обновлении привязки
+use App\Contracts\PodcastPublisher;
+use App\Services\SpotifyPublisher;
+use App\Services\TransistorPublisher;
+use Illuminate\Contracts\Foundation\Application;
+$this->app->bind(PodcastPublisher::class, SpotifyPublisher::class);
+$this->app->rebinding(
+  PodcastPublisher::class,
+  function (Application $app, PodcastPublisher $newInstance) { });
+// новая привязка вызовет повторное замыкание
+$this->app->bind(PodcastPublisher::class, TransistorPublisher::class);</code></pre><p>PSR-11</p><pre><code>- контейнер служб Laravel реализует интерфейс PSR-11: получить экземпляр контейнера
+use App\Services\Transistor;
+use Psr\Container\ContainerInterface;
+Route::get('/', function (ContainerInterface $container) {$service = $container->get(Transistor::class);});
+</code></pre></pre></details><details><summary>Facades</summary><p>Фасады - статические прокси для базовых классов в контейнере служб, и обеспечивающих доступ почти ко всему функционалу Laravel.<br>
+фасад – это класс, который обеспечивает доступ к объекту из контейнера.<br></p><a href="https://github.com/illuminate">Illuminate</a><pre><code>use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Route;
+Route::get('/cache', function () {return Cache::get('key');});
+- фасады и помощники
+use Illuminate\Support\Facades\Response;
+Route::get('/users', function () {return Response::json([ //... ]);});
+либо помощник без use
+Route::get('/users', function () {return response()->json([ //... ]);});
+// фасад
+return Illuminate\Support\Facades\View::make('profile');    // помощник return view('profile');
+- тестировать фасад и помощника
+use Illuminate\Support\Facades\Cache;
+Route::get('/cache', function () {return Cache::get('key');});
+// помощник
+Route::get('/cache', function () {return cache('key');});
+// тест фасада
+use Illuminate\Support\Facades\Cache;
+test('basic example', function () {Cache::shouldReceive('get')->with('key')->andReturn('value');
+$response = $this->get('/cache');
+$response->assertSee('value');});
+// тест помощника
+use Illuminate\Support\Facades\Cache;
+public function test_basic_example(): void {Cache::shouldReceive('get')->with('key')->andReturn('value');
+$response = $this->get('/cache');
+$response->assertSee('value');}
+-  фасад в реальном времени
+namespace App\Models;
+use App\Contracts\Publisher;
+use Illuminate\Database\Eloquent\Model;
+class Podcast extends Model {
+  public function publish(Publisher $publisher): void {
+    $this->update(['publishing' => now()]);
+    $publisher->publish($this);}}
+// сгенерировать фасад в реальном времени (добавить Facades\ к импорту класса) - экземпляр Publisher получен из контейнера службы
+namespace App\Models;
+use Facades\App\Contracts\Publisher;
+use Illuminate\Database\Eloquent\Model;
+class Podcast extends Model {
+  public function publish(): void {
+    $this->update(['publishing' => now()]);
+    $publisher->publish($this);
+    Publisher::publish($this);}}
+// тестировать
+use App\Models\Podcast;
+use Facades\App\Contracts\Publisher;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+uses(RefreshDatabase::class);
+test('podcast can be published', function () {
+  $podcast = Podcast::factory()->create();
+  Publisher::shouldReceive('publish')->once()->with($podcast);
+  $podcast->publish();});</code></pre><table><caption>фасад, его базовый класс и привязка к контейнеру служб</caption><thead><tr><th>Фасад</th><th>Класс</th><th>Привязка</th></tr></thead><tbody> <tr><td>App</td><td>Illuminate\Foundation\Application</td><td>app</td></tr><tr><td>Artisan</td><td>Illuminate\Contracts\Console\Kernel</td><td>artisan</td></tr><tr><td>Auth (Instance)</td><td>Illuminate\Contracts\Auth\Guard</td><td>auth.driver</td></tr><tr><td>Auth</td><td>Illuminate\Auth\AuthManager</td><td>auth</td></tr><tr><td>Blade</td><td>Illuminate\View\Compilers\BladeCompiler</td><td>blade.compiler</td></tr><tr><td>Broadcast (Instance)</td><td>Illuminate\Contracts\Broadcasting\Broadcaster </td><td>...</td></tr><tr><td>Broadcast</td><td>Illuminate\Contracts\Broadcasting\Factory</td><td>...</td></tr><tr><td>Bus</td><td>Illuminate\Contracts\Bus\Dispatcher</td><td>...</td></tr><tr><td>Cache (Instance)</td><td>Illuminate\Cache\Repository</td><td>cache.store</td></tr><tr><td>Cache</td><td>Illuminate\Cache\CacheManager</td><td>cache</td></tr><tr><td>Config</td><td>Illuminate\Config\Repository</td><td>config</td></tr><tr><td>Context</td><td>Illuminate\Log\Context\Repository</td><td>...</td></tr><tr><td>Cookie</td><td>Illuminate\Cookie\CookieJar</td><td>cookie</td></tr><tr><td>Crypt</td><td>Illuminate\Encryption\Encrypter</td><td>encrypter</td></tr><tr><td>Date</td><td>Illuminate\Support\DateFactory</td><td>date</td></tr><tr><td>DB (Instance)</td><td>Illuminate\Database\Connection</td><td>db.connection</td></tr><tr><td>DB</td><td>Illuminate\Database\DatabaseManager</td><td>db</td></tr><tr><td>Event</td><td>Illuminate\Events\Dispatcher</td><td>events</td></tr><tr><td>Exceptions (Instance)</td><td>Illuminate\Contracts\Debug\ExceptionHandler</td><td>...</td></tr><tr><td>Exceptions</td><td>Illuminate\Foundation\Exceptions\Handler</td><td>...</td></tr><tr><td>File</td><td>Illuminate\Filesystem\Filesystem</td><td>files</td></tr><tr><td>Gate</td><td>Illuminate\Contracts\Auth\Access\Gate</td><td>...</td></tr><tr><td>Hash</td><td>Illuminate\Contracts\Hashing\Hasher</td><td>hash</td></tr><tr><td>Http</td><td>Illuminate\Http\Client\Factory</td><td>...</td></tr><tr><td>Lang</td><td>Illuminate\Translation\Translator</td><td>translator</td></tr><tr><td>Log</td><td>Illuminate\Log\LogManager</td><td>log</td></tr><tr><td>Mail</td><td>Illuminate\Mail\Mailer</td><td>mailer</td></tr><tr><td>Notification</td><td>Illuminate\Notifications\ChannelManager</td><td>...</td></tr><tr><td>Password (Instance)</td><td>Illuminate\Auth\Passwords\PasswordBroker</td><td>auth.password.broker</td></tr><tr><td>Password</td><td>Illuminate\Auth\Passwords\PasswordBrokerManager</td><td>auth.password</td></tr><tr><td>Pipeline (Instance)</td><td>Illuminate\Pipeline\Pipeline</td><td>...</td></tr><tr><td>Process</td><td>Illuminate\Process\Factory</td><td>...</td></tr><tr><td>Queue (Base Class)</td><td>Illuminate\Queue\Queue</td><td>...</td></tr><tr><td>Queue (Instance)</td><td>Illuminate\Contracts\Queue\Queue</td><td>queue.connection</td></tr><tr><td>Queue</td><td>Illuminate\Queue\QueueManager</td><td>queue</td></tr><tr><td>RateLimiter</td><td>Illuminate\Cache\RateLimiter</td><td>...</td></tr><tr><td>Redirect</td><td>Illuminate\Routing\Redirector</td><td>redirect</td></tr><tr><td>Redis (Instance)</td><td>Illuminate\Redis\Connections\Connection</td><td>redis.connection</td></tr><tr><td>Redis</td><td>Illuminate\Redis\RedisManager</td><td>redis</td></tr><tr><td>Request</td><td>Illuminate\Http\Request</td><td>request</td></tr><tr><td>Response (Instance)</td><td>Illuminate\Http\Response</td><td>...</td></tr><tr><td>Response</td><td>Illuminate\Contracts\Routing\ResponseFactory</td><td>...</td></tr><tr><td>Route</td><td>Illuminate\Routing\Router</td><td>router</td></tr><tr><td>Schedule</td><td>Illuminate\Console\Scheduling\Schedule</td><td>...</td></tr><tr><td>Schema</td><td>Illuminate\Database\Schema\Builder</td><td>...</td></tr><tr><td>Session (Instance)</td><td>Illuminate\Session\Store</td><td>session.store</td></tr><tr><td>Session</td><td>Illuminate\Session\SessionManager</td><td>session</td></tr><tr><td>Storage (Instance)</td><td>Illuminate\Contracts\Filesystem\Filesystem</td><td>filesystem.disk</td></tr><tr><td>Storage</td><td>Illuminate\Filesystem\FilesystemManager</td><td>filesystem</td></tr><tr><td>URL</td><td>Illuminate\Routing\UrlGenerator</td><td>url</td></tr><tr><td>Validator (Instance)</td><td>Illuminate\Validation\Validator</td><td>...</td></tr><tr><td>Validator</td><td>Illuminate\Validation\Factory</td><td>validator</td></tr><tr><td>View (Instance)</td><td>Illuminate\View\View</td><td>...</td></tr><tr><td>View</td><td>Illuminate\View\Factory</td><td>view</td></tr><tr><td>Vite</td><td>Illuminate\Foundation\Vite</td><td>...</td></tr></tbody></table></details><details><summary>Helpers</summary><p>глобальные вспомогательные функции</p><a href="https://laravel.su/docs/12.x/helpers#method-when">доступные методы</a><pre><code>- массивы и объекты
 // Arr::accessible - доступно ли переданное значение массиву (true/false)
   use Illuminate\Support\Arr;
   use Illuminate\Support\Collection;
