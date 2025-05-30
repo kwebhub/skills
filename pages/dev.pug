@@ -11740,19 +11740,174 @@ block menu
                   авторизация канала App.Models.User.{id} включена в файл routes/channels.php
                 Echo.private(`App.Models.User.${userId}`).notification((notification) => {console.log(notification.type);});
 
-          //- Concurrency*
+          //- Concurrency
           //- одновременное, параллельное выполнение задач
           details
             summary Concurrency
-            p
+            p Одновременное выполнение функций для не зависящих друг от друга задач
             pre
               code.
+                - фасад Concurrency поддерживает три драйвера: process (по умолчанию), fork и sync.
+                  PHP не поддерживает разветвление во время веб-запросов, поэтому нужен CLI PHP.
+                  composer require spatie/fork    // fork лучше производительность чем у process
+                  // sync: отключить весь параллелизм и выполнить функции внутри родительского процесса, полезено во время тестирования
+                - запуск параллельных задач
+                use Illuminate\Support\Facades\Concurrency;
+                use Illuminate\Support\Facades\DB;
+                [$userCount, $orderCount] = Concurrency::run([
+                  fn () => DB::table('users')->count(),
+                  fn () => DB::table('orders')->count()]);
+                // указать драйвер
+                $results = Concurrency::driver('fork')->run(...);
+                // изменить драйвер по умолчанию
+                php artisan config:publish concurrency    // параметр default в config/concurrency.php
+                - отсрочка параллельных задач: выполнять функции одновременно после отправки пользователю HTTP-ответа
+                use App\Services\Metrics;
+                use Illuminate\Support\Facades\Concurrency;
+                Concurrency::defer([
+                  fn () => Metrics::report('users'),
+                  fn () => Metrics::report('orders')]);
 
-          //- Context*
+          //- Context
           //- собирать, извлекать и обмениваться информацией в запросах, заданиях и командах
           details
             summary Context
-            p
+            p Информация записывается в журналы с отслеживанием потоков и историей выполнения кода
+            pre
+              code.
+                - добавить URL-адрес и id трассировки в контекст каждого входящего запроса
+                namespace App\Http\Middleware;
+                use Closure;
+                use Illuminate\Http\Request;
+                use Illuminate\Support\Facades\Context;
+                use Illuminate\Support\Str;
+                use Symfony\Component\HttpFoundation\Response;
+                class AddContext {
+                  public function handle(Request $request, Closure $next): Response {
+                    Context::add('url', $request->url());
+                    Context::add('trace_id', Str::uuid()->toString());
+                    return $next($request);}}
+                // информация, добавленная в контекст, автоматически добавляется в виде метаданных ко всем записям журнала
+                Log::info('Пользователь прошел аутентификацию.', ['auth_id' => Auth::id()]);  // записать запись в журнал
+                // получим запись
+                Пользователь прошел аутентификацию. {"auth_id":27} {"url":"https://example.com/login","trace_id":"e04e1a11-e75c-4db3-b5b5-cfef4ef56697"}
+                - Информация, добавленная в контекст, также становится доступной для заданий, отправленных в очередь
+                // в посреднике
+                Context::add('url', $request->url());
+                Context::add('trace_id', Str::uuid()->toString());
+                // в контроллере
+                ProcessPodcast::dispatch($podcast);
+                // при отправке задания любая информация, хранящаяся в данный момент в контексте, фиксируется и передается заданию
+                class ProcessPodcast implements ShouldQueue {
+                  use Queueable;
+                  public function handle(): void {Log::info('Обработка подкаста.', ['podcast_id' => $this->podcast->id]);}}
+                // результирующая запись журнала
+                Обработка подкаста. {"podcast_id":95} {"url":"https://example.com/login","trace_id":"e04e1a11-e75c-4db3-b5b5-cfef4ef56697"}
+                - захват контекста
+                // хранить информацию в текущем контексте
+                use Illuminate\Support\Facades\Context;
+                Context::add('key', 'value');
+                либо
+                Context::add(['first_key' => 'value', 'second_key' => 'value']);
+                // add переопределит значение с тем же ключём, addIf добавить информацию в контекст только если ключ еще не существует
+                Context::add('key', 'first');
+                Context::get('key');    // "first"
+                Context::addIf('key', 'second');
+                Context::get('key');    // "first"
+                // добавления данных в контекст по условию
+                use Illuminate\Support\Facades\Auth;
+                use Illuminate\Support\Facades\Context;
+                Context::when(
+                  Auth::user()->isAdmin(),
+                  fn ($context) => $context->add('permissions', Auth::user()->permissions),
+                  fn ($context) => $context->add('permissions', []));
+                // создать стек: список данных, хранящихся в том порядке, в котором они были добавлены
+                use Illuminate\Support\Facades\Context;
+                Context::push('breadcrumbs', 'first_value');
+                Context::push('breadcrumbs', 'second_value', 'third_value');
+                Context::get('breadcrumbs');
+                вернёт
+                [
+                  'first_value',
+                  'second_value',
+                  'third_value',
+                ]
+                // создать прослушиватель событий, который помещает в стек инфу о SQL-запросе и его продолжительности при выполнении запроса
+                use Illuminate\Support\Facades\Context;
+                use Illuminate\Support\Facades\DB;
+                DB::listen(function ($event) {Context::push('queries', [$event->time, $event->sql]);});
+                // находится ли значение в стеке
+                if (Context::stackContains('breadcrumbs', 'first_value')) { }
+                if (Context::hiddenStackContains('secrets', 'first_value')) { }
+                либо
+                use Illuminate\Support\Facades\Context;
+                use Illuminate\Support\Str;
+                return Context::stackContains('breadcrumbs', function ($value) {return Str::startsWith($value, 'query_');});
+                - получение контекста
+                // получить информацию из контекста
+                use Illuminate\Support\Facades\Context;
+                $value = Context::get('key');
+                // получить подмножество информации в контексте
+                $data = Context::only(['first_key', 'second_key']);
+                // извлечение и удаление информации из контекста
+                $value = Context::pull('key');
+                // извлечь элементы из стека
+                Context::push('breadcrumbs', 'first_value', 'second_value');
+                Context::pop('breadcrumbs')     // second_value
+                Context::get('breadcrumbs');    // ['first_value']
+                // получить всю информацию, хранящуюся в контексте
+                $data = Context::all();
+                // имеет ли контекст значение для указанного ключа
+                use Illuminate\Support\Facades\Context;
+                if (Context::has('key')) { //... }
+                даже при null значение есть
+                Context::add('key', null);
+                Context::has('key');    // true
+                - удаление контекста
+                use Illuminate\Support\Facades\Context;
+                Context::add(['first_key' => 1, 'second_key' => 2]);
+                Context::forget('first_key');
+                Context::all();     // ['second_key' => 2]
+                либо забыть несколько ключей одновременно
+                Context::forget(['first_key', 'second_key']);
+                - скрытый контекст не добавляется в журналы
+                use Illuminate\Support\Facades\Context;
+                Context::addHidden('key', 'value');
+                Context::getHidden('key');    // 'value'
+                Context::get('key');    // null
+                // скрытые методы
+                Context::addHidden(/* ... */);
+                Context::addHiddenIf(/* ... */);
+                Context::pushHidden(/* ... */);
+                Context::getHidden(/* ... */);
+                Context::pullHidden(/* ... */);
+                Context::popHidden(/* ... */);
+                Context::onlyHidden(/* ... */);
+                Context::allHidden(/* ... */);
+                Context::hasHidden(/* ... */);
+                Context::forgetHidden(/* ... */);
+                - события контекста: гидратация и обезвоживание
+                // зарегистрировать в AppServiceProvider
+                // когда задание отправляется в очередь, данные в контексте обезвоживаются
+                use Illuminate\Log\Context\Repository;
+                use Illuminate\Support\Facades\Config;
+                use Illuminate\Support\Facades\Context;
+                public function boot(): void {
+                  Context::dehydrating(function (Repository $context) {$context->addHidden('locale', Config::get('app.locale'));});}
+                // когда поставленное в очередь задание начинает выполняться, любой контекст задания, будет «гидратирован» в текущий контекст
+                use Illuminate\Log\Context\Repository;
+                use Illuminate\Support\Facades\Config;
+                use Illuminate\Support\Facades\Context;
+                public function boot(): void {
+                  Context::hydrated(function (Repository $context) {
+                    if ($context->hasHidden('locale')) {Config::set('app.locale', $context->getHidden('locale'));}});}
+
+          //- Strings
+          //- функции для работы с строковыми значениями
+          details
+            summary Strings
+            p функции для работы с строковыми значениями
+            a(href="https://laravel.su/docs/12.x/strings#dostupnye-metody") методы
             pre
               code.
 
@@ -11760,14 +11915,6 @@ block menu
           //- поддержка мультиязычности
           details
             summary Localization
-            p
-            pre
-              code.
-
-          //- Strings*
-          //- функции для работы с строковыми значениями
-          details
-            summary Strings
             p
             pre
               code.
