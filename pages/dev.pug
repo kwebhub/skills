@@ -11911,21 +11911,161 @@ block menu
             pre
               code.
 
-          //- Localization*
+          //- Localization
           //- поддержка мультиязычности
           details
             summary Localization
-            p
+            p мультиязычность интерфейса приложения
             pre
               code.
+                php artisan lang:publish    // опубликовать языковые файлы
+                - языковые файлы
+                /lang
+                  /en
+                    messages.php
+                  /es
+                    messages.php
+                либо
+                  /lang
+                    en.json
+                    es.json
+                - язык по умолчанию в APP_LOCALE .env сохранит в locale  config/app.php
+                  резервный язык APP_FALLBACK_LOCALE .env
+                - изменить язык по умолчанию для одного HTTP-запроса во время выполнения
+                use Illuminate\Support\Facades\App;
+                Route::get('/greeting/{locale}', function (string $locale) {
+                  if (! in_array($locale, ['en', 'es', 'fr'])) {abort(400);}
+                  App::setLocale($locale);});
+                - определить текущий язык или проверить соответствие указанного языка
+                use Illuminate\Support\Facades\App;
+                $locale = App::currentLocale();
+                if (App::isLocale('en')) { }
+                - поддержка языком множественного числа: french, norwegian-bokmal, portuguese, spanish и turkish
+                в App\Providers\AppServiceProvider
+                use Illuminate\Support\Pluralizer;
+                public function boot(): void {Pluralizer::useLanguage('spanish');}
+                - все языковые файлы возвращают массив строк с ключами
+                return ['welcome' => 'Welcome to our application!'];    // lang/en/messages.php
+                // для языков, отличающихся территориально языковые каталоги называть «en_GB»
+                - файлы перевода, которые используют строки перевода в качестве ключей
+                {"I love programming.": "Me encanta programar."}    // lang/es.json
+                - получить строки перевода из языковых файлов
+                echo __('messages.welcome');    // lang/en/messages.php
+                либо в шаблонизаторе Blade,
+                {{ __('messages.welcome') }}
+                echo __('I love programming.');   // lang/es.json
+                - заполнитель в строках перевода
+                'welcome' => 'Welcome, :name',
+                echo __('messages.welcome', ['name' => 'dayle']);
+                'welcome' => 'Welcome, :NAME', // Welcome, DAYLE
+                'goodbye' => 'Goodbye, :Name', // Goodbye, Dayle
+                // автоматически вызывает метод __toString
+                // если нет контроля над методом __toString, регистрация пользовательского обработчика форматирования 
+                в AppServiceProvider
+                use Illuminate\Support\Facades\Lang;
+                use Money\Money;
+                public function boot(): void {Lang::stringable(function (Money $money) {return $money->formatTo('en_GB');});}
+                - различать формы единственного и множественного числа строки
+                'apples' => 'There is one apple|There are many apples'
+                либо
+                "There is one apple|There are many apples": "Hay una manzana|Hay muchas manzanas"
+                либо
+                'apples' => '{0} There are none|[1,19] There are some|[20,*] There are many'
+                // извлечения строки соответствующую указанному количеству
+                echo trans_choice('messages.apples', 10);
+                либо
+                'minutes_ago' => '{1} :value minute ago|[2,*] :value minutes ago',
+                echo trans_choice('time.minutes_ago', 5, ['value' => 5]);
+                // отобразить целочисленное значение
+                'apples' => '{0} There are none|{1} There is one|[2,*] There are :count'
+                - переопределить языковые файлы пакеты
+                lang/vendor/{package}/{locale}
+                // переопределить строки перевода в messages.php для пакета skyrim/hearthfire: lang/vendor/hearthfire/en/messages.php
+                  в файле определить только те строки перевода, которые нужно переопределить
 
           //- File Storage*
           //- абстракция файловой системы для работы с локальными и производственными файловыми системами
           details
             summary File Storage
-            p
+            p обеспечивает абстракцию файловой системы и содержит драйверы для работы с локальными файловыми системами, SFTP и Amazon S3
             pre
               code.
+                -  драйвер local взаимодействует с файлами на сервере, на котором запущено приложение Laravel
+                  операции с файлами выполняются относительно корневого каталога storage/app
+                use Illuminate\Support\Facades\Storage;
+                Storage::disk('local')->put('example.txt', 'Contents');   // запишет файл в storage/app/example.txt
+                - публичный диск определен в config/filesystems.php по умолчанию использует драйвер local и хранит свои файлы в storage/app/public
+                php artisan storage:link    // создать символическую ссылку из storage/app/public на public/storage, для доступа из интернета
+                либо настроить дополнительные символические ссылки в config/filesystems.php
+                'links' => [
+                  public_path('storage') => storage_path('app/public'),
+                  public_path('images') => storage_path('app/images')]
+                echo asset('storage/file.txt');   // создать URL-адреса для сохраненных файлов
+                php artisan storage:unlink    // уничтожение настроенных символических ссылок
+                -тдрайвер s3 используется для записи в службу облачного хранилища Amazon S3
+                composer require league/flysystem-aws-s3-v3 "^3.0" --with-all-dependencies    // установить пакет Flysystem S3
+                // настройка конфигурации диска сохраняется в config/filesystems.php через указание в .env
+                AWS_ACCESS_KEY_ID=&lt;your-key-id&gt;
+                AWS_SECRET_ACCESS_KEY=&lt;your-secret-access-key&gt;
+                AWS_DEFAULT_REGION=us-east-1
+                AWS_BUCKET=&lt;your-bucket-name&gt;
+                AWS_USE_PATH_STYLE_ENDPOINT=false
+                - драйвер FTP
+                composer require league/flysystem-ftp "^3.0"    // установить пакет Flysystem FTP
+                // в config/filesystems.php
+                'ftp' => [
+                  'driver' => 'ftp',
+                  'host' => env('FTP_HOST'),
+                  'username' => env('FTP_USERNAME'),
+                  'password' => env('FTP_PASSWORD'),
+                  // Optional FTP Settings...
+                  // 'port' => env('FTP_PORT', 21),
+                  // 'root' => env('FTP_ROOT'),
+                  // 'passive' => true,
+                  // 'ssl' => true,
+                  // 'timeout' => 30]
+                - драйвер SFTP
+                composer require league/flysystem-sftp-v3 "^3.0"    // установить пакет Flysystem SFTP
+                // в config/filesystems.php
+                'sftp' => [
+                  'driver' => 'sftp',
+                  'host' => env('SFTP_HOST'),
+                  // Settings for basic authentication...
+                  'username' => env('SFTP_USERNAME'),
+                  'password' => env('SFTP_PASSWORD'),
+                  // Settings for SSH key based authentication with encryption password...
+                  'privateKey' => env('SFTP_PRIVATE_KEY'),
+                  'passphrase' => env('SFTP_PASSPHRASE'),
+                  // Settings for file / directory permissions...
+                  'visibility' => 'private', // `private` = 0600, `public` = 0644
+                  'directory_visibility' => 'private', // `private` = 0700, `public` = 0755
+                  // Optional SFTP Settings...
+                  // 'hostFingerprint' => env('SFTP_HOST_FINGERPRINT'),
+                  // 'maxTries' => 4,
+                  // 'passphrase' => env('SFTP_PASSPHRASE'),
+                  // 'port' => env('SFTP_PORT', 22),
+                  // 'root' => env('SFTP_ROOT', ''),
+                  // 'timeout' => 30,
+                  // 'useAgent' => true]
+                - ограниченные диски определяют файловую систему, в которой все пути автоматически дополняются указанным префиксом пути
+                composer require league/flysystem-path-prefixing "^3.0"
+                // определить диск с драйвером scoped
+                's3-videos' => [
+                  'driver' => 'scoped',
+                  'disk' => 's3',
+                  'prefix' => 'path/to/videos']
+                - диски только для чтения создают диски с запретом записи записи
+                composer require league/flysystem-read-only "^3.0"
+                's3-videos' => [
+                  'driver' => 's3',
+                  'read-only' => true]
+                - для взаимодействия с совместимой с S3 службой хранения файлов, такой как MinIO или DigitalOcean Spaces
+                указать AWS_ENDPOINT в .env для изменения настройки в config/filesystems.php
+                'endpoint' => env('AWS_ENDPOINT', 'https://minio:9000'),
+                AWS_URL=http://localhost:9000/local
+
+                https://laravel.su/docs/12.x/filesystem#dostup-k-ekzempliaram-diskov
+
 
           //- Processes*
           //- вызывать внешние процессы из приложения
