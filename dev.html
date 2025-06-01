@@ -8546,9 +8546,202 @@ composer require league/flysystem-read-only "^3.0"
 указать AWS_ENDPOINT в .env для изменения настройки в config/filesystems.php
 'endpoint' => env('AWS_ENDPOINT', 'https://minio:9000'),
 AWS_URL=http://localhost:9000/local
-
-https://laravel.su/docs/12.x/filesystem#dostup-k-ekzempliaram-diskov
-
+- доступ к экземплярам дисков
+use Illuminate\Support\Facades\Storage;
+Storage::put('avatars/1', $content);    // использует диск по умолчанию
+либо
+Storage::disk('s3')->put('avatars/1', $content);    // использует указанный диск
+- создать диск во время выполнения без конфигурации в config/filesystems.php
+use Illuminate\Support\Facades\Storage;
+$disk = Storage::build(['driver' => 'local', 'root' => '/path/to/root']);
+$disk->put('image.jpg', $content);
+- получение файлов: все пути к файлам должны быть указаны относительно «корня» диска
+$contents = Storage::get('file.jpg');   // получить содержимое файла
+$orders = Storage::json('orders.json');   // извлечения и декодирования json
+if (Storage::disk('s3')->exists('file.jpg')) { }    // существует ли файл на диске
+if (Storage::disk('s3')->missing('file.jpg')) { }   // отсутствует ли файл на диске
+return Storage::download('file.jpg');   // скачать файл
+либо $name - имя файла, которое видит пользователь при скачивании
+return Storage::download('file.jpg', $name, $headers);    // $headers - массив заголовков
+- URL-адреса файлов
+use Illuminate\Support\Facades\Storage;
+$url = Storage::url('file.jpg');
+// при драйвере local добавит /storage к указанному пути и вернет относительный URL-адрес файла
+  общедоступные файлы в storage/app/public и создать символическую ссылку в public/storage на storage/app/public
+// при драйвере s3 вернет абсолютный внешний URL-адрес
+- изменить хост для URL-адресов
+'public' => [
+  'driver' => 'local',
+  'root' => storage_path('app/public'),
+  'url' => env('APP_URL').'/storage',
+  'visibility' => 'public',
+  'throw' => false]
+- создать временные URL-адреса для файлов, хранящихся с помощью драйверов local и s3
+use Illuminate\Support\Facades\Storage;
+$url = Storage::temporaryUrl('file.jpg', now()->addMinutes(5));
+либо передать массив параметров запроса
+$url = Storage::temporaryUrl('file.jpg', now()->addMinutes(5),[
+  'ResponseContentType' => 'application/octet-stream',
+  'ResponseContentDisposition' => 'attachment; filename=file2.jpg']);
+// включить локальные временные URL-адреса в config/filesystems.php
+'local' => [
+  'driver' => 'local',
+  'root' => storage_path('app/private'),
+  'serve' => true,
+  'throw' => false]
+- настроить способ создания временных URL-адресов для определенного диска хранилища
+namespace App\Providers;
+use DateTime;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\URL;
+use Illuminate\Support\ServiceProvider;
+class AppServiceProvider extends ServiceProvider {
+  public function boot(): void {
+    Storage::disk('local')->buildTemporaryUrlsUsing(
+      function (string $path, DateTime $expiration, array $options) {
+        return URL::temporarySignedRoute(
+          'files.download',
+          $expiration,
+          array_merge($options, ['path' => $path]));});}}
+- временные URL-адреса для загрузки из клиентского приложения на стороне клиента, поддерживается только драйвером s3
+// полезен в серверных средах, где клиентское приложение должно загружать файлы в облако
+use Illuminate\Support\Facades\Storage;
+['url' => $url, 'headers' => $headers] = Storage::temporaryUploadUrl('file.jpg', now()->addMinutes(5));
+- метаданные файла
+use Illuminate\Support\Facades\Storage;
+$size = Storage::size('file.jpg');    // размера файла в байтах
+$time = Storage::lastModified('file.jpg');    // метка UNIX последнего изменения файла
+$mime = Storage::mimeType('file.jpg');    // MIME-тип файла 
+$path = Storage::path('file.jpg');    // путь к файлу: драйвер local вернет абсолютный путь, s3 - относительный путь в корзине S3
+- хранение файлов: все пути к файлам должны быть относительно корня диска
+use Illuminate\Support\Facades\Storage;
+Storage::put('file.jpg', $contents);    // сохранения содержимого файла на диске
+Storage::put('file.jpg', $resource);    // использовать поддержку базового потока Flysystem
+if (! Storage::put('file.jpg', $contents)) { }    // удалось ли записать на диск
+// включить выброс исключения при неудашейся записи в config/filesystems.php
+'public' => [
+  'driver' => 'local',
+  'throw' => true]
+// записывать в начало или конец файла
+Storage::prepend('file.log', 'Prepended Text');
+Storage::append('file.log', 'Appended Text');
+// копирование и перемещение файлов
+Storage::copy('old/file.jpg', 'new/file.jpg');
+Storage::move('old/file.jpg', 'new/file.jpg');
+- автоматическая потоковая передача: потоковая передача файлов в хранилище значительно сокращает использование памяти
+// вернет путь, включая сгенерированное имя файла
+use Illuminate\Http\File;
+use Illuminate\Support\Facades\Storage;
+$path = Storage::putFile('photos', new File('/path/to/photo')); // автоматически генерировать уникальный идентификатор для имени файла
+либо явно указать имя файла
+$path = Storage::putFileAs('photos', new File('/path/to/photo'), 'photo.jpg');
+либо с аргументом для определения «видимости» сохраненного файла
+Storage::putFile('photos', new File('/path/to/photo'), 'public');
+- загрузка файлов: вернет путь, включая сгенерированное имя файла
+namespace App\Http\Controllers;
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+class UserAvatarController extends Controller {
+  public function update(Request $request): string {
+    // по умолчанию store генерирует уникальный идентификатор для имени файла в указанной папке 'avatars'
+    $path = $request->file('avatar')->store('avatars');
+    return $path;}}
+либо
+$path = Storage::putFile('avatars', $request->file('avatar'));
+// присвоить имя вручную
+$path = $request->file('avatar')->storeAs('avatars', $request->user()->id);
+либо
+$path = Storage::putFileAs('avatars', $request->file('avatar'), $request->user()->id);
+// указать диск
+$path = $request->file('avatar')->store('avatars/'.$request->user()->id, 's3');
+либо
+$path = $request->file('avatar')->storeAs('avatars', $request->user()->id, 's3');
+// получить оригинальное имя или расширение загружаемого файла: небезопасно
+$file = $request->file('avatar');
+$name = $file->getClientOriginalName();
+$extension = $file->getClientOriginalExtension();
+либо безопасно
+$file = $request->file('avatar');
+$name = $file->hashName();    // Generate a unique, random name
+$extension = $file->extension();    // Determine the file's extension based on the file's MIME type
+- видимость файла
+use Illuminate\Support\Facades\Storage;
+Storage::put('file.jpg', $contents, 'public');    //  задать видимость при записи файла
+$visibility = Storage::getVisibility('file.jpg');   // получить видимость сохранённого файла
+Storage::setVisibility('file.jpg', 'public');   // задать видимость сохранённому файлу
+// сохранить загружаемый файл с видимостью public
+$path = $request->file('avatar')->storePublicly('avatars', 's3');
+$path = $request->file('avatar')->storePubliclyAs('avatars', $request->user()->id, 's3');
+// для драйвера local, видимость public это право доступа 0755 для каталогов и 0644 для файлов
+в config/filesystems.php
+'local' => [
+  'driver' => 'local',
+  'root' => storage_path('app'),
+  'permissions' => [
+    'file' => [
+      'public' => 0644,
+      'private' => 0600],
+    'dir' => [
+      'public' => 0755,
+      'private' => 0700]],
+  'throw' => false]
+- удаление файлов
+use Illuminate\Support\Facades\Storage;
+Storage::delete('file.jpg');
+Storage::delete(['file.jpg', 'file2.jpg']);
+либо указать диск
+Storage::disk('s3')->delete('path/file.jpg');
+- каталоги
+use Illuminate\Support\Facades\Storage;
+$files = Storage::files($directory);
+$files = Storage::allFiles($directory);
+// вернет массив всех каталогов указанного каталога
+$directories = Storage::directories($directory);
+либо всех каталогов внутри указанного каталога и всех его подкаталогов
+$directories = Storage::allDirectories($directory);
+// создать каталог
+Storage::makeDirectory($directory);
+// удалить каталог и все его файлы
+Storage::deleteDirectory($directory);
+- тестирование: создавать фейковый диск
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
+test('albums can be uploaded', function () {
+  Storage::fake('photos');
+  $response = $this->json('POST', '/photos', [
+    UploadedFile::fake()->image('photo1.jpg'),
+    UploadedFile::fake()->image('photo2.jpg')]);
+  // Проверка, что один или несколько файлов были сохранены
+  Storage::disk('photos')->assertExists('photo1.jpg');
+  Storage::disk('photos')->assertExists(['photo1.jpg', 'photo2.jpg']);
+  // Проверка, что один или несколько файлов не были сохранены
+  Storage::disk('photos')->assertMissing('missing.jpg');
+  Storage::disk('photos')->assertMissing(['missing.jpg', 'non-existing.jpg']);
+  // Проверка, что количество файлов в данном каталоге соответствует ожидаемому количеству
+  Storage::disk('photos')->assertCount('/wallpapers', 2);
+  // Проверка, что данный каталог пуст
+  Storage::disk('photos')->assertDirectoryEmpty('/wallpapers');});
+  - файловые системы не из коробки
+  composer require spatie/flysystem-dropbox   // добавить адаптер Dropbox
+  // зарегистрировать адаптер
+  namespace App\Providers;
+  use Illuminate\Contracts\Foundation\Application;
+  use Illuminate\Filesystem\FilesystemAdapter;
+  use Illuminate\Support\Facades\Storage;
+  use Illuminate\Support\ServiceProvider;
+  use League\Flysystem\Filesystem;
+  use Spatie\Dropbox\Client as DropboxClient;
+  use Spatie\FlysystemDropbox\DropboxAdapter;
+  class AppServiceProvider extends ServiceProvider {
+    public function register(): void { }
+    public function boot(): void {
+      Storage::extend('dropbox', function (Application $app, array $config) {
+        $adapter = new DropboxAdapter(new DropboxClient($config['authorization_token']));
+        return new FilesystemAdapter(
+          new Filesystem($adapter, $config),
+          $adapter,
+          $config);});}}
+  // $config содержит значения, определенные в config/filesystems.php
 </code></pre></details><details><summary>Processes</summary><p></p><pre><code></code></pre></details><details><summary>Task Scheduling</summary><p></p><pre><code></code></pre></details><details><summary>Package Development</summary><p></p><pre><code></code></pre></details><details><summary>Routes</summary><p>маршрут это URI и поведение при запросе этого URI<br>
 ананимные функции маршрутов - это альтернатива контроллеров и консольных команд в виде классов<br>
 routes/console.php не определяет HTTP-маршруты, он определяет консольные точки входа<br>
