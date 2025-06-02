@@ -8742,7 +8742,192 @@ test('albums can be uploaded', function () {
           $adapter,
           $config);});}}
   // $config содержит значения, определенные в config/filesystems.php
-</code></pre></details><details><summary>Processes</summary><p></p><pre><code></code></pre></details><details><summary>Task Scheduling</summary><p></p><pre><code></code></pre></details><details><summary>Package Development</summary><p></p><pre><code></code></pre></details><details><summary>Routes</summary><p>маршрут это URI и поведение при запросе этого URI<br>
+</code></pre></details><details><summary>Processes</summary><p>позволяет вызывать внешние процессы из приложения</p><pre><code>- вызов процессов: run вызывает процессы синхронно
+// вызвать базовый синхронный процесс и проверить его результат
+use Illuminate\Support\Facades\Process;
+$result = Process::run('ls -la');
+return $result->output();
+// run вернет Illuminate\Contracts\Process\ProcessResult, который даёт методы для анализа результата выполнения процесса
+$result = Process::run('ls -la');
+$result->successful();
+$result->failed();
+$result->exitCode();
+$result->output();
+$result->errorOutput();
+// если процесс провалился
+$result = Process::run('ls -la')->throw();    // выбросить экземпляр Illuminate\Process\Exceptions\ProcessFailedException
+$result = Process::run('ls -la')->throwIf($condition);    // выбросит по условию
+$result = Process::path(__DIR__)->run('ls -la');    // указать рабочий каталог процесса
+$result = Process::input('Hello World')->run('cat');    // предоставить ввод через “стандартный ввод” процесса
+// если процессы выполняются более 60 секунд, то выбрасят экземпляр Illuminate\Process\Exceptions\ProcessTimedOutException
+$result = Process::timeout(120)->run('bash import.sh');   // настроить таймаут процесса
+$result = Process::forever()->run('bash import.sh');    // отключить таймаут процесса
+// указать максимальное количество секунд выполнения процесса без результата
+$result = Process::timeout(60)->idleTimeout(30)->run('bash import.sh');
+// процесс унаследует все переменные среды из .env
+$result = Process::forever()->env(['IMPORT_PATH' => __DIR__])->run('bash import.sh');
+// унаследованную переменную среды из процесса
+$result = Process::forever()->env(['LOAD_PATH' => false])->run('bash import.sh');
+// режим TTY соединяет ввод и вывод процесса с вводом и выводом терминала
+Process::forever()->tty()->run('vim');    // открыть редактор Vim как процесс
+// получить вывод после выполнения процесса с методом output (stdout) и errorOutput (stderr)
+use Illuminate\Support\Facades\Process;
+$result = Process::run('ls -la');
+echo $result->output();
+echo $result->errorOutput();
+// получить вывод в реальном времени: первый аргумент функции это тип вывода (stdout или stderr), второй - сам вывод в виде строки
+$result = Process::run('ls -la', function (string $type, string $output) {echo $output;});
+if (Process::run('ls -la')->seeInOutput('laravel')) { }   // содержится ли заданная строка в выводе процесса
+// отключить получение вывода от процесса
+use Illuminate\Support\Facades\Process;
+$result = Process::quietly()->run('bash import.sh');
+- асинхронные процессы: start вызывает процессы асинхронно
+// приложение выполняет другие задачи, пока процесс выполняется в фоновом режиме
+$process = Process::timeout(120)->start('bash import.sh');
+while ($process->running()) { }   // определяет выполняется ли процесс
+$result = $process->wait();   // дождаться завершения процесса и получить экземпляр результата
+либо
+$process = Process::timeout(120)->start('bash import.sh');
+$result = $process->wait();
+// получить вывод процесса, который произошел после последнего вывода
+$process = Process::timeout(120)->start('bash import.sh');
+while ($process->running()) {
+  echo $process->latestOutput();
+  echo $process->latestErrorOutput();
+  sleep(1);}
+// получать вывод в реальном времени: первый аргумент функции это тип вывода (stdout или stderr), второй - сам вывод в виде строки
+$process = Process::start('bash import.sh', function (string $type, string $output) {echo $output;});
+$result = $process->wait();
+// остановить ожидание завершения процесса, как только процесс выведет нужный результат
+$process = Process::start('bash import.sh');
+$process->waitUntil(function (string $type, string $output) {return $output === 'Ready...';});
+- параллельные процессы: управление пулом одновременных асинхронных процессов
+use Illuminate\Process\Pool;
+use Illuminate\Support\Facades\Process;
+$pool = Process::pool(function (Pool $pool) {
+  $pool->path(__DIR__)->command('bash import-1.sh');
+  $pool->path(__DIR__)->command('bash import-2.sh');
+  $pool->path(__DIR__)->command('bash import-3.sh');
+})->start(function (string $type, string $output, int $key) { });
+while ($pool->running()->isNotEmpty()) { }    // доступ к коллекции запущенных процессов
+$results = $pool->wait();   // дождаться завершения всех процессов в пуле и получить массив их результатов
+echo $results[0]->output();   // получить экземпляр результата
+либо с получением результатов в реальном времени
+[$first, $second, $third] = Process::concurrently(function (Pool $pool) {
+  $pool->path(__DIR__)->command('ls -la');
+  $pool->path(app_path())->command('ls -la');
+  $pool->path(storage_path())->command('ls -la');});
+echo $first->output();
+// назначить строковые ключи каждому процессу в пуле, вместо числовых для определения к какому процессу относится вывод
+$pool = Process::pool(function (Pool $pool) {
+  $pool->as('first')->command('bash import-1.sh');
+  $pool->as('second')->command('bash import-2.sh');
+  $pool->as('third')->command('bash import-3.sh');
+})->start(function (string $type, string $output, string $key) { });
+$results = $pool->wait();
+return $results['first']->output();
+$processIds = $pool->running()->each->id();   // получить доступ к идентификаторам процессов в основном пуле
+$pool->signal(SIGUSR2);   // отправить сигнал каждому процессу внутри пула
+- pipelines
+// pipe выполнит связанные процессы синхронно и вернет результат последнего
+use Illuminate\Process\Pipe;
+use Illuminate\Support\Facades\Process;
+$result = Process::pipe(function (Pipe $pipe) {
+  $pipe->command('cat example.txt');
+  $pipe->command('grep -i "laravel"');});
+if ($result->successful()) { }
+либо
+$result = Process::pipe(['cat example.txt', 'grep -i "laravel"']);
+// получать вывод в реальном времени: первый аргумент функции это тип вывода (stdout или stderr), второй - сам вывод в виде строки
+$result = Process::pipe(function (Pipe $pipe) {
+  $pipe->command('cat example.txt');
+  $pipe->command('grep -i "laravel"');},
+  function (string $type, string $output) {echo $output;});
+// назначать строковые ключи каждому процессу
+$result = Process::pipe(function (Pipe $pipe) {
+  $pipe->as('first')->command('cat example.txt');
+  $pipe->as('second')->command('grep -i "laravel"');
+})->start(function (string $type, string $output, string $key) { });
+- получить присвоенный операционной системой идентификатор выполняющегося процесса
+$process = Process::start('bash import.sh');
+return $process->id();
+- отправить сигнал запущенному процессу
+$process->signal(SIGUSR2);</code></pre><a href="https://www.php.net/manual/ru/pcntl.constants.php">предопределенные константы сигналов процессу</a><p>тестирование процессов: возврат фиктивных/заглушечных результатов при вызове процессов</p><pre><code>- вызвать синхронный процесс
+use Illuminate\Support\Facades\Process;
+use Illuminate\Support\Facades\Route;
+Route::get('/import', function () {
+  Process::run('bash import.sh');
+  return 'Import complete!';});
+- тест синхронного процесса
+use Illuminate\Process\PendingProcess;
+use Illuminate\Contracts\Process\ProcessResult;
+use Illuminate\Support\Facades\Process;
+test('process is invoked', function () {
+  Process::fake();    // вернуть поддельный успешный результат для каждого вызванного процесса
+  $response = $this->get('/import');
+  Process::assertRan('bash import.sh');   // был ли запущен процесс
+  // проверить конфигурацию процесса
+  Process::assertRan(function (PendingProcess $process, ProcessResult $result) {
+    return $process->command === 'bash import.sh' && $process->timeout === 60;});});
+// указать вывод и код завершения для поддельных процессов
+Process::fake(['*' => Process::result(output: 'Test output', errorOutput: 'Test error output', exitCode: 1)]);
+// ключи массива - шаблоны подделываемых команд, значения - их результаты
+Process::fake([
+  'cat *' => Process::result(output: 'Test "cat" output'),
+  'ls *' => Process::result(output: 'Test "ls" output')]);
+либо если не нужно настраивать код завершения или вывод ошибок поддельного процесса
+Process::fake([
+  'cat *' => 'Test "cat" output',
+  'ls *' => 'Test "ls" output']);
+// назначить различные фейковые результаты каждому вызову процесса
+Process::fake(['ls *' => Process::sequence()->push(Process::result('First invocation'))->push(Process::result('Second invocation'))]);
+- вызвать асинхронный процесс
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Route;
+Route::get('/import', function () {
+  $process = Process::start('bash import.sh');
+  while ($process->running()) {
+    Log::info($process->latestOutput());
+    Log::info($process->latestErrorOutput());}
+  return 'Done';});
+- тест асинхронного процесса: описать, сколько раз метод running должен возвращать true и указать какие строки вывода вернуть
+Process::fake(['bash import.sh' => Process::describe()
+  ->output('First line of standard output')
+  ->errorOutput('First line of error output')
+  ->output('Second line of standard output')
+  ->exitCode(0)
+  ->iterations(3)]);
+- утверждения процессов для тестов: true/false
+use Illuminate\Support\Facades\Process;
+Process::assertRan('ls -la');   // процесс выполняется
+// получить экземпляр и результат процесса, чтобы проверить конфигурацию процесса
+use Illuminate\Process\PendingProcess;
+use Illuminate\Contracts\Process\ProcessResult;
+Process::assertRan(fn ($process, $result) =>
+  $process->command === 'ls -la' &&
+  $process->path === __DIR__ &&
+  $process->timeout === 60);
+// если функция вернет true, то утверждение будет пройдено
+либо
+use Illuminate\Support\Facades\Process;
+Process::assertDidntRun('ls -la');    // процесс не выполняется
+// получить экземпляр и результат процесса, чтобы проверить конфигурацию процесса
+Process::assertDidntRun(fn (PendingProcess $process, ProcessResult $result) => $process->command === 'ls -la');
+// если функция вернет true, то утверждение будет провалено
+либо
+use Illuminate\Support\Facades\Process;
+Process::assertRanTimes('ls -la', times: 3);    // процесс выполнился 3 раза
+// получить экземпляр и результат процесса, чтобы проверить конфигурацию процесса
+Process::assertRanTimes(function (PendingProcess $process, ProcessResult $result) {
+  return $process->command === 'ls -la';}, times: 3);
+// если функция вернет true и процесс был вызван указанное количество раз, то утверждение будет пройдено
+- процессы без поддельного результата, вызовут исключение, а не фактический процесс
+use Illuminate\Support\Facades\Process;
+Process::preventStrayProcesses();
+Process::fake(['ls *' => 'Test output...']);
+Process::run('ls -la');   // получен поддельный ответ
+Process::run('bash import.sh');      // получено исключение
+</code></pre></details><details><summary>Task Scheduling</summary><p></p><pre><code></code></pre></details><details><summary>Package Development</summary><p></p><pre><code></code></pre></details><details><summary>Routes</summary><p>маршрут это URI и поведение при запросе этого URI<br>
 ананимные функции маршрутов - это альтернатива контроллеров и консольных команд в виде классов<br>
 routes/console.php не определяет HTTP-маршруты, он определяет консольные точки входа<br>
 - api.php - маршруты API<br>
