@@ -9486,9 +9486,11 @@ block menu
               - Sail - взаимодействие со средой разработки Docker<br>
               - Sanctum - система аутентификации для SPA (приложения с одной страницей), мобильные приложения и простые токены-API<br>
               - Scout - полнотекстовоый поиск<br>
-              - Socialite аутентификация через соц.сети<br>
-              - Telescope предоставляет информацию о поступающих запросах, исключениях, записях записей, баз данных, задаваемых заданий, почтовых сообщений, уведомлениях, операциях кэша, запланированных задачах, переменных дампов и т.д.<br>
-              - Valet среда разработки для мак
+              - Socialite - аутентификация через соц.сети<br>
+              - Telescope - предоставляет информацию о поступающих запросах, исключениях, записях записей, баз данных, задаваемых заданий, почтовых сообщений, уведомлениях, операциях кэша, запланированных задачах, переменных дампов и т.д.<br>
+              - Valet - среда разработки для мак
+              - Orchestral Testbench - эмулирует приложения Laravel для написания тестов для пакета
+            p Пакеты – это основной способ добавления функциональности в Laravel.
 
           //- Testing
           //- создание тестов
@@ -12458,21 +12460,145 @@ block menu
                 Process::run('ls -la');   // получен поддельный ответ
                 Process::run('bash import.sh');      // получено исключение
 
-          //- Task Scheduling*
+          //- Task Scheduling
           //- управление запланированными задачами на сервере
           details
             summary Task Scheduling
-            p
+            p.
+              Планировщик позволяет определять расписание команд в самом приложении, без отдельного подключения по SSH.<br>
+              При использовании планировщика на сервере требуется только одна запись cron.<br>
+              Расписание задач обычно определяется в файле routes/console.php<br>
+            a(href="https://laravel.su/docs/12.x/scheduling#parametry-periodicnosti-raspisaniia") параметры периодичности расписания<br>
+            a(href="https://laravel.su/docs/12.x/scheduling#sobytiia") события планировщика
             pre
               code.
-
-          //- Package Development*
-          //- основной способ добавления функциональности в Laravel
-          details
-            summary Package Development
-            p
-            pre
-              code.
+                - функция каждую полночь выполняет запрос к базе данных для очистки таблицы
+                в routes/console.php
+                use Illuminate\Support\Facades\DB;
+                use Illuminate\Support\Facades\Schedule;
+                Schedule::call(function () {DB::table('recent_users')->delete();})->daily();
+                либо через вызываемые объекты – это простые классы PHP, содержащие метод __invoke
+                Schedule::call(new DeleteRecentUsers)->daily();
+                либо routes/console.php только для определения команд, а определение запланированных задач в bootstrap/app.php
+                use Illuminate\Console\Scheduling\Schedule;
+                ->withSchedule(function (Schedule $schedule) {$schedule->call(new DeleteRecentUsers)->daily();})
+                // просмотреть список запланированных задач и их следующий запуск
+                php artisan schedule:list
+                - планирование команд Artisan
+                use App\Console\Commands\SendEmailsCommand;
+                use Illuminate\Support\Facades\Schedule;
+                Schedule::command('emails:send Taylor --force')->daily();
+                Schedule::command(SendEmailsCommand::class, ['Taylor', '--force'])->daily();
+                либо
+                Artisan::command('delete:recent-users', function () {DB::table('recent_users')->delete();})
+                  ->purpose('Удалить недавних пользователей')->daily();
+                либо
+                Artisan::command('emails:send {user} {--force}', function ($user) { //... })
+                  ->purpose('Отправлять электронные письма указанному пользователю')->schedule(['Taylor', '--force'])->daily();
+                - планирование отправки заданий в очереди
+                use App\Jobs\Heartbeat;
+                use Illuminate\Support\Facades\Schedule;
+                Schedule::job(new Heartbeat)->everyFiveMinutes();
+                либо отправляем задание в очередь «heartbeats» соединения «sqs»
+                Schedule::job(new Heartbeat, 'heartbeats', 'sqs')->everyFiveMinutes();
+                - планирование команд для операционной системы: exec для передачи команды операционной системе
+                use Illuminate\Support\Facades\Schedule;
+                Schedule::exec('node /home/forge/script.js')->daily();  
+                - запланировать выполнение команды еженедельно в понедельник
+                use Illuminate\Support\Facades\Schedule;
+                Schedule::call(function () { //... })->weekly()->mondays()->at('13:00');    // раз в неделю в понедельник в 13:00
+                Schedule::command('foo')->weekdays()->hourly()->timezone('America/Chicago')->between('8:00', '17:00');  // по будням каждый час с 8 до 17
+                - выполнение команды ежечасно по воскресеньям и средам
+                Schedule::command('emails:send')->hourly()->days([0, 3]);
+                либо указать дни выполнения команды
+                use Illuminate\Support\Facades;
+                use Illuminate\Console\Scheduling\Schedule;
+                Facades\Schedule::command('emails:send')->hourly()->days([Schedule::SUNDAY, Schedule::WEDNESDAY]);
+                - выполнение команды по времени суток
+                Schedule::command('emails:send')->hourly()->between('7:00', '22:00');
+                либо
+                Schedule::command('emails:send')->hourly()->unlessBetween('23:00', '4:00');
+                - выполнение команды по условию
+                Schedule::command('emails:send')->daily()->when(function () {return true;});
+                - если метод skip возвращает true, то запланированная команда не будет выполнена
+                Schedule::command('emails:send')->daily()->skip(function () {return true;});
+                - выполнение команды по значению APP_ENV в .env
+                Schedule::command('emails:send')->daily()->environments(['staging', 'production']);
+                - выполнение команды по часовым поясам
+                Schedule::command('report:generate')->timezone('America/New_York')->at('2:00')
+                // назначить часовой пояс всем расписаниям в bootstrap/app.php
+                'timezone' => env('APP_TIMEZONE', 'UTC'),
+                'schedule_timezone' => 'America/Chicago',
+                - предотвращение дублирования задач
+                use Illuminate\Support\Facades\Schedule;
+                Schedule::command('emails:send')->withoutOverlapping();   // будет запускаться каждую минуту при условии, что она еще не запущена
+                либо указать сколько минут до окончания блокировки «перекрывающихся» задач, по умолчанию блокировка на 24 часа
+                Schedule::command('emails:send')->withoutOverlapping(10);
+                либо очистить кеш от блокировок
+                php artisan schedule:clear-cache
+                - выполнить задачу только на одном сервере, чтобы другие серверы не могли одновременно выполнять ту же задачу
+                Schedule::command('report:generate')->fridays()->at('17:00')->onOneServer();
+                - именование заданий для выполнения с разными параметрами
+                Schedule::job(new CheckUptime('https://laravel.com'))->name('check_uptime:laravel.com')->everyFiveMinutes()->onOneServer();
+                Schedule::job(new CheckUptime('https://vapor.laravel.com'))->name('check_uptime:vapor.laravel.com')->everyFiveMinutes()->onOneServer();
+                - имена заданиям присваивать при выполнении на одном сервере
+                Schedule::call(fn () => User::resetApiRequestCount())->name('reset-api-request-count')->daily()->onOneServer();
+                - запустить задачу в фоновом режиме, чтобы другие одновременно запланированные задачи не ждали её завершения
+                Schedule::command('analytics:report')->daily()->runInBackground();    // только для задач с command и exec
+                - запустить задачу принудительно, даже в режиме обслуживания
+                Schedule::command('emails:send')->evenInMaintenanceMode();
+                - группировка задач: перечислить задачи, к котором применить методы
+                Schedule::daily()->onOneServer()->timezone('America/New_York')->group(function () {
+                  Schedule::command('emails:send --force');
+                  Schedule::command('emails:prune');});
+                - запустить планировщик: проанализирует запланированные задачи и определит их запускать, исходя из текущего времени сервера
+                php artisan schedule:run    // выполняется в течении минуты
+                - добавить запись в cron на сервере через SSH, чтобы запускать schedule:run каждую минуту
+                * * * * * cd /path-to-your-project && php artisan schedule:run >> /dev/null 2>&1
+                - выполнение заданий с интервалом менее минуты
+                Schedule::call(function () {DB::table('recent_users')->delete();})->everySecond();    // выполнение каждую секунду
+                - все задания с интервалом менее минуты поместить в очередь заданий или выполняют команды в фоновом режиме
+                use App\Jobs\DeleteRecentUsers;
+                Schedule::job(new DeleteRecentUsers)->everyTenSeconds();
+                Schedule::command('users:delete')->everyTenSeconds()->runInBackground();
+                - прерывание задач с интервалом менее минуты
+                php artisan schedule:interrupt    // добавить в сценарий развертывания приложения, после завершения развертывания
+                - локально вызывать планировщик каждую минуту
+                php artisan schedule:work
+                - отправить результат выполнения задачи, только для задач с command и exec
+                Schedule::command('emails:send')->daily()->sendOutputTo($filePath);   // в файл для просмотра
+                Schedule::command('emails:send')->daily()->appendOutputTo($filePath);   // добавить результат в указанный файл
+                // отправить результат по электронной почте, при настроенной почтовой службе
+                Schedule::command('report:generate')->daily()->sendOutputTo($filePath)->emailOutputTo('taylor@example.com');
+                либо отправить только неудачные результаты по электронной почте
+                Schedule::command('report:generate')->daily()->emailOutputOnFailure('taylor@example.com');
+                - хуки выполнения задачи
+                Schedule::command('emails:send')->daily()
+                  ->before(function () { })   // выполнить перед выполнением задачи
+                  ->after(function () { });   // выполнить после выполнения задачи
+                Schedule::command('emails:send')->daily()
+                  ->onSuccess(function () { })   // выполнить при успешном выполнении задачи (код 0)
+                  ->onFailure(function () { });   // выполнить при провале выполнения задачи
+                либо с доступом к выводу задачи
+                use Illuminate\Support\Stringable;
+                Schedule::command('emails:send')->daily()
+                  ->onSuccess(function (Stringable $output) { })
+                  ->onFailure(function (Stringable $output) { });
+                - автоматически пинговать по-указанному URL: полезно для уведомления внешней службы
+                Schedule::command('emails:send')->daily()
+                  ->pingBefore($url)    // до выполнения задачи
+                  ->thenPing($url);   // после выполнения задачи
+                либо проверка связи с указанным URL-адресом
+                Schedule::command('emails:send')->daily()
+                  ->pingOnSuccess($successUrl)    // при успешном выполнении задачи (код 0)
+                  ->pingOnFailure($failureUrl);   // при провале выполнения задачи
+                либо проверка связи с указанным URL-адресом по условию
+                Schedule::command('emails:send')->daily()
+                  ->pingBeforeIf($condition, $url)
+                  ->thenPingIf($condition, $url);             
+                Schedule::command('emails:send')->daily()
+                  ->pingOnSuccessIf($condition, $successUrl)
+                  ->pingOnFailureIf($condition, $failureUrl);
 
           //- Routes
           //- маршрут это URI и поведение при запросе этого URI
