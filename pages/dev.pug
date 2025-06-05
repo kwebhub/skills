@@ -9491,6 +9491,116 @@ block menu
               - Valet - среда разработки для мак
               - Orchestral Testbench - эмулирует приложения Laravel для написания тестов для пакета
             p Пакеты – это основной способ добавления функциональности в Laravel.
+            pre
+              code.
+                - регистрация сервис-провайдеров и фасадов в composer.json пакета для автозагрузки в Laravel
+                "extra": {
+                  "laravel": {
+                    "providers": ["Barryvdh\\Debugbar\\ServiceProvider"],
+                    "aliases": {"Debugbar": "Barryvdh\\Debugbar\\Facade"}}}
+                - отключить в composer.json приложения обнаружение пакета
+                "extra": {
+                  "laravel": {
+                    "dont-discover": ["barryvdh/laravel-debugbar"]}}
+                либо отключить обнаружение всех пакетов
+                "extra": {
+                  "laravel": {
+                    "dont-discover": ["*"]}}
+                // обязательно добавить в зависимости пакета
+                use Illuminate\Support\ServiceProvider;
+                - конфигурация
+                // разрешить публикацию файлов конфигурации
+                в ServiceProvider пакета
+                public function boot(): void {
+                  $this->publishes([
+                    __DIR__.'/../config/courier.php' => config_path('courier.php'),
+                  ]);}
+                // опубликовать конфигурационный файл пакета в каталог config приложения
+                php artisan vendor:publish
+                // доступ к опубликованному файлу конфигурации пакета из приложения
+                $value = config('courier.option');
+                // объединить конфигурационный файл пакета с конфигурационным файлом приложения
+                в ServiceProvider пакета
+                public function register(): void {
+                  $this->mergeConfigFrom(
+                    __DIR__.'/../config/courier.php', 'courier'   // первый параметр: конфиг пакета, второй - конфиг приложения
+                  );}
+                - если пакет содержит маршруты, то закеширует их
+                public function boot(): void {$this->loadRoutesFrom(__DIR__.'/../routes/web.php');}
+                - если пакет содержит миграции БД, то сообщить Laravel, что указанный каталог или файл содержит миграции
+                public function boot(): void {
+                  $this->publishesMigrations([
+                    __DIR__.'/../database/migrations' => database_path('migrations'),
+                  ]);}
+                - если пакет содержит языковые файлы, то сообщить Laravel как их загрузить
+                public function boot(): void {$this->loadTranslationsFrom(__DIR__.'/../lang', 'courier');}
+                // ссылка на перевод: package::file.line, например загрузить строку приветствия пакета courier из файла messages
+                echo trans('courier::messages.welcome');
+                // зарегистрировать файлы перевода пакета в формате JSON
+                public function boot(): void {$this->loadJsonTranslationsFrom(__DIR__.'/../lang');}
+                // опубликовать языковые файлы пакета в каталоге resources/lang/vendor приложения
+                public function boot(): void {
+                  $this->loadTranslationsFrom(__DIR__.'/../lang', 'courier');
+                  $this->publishes([
+                    __DIR__.'/../lang' => $this->app->langPath('vendor/courier'),   // путь пакета и желаемое место публикации
+                  ]);}
+                php artisan vendor:publish    // опубликовать (скопировать в resources/lang/vendor/courier)
+                - шаблоны
+                // зарегистрировать шаблоны пакета
+                в ServiceProvider пакета укзать путь к шаблонам и имя пакета
+                public function boot(): void {$this->loadViewsFrom(__DIR__.'/../resources/views', 'courier');}
+                // ссылка на шаблон: package::view, например загрузить шаблон dashboard пакета courier
+                Route::get('/dashboard', function () {return view('courier::dashboard');});
+                // публикации шаблонов в resources/views/vendor
+                public function boot(): void {
+                  $this->loadViewsFrom(__DIR__.'/../resources/views', 'courier');
+                  $this->publishes([
+                    __DIR__.'/../resources/views' => resource_path('views/vendor/courier'),
+                  ]);}
+                php artisan vendor:publish    // опубликовать (скопировать в resources/views/vendor/courier)
+                // чтобы Laravel знал, где найти компонент, зарегистрировать его в ServiceProvider пакета
+                use Illuminate\Support\Facades\Blade;
+                use VendorPackage\View\Components\AlertComponent;
+                public function boot(): void
+                {Blade::component('package-alert', AlertComponent::class);}
+                использовать компонент: &lt;x-package-alert/&gt;
+                // метод componentNamespace автоматически загрузить классы компонентов из пакета Nightshade
+                компоненты Calendar и ColorPicker находятся в пространстве имен Nightshade\Views\Components
+                use Illuminate\Support\Facades\Blade;
+                public function boot(): void {Blade::componentNamespace('Nightshade\\Views\\Components', 'nightshade');}
+                использовать компоненты пакета
+                &lt;x-nightshade::calendar /&gt;
+                &lt;x-nightshade::color-picker /&gt;
+                - команды
+                // добавить информацию о пакете в вывод команды Artisan about: краткое описание окружения и конфигурации приложения
+                use Illuminate\Foundation\Console\AboutCommand;
+                public function boot(): void
+                {AboutCommand::add('Мой Пакет', fn () => ['Версия' => '1.0.0']);}
+                // зарегистрировать Artisan-команды пакета в Laravel: указать массив классов команд
+                use Courier\Console\Commands\InstallCommand;
+                use Courier\Console\Commands\NetworkCommand;
+                public function boot(): void {
+                  if ($this->app->runningInConsole()) {
+                    $this->commands([
+                      InstallCommand::class,
+                      NetworkCommand::class]);}}
+                // команда Laravel optimize кэширует конфигурацию приложения, события, маршруты и представления
+                указать команды пакета для выполнения при вызове optimize и clear
+                public function boot(): void {
+                  if ($this->app->runningInConsole()) {
+                    $this->optimizes(
+                      optimize: 'package:optimize',
+                      clear: 'package:clear-optimizations');}}
+                - опубликовать публичные ресурсы пакета (изображения и скомпилированные JavaScript, CSS) с префиксом public
+                public function boot(): void {$this->publishes([__DIR__.'/../public' => public_path('vendor/courier')], 'public');}
+                php artisan vendor:publish    // опубликовать (скопировать в public/vendor/courier)
+                // перезаписывать ресурсы каждый раз при обновлении пакета
+                php artisan vendor:publish --tag=public --force
+                // публикация указанных файлов
+                public function boot(): void {
+                  $this->publishes([__DIR__.'/../config/package.php' => config_path('package.php')], 'courier-config');
+                  $this->publishesMigrations([__DIR__.'/../database/migrations/' => database_path('migrations')], 'courier-migrations');}
+                php artisan vendor:publish --tag=courier-config   // опубликовать группы файлов отдельно, ссылаясь на их теги
 
           //- Testing
           //- создание тестов
