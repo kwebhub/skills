@@ -3,6 +3,12 @@ extends templates/layout
 block menu
   .menu__inner
     a(href="https://www.cyberseek.org/pathway.html") pathway
+
+https://www.hackthebox.com/
+https://wrccdc.org/
+https://picoctf.org/
+
+
     pre.
       1. rust + bash + SQL
       2. свои программы (2Д игра - нa ютуб видео с обучением переписываем на rust)
