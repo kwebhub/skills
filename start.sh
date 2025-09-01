@@ -1,6 +1,6 @@
 #!/bin/bash
-sass -w --no-source-map --style=compressed ./app/scss/style.scss:./app/style.min.css & 
-pug -w ./app/pages/*.pug -o ./app
+sass -w --no-source-map --style=compressed ./scss/style.scss:./style.min.css & 
+pug -w ./pages/*.pug -o ./
 
 # npm install -g pug pug-cli
 # npm install -g sass
